@@ -27,7 +27,6 @@ public class MainTest {
 		logger.warning("hello");
 		System.out.println("\nTest\n");
 		Assert.assertTrue(true);
-		Assert.fail();
 	}
 
 	@After
