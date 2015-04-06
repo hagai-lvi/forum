@@ -7,9 +7,9 @@ import java.util.logging.Logger;
 /**
  * Created by hagai_lvi on 4/6/15.
  */
-public class Main {
+public class MainTest {
 
-	public static Logger logger = Logger.getLogger(Main.class.getName());
+	public static Logger logger = Logger.getLogger(MainTest.class.getName());
 
 
 	@BeforeClass
@@ -25,7 +25,7 @@ public class Main {
 	@Test
 	public void test1(){
 		logger.warning("hello");
-		System.out.println("Test");
+		System.out.println("\nTest\n");
 		Assert.assertTrue(true);
 	}
 
