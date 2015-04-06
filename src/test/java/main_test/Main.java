@@ -2,10 +2,15 @@ package main_test;
 
 import org.junit.*;
 
+import java.util.logging.Logger;
+
 /**
  * Created by hagai_lvi on 4/6/15.
  */
 public class Main {
+
+	public static Logger logger = Logger.getLogger(Main.class.getName());
+
 
 	@BeforeClass
 	public static void beforeClass(){
@@ -19,6 +24,7 @@ public class Main {
 
 	@Test
 	public void test1(){
+		logger.warning("hello");
 		System.out.println("Test");
 		Assert.assertTrue(true);
 	}
