@@ -30,6 +30,7 @@ public class Forum implements ForumI {
 
     @Override
     public UserI register(String userName, String password, String eMail) {
+        //TODO
         return null;
     }
 
