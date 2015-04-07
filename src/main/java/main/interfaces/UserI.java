@@ -16,4 +16,8 @@ public interface UserI {
 	 * Get the list of all of the subforums of this user
 	 */
 	Collection<SubForumPermissionI> getSubForums();
+
+    String getUsername();
+
+    String getPassword();
 }

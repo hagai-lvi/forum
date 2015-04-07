@@ -1,6 +1,5 @@
 package main_test;
 
-import main.Main;
 import org.junit.*;
 
 import java.util.logging.Logger;
@@ -28,9 +27,6 @@ public class MainTest {
 		logger.warning("hello");
 		System.out.println("\nTest\n");
 		Assert.assertTrue(true);
-
-		Main main = new Main();
-		Assert.assertEquals(main.hello(),"Hello");
 	}
 
 	@After

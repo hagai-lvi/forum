@@ -9,4 +9,9 @@ public interface MessageI {
 	 * @return the user that created this message
 	 */
 	UserI getUser();
+
+    /**
+     * Add a reply to this message
+     */
+    void reply(MessageI reply);
 }

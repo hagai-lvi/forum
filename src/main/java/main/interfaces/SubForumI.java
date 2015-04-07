@@ -1,5 +1,7 @@
 package main.interfaces;
 
+import main.exceptions.MessageNotFoundException;
+
 /**
  * Created by hagai_lvi on 4/6/15.
  */
@@ -13,7 +15,7 @@ public interface SubForumI {
 	/**
 	 * reply to a specific messgae
 	 */
-	void replyToMessage(MessageI original, MessageI reply);
+	void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException;
 
 	/**
 	 * Allows a user to report a moderator
