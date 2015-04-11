@@ -1,14 +1,15 @@
 package main.forum_contents;
 
+import main.User.User;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
 import main.interfaces.ForumI;
+import main.interfaces.ForumPolicyI;
 import main.interfaces.SubForumI;
-import main.interfaces.SubForumPermissionI;
 import main.interfaces.UserI;
 
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 
 /**
@@ -16,9 +17,14 @@ import java.util.HashMap;
  */
 public class Forum implements ForumI {
 
+    private ForumPolicyI policy;
     private HashMap<String, SubForumI> _subForums = new HashMap<>();
     private HashMap<String, UserI> _users = new HashMap<>();
     private UserI guest = null; //TODO initialize
+
+    public Forum(ForumPolicyI policy){
+        this.policy = policy;
+    }
 
     @Override
     public SubForumI createSubForum(String name) throws SubForumAlreadyExistException {
@@ -38,9 +44,9 @@ public class Forum implements ForumI {
         if (_users.containsKey(userName)){
             throw new UserAlreadyExistsException(userName);
         } // we are done with protective programing, time to do work.
-        ArrayList<SubForumPermissionI> user_permissions = new ArrayList<SubForumPermissionI>();
-        
-        return null;
+        User new_user = new User(userName, password, eMail);
+        new_user.addForum(this);
+        return new_user;
     }
 
     @Override
@@ -70,5 +76,15 @@ public class Forum implements ForumI {
     public void logout(UserI user) {
         //TODO what should happen?
 
+    }
+
+    @Override
+    public void setPolicy(ForumPolicyI policy) {
+        //TODO
+    }
+
+    @Override
+    public Collection<UserI> getUserList() {
+        return _users.values();
     }
 }
