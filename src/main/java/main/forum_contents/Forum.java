@@ -80,7 +80,7 @@ public class Forum implements ForumI {
 
     @Override
     public void setPolicy(ForumPolicyI policy) {
-        //TODO
+        this.policy = policy;
     }
 
     @Override
