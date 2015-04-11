@@ -21,6 +21,15 @@ public interface ForumPolicyI {
      */
     void setMaxModerators(int numOfModerators);
 
+    /**
+     * Checks whether a given user is a valid manager according to policy.
+     * @param manager - the designated manager.
+     */
+    boolean isValidManager(UserI manager);
 
-
+    /**
+     * Checks whether a given user is a valid moderator according to policy.
+     * @param moderator - the designated moderator.
+     */
+    boolean isValidModerator(UserI moderator);
 }
