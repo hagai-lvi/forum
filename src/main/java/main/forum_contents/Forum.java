@@ -40,7 +40,7 @@ public class Forum implements ForumI {
     @Override
     public UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException {
         // Protective Programing
-        if (userName.equals("") || userName.equals(null) || password.equals("") || password.equals(null) || eMail.equals("") || eMail.equals(null))
+        if (userName.equals("") || userName == null || password.equals("") || password == null || eMail.equals("") || eMail == null)
             throw new InvalidUserCredentialsException();
         if (_users.containsKey(userName)){
             throw new UserAlreadyExistsException(userName);
@@ -53,7 +53,7 @@ public class Forum implements ForumI {
 
     @Override
     public void sendAuthenticationEMail(UserI user) {
-        //TODO create a mini mail client? generate an authentication link?
+        return;
 
     }
 
