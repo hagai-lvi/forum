@@ -38,14 +38,16 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException {
+    public UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException {
+        // Protective Programing
         if (userName.equals("") || userName.equals(null) || password.equals("") || password.equals(null) || eMail.equals("") || eMail.equals(null))
-            return null; // I don't have power to define new exception for everything.
+            throw new InvalidUserCredentialsException();
         if (_users.containsKey(userName)){
             throw new UserAlreadyExistsException(userName);
-        } // we are done with protective programing, time to do work.
+        }
+        // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
-        new_user.addForum(this);
+        new_user.addForum(this);  // Gabi said this will be the logic
         return new_user;
     }
 

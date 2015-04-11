@@ -20,7 +20,7 @@ public interface ForumI {
 	/**
 	 * Register a user to this forum
 	 */
-	UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException;
+	UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException;
 
 	/**
 	 * send an authentication email to the given email
