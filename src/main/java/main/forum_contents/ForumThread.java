@@ -1,5 +1,6 @@
 package main.forum_contents;
 
+import data_structures.Tree;
 import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 
@@ -8,14 +9,15 @@ import main.interfaces.ThreadI;
  */
 public class ForumThread implements ThreadI{
     //TODO should a thread have a subject?
-    MessageI _rootMessage;
+    Tree<MessageI> threadTree;
 
-    public ForumThread(MessageI root){
-        _rootMessage = root;
+
+    public ForumThread(MessageI initialMessage){
+        threadTree = new Tree<>(initialMessage);
     }
 
     @Override
     public MessageI getRootMessage() {
-        return _rootMessage;
+        return threadTree.getRoot();
     }
 }
