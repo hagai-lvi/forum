@@ -9,7 +9,7 @@ import java.util.logging.Logger;
  */
 public class MainTest {
 
-	public static Logger logger = Logger.getLogger(MainTest.class.getName());
+	private static Logger logger = Logger.getLogger(MainTest.class.getName());
 
 
 	@BeforeClass
