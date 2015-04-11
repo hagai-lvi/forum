@@ -29,7 +29,7 @@ public class User implements UserI {
     /**
     ﬂ * Get the list of all of the subforums of this user
      */
-    public Collection<SubForumPermissionI> getSubForums() {
+    public Collection<SubForumPermissionI> getSubForumPermission() {
         return null;
     }
 
