@@ -1,6 +1,7 @@
 package main.forum_contents;
 
 import main.User.User;
+import main.Utils.GmailSender;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
@@ -53,8 +54,15 @@ public class Forum implements ForumI {
 
     @Override
     public void sendAuthenticationEMail(UserI user) {
-        return;
-
+        String topic = "Authentication Email For: " + user.getUsername();
+        String body = "Hello, " + user.getUsername() + " \n This is your authentication token : \n";
+        body += user.getUserAuthString();
+        try {
+            GmailSender.sendFromGMail(new String[]{user.getEmail()}, topic, body);
+        }
+        catch(Exception e){
+            System.out.println("Had error "+e.toString());
+        }
     }
 
     @Override

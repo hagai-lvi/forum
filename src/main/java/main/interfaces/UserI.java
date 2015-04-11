@@ -20,4 +20,8 @@ public interface UserI {
     String getUsername();
 
     String getPassword();
+
+	String getEmail();
+
+	String getUserAuthString();
 }

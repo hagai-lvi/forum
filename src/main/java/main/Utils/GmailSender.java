@@ -9,11 +9,7 @@ public class GmailSender {
     private static String USER_NAME = "SEWorkshopForum";  // GMail user name (just the part before "@gmail.com")
     private static String PASSWORD = "123Bs!324Adz(01"; // GMail password
 
-    public static void main(String[] args){
-        sendFromGMail(new String[]{"tom.gonda@gmail.com"}, "Hello this is subject", "hello this is body");
-    }
-
-    private static void sendFromGMail(String[] to, String subject, String body) {
+    public static void sendFromGMail(String[] to, String subject, String body) {
         Properties props = System.getProperties();
         String host = "smtp.gmail.com";
         props.put("mail.smtp.starttls.enable", "true");

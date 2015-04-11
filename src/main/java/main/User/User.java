@@ -1,9 +1,11 @@
 package main.User;
 
+import main.Utils.SecureString;
 import main.interfaces.ForumI;
 import main.interfaces.SubForumPermissionI;
 import main.interfaces.UserI;
 
+import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 
@@ -12,6 +14,7 @@ import java.util.GregorianCalendar;
  */
 public class User implements UserI {
 
+    private String authString = null;
     private String username;
     private String password;
     private String email;
@@ -31,6 +34,7 @@ public class User implements UserI {
         signUpDate = new GregorianCalendar();
         seniority_in_days = 0;
         numOfMessages = 0;
+        this.authString = SecureString.nextUserAuthString();
     }
 
     public void addForum(ForumI forum){
@@ -95,6 +99,10 @@ public class User implements UserI {
 
     public void setNumOfMessages(int numOfMessages) {
         this.numOfMessages = numOfMessages;
+    }
+
+    public String getUserAuthString(){
+        return this.authString;
     }
 
     public Collection<SubForumPermissionI> getSubForumsPermissions() {
