@@ -4,6 +4,8 @@ import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
 
+import java.util.Collection;
+
 /**
  * Created by hagai_lvi on 4/6/15.
  */
@@ -46,4 +48,9 @@ public interface ForumI {
 	 * Set the policy of this forum
 	 */
 	void setPolicy(ForumPolicyI policy);
+
+	/**
+	 * return the list of users that are registered to this forum
+	 */
+	Collection<UserI> getUserList();
 }

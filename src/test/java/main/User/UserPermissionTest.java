@@ -13,7 +13,7 @@ public class UserPermissionTest {
 
     @Before
     public void setUp() throws Exception {
-        UserI user = new User("Gabi", "123456");
+        UserI user = new User("Gabi", "123456", "mail");
     }
 
     @Test
