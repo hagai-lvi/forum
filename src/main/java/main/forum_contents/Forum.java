@@ -1,5 +1,6 @@
 package main.forum_contents;
 
+import main.User.User;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
@@ -35,9 +36,9 @@ public class Forum implements ForumI {
         if (_users.containsKey(userName)){
             throw new UserAlreadyExistsException(userName);
         } // we are done with protective programing, time to do work.
-        ArrayList<SubForumPermissionI> user_permissions = new ArrayList<SubForumPermissionI>();
-        
-        return null;
+        User new_user = new User(userName, password, eMail);
+        new_user.addForum(this);
+        return new_user;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package main.User;
 
+import main.interfaces.ForumI;
 import main.interfaces.SubForumPermissionI;
 import main.interfaces.UserI;
 
@@ -12,11 +13,17 @@ public class User implements UserI {
 
     private String username;
     private String password;
+    private String email;
     private Collection<SubForumPermissionI> subForumsPermissions;
 
-    public User(String username, String password) {
+    public User(String username, String password, String email) {
         this.username = username;
         this.password = password;
+        this.email    = email;
+    }
+
+    public void addForum(ForumI forum){
+        return; // TODO : add
     }
 
     /**
