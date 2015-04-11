@@ -41,4 +41,9 @@ public interface ForumI {
 	 * Log out the user
 	 */
 	void logout(UserI user);
+
+	/**
+	 * Set the policy of this forum
+	 */
+	void setPolicy(ForumPolicyI policy);
 }

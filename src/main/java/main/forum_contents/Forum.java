@@ -3,10 +3,7 @@ package main.forum_contents;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
-import main.interfaces.ForumI;
-import main.interfaces.SubForumI;
-import main.interfaces.SubForumPermissionI;
-import main.interfaces.UserI;
+import main.interfaces.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -70,5 +67,10 @@ public class Forum implements ForumI {
     public void logout(UserI user) {
         //TODO what should happen?
 
+    }
+
+    @Override
+    public void setPolicy(ForumPolicyI policy) {
+        //TODO
     }
 }
