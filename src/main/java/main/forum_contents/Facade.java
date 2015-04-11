@@ -10,6 +10,10 @@ import java.util.Collection;
  * Created by hagai_lvi on 4/11/15.
  */
 public class Facade implements FacadeI {
+	private static Facade theFacade = new Facade();
+
+	private Facade(){}
+
 	private Collection<ForumI> forums = new ArrayList<>();
 	@Override
 	public Collection<ForumI> getForumList() {
@@ -19,5 +23,9 @@ public class Facade implements FacadeI {
 	@Override
 	public void addForum(ForumI toAdd) {
 		forums.add(toAdd);
+	}
+
+	public static FacadeI getFacade(){
+		return theFacade;
 	}
 }
