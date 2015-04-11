@@ -25,6 +25,10 @@ public class Tree<T> {
         ancestorNode.addChild(dataToAdd);
     }
 
+    public T getRoot() {
+        return root.getData();
+    }
+
     private Node<T> findNode(T data) {
         return root.findChild(data);
     }
@@ -64,6 +68,10 @@ public class Tree<T> {
             }
 
             return null;
+        }
+
+        public T getData() {
+            return data;
         }
     }
 }
