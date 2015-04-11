@@ -20,4 +20,6 @@ public interface UserI {
     String getUsername();
 
     String getPassword();
+
+	boolean isManager();
 }

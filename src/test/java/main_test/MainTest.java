@@ -18,7 +18,7 @@ public class MainTest {
 	Collection<ForumI> _forumCollection;
 	HashMap<ForumI,UserI> _forumUsers;
 
-	public static Logger logger = Logger.getLogger(MainTest.class.getName());
+	private static Logger logger = Logger.getLogger(MainTest.class.getName());
 
 
 	@BeforeClass
