@@ -1,5 +1,7 @@
 package main.User;
 
+import main.exceptions.PermissionDenied;
+import main.forum_contents.SubForum;
 import main.interfaces.*;
 
 import java.util.logging.Logger;
@@ -20,8 +22,8 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     /**
      * Create a subforum in this forum
      */
-    public SubForumI createSubForum(String name){
-        if(canCreateForum()) {
+    public SubForumI createSubForum(String name) throws PermissionDenied{
+        if(canCreateSubForum()) {
             logger.fine("The user - " + currentUser.getUsername() + " has permission to create Sub-Forum");
             return new SubForum(name);
         }
@@ -29,6 +31,9 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
         throw new PermissionDenied("User has no permission to create sub forum", currentUser);
     }
 
+    private boolean canCreateSubForum(){
+        return currentUser.isManager();
+    }
     /**
      * Delete a subForum from this forum
      */
