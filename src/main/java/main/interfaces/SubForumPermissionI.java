@@ -11,7 +11,7 @@ public interface SubForumPermissionI {
 	void creatThread(MessageI message);
 
 	/**
-	 * reply to a specific messgae
+	 * reply to a specific message
 	 */
 	void replyToMessage(MessageI original, MessageI reply);
 
