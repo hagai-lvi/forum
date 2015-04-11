@@ -2,10 +2,13 @@ package main.forum_contents;
 
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.UserAlreadyExistsException;
 import main.interfaces.ForumI;
 import main.interfaces.SubForumI;
+import main.interfaces.SubForumPermissionI;
 import main.interfaces.UserI;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -29,8 +32,14 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public UserI register(String userName, String password, String eMail) {
-        //TODO
+    public UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException {
+        if (userName.equals("") || userName.equals(null) || password.equals("") || password.equals(null) || eMail.equals("") || eMail.equals(null))
+            return null; // I don't have power to define new exception for everything.
+        if (_users.containsKey(userName)){
+            throw new UserAlreadyExistsException(userName);
+        } // we are done with protective programing, time to do work.
+        ArrayList<SubForumPermissionI> user_permissions = new ArrayList<SubForumPermissionI>();
+        
         return null;
     }
 
