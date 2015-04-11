@@ -4,7 +4,7 @@ import main.exceptions.PermissionDenied;
 import main.forum_contents.SubForum;
 import main.interfaces.*;
 
-import java.util.logging.Logger;
+import org.apache.log4j.Logger;
 
 /**
  * Created by gabigiladov on 4/11/15.
@@ -15,7 +15,7 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     private static Logger logger = Logger.getLogger(UserPermission.class.getName());
 
     public UserPermission(UserI currentUser){
-        logger.fine("Creating new permissions for - " + currentUser.getUsername());
+        logger.info("Creating new permissions for - " + currentUser.getUsername());
         this.currentUser = currentUser;
     }
 
@@ -24,15 +24,15 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
      */
     public SubForumI createSubForum(String name) throws PermissionDenied{
         if(canCreateSubForum()) {
-            logger.fine("The user - " + currentUser.getUsername() + " has permission to create Sub-Forum");
+            logger.info("The user - " + currentUser.getUsername() + " has permission to create Sub-Forum");
             return new SubForum(name);
         }
-        logger.warning("The user - " + currentUser.getUsername() + " has no permission to create Sub-Forum!");
+        logger.error("The user - " + currentUser.getUsername() + " has no permission to create Sub-Forum!");
         throw new PermissionDenied("User has no permission to create sub forum", currentUser);
     }
 
     private boolean canCreateSubForum(){
-        return currentUser.isManager();
+        return false;
     }
     /**
      * Delete a subForum from this forum
