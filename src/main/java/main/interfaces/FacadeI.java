@@ -8,4 +8,10 @@ import java.util.Collection;
 public interface FacadeI {
 	Collection<ForumI> getForumList();
 	void addForum(ForumI toAdd);
+
+	//added by gilm
+	boolean InitilizeSystem();
+
+
+
 }

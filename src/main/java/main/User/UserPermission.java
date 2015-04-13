@@ -19,6 +19,11 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
         this.currentUser = currentUser;
     }
 
+    @Override
+    public SubForumPermissionI[] viewSubForums() {
+        return new SubForumPermissionI[0];
+    }
+
     /**
      * Create a subforum in this forum
      */
@@ -48,6 +53,11 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
     }
 
+    @Override
+    public void createThread(MessageI message) {
+
+    }
+
     /**
      * reply to a specific message
      */
@@ -67,5 +77,10 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
      */
     public void deleteMessage(MessageI message){
 
+    }
+
+    @Override
+    public ThreadI[] getThreads() {
+        return new ThreadI[0];
     }
 }

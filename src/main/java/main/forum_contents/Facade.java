@@ -25,6 +25,11 @@ public class Facade implements FacadeI {
 		forums.add(toAdd);
 	}
 
+	@Override
+	public boolean InitilizeSystem() {
+		return false;
+	}
+
 	public static FacadeI getFacade(){
 		return theFacade;
 	}

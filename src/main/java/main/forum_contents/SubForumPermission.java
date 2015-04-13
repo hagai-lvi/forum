@@ -1,8 +1,5 @@
 package main.forum_contents;
-import main.interfaces.MessageI;
-import main.interfaces.SubForumI;
-import main.interfaces.SubForumPermissionI;
-import main.interfaces.UserI;
+import main.interfaces.*;
 
 /**
  * Created by xkcd2 on 4/11/2015.
@@ -19,7 +16,7 @@ public class SubForumPermission implements SubForumPermissionI{
     };
 
     @Override
-    public void creatThread(MessageI message) {
+    public void createThread(MessageI message) {
         return; // TODO: implement
     }
 
@@ -38,4 +35,8 @@ public class SubForumPermission implements SubForumPermissionI{
         return; // TODO: implement
     }
 
+    @Override
+    public ThreadI[] getThreads() {
+        return null; // TODO: implement
+    }
 }

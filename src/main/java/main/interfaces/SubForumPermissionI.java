@@ -8,7 +8,7 @@ public interface SubForumPermissionI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void creatThread(MessageI message);
+	void createThread(MessageI message);
 
 	/**
 	 * reply to a specific message
@@ -24,4 +24,10 @@ public interface SubForumPermissionI {
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
 	void deleteMessage(MessageI message);
+
+	/**
+	 * view threads
+	 */
+
+	ThreadI[] getThreads();
 }
