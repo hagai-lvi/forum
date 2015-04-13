@@ -58,6 +58,8 @@ public class User implements UserI {
         return null;
     }
 
+    public void setAuthenticated() { this.isAuthenticated = true;}
+
     public String getUsername(){
 
         return username;
