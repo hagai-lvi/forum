@@ -54,6 +54,7 @@ public class Forum implements ForumI {
         User new_user = new User(userName, password, eMail);
         new_user.addForum(this);  // Gabi said this will be the logic
         sendAuthenticationEMail(new_user);
+        _users.put(userName, new_user);
         return new_user;
     }
 
