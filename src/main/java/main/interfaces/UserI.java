@@ -1,5 +1,7 @@
 package main.interfaces;
 
+import main.exceptions.PermissionDenied;
+
 import java.util.Collection;
 
 /**
@@ -24,4 +26,10 @@ public interface UserI {
 	String getEmail();
 
 	String getUserAuthString();
+
+	void removeMessage(MessageI msg) throws PermissionDenied;
+
+	void addMessage(MessageI msg);
+
+	void removeForum(ForumI forum);
 }

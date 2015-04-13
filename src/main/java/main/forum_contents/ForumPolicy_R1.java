@@ -22,10 +22,10 @@ public class ForumPolicy_R1 implements ForumPolicyI {
     private int maxModerators;
     private String passwordRegex;
 
-    public ForumPolicy_R1(Forum forum, int maxModerators, String passwordRegex) {
+    public ForumPolicy_R1(int maxModerators, String passwordRegex) {
         this.maxModerators = maxModerators;
         this.passwordRegex = passwordRegex;
-        this.forum = forum;
+        //this.forum = forum;
     }
 
     @java.lang.Override

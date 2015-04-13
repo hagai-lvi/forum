@@ -1,7 +1,9 @@
 package main.User;
 
 import main.Utils.SecureString;
+import main.exceptions.PermissionDenied;
 import main.interfaces.ForumI;
+import main.interfaces.MessageI;
 import main.interfaces.SubForumPermissionI;
 import main.interfaces.UserI;
 
@@ -103,6 +105,21 @@ public class User implements UserI {
 
     public String getUserAuthString(){
         return this.authString;
+    }
+
+    @Override
+    public void removeMessage(MessageI msg) throws PermissionDenied {
+
+    }
+
+    @Override
+    public void addMessage(MessageI msg) {
+
+    }
+
+    @Override
+    public void removeForum(ForumI forum) {
+
     }
 
     public Collection<SubForumPermissionI> getSubForumsPermissions() {

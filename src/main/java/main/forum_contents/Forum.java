@@ -97,4 +97,19 @@ public class Forum implements ForumI {
     public Collection<UserI> getUserList() {
         return _users.values();
     }
+
+    @Override
+    public String[] getUserTypes() {
+        return new String[0];
+    }
+
+    @Override
+    public void addUserType(String type) {
+
+    }
+
+    @Override
+    public boolean removeUserType(String type) {
+        return false;
+    }
 }

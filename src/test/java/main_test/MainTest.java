@@ -31,7 +31,12 @@ public class MainTest {
 	public void setUp() throws Exception
 	{
 		_facade = Facade.getFacade();
-		//_facade.`
+		ForumPolicyI policy = new ForumPolicy_R1(3,"[a-zA-Z]*[!@#$][a-zA-Z]");
+		for(int i=0;i<10;i++) {
+			ForumI newForum = new Forum(policy);
+			_facade.addForum(newForum);
+		}
+
 		_forumCollection = _facade.getForumList();
 
 
@@ -181,6 +186,7 @@ public class MainTest {
 	/**
 	 * target: check register usecase for new user
 	 * check that the user exist in the list after register and that user cannot register twice
+	 * check if you get email authentication message in your inbox
 	 */
 	public void Test_Register() {
 
@@ -216,7 +222,7 @@ public class MainTest {
 			fail("fail to register new user");
 		}
 
-		try{
+		try {
 			forum.login("notexist", "user");
 			fail("should throw exception");
 		}catch (InvalidUserCredentialsException e) {
@@ -286,32 +292,74 @@ public class MainTest {
 	}
 
 	@Test
+	/**
+	 * target: test post message usecase
+	 */
 	public void Test_PostMessage(){
-
+		ForumI forum = _forumCollection.iterator().next();
+		UserI user = forum.getUserList().iterator().next();
+		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
+		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
+		ThreadI firstThread = subForumPermission.getThreads()[0];
+		firstThread.getRootMessage().reply(new ForumMessage());
 	}
 
 	@Test
+	/**
+	 * target test Friend Type requirement
+	 */
 	public void Test_FriendType(){
-
+		ForumI forum = _forumCollection.iterator().next();
+		int n = forum.getUserTypes().length;
+		forum.addUserType("GoldenX");
+		assertEquals(n+1,forum.getUserTypes().length);
 	}
 
+
 	@Test
+	/**
+	 * target: check use case send report on moderator
+	 */
 	public void Test_ComplainOnModerator(){
+		ForumI forum = _forumCollection.iterator().next();
+		UserI user = forum.getUserList().iterator().next();
+		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
+		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
+
+		//add check to see if moshe his a moderator.
+		subForumPermission.reportModerator("Moshe","he is not behave well!!");
 
 	}
 
 	@Test
-	public void Test_EmailAuthentication(){
-
-	}
-
-	@Test
+	/**
+	 * target: test remove message usecase, check that user can remove only
+	 * 			his messages.
+	 */
 	public void Test_RemoveMessage(){
+		ForumI forum = _forumCollection.iterator().next();
+		Iterator<UserI> userItr = forum.getUserList().iterator();
+		UserI userA = userItr.next();
+		UserI userB = userItr.next();
 
+		MessageI msg = new ForumMessage();
+		userA.addMessage(msg);
+		try {
+			userB.removeMessage(msg);
+			fail("user should not bre able to remove other user's message");
+		}catch (PermissionDenied e){
+			assertTrue(true);
+		}
 	}
 
 	@Test
+	/**
+	 * target: test cancel forum usecase
+	 */
 	public void Test_CancelForum(){
+		ForumI forum = _forumCollection.iterator().next();
+		UserI userA = forum.getUserList().iterator().next();
+
 
 	}
 

@@ -53,4 +53,13 @@ public interface ForumI {
 	 * return the list of users that are registered to this forum
 	 */
 	Collection<UserI> getUserList();
+
+	/**
+	 * manage forum user types
+	 */
+	String[] getUserTypes();
+
+	void addUserType(String type);
+
+	boolean removeUserType(String type);
 }
