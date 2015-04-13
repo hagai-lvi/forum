@@ -1,5 +1,7 @@
 package main.interfaces;
 
+import main.User.User;
+
 /**
  * Created by hagai_lvi on 4/6/15.
  */
@@ -21,6 +23,15 @@ public interface ForumPolicyI {
      */
     void setMaxModerators(int numOfModerators);
 
+    /**
+     * Checks whether a given user is a valid manager according to policy.
+     * @param manager - the designated manager.
+     */
+    boolean isValidManager(User manager);
 
-
+    /**
+     * Checks whether a given user is a valid moderator according to policy.
+     * @param moderator - the designated moderator.
+     */
+    boolean isValidModerator(User moderator);
 }

@@ -1,6 +1,7 @@
 package main.forum_contents;
 
 import main.User.User;
+import main.Utils.GmailSender;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
@@ -38,21 +39,30 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException {
-        if (userName.equals("") || userName.equals(null) || password.equals("") || password.equals(null) || eMail.equals("") || eMail.equals(null))
-            return null; // I don't have power to define new exception for everything.
+    public UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException {
+        // Protective Programing
+        if (userName.equals("") || userName == null || password.equals("") || password == null || eMail.equals("") || eMail == null)
+            throw new InvalidUserCredentialsException();
         if (_users.containsKey(userName)){
             throw new UserAlreadyExistsException(userName);
-        } // we are done with protective programing, time to do work.
+        }
+        // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
-        new_user.addForum(this);
+        new_user.addForum(this);  // Gabi said this will be the logic
         return new_user;
     }
 
     @Override
     public void sendAuthenticationEMail(UserI user) {
-        //TODO create a mini mail client? generate an authentication link?
-
+        String topic = "Authentication Email For: " + user.getUsername();
+        String body = "Hello, " + user.getUsername() + " \n This is your authentication token : \n";
+        body += user.getUserAuthString();
+        try {
+            GmailSender.sendFromGMail(new String[]{user.getEmail()}, topic, body);
+        }
+        catch(Exception e){
+            System.out.println("Had error "+e.toString());
+        }
     }
 
     @Override
