@@ -6,6 +6,7 @@ import main.interfaces.UserI;
 import org.apache.log4j.Logger;
 import org.junit.experimental.theories.FromDataPoints;
 
+import java.util.Calendar;
 import java.util.GregorianCalendar;
 
 /**
@@ -43,29 +44,33 @@ public class ForumPolicy_R1 implements ForumPolicyI {
 
     @java.lang.Override
     public void setPasswordRegex(String regex) {
-        logger.warn("password regex changed");
+        logger.warn("password regex changed from " + passwordRegex + " to " + regex + ".");
         this.passwordRegex = regex;
     }
 
     @java.lang.Override
     public void setMaxModerators(int numOfModerators) {
-        logger.warn("maximum number of moderators modified.");
+        logger.warn("maximum number of moderators changed from "+maxModerators+" to " +numOfModerators + ".");
         this.maxModerators = numOfModerators;
     }
 
     @java.lang.Override
-    public boolean isValidManager(User manager){
-        long currTime = GregorianCalendar.getInstance().getTime().getTime();
-        long userTime = manager.getSignUpDate().getTime().getTime();
-        long timeSinceRegistration = currTime - userTime;
-        System.out.println(timeSinceRegistration);
-        return true;
-
+    public boolean isValidAdmin(User admin){
+        long currYear = GregorianCalendar.getInstance().get(Calendar.YEAR);
+        long userYear = admin.getSignUpDate().get(Calendar.YEAR);
+        long currMonth = GregorianCalendar.getInstance().get(Calendar.MONTH);
+        long userMonth = admin.getSignUpDate().get(Calendar.MONTH);
+        long seniority = (currYear - userYear) * 12 + currMonth - userMonth;
+        return seniority > GOLDEN_USER_SENIORITY;
     }
 
     @java.lang.Override
     public boolean isValidModerator(User moderator){
-        /* TODO */
-        return false;
+        long currYear = GregorianCalendar.getInstance().get(Calendar.YEAR);
+        long userYear = moderator.getSignUpDate().get(Calendar.YEAR);
+        long currMonth = GregorianCalendar.getInstance().get(Calendar.MONTH);
+        long userMonth = moderator.getSignUpDate().get(Calendar.MONTH);
+        long seniority = (currYear - userYear) * 12 + currMonth - userMonth;
+        return seniority > SILVER_USER_SENIORITY;
     }
 }

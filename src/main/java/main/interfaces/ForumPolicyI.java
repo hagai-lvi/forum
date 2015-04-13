@@ -27,7 +27,7 @@ public interface ForumPolicyI {
      * Checks whether a given user is a valid manager according to policy.
      * @param manager - the designated manager.
      */
-    boolean isValidManager(User manager);
+    boolean isValidAdmin(User manager);
 
     /**
      * Checks whether a given user is a valid moderator according to policy.
