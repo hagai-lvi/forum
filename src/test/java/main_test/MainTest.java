@@ -222,8 +222,8 @@ public class MainTest {
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user;
 		try {
-			user = forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
-			UserI sameUser = forum.login("gilgilmor", "morgil12345");
+			user = forum.register("gilgilmor2", "morgil12345", "gilmor89@gmail.com");
+			UserI sameUser = forum.login("gilgilmor2", "morgil12345");
 			assertSame("Not the same user when login", user, sameUser);
 		}catch (Throwable e) {
 			fail("fail to register new user");
