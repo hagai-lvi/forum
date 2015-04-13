@@ -9,15 +9,19 @@ import main.interfaces.ThreadI;
  */
 public class ForumThread implements ThreadI{
     //TODO should a thread have a subject?
-    Tree<MessageI> threadTree;
+    MessageI threadTree;
 
 
     public ForumThread(MessageI initialMessage){
-        threadTree = new Tree<>(initialMessage);
+        threadTree = initialMessage;
     }
 
     @Override
     public MessageI getRootMessage() {
-        return threadTree.getRoot();
+        return threadTree;
+    }
+
+    public void printThread(){
+        System.out.println(threadTree.printSubTree(0));
     }
 }

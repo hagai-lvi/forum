@@ -24,7 +24,7 @@ public class User implements UserI {
     private int seniority_in_days;
     private int numOfMessages;
     private Collection<SubForumPermissionI> subForumsPermissions;
-
+    private boolean isAuthenticated;
     public void setUsername(String username) {
         this.username = username;
     }
@@ -36,6 +36,7 @@ public class User implements UserI {
         signUpDate = new GregorianCalendar();
         seniority_in_days = 0;
         numOfMessages = 0;
+        this.isAuthenticated = false;
         this.authString = SecureString.nextUserAuthString();
     }
 

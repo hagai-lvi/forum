@@ -14,4 +14,6 @@ public interface MessageI {
      * Add a reply to this message
      */
     void reply(MessageI reply);
+
+    String printSubTree(int detph);
 }

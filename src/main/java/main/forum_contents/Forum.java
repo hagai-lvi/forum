@@ -9,7 +9,7 @@ import main.interfaces.ForumI;
 import main.interfaces.ForumPolicyI;
 import main.interfaces.SubForumI;
 import main.interfaces.UserI;
-
+import org.apache.log4j.Logger;
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -21,11 +21,23 @@ public class Forum implements ForumI {
     private ForumPolicyI policy;
     private HashMap<String, SubForumI> _subForums = new HashMap<>();
     private HashMap<String, UserI> _users = new HashMap<>();
-    private UserI guest = null; //TODO initialize
+    private User guest = null;
+    private static Logger logger = Logger.getLogger(Forum.class.getName());
 
-    public Forum(ForumPolicyI policy){
+    public Forum(ForumPolicyI policy) {
         this.policy = policy;
+        try {
+            this.guest = register("Guest user", "no_pass", "nomail@nomail.com");
+            this.guest.addForum(this);
+        }
+        catch (UserAlreadyExistsException e){
+            logger.error("User already exists on intialize, weird");
+        }
+        catch (InvalidUserCredentialsException e){
+            logger.error("User cred invalid, weird");
+        }
     }
+
 
     @Override
     public SubForumI createSubForum(String name) throws SubForumAlreadyExistException {
@@ -39,7 +51,7 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException {
+    public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException {
         // Protective Programing
         if (userName.equals("") || userName == null || password.equals("") || password == null || eMail.equals("") || eMail == null)
             throw new InvalidUserCredentialsException();
@@ -49,6 +61,7 @@ public class Forum implements ForumI {
         // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
         new_user.addForum(this);  // Gabi said this will be the logic
+        sendAuthenticationEMail(new_user);
         return new_user;
     }
 
@@ -78,14 +91,13 @@ public class Forum implements ForumI {
 
     @Override
     public UserI guestLogin() {
-        // TODO initialize guest
-        return guest;
+        return guest; // guest was intialized on start
     }
 
     @Override
     public void logout(UserI user) {
-        //TODO what should happen?
-
+        //what should happen?  --> nothing.
+        return;
     }
 
     @Override

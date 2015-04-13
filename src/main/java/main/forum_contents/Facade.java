@@ -15,6 +15,7 @@ public class Facade implements FacadeI {
 	private Facade(){}
 
 	private Collection<ForumI> forums = new ArrayList<>();
+
 	@Override
 	public Collection<ForumI> getForumList() {
 		return forums;
