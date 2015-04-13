@@ -26,16 +26,8 @@ public class Forum implements ForumI {
 
     public Forum(ForumPolicyI policy) {
         this.policy = policy;
-        try {
-            this.guest = register("Guest user", "no_pass", "nomail@nomail.com");
-            this.guest.addForum(this);
-        }
-        catch (UserAlreadyExistsException e){
-            logger.error("User already exists on intialize, weird");
-        }
-        catch (InvalidUserCredentialsException e){
-            logger.error("User cred invalid, weird");
-        }
+        this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
+        this.guest.addForum(this);
     }
 
 
