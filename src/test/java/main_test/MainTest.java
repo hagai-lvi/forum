@@ -91,7 +91,7 @@ public class MainTest {
 	 */
 	@Test
 	public void Test_initilize(){
-		assert(_facade.InitilizeSystem());
+		assertTrue(_facade.InitilizeSystem());
 	}
 
 	/**
@@ -99,9 +99,9 @@ public class MainTest {
 	 */
 	@Test
 	public void Test_CreateForum(){
-		/*
+
 		ForumI newForum;
-		ForumPolicyI newPolicy = new ForumPolicy_R1(newForum, 2, "[a-z]*[!@#][a-z]*");
+		ForumPolicyI newPolicy = new ForumPolicy_R1(2, "[a-z]*[!@#][a-z]*");
 		newForum = new Forum(newPolicy);
 		int numOfForums = _forumCollection.size();
 
@@ -111,11 +111,18 @@ public class MainTest {
 		assertEquals(numOfForums + 1, newCollection.size());
 
 
-		assert (newCollection.contains(newForum));*/
+		assert (newCollection.contains(newForum));
 	}
 
 	@Test
+	/**
+	 * target: set new policy for forum
+	 */
 	public void Test_SetPolicies(){
+		ForumPolicyI newPolicy = new ForumPolicy_R1(2, "[a-z]*[!@#\\d]*[\\d]*");
+		ForumI forum = _forumCollection.iterator().next();
+		forum.setPolicy(newPolicy);
+
 
 	}
 
@@ -130,7 +137,7 @@ public class MainTest {
 
 		Collection<SubForumPermissionI> subForumPermissionsCollection = guest.getSubForumPermission();
 
-		MessageI msg = new ForumMessage();
+		MessageI msg = new ForumMessage(guest,"I TRY TO CREATE MESSAGE NANA");
 		SubForumPermissionI subForumPermission = subForumPermissionsCollection.iterator().next();
 
 		//try create thread
@@ -148,7 +155,7 @@ public class MainTest {
 		try{
 			//this test will not be include yet
 			//subForumPermission.replyToMessage(msg,msg);
-			MessageI reply = new ForumMessage();
+			MessageI reply = new ForumMessage(guest,"I TRY TO CREATE REPLY NANA");
 			subForumPermission.replyToMessage(msg, reply);
 			fail("a guest cannot reply to message");
 		//} catch (PermissionDenied e){
@@ -287,7 +294,7 @@ public class MainTest {
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
 		int n = subForumPermission.getThreads().length;
-		subForumPermission.createThread(new ForumMessage());
+		subForumPermission.createThread(new ForumMessage(user, "I created THREADDDDDD!@!@!@!@"));
 		assertEquals(n+1,subForumPermission.getThreads().length);
 	}
 
@@ -301,7 +308,7 @@ public class MainTest {
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
 		ThreadI firstThread = subForumPermission.getThreads()[0];
-		firstThread.getRootMessage().reply(new ForumMessage());
+		firstThread.getRootMessage().reply(new ForumMessage(user, "I post Message"));
 	}
 
 	@Test
@@ -342,7 +349,7 @@ public class MainTest {
 		UserI userA = userItr.next();
 		UserI userB = userItr.next();
 
-		MessageI msg = new ForumMessage();
+		MessageI msg = new ForumMessage(userA,"userA message");
 		userA.addMessage(msg);
 		try {
 			userB.removeMessage(msg);
