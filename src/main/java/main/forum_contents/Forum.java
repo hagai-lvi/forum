@@ -56,7 +56,7 @@ public class Forum implements ForumI {
         // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
         new_user.addForum(this);  // Gabi said this will be the logic
-        //sendAuthenticationEMail(new_user);
+        //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);
         return new_user;
     }
@@ -72,6 +72,18 @@ public class Forum implements ForumI {
         catch(Exception e){
             System.out.println("Had error "+e.toString());
         }
+    }
+
+    public boolean enterUserAuthenticationString(User user, String auth_string){
+        try{
+            if (user.getUserAuthString().equals(auth_string)){
+                return true;
+            }
+        }
+        catch (Throwable e){
+            return false;
+        }
+        return false;
     }
 
     @Override
