@@ -50,6 +50,9 @@ public class Forum implements ForumI {
         if (_users.containsKey(userName)){
             throw new UserAlreadyExistsException(userName);
         }
+        if (!policy.isValidPassword(password)){
+            throw new InvalidUserCredentialsException();
+        }
         // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
         new_user.addForum(this);  // Gabi said this will be the logic
