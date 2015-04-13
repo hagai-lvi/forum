@@ -16,6 +16,8 @@ public class ForumMessage implements MessageI {
 	String message_text;
 	Date writing_time;
 	ArrayList<MessageI> replays;
+	boolean isDeleted = false;
+
 
 	public ForumMessage(UserI user, String message_text){
 		this.writing_user = user;
@@ -36,6 +38,9 @@ public class ForumMessage implements MessageI {
 	}
 
 	public String printSubTree(int depth){
+		if (isDeleted){
+			return "";
+		}
 		String ans = "";
 		for (int i = 0; i < depth ; i++){
 			ans += "	";
@@ -45,5 +50,9 @@ public class ForumMessage implements MessageI {
 			ans += "\n " + m.printSubTree(depth+1);
 		}
 		return ans;
+	}
+
+	public void removeMessage(){
+		this.isDeleted = true;
 	}
 }
