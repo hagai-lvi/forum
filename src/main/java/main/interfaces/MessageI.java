@@ -16,4 +16,6 @@ public interface MessageI {
     void reply(MessageI reply);
 
     String printSubTree(int detph);
+
+    void removeMessage();
 }
