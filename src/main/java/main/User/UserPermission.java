@@ -45,6 +45,21 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
     }
 
+    @Override
+    public void setAdmin(UserI admin, ForumI forum) {
+
+    }
+
+    @Override
+    public void setPolicy(ForumI forum, ForumPolicyI policy) {
+
+    }
+
+    @Override
+    public String viewStatistics(ForumI forum) {
+        return null;
+    }
+
     /**
      * create a thread in the subforum
      */
@@ -81,5 +96,20 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     @Override
     public ThreadI[] getThreads() {
         return new ThreadI[0];
+    }
+
+    @Override
+    public void setModerator(SubForumI subForum, UserI moderator) {
+
+    }
+
+    @Override
+    public void banModerator(UserI moderatorToBan, long time) {
+
+    }
+
+    @Override
+    public void sendFriendRequest(UserI newFriend) {
+
     }
 }
