@@ -4,6 +4,8 @@ import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
 
+import java.util.Collection;
+
 /**
  * Created by hagai_lvi on 4/6/15.
  */
@@ -31,6 +33,12 @@ public interface SubForumI {
 	 */
 	void deleteMessage(MessageI message, UserI requesting_user);
 
-	public void setModerator(UserI mod);
+	void setModerator(UserI mod);
+
+	/**
+	 * Return the threads in this subforum
+	 */
+	Collection<ThreadI> getThreads();
+
 
 }

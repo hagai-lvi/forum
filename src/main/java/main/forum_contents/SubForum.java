@@ -6,7 +6,7 @@ import main.exceptions.ModeratorDoesNotExistsException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 
-import java.security.Policy;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -77,7 +77,13 @@ public class SubForum implements SubForumI {
         }
     }
 
+    @Override
     public String getName(){
         return this._name;
+    }
+
+    @Override
+    public Collection<ThreadI> getThreads(){
+        return _threads;
     }
 }

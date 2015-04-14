@@ -145,7 +145,7 @@ public class MainTest {
 			subForumPermission.replyToMessage(msg, reply);
 			fail("a guest cannot reply to message");
 		} catch (PermissionDeniedException e) {
-			fail("User could not reply to message");
+			//expected exception
 		} catch (Exception e){
 			fail("a guest cannot reply to message");
 		}
@@ -154,20 +154,18 @@ public class MainTest {
 		try{
 			subForumPermission.reportModerator("Moshe","He is so bad Moderator",guest);
 			fail("a guest cannot create a report on moderator");
-		//} catch (PermissionDenied e){
-
-		} catch (Exception e){
-			fail("a guest cannot create a report on moderator");
-		} catch (ModeratorDoesNotExistsException e) {
+		} catch (ModeratorDoesNotExistsException e) {//TODO need to define the expected result
+			//expected exception
+		} catch (PermissionDeniedException e) {
 			//expected exception
 		}
 
 		//try view threads
-		ThreadI[] threads = new ThreadI[0];
+		ThreadI[] threads = null;
 		try {
 			threads = subForumPermission.getThreads();
 		} catch (PermissionDeniedException e) {
-			e.printStackTrace();
+			fail("expected to have permission");
 		}
 		MessageI rootMessage = threads[0].getRootMessage();
 

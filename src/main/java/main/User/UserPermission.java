@@ -157,7 +157,7 @@ import org.apache.log4j.Logger;
 
     @Override
     public ThreadI[] getThreads() {
-        return new ThreadI[0];
+        return subforum.getThreads().toArray(new ThreadI[0]);
     }
 
     @Override
