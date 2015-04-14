@@ -2,7 +2,7 @@ package main_test;
 
 import main.User.User;
 import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.PermissionDeniedException;
+import main.exceptions.PermissionDenied;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
 import main.forum_contents.Facade;
@@ -139,8 +139,6 @@ public class MainTest {
 		ForumPolicyI newPolicy = new ForumPolicy_R1(2, "[a-z]*[!@#\\d]*[\\d]*");
 		ForumI forum = _forumCollection.iterator().next();
 		forum.setPolicy(newPolicy);
-
-
 	}
 
 	@Test
@@ -172,11 +170,11 @@ public class MainTest {
 		try{
 			//this test will not be include yet
 			//subForumPermission.replyToMessage(msg,msg);
-			MessageI reply = new ForumMessage(null, guest, "I TRY TO CREATE REPLY NANA");
+			MessageI reply = new ForumMessage(guest,"I TRY TO CREATE REPLY NANA");
 			subForumPermission.replyToMessage(msg, reply);
 			fail("a guest cannot reply to message");
-		} catch (PermissionDeniedException e) {
-			fail("User could not reply to message");
+		//} catch (PermissionDenied e){
+
 		} catch (Exception e){
 			fail("a guest cannot reply to message");
 		}
@@ -215,7 +213,7 @@ public class MainTest {
 	public void Test_Register() {
 
 		ForumI forum = _forumCollection.iterator().next();
-		UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com");
+		UserI user =new User("gilgilmor", "morgil12345", "gilmor89@gmail.com");
 		try {
 			user = forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
 			forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
@@ -226,13 +224,15 @@ public class MainTest {
 			fail("wrong exception, register the same user");
 		}finally {
 			Collection<UserI> users = forum.getUserList();
-			assertTrue(users.contains(user));
-			System.out.println("Asserted : " + users.contains(user));
+			assert (users.contains(user));
 		}
+
 	}
 
 	/**
-	 *  targer: check login usecase, try login to non exist user
+	 *  targer: check login usecase,
+	 *  test that the login return the same user that register
+	 *  try login to non exist user
 	 */
 	@Test
 	public void Test_Login(){
@@ -265,13 +265,12 @@ public class MainTest {
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user;
 		try {
-			user = forum.register("some_new_user", "morgil12345", "gilmor89@gmail.com");
-			UserI sameUser = forum.login("some_new_user", "morgil12345");
+			user = forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
+			UserI sameUser = forum.login("gilgilmor", "morgil12345");
 			forum.logout(sameUser);
 		}catch (Throwable e) {
 			fail("fail to logout");
 		}
-		assertTrue(true);
 
 	}
 
@@ -341,38 +340,6 @@ public class MainTest {
 	}
 
 
-	/**
-	@Test
-	 * target: test remove message usecase, check that user can remove only
-	 * 			his messages.
-
-	 public void Test_RemoveMessage(){
-	 ForumI forum = _forumCollection.iterator().next();
-	 Iterator<UserI> userItr = forum.getUserList().iterator();
-	 UserI userA = userItr.next();
-	 UserI userB = userItr.next();
-
-	 MessageI msg = new ForumMessage(userA,"userA message");
-	 userA.addMessage(msg);
-	 try {
-	 userB.removeMessage(msg);
-	 fail("user should not bre able to remove other user's message");
-	 }catch (PermissionDenied e){
-	 assertTrue(true);
-	 }
-	 }
-	 */
-	@Test
-	/**
-	 * target: test cancel forum usecase
-	 */
-	public void Test_CancelForum(){
-		ForumI forum = _forumCollection.iterator().next();
-		UserI userA = forum.getUserList().iterator().next();
-
-
-	}
-
 	@Test
 	/**
 	 * target: check use case send report on moderator
@@ -388,4 +355,49 @@ public class MainTest {
 
 	}
 
+	//@Test
+	/**
+	 * target: test remove message usecase, check that user can remove only
+	 * 			his messages.
+	 *//*
+	public void Test_RemoveMessage(){
+		ForumI forum = _forumCollection.iterator().next();
+		Iterator<UserI> userItr = forum.getUserList().iterator();
+		UserI userA = userItr.next();
+		UserI userB = userItr.next();
+
+		MessageI msg = new ForumMessage(userA,"userA message");
+		userA.addMessage(msg);
+		try {
+			userB.removeMessage(msg);
+			fail("user should not bre able to remove other user's message");
+		}catch (PermissionDenied e){
+			assertTrue(true);
+		}
+	}*/
+
+	@Test
+	/**
+	 * target: test cancel forum usecase
+	 */
+	public void Test_CancelForum(){
+		ForumI forum = _forumCollection.iterator().next();
+		UserI userA = forum.getUserList().iterator().next();
+
+
+	}
+
+
+	//Intergation Test
+
+	@Test
+	/**
+	 * target: test cancel forum usecase
+	 */
+	public void IntegrationTest_() {
+
+	}
 }
+
+
+
