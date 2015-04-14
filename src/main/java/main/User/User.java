@@ -52,7 +52,8 @@ public class User implements UserI {
          Get the list of all of the subforums of this user
      */
     public Collection<SubForumPermissionI> getSubForumPermission() {
-        return null;
+
+        return this.subForumsPermissions;
     }
 
     public String getUsername(){
