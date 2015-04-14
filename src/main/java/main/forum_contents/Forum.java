@@ -23,12 +23,17 @@ public class Forum implements ForumI {
     private HashMap<String, SubForumI> _subForums = new HashMap<>();
     private HashMap<String, UserI> _users = new HashMap<>();
     private User guest = null;
+    private User admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
 
     public Forum(ForumPolicyI policy) {
         this.policy = policy;
         this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
+        this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
         this.guest.addForum(this);
+        this.admin.addForum(this);
+        this._users.put("Guest", this.guest);
+        this._users.put("Admin", this.admin);
     }
 
     @Override
@@ -75,7 +80,7 @@ public class Forum implements ForumI {
             GmailSender.sendFromGMail(new String[]{user.getEmail()}, topic, body);
         }
         catch(Exception e){
-            System.out.println("Had error "+e.toString());
+            logger.error("Problem sending auth mail");
         }
     }
 
@@ -87,9 +92,14 @@ public class Forum implements ForumI {
             }
         }
         catch (Throwable e){
+            logger.error("Problem authenticating user - gave null string for example");
             return false;
         }
         return false;
+    }
+
+    public UserI get_admin_user(){
+        return this.admin;
     }
 
     @Override
