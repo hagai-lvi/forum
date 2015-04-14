@@ -21,6 +21,8 @@ public interface ForumI {
 	 */
 	SubForumI createSubForum(String name) throws SubForumAlreadyExistException;
 
+
+	void deleteSubForum(SubForumI todelete);
 	/**
 	 * Register a user to this forum
 	 */
