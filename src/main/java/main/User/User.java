@@ -145,6 +145,36 @@ public class User implements UserI {
         return new ThreadI[0];
     }
 
+    @Override
+    public void setAdmin(UserI admin, ForumI forum) {
+
+    }
+
+    @Override
+    public void setPolicy(ForumI forum, ForumPolicyI policy) {
+
+    }
+
+    @Override
+    public String viewStatistics(ForumI forum) {
+        return null;
+    }
+
+    @Override
+    public void setModerator(SubForumI subForum, UserI moderator) {
+
+    }
+
+    @Override
+    public void banModerator(UserI moderatorToBan, long time) {
+
+    }
+
+    @Override
+    public void sendFriendRequest(UserI newFriend) {
+
+    }
+
     public Collection<SubForumPermissionI> getSubForumsPermissions() {
         return subForumsPermissions;
     }

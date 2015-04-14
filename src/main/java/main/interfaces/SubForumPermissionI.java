@@ -30,4 +30,19 @@ public interface SubForumPermissionI {
 	 */
 
 	ThreadI[] getThreads();
+
+	/**
+	 * Set moderator for subforum
+	 */
+	void setModerator(SubForumI subForum, UserI moderator);
+
+	/**
+	 * Ban moderator
+	 */
+	void banModerator(UserI moderatorToBan, long time);
+
+	/**
+	 * Send friend request to another user
+	 */
+	void sendFriendRequest(UserI newFriend);
 }

@@ -43,6 +43,7 @@ public interface UserI {
 	 * view subForums
 	 */
 	SubForumPermissionI[] viewSubForums();
+
 	/**
 	 * Create a subforum in this forum
 	 */

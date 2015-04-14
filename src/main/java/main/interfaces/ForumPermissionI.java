@@ -20,4 +20,18 @@ public interface ForumPermissionI {
 	 */
 	void deleteSubForum(SubForumI toDelete);
 
+	/**
+	 * Set new forum administrator
+	 */
+	void setAdmin(UserI admin, ForumI forum);
+
+	/**
+	 * Set policy for forum
+	 */
+	void setPolicy(ForumI forum, ForumPolicyI policy);
+
+	/**
+	 * Get statistics
+	 */
+	String viewStatistics(ForumI forum);
 }
