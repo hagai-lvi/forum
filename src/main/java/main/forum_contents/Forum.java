@@ -1,14 +1,10 @@
 package main.forum_contents;
 
 import main.User.User;
+import main.User.UserPermission;
 import main.Utils.GmailSender;
-import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.UserAlreadyExistsException;
-import main.interfaces.ForumI;
-import main.interfaces.ForumPolicyI;
-import main.interfaces.SubForumI;
-import main.interfaces.UserI;
+import main.exceptions.*;
+import main.interfaces.*;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -19,6 +15,7 @@ import java.util.HashMap;
  */
 public class Forum implements ForumI {
 
+    private String forum_name;
     private ForumPolicyI policy;
     private HashMap<String, SubForumI> _subForums = new HashMap<>();
     private HashMap<String, UserI> _users = new HashMap<>();
@@ -26,16 +23,33 @@ public class Forum implements ForumI {
     private User admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
 
-    public Forum(ForumPolicyI policy) {
+    public Forum(ForumPolicyI policy){
         this.policy = policy;
         this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
         this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
-        this.guest.addForum(this);
-        this.admin.addForum(this);
+        add_all_subforums_to_user(guest, "GUEST");
+        add_all_subforums_to_user(admin, "ADMINISTRATOR");
         this._users.put("Guest", this.guest);
         this._users.put("Admin", this.admin);
+        this.forum_name = "Default Forum Name";
     }
 
+
+    public Forum(String name, ForumPolicyI policy){
+        this.policy = policy;
+        this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
+        this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
+        add_all_subforums_to_user(guest, "GUEST");
+        add_all_subforums_to_user(admin, "ADMINISTRATOR");
+        this._users.put("Guest", this.guest);
+        this._users.put("Admin", this.admin);
+        this.forum_name = name;
+    }
+
+
+    public String getName(){
+        return this.forum_name;
+    }
     @Override
     public HashMap<String, SubForumI> get_subForums(){ return _subForums;}
 
@@ -48,7 +62,23 @@ public class Forum implements ForumI {
 
         SubForumI subForum = new SubForum(name,  this.policy.getSubforumPolicy());
         _subForums.put(name, subForum);
+        for (UserI user: _users.values()){
+            user.addSubForumPermission(new UserPermission("REGULAR", this, subForum));
+        }
         return subForum;
+    }
+
+    public void deleteSubForum(SubForumI subforum) throws SubForumDoesNotExsitsException {
+        if (!_subForums.containsKey(subforum.getName())){
+            throw new SubForumDoesNotExsitsException();
+        }
+        _subForums.remove(subforum.getName());
+    }
+
+    private void add_all_subforums_to_user(UserI user, String perm){
+        for (SubForumI sub: _subForums.values()){
+            user.addSubForumPermission(new UserPermission(perm, this, sub));
+        }
     }
 
     @Override
@@ -65,7 +95,7 @@ public class Forum implements ForumI {
         }
         // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
-        new_user.addForum(this);  // Gabi said this will be the logic
+        add_all_subforums_to_user(new_user, "REGULAR");
         //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);
         return new_user;

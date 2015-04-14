@@ -2,6 +2,7 @@ package main.interfaces;
 
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.SubForumDoesNotExsitsException;
 import main.exceptions.UserAlreadyExistsException;
 import main.forum_contents.SubForum;
 
@@ -21,6 +22,9 @@ public interface ForumI {
 	 */
 	SubForumI createSubForum(String name) throws SubForumAlreadyExistException;
 
+	public String getName();
+
+	void deleteSubForum(SubForumI todelete) throws SubForumDoesNotExsitsException;
 	/**
 	 * Register a user to this forum
 	 */

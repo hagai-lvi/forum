@@ -33,7 +33,7 @@ public class ForumMessage implements MessageI {
 
 	public void editText(UserI user, String new_text) throws PermissionDeniedException {
 		if (user != this.writing_user){
-			throw new PermissionDeniedException("User can't edit message", user);
+			throw new PermissionDeniedException("User can't edit message");
 		}
 		this.message_text = new_text;
 	}

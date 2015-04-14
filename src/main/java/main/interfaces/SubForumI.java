@@ -13,7 +13,7 @@ public interface SubForumI {
 	 */
 	void creatThread(MessageI message) throws DoesNotComplyWithPolicyException;
 
-	String get_name();
+	String getName();
 
 	/**
 	 * reply to a specific messgae

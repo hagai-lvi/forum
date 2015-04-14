@@ -1,8 +1,7 @@
 package main.User;
 
-import com.sun.xml.internal.bind.v2.TODO;
 import main.exceptions.PermissionDeniedException;
-import main.forum_contents.SubForum;
+import main.exceptions.SubForumAlreadyExistException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 
@@ -11,13 +10,15 @@ import org.apache.log4j.Logger;
  */
 public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
-    private UserI currentUser;
     private String permission;
+    private ForumI forum;
+    private SubForumI subforum;
     private static Logger logger = Logger.getLogger(UserPermission.class.getName());
 
-    public UserPermission(UserI currentUser, String permission){
-        logger.info("Creating new permissions for - " + currentUser.getUsername());
-        this.currentUser = currentUser;
+    public UserPermission(String permission, ForumI forum, SubForumI subforum){
+        logger.info("Creating new permissions for - " + permission);
+        this.forum = forum;
+        this.subforum = subforum;
         this.permission = permission;
     }
 
@@ -27,15 +28,16 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     }
 
     /**
-     * Create a subforum in this forum
+     * Create a subforum in this forum.
      */
-    public SubForumI createSubForum(String name) throws PermissionDenied{
+    public void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
         if(canCreateSubForum()) {
-            logger.info("The user - " + currentUser.getUsername() + " has permission to create Sub-Forum");
-            return new SubForum(name);
+            logger.info(permission + " has permission to create Sub-Forum");
+            forum.createSubForum(name);
+        } else {
+            logger.error(permission + " has no permission to create Sub-Forum!");
+            throw new PermissionDeniedException("User has no permission to create sub forum");
         }
-        logger.error("The user - " + currentUser.getUsername() + " has no permission to create Sub-Forum!");
-        throw new PermissionDenied("User has no permission to create sub forum", currentUser);
     }
 
     private boolean canCreateSubForum(){
@@ -44,13 +46,15 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     /**
      * Delete a subForum from this forum
      */
-    public void deleteSubForum(SubForumI toDelete) throws PermissionDenied {
+    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException {
         if(canDeleteSunForum()) {
-            logger.info("The user - " + currentUser.getUsername() + " has permission to delete Sub-Forum");
-            // TODO
+            logger.info(permission + " has permission to delete Sub-Forum");
+            deleteSubForum(toDelete);
         }
-        logger.error("The user - " + currentUser.getUsername() + " has no permission to delete Sub-Forum!");
-        throw new PermissionDenied("User has no permission to delete sub forum", currentUser);
+        else {
+            logger.error(permission + " has no permission to delete Sub-Forum!");
+            throw new PermissionDeniedException("User has no permission to delete sub forum");
+        }
     }
 
     private boolean canDeleteSunForum() {
@@ -74,13 +78,6 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
     @Override
     public void addForum(ForumI forum) {
-
-    }
-
-    /**
-     * create a thread in the subforum
-     */
-    public void creatThread(MessageI message){
 
     }
 
@@ -128,5 +125,10 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     @Override
     public void sendFriendRequest(UserI newFriend) {
 
+    }
+
+    @Override
+    public SubForumI getSubForum() {
+        return subforum;
     }
 }
