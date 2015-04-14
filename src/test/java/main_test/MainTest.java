@@ -2,7 +2,7 @@ package main_test;
 
 import main.User.User;
 import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.PermissionDenied;
+import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
 import main.forum_contents.Facade;
@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import org.junit.*;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
@@ -173,11 +172,11 @@ public class MainTest {
 		try{
 			//this test will not be include yet
 			//subForumPermission.replyToMessage(msg,msg);
-			MessageI reply = new ForumMessage(guest,"I TRY TO CREATE REPLY NANA");
+			MessageI reply = new ForumMessage(null, guest, "I TRY TO CREATE REPLY NANA");
 			subForumPermission.replyToMessage(msg, reply);
 			fail("a guest cannot reply to message");
-		//} catch (PermissionDenied e){
-
+		} catch (PermissionDeniedException e) {
+			fail("User could not reply to message");
 		} catch (Exception e){
 			fail("a guest cannot reply to message");
 		}

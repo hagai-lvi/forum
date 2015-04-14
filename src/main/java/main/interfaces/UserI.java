@@ -1,6 +1,6 @@
 package main.interfaces;
 
-import main.exceptions.PermissionDenied;
+import main.exceptions.PermissionDeniedException;
 
 import java.util.Collection;
 
@@ -47,7 +47,7 @@ public interface UserI {
 	/**
 	 * Create a subforum in this forum
 	 */
-	SubForumI createSubForum(String name) throws PermissionDenied;
+	SubForumI createSubForum(String name) throws PermissionDeniedException;
 
 	/**
 	 * Delete a subForum from this forum
