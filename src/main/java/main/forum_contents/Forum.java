@@ -46,7 +46,7 @@ public class Forum implements ForumI {
             throw new SubForumAlreadyExistException(name,this);
         }
 
-        SubForumI subForum = new SubForum(name, this.policy);
+        SubForumI subForum = new SubForum(name,  this.policy.getSubforumPolicy());
         _subForums.put(name, subForum);
         return subForum;
     }

@@ -1,6 +1,7 @@
 package main.interfaces;
 
 import main.User.User;
+import main.forum_contents.SubForum;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -13,6 +14,8 @@ public interface ForumPolicyI {
      */
 	boolean isValidPassword(String password);
 
+
+    SubForumPolicyI getSubforumPolicy();
     /**
      * Each member in this forum must have a password that matches the given regex
      */

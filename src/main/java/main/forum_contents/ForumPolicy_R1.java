@@ -2,6 +2,8 @@ package main.forum_contents;
 
 import main.User.User;
 import main.interfaces.ForumPolicyI;
+import main.interfaces.MessageI;
+import main.interfaces.SubForumPolicyI;
 import org.apache.log4j.Logger;
 
 import java.util.Calendar;
@@ -10,7 +12,7 @@ import java.util.GregorianCalendar;
 /**
  * Created by victor on 4/11/2015.
  */
-public class ForumPolicy_R1 implements ForumPolicyI {
+public class ForumPolicy_R1 implements ForumPolicyI, SubForumPolicyI{
 
     private Forum forum;
     private static Logger logger = Logger.getLogger(ForumPolicy_R1.class.getName());
@@ -30,6 +32,11 @@ public class ForumPolicy_R1 implements ForumPolicyI {
     @java.lang.Override
     public boolean isValidPassword(String password) {
         return password.matches(passwordRegex);
+    }
+
+    @Override
+    public SubForumPolicyI getSubforumPolicy() {
+        return this;
     }
 
     public int getMaxModerators() {
@@ -70,5 +77,10 @@ public class ForumPolicy_R1 implements ForumPolicyI {
         long userMonth = moderator.getSignUpDate().get(Calendar.MONTH);
         long seniority = (currYear - userYear) * 12 + currMonth - userMonth;
         return seniority > SILVER_USER_SENIORITY;
+    }
+
+    @Override
+    public boolean isValidMessage(MessageI message) {
+        return true;
     }
 }
