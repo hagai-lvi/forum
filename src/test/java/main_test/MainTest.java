@@ -340,6 +340,38 @@ public class MainTest {
 	}
 
 
+	/**
+	@Test
+	 * target: test remove message usecase, check that user can remove only
+	 * 			his messages.
+
+	 public void Test_RemoveMessage(){
+	 ForumI forum = _forumCollection.iterator().next();
+	 Iterator<UserI> userItr = forum.getUserList().iterator();
+	 UserI userA = userItr.next();
+	 UserI userB = userItr.next();
+
+	 MessageI msg = new ForumMessage(userA,"userA message");
+	 userA.addMessage(msg);
+	 try {
+	 userB.removeMessage(msg);
+	 fail("user should not bre able to remove other user's message");
+	 }catch (PermissionDenied e){
+	 assertTrue(true);
+	 }
+	 }
+	 */
+	@Test
+	/**
+	 * target: test cancel forum usecase
+	 */
+	public void Test_CancelForum(){
+		ForumI forum = _forumCollection.iterator().next();
+		UserI userA = forum.getUserList().iterator().next();
+
+
+	}
+
 	@Test
 	/**
 	 * target: check use case send report on moderator
@@ -352,38 +384,6 @@ public class MainTest {
 
 		//add check to see if moshe his a moderator.
 		subForumPermission.reportModerator("Moshe","he is not behave well!!");
-
-	}
-
-	@Test
-	/**
-	 * target: test remove message usecase, check that user can remove only
-	 * 			his messages.
-	 */
-	public void Test_RemoveMessage(){
-		ForumI forum = _forumCollection.iterator().next();
-		Iterator<UserI> userItr = forum.getUserList().iterator();
-		UserI userA = userItr.next();
-		UserI userB = userItr.next();
-
-		MessageI msg = new ForumMessage(userA,"userA message");
-		userA.addMessage(msg);
-		try {
-			userB.removeMessage(msg);
-			fail("user should not bre able to remove other user's message");
-		}catch (PermissionDenied e){
-			assertTrue(true);
-		}
-	}
-
-	@Test
-	/**
-	 * target: test cancel forum usecase
-	 */
-	public void Test_CancelForum(){
-		ForumI forum = _forumCollection.iterator().next();
-		UserI userA = forum.getUserList().iterator().next();
-
 
 	}
 

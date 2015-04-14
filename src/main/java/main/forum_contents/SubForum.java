@@ -56,4 +56,8 @@ public class SubForum implements SubForumI {
             message.removeMessage();
         }
     }
+
+    public String get_name(){
+        return this._name;
+    }
 }

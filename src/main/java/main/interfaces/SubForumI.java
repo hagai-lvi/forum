@@ -12,6 +12,8 @@ public interface SubForumI {
 	 */
 	void creatThread(MessageI message);
 
+	String get_name();
+
 	/**
 	 * reply to a specific messgae
 	 */

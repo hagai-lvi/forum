@@ -3,14 +3,18 @@ package main.interfaces;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
+import main.forum_contents.SubForum;
 
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * Created by hagai_lvi on 4/6/15.
  */
 public interface ForumI {
 
+
+	HashMap<String, SubForumI> get_subForums();
 
 	/**
 	 * Create a subforum in this forum

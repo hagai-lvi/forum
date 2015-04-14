@@ -31,6 +31,9 @@ public class Forum implements ForumI {
         this.guest.addForum(this);
     }
 
+    @Override
+    public HashMap<String, SubForumI> get_subForums(){ return _subForums;}
+
 
     @Override
     public SubForumI createSubForum(String name) throws SubForumAlreadyExistException {
