@@ -9,10 +9,10 @@
     <version>1.0-SNAPSHOT</version>
 
     <dependencies>
-  		<dependency>
-      			<groupId>org.passay</groupId>
-     			 <artifactId>passay</artifactId>
-      			<version>1.0</version>
+        <dependency>
+            <groupId>org.passay</groupId>
+            <artifactId>passay</artifactId>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -52,8 +52,10 @@
                     <artifactId>maven-surefire-plugin</artifactId>
                     <version>2.17</version>
                     <configuration>
+                        <forkCount>5</forkCount>
+                        <reuseForks>true</reuseForks>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                        <reportsDirectory>../shippable/testresults</reportsDirectory>
+                        <reportsDirectory>${env.CIRCLE_TEST_REPORTS}</reportsDirectory>
                     </configuration>
                     <dependencies>
                         <dependency>
