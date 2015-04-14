@@ -1,7 +1,7 @@
 package main.User;
 
 import main.Utils.SecureString;
-import main.exceptions.PermissionDenied;
+import main.exceptions.PermissionDeniedException;
 import main.interfaces.*;
 
 import java.util.GregorianCalendar;
@@ -117,7 +117,7 @@ public class User implements UserI {
     }
 
     @Override
-    public SubForumI createSubForum(String name) throws PermissionDenied {
+    public SubForumI createSubForum(String name) throws PermissionDeniedException {
         return null;
     }
 

@@ -1,6 +1,7 @@
 package main.forum_contents;
 
 import main.exceptions.IncorrectPermissionsException;
+import main.exceptions.PermissionDeniedException;
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
 
@@ -30,9 +31,9 @@ public class ForumMessage implements MessageI {
 		replays = new ArrayList<MessageI>();
 	}
 
-	public void editText(UserI user, String new_text) throws IncorrectPermissionsException {
+	public void editText(UserI user, String new_text) throws PermissionDeniedException {
 		if (user != this.writing_user){
-			throw new IncorrectPermissionsException();
+			throw new PermissionDeniedException("User can't edit message", user);
 		}
 		this.message_text = new_text;
 	}
