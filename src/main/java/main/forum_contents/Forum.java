@@ -61,7 +61,7 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException {
+    public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException {
         // Protective Programing
         if (userName.equals("") || userName == null || password.equals("") || password == null || eMail.equals("") || eMail == null)
             throw new InvalidUserCredentialsException();
@@ -74,8 +74,7 @@ public class Forum implements ForumI {
         }
         // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
-        add_all_subforums_to_user(new_user, "regular");
-        new_user.addForum(this);  // Gabi said this will be the logic
+        add_all_subforums_to_user(new_user, "REGULAR");
         //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);
         return new_user;
