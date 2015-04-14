@@ -2,6 +2,7 @@ package main.forum_contents;
 
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
+import main.exceptions.ModeratorDoesNotExistsException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 
@@ -53,9 +54,17 @@ public class SubForum implements SubForumI {
         original.reply(reply);
     }
 
-    @Override
-    public void reportModerator(String moderatorUsername, String reportMessage, UserI reporter) {
+    public void setModerator(UserI mod){
+        _moderators.put(mod.getUsername(), mod);
+    }
 
+
+    @Override
+    public void reportModerator(String moderatorUsername, String reportMessage, UserI reporter) throws ModeratorDoesNotExistsException {
+        if (!_moderators.containsKey(moderatorUsername)){
+            throw new ModeratorDoesNotExistsException();
+        }
+        // TODO: send to in-charge forum admin
     }
 
     @Override
