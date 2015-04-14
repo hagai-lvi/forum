@@ -1,5 +1,6 @@
 package main.User;
 
+import com.sun.xml.internal.bind.v2.TODO;
 import main.exceptions.PermissionDeniedException;
 import main.forum_contents.SubForum;
 import main.interfaces.*;
@@ -28,13 +29,13 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     /**
      * Create a subforum in this forum
      */
-    public SubForumI createSubForum(String name) throws PermissionDeniedException {
+    public SubForumI createSubForum(String name) throws PermissionDenied{
         if(canCreateSubForum()) {
             logger.info("The user - " + currentUser.getUsername() + " has permission to create Sub-Forum");
             return new SubForum(name);
         }
         logger.error("The user - " + currentUser.getUsername() + " has no permission to create Sub-Forum!");
-        throw new PermissionDeniedException("User has no permission to create sub forum", currentUser);
+        throw new PermissionDenied("User has no permission to create sub forum", currentUser);
     }
 
     private boolean canCreateSubForum(){
@@ -43,13 +44,13 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     /**
      * Delete a subForum from this forum
      */
-    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException {
+    public void deleteSubForum(SubForumI toDelete) throws PermissionDenied {
         if(canDeleteSunForum()) {
             logger.info("The user - " + currentUser.getUsername() + " has permission to delete Sub-Forum");
             // TODO
         }
         logger.error("The user - " + currentUser.getUsername() + " has no permission to delete Sub-Forum!");
-        throw new PermissionDeniedException("User has no permission to delete sub forum", currentUser);
+        throw new PermissionDenied("User has no permission to delete sub forum", currentUser);
     }
 
     private boolean canDeleteSunForum() {
@@ -84,7 +85,7 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     }
 
     @Override
-    public void createThread(MessageI message, SubForumI subForum) {
+    public void createThread(MessageI message) {
 
     }
 

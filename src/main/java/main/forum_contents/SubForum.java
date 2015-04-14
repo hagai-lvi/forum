@@ -5,6 +5,7 @@ import main.interfaces.MessageI;
 import main.interfaces.SubForumI;
 import main.interfaces.ThreadI;
 import main.interfaces.UserI;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -20,6 +21,7 @@ public class SubForum implements SubForumI {
     private List<ThreadI> _threads = new LinkedList<>();
     private HashMap<MessageI, ThreadI> _threadByMessage = new HashMap<>();
     private HashMap<String, UserI> _moderators = new HashMap<String, UserI>();
+    private static Logger logger = Logger.getLogger(Forum.class.getName());
 
 
 
@@ -39,6 +41,7 @@ public class SubForum implements SubForumI {
     public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException {
         ThreadI _thread = _threadByMessage.get(original);
         if (_thread == null){
+            logger.warn("User tried to delete already deleted message");
             throw new MessageNotFoundException(original, this);
         }
         original.reply(reply);
