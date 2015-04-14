@@ -15,6 +15,7 @@ import java.util.HashMap;
  */
 public class Forum implements ForumI {
 
+    private String forum_name;
     private ForumPolicyI policy;
     private HashMap<String, SubForumI> _subForums = new HashMap<>();
     private HashMap<String, UserI> _users = new HashMap<>();
@@ -22,7 +23,7 @@ public class Forum implements ForumI {
     private User admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
 
-    public Forum(ForumPolicyI policy){
+    public Forum(String name, ForumPolicyI policy){
         this.policy = policy;
         this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
         this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
@@ -32,6 +33,10 @@ public class Forum implements ForumI {
         this._users.put("Admin", this.admin);
     }
 
+
+    public String get_name(){
+        return this.forum_name;
+    }
     @Override
     public HashMap<String, SubForumI> get_subForums(){ return _subForums;}
 

@@ -47,11 +47,10 @@ public class SubForum implements SubForumI {
         }
         ThreadI _thread = _threadByMessage.get(original);
         if (_thread == null){
-            logger.warn("User tried to delete already deleted message");
+            logger.warn("User tried to reply to already deleted thread");
             throw new MessageNotFoundException(original, this);
         }
         original.reply(reply);
-        _threadByMessage.put(reply, _thread);
     }
 
     @Override
