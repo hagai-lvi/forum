@@ -19,12 +19,63 @@ public interface UserI {
 	 */
 	Collection<SubForumPermissionI> getSubForumPermission();
 
+	/**
+	 * Get username
+	 */
     String getUsername();
 
+	/**
+	 * Get password
+	 */
     String getPassword();
 
+	/**
+	 * Get Mail
+	 */
 	String getEmail();
 
+	/**
+	 * Get authentication string
+	 */
 	String getUserAuthString();
 
+	/**
+	 * view subForums
+	 */
+	SubForumPermissionI[] viewSubForums();
+	/**
+	 * Create a subforum in this forum
+	 */
+	SubForumI createSubForum(String name) throws PermissionDenied;
+
+	/**
+	 * Delete a subForum from this forum
+	 */
+	void deleteSubForum(SubForumI toDelete);
+
+	/**
+	 * create a thread in the subforum
+	 */
+	void createThread(MessageI message);
+
+	/**
+	 * reply to a specific message
+	 */
+	void replyToMessage(MessageI original, MessageI reply);
+
+	/**
+	 * Allows a user to report a moderator
+	 */
+	void reportModerator(String moderatorUsername, String reportMessage);
+
+	/**
+	 * Delete a specific message if the message was create by the user that sent this request
+	 */
+	void deleteMessage(MessageI message);
+
+	/**
+	 * view threads
+	 */
+
+	ThreadI[] getThreads();
 }

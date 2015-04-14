@@ -2,10 +2,7 @@ package main.User;
 
 import main.Utils.SecureString;
 import main.exceptions.PermissionDenied;
-import main.interfaces.ForumI;
-import main.interfaces.MessageI;
-import main.interfaces.SubForumPermissionI;
-import main.interfaces.UserI;
+import main.interfaces.*;
 
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -105,6 +102,46 @@ public class User implements UserI {
 
     public String getUserAuthString(){
         return this.authString;
+    }
+
+    @Override
+    public SubForumPermissionI[] viewSubForums() {
+        return new SubForumPermissionI[0];
+    }
+
+    @Override
+    public SubForumI createSubForum(String name) throws PermissionDenied {
+        return null;
+    }
+
+    @Override
+    public void deleteSubForum(SubForumI toDelete) {
+
+    }
+
+    @Override
+    public void createThread(MessageI message) {
+
+    }
+
+    @Override
+    public void replyToMessage(MessageI original, MessageI reply) {
+
+    }
+
+    @Override
+    public void reportModerator(String moderatorUsername, String reportMessage) {
+
+    }
+
+    @Override
+    public void deleteMessage(MessageI message) {
+
+    }
+
+    @Override
+    public ThreadI[] getThreads() {
+        return new ThreadI[0];
     }
 
     public Collection<SubForumPermissionI> getSubForumsPermissions() {
