@@ -54,6 +54,9 @@ public class SubForum implements SubForumI {
     public void deleteMessage(MessageI message, UserI requesting_user) {
         if (message.getUser() == requesting_user){
             message.removeMessage();
+            if (_threadByMessage.containsKey(message)){
+                _threadByMessage.remove(message);
+            }
         }
     }
 
