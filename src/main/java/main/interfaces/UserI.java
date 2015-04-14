@@ -78,4 +78,37 @@ public interface UserI {
 	 */
 
 	ThreadI[] getThreads();
+
+	/**
+	 * Set new forum administrator
+	 */
+	void setAdmin(UserI admin, ForumI forum);
+
+	/**
+	 * Set policy for forum
+	 */
+	void setPolicy(ForumI forum, ForumPolicyI policy);
+
+	/**
+	 * Get statistics
+	 */
+	String viewStatistics(ForumI forum);
+
+	/**
+	 * Set moderator for subforum
+	 */
+	void setModerator(SubForumI subForum, UserI moderator);
+
+	/**
+	 * Ban moderator
+	 */
+	void banModerator(UserI moderatorToBan, long time);
+
+	/**
+	 * Send friend request to another user
+	 */
+	void sendFriendRequest(UserI newFriend);
+
+
+
 }
