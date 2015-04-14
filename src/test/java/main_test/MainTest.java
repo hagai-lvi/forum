@@ -334,9 +334,9 @@ public class MainTest {
 	 */
 	public void Test_FriendType(){
 		ForumI forum = _forumCollection.iterator().next();
-		int n = forum.getUserTypes().length;
+		int n = forum.getUserTypes().size();
 		forum.addUserType("GoldenX");
-		assertEquals(n + 1, forum.getUserTypes().length);
+		assertEquals(n + 1, forum.getUserTypes().size());
 	}
 
 
