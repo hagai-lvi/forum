@@ -31,7 +31,7 @@ public interface SubForumI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, UserI requesting_user);
+	void deleteMessage(MessageI message, UserI requestingUser);
 
 	void setModerator(UserI mod);
 

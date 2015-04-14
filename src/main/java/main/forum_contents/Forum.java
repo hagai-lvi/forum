@@ -33,8 +33,8 @@ public class Forum implements ForumI {
         this.policy = policy;
         this.guest = new User(GUEST_USER_NAME, "no_pass", "nomail@nomail.com");
         this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
-        add_all_subforums_to_user(guest, PERMISSION_GUEST);
-        add_all_subforums_to_user(admin, PERMISSION_ADMIN);
+        addAllSubforumsToUser(guest, PERMISSION_GUEST);
+        addAllSubforumsToUser(admin, PERMISSION_ADMIN);
         this._users.put("Guest", this.guest);
         this._users.put("Admin", this.admin);
         this.forum_name = name;
@@ -53,7 +53,7 @@ public class Forum implements ForumI {
         return this.forum_name;
     }
     @Override
-    public HashMap<String, SubForumI> get_subForums(){ return _subForums;}
+    public HashMap<String, SubForumI> getSubForums(){ return _subForums;}
 
 
     @Override
@@ -84,7 +84,7 @@ public class Forum implements ForumI {
         _subForums.remove(subforum.getName());
     }
 
-    private void add_all_subforums_to_user(UserI user, String perm){
+    private void addAllSubforumsToUser(UserI user, String perm){
         for (SubForumI sub: _subForums.values()){
             user.addSubForumPermission(new UserPermission(perm, this, sub));
         }
@@ -104,7 +104,7 @@ public class Forum implements ForumI {
         }
         // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
-        add_all_subforums_to_user(new_user, PERMISSION_REGULAR);
+        addAllSubforumsToUser(new_user, PERMISSION_REGULAR);
         //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);
         return new_user;

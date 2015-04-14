@@ -4,7 +4,6 @@ import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;
 import main.exceptions.UserAlreadyExistsException;
-import main.forum_contents.SubForum;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -15,7 +14,7 @@ import java.util.HashMap;
 public interface ForumI {
 
 
-	HashMap<String, SubForumI> get_subForums();
+	HashMap<String, SubForumI> getSubForums();
 
 	/**
 	 * Create a subforum in this forum

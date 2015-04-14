@@ -17,7 +17,7 @@ public class User implements UserI {
     private String password;
     private String email;
     private GregorianCalendar signUpDate;
-    private int seniority_in_days;
+    private int seniorityInDays;
     private int numOfMessages;
     private Vector<SubForumPermissionI> subForumsPermissions;
     private Vector<ForumPermissionI> forumsPermission;
@@ -31,7 +31,7 @@ public class User implements UserI {
         this.password = password;
         this.email    = email;
         signUpDate = new GregorianCalendar();
-        seniority_in_days = 0;
+        seniorityInDays = 0;
         numOfMessages = 0;
         this.isAuthenticated = true; //TODO should be false, set to true for testing purpose
         this.authString = SecureString.nextUserAuthString();
@@ -91,12 +91,12 @@ public class User implements UserI {
         this.signUpDate = signUpDate;
     }
 
-    public int getSeniority_in_days() {
-        return seniority_in_days;
+    public int getSeniorityInDays() {
+        return seniorityInDays;
     }
 
-    public void setSeniority_in_days(int seniority_in_days) {
-        this.seniority_in_days = seniority_in_days;
+    public void setSeniorityInDays(int seniorityInDays) {
+        this.seniorityInDays = seniorityInDays;
     }
 
     public int getNumOfMessages() {

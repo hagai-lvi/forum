@@ -1,6 +1,5 @@
 package main.forum_contents;
 
-import main.exceptions.IncorrectPermissionsException;
 import main.exceptions.PermissionDeniedException;
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
@@ -14,36 +13,36 @@ import java.util.Date;
 public class ForumMessage implements MessageI {
 
 	ForumMessage reply_message;
-	UserI writing_user;
-	String message_text;
-	String message_title;
-	Date writing_time;
+	UserI writingUser;
+	String messageText;
+	String messageTitle;
+	Date writingTime;
 	ArrayList<MessageI> replays;
 	boolean isDeleted = false;
 
 
-	public ForumMessage(ForumMessage reply_to, UserI user, String message_text, String message_title){
-		this.writing_user = user;
-		this.message_text = message_text;
+	public ForumMessage(ForumMessage reply_to, UserI user, String messageText, String messageTitle){
+		this.writingUser = user;
+		this.messageText = messageText;
 		this.reply_message = reply_to;
-		this.message_title = message_title;
-		writing_time = new Date();
+		this.messageTitle = messageTitle;
+		writingTime = new Date();
 		replays = new ArrayList<MessageI>();
 	}
 
-	public void editText(UserI user, String new_text) throws PermissionDeniedException {
-		if (user != this.writing_user){
+	public void editText(UserI user, String newText) throws PermissionDeniedException {
+		if (user != this.writingUser){
 			throw new PermissionDeniedException("User can't edit message");
 		}
-		this.message_text = new_text;
+		this.messageText = newText;
 	}
 
 
 	@Override
 	public UserI getUser() {
-		return writing_user;
+		return writingUser;
 	}
-	public Date getDate()  { return writing_time; }
+	public Date getDate()  { return writingTime; }
 
 	@Override
 	public void reply(MessageI reply) {
@@ -62,7 +61,7 @@ public class ForumMessage implements MessageI {
 		for (int i = 0; i < depth ; i++){
 			ans += "	";
 		}
-		ans = "--> " + this.message_text;
+		ans = "--> " + this.messageText;
 		for (MessageI m: replays){
 			ans += "\n " + m.printSubTree(depth+1);
 		}
