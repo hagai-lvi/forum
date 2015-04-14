@@ -1,9 +1,6 @@
 package main.User;
 
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.MessageNotFoundException;
-import main.exceptions.PermissionDeniedException;
-import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.*;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 
@@ -129,10 +126,10 @@ import org.apache.log4j.Logger;
     }
 
    @Override
-    public void reportModerator(String moderatorUsername, String reportMessage) throws PermissionDeniedException {
+    public void reportModerator(String moderatorUsername, String reportMessage, UserI reporter) throws PermissionDeniedException, ModeratorDoesNotExistsException {
        if(!permission.equals("Guest")) {
            logger.info(permission + " has permission to report moderator");
-           subforum.reportModerator(moderatorUsername, reportMessage);
+           subforum.reportModerator(moderatorUsername, reportMessage, reporter);
        } else {
            logger.error(permission + " has no permission to reply");
            throw new PermissionDeniedException("User has no permission to reply");
@@ -142,10 +139,11 @@ import org.apache.log4j.Logger;
     /**
      * Delete a specific message if the message was create by the user that sent this request
      */
-    public void deleteMessage(MessageI message) throws PermissionDeniedException {
+    @Override
+    public void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException {
         if(canDeleteMessage()) {
             logger.info(permission + " has permission to delete message");
-            subforum.reportModerator(moderatorUsername, reportMessage);
+            subforum.deleteMessage(message, deleter);
         } else {
             logger.error(permission + " has no permission to delete message");
             throw new PermissionDeniedException("User has no delete message");
@@ -163,12 +161,12 @@ import org.apache.log4j.Logger;
 
     @Override
     public void setModerator(UserI moderator) throws PermissionDeniedException {
-        if(permission.equals("")) {
-            logger.info(permission + " has permission to delete message");
-            subforum.reportModerator(moderatorUsername, reportMessage);
+        if( permission.equals("Administrator")) {
+            logger.info(permission + " has permission to set moderator");
+            subforum.setModerator(moderator);
         } else {
-            logger.error(permission + " has no permission to delete message");
-            throw new PermissionDeniedException("User has no delete message");
+            logger.error(permission + " has no permission to set moderator");
+            throw new PermissionDeniedException("User can not set moderator");
         }
     }
 

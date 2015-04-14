@@ -1,10 +1,7 @@
 package main_test;
 
 import main.User.User;
-import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.PermissionDeniedException;
-import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.UserAlreadyExistsException;
+import main.exceptions.*;
 import main.forum_contents.Facade;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
@@ -161,11 +158,10 @@ public class MainTest {
 		try {
 			subForumPermission.createThread(msg);
 			fail("a guest cannot create a thread");
-			//} catch (PermissionDenied e){
-
-			//}
-		}catch (Exception e){
-			fail("a guest cannot create a thread");
+		}catch (DoesNotComplyWithPolicyException e) {
+			fail("Expected PermissionDeniedException");
+		} catch (PermissionDeniedException e) {
+			//expected exception
 		}
 
 		//try reply to message
@@ -183,12 +179,14 @@ public class MainTest {
 
 		//try report moderator
 		try{
-			subForumPermission.reportModerator("Moshe","He is so bad Moderator");
+			subForumPermission.reportModerator("Moshe","He is so bad Moderator",guest);
 			fail("a guest cannot create a report on moderator");
 		//} catch (PermissionDenied e){
 
 		} catch (Exception e){
 			fail("a guest cannot create a report on moderator");
+		} catch (ModeratorDoesNotExistsException e) {
+			//expected exception
 		}
 
 		//try view threads
@@ -202,12 +200,11 @@ public class MainTest {
 
 		//try delete message
 		try{
-			subForumPermission.deleteMessage(rootMessage);
+			subForumPermission.deleteMessage(rootMessage,guest);
 			fail("a guest cannot delete message");
-		//} catch (PermissionDenied e){
 
-		} catch (Exception e){
-			fail("a guest cannot delete message");
+		} catch (PermissionDeniedException e) {
+			// expected exception
 		}
 	}
 
@@ -330,6 +327,8 @@ public class MainTest {
 			subForumPermission.createThread(new ForumMessage(null, user, "I created THREADDDDDD!@!@!@!@", ""));
 		} catch (PermissionDeniedException e) {
 			e.printStackTrace();
+		} catch (DoesNotComplyWithPolicyException e) {
+			e.printStackTrace();
 		}
 		try {
 			assertEquals(n + 1, subForumPermission.getThreads().length);
@@ -412,8 +411,10 @@ public class MainTest {
 
 		//add check to see if moshe his a moderator.
 		try {
-			subForumPermission.reportModerator("Moshe","he is not behave well!!");
+			subForumPermission.reportModerator("Moshe","he is not behave well!!", user);
 		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		} catch (ModeratorDoesNotExistsException e) {
 			e.printStackTrace();
 		}
 

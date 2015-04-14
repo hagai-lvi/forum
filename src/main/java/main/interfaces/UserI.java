@@ -1,8 +1,9 @@
 package main.interfaces;
 
 import main.exceptions.DoesNotComplyWithPolicyException;
+import main.exceptions.MessageNotFoundException;
+import main.exceptions.ModeratorDoesNotExistsException;
 import main.exceptions.PermissionDeniedException;
-import main.forum_contents.SubForum;
 
 import java.util.Collection;
 import java.util.Vector;
@@ -65,12 +66,12 @@ public interface UserI {
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(SubForumI subforum, MessageI original, MessageI reply)throws PermissionDeniedException;
+	void replyToMessage(SubForumI subforum, MessageI original, MessageI reply) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator
 	 */
-	void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage)throws PermissionDeniedException;
+	void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException;
 
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request

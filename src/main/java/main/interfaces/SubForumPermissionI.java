@@ -2,6 +2,7 @@ package main.interfaces;
 
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
+import main.exceptions.ModeratorDoesNotExistsException;
 import main.exceptions.PermissionDeniedException;
 
 /**
@@ -22,12 +23,12 @@ public interface SubForumPermissionI {
 	/**
 	 * Allows a user to report a moderator
 	 */
-	void reportModerator(String moderatorUsername, String reportMessage) throws PermissionDeniedException;
+	void reportModerator(String moderatorUsername, String reportMessage, UserI reporter) throws PermissionDeniedException, ModeratorDoesNotExistsException;
 
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message) throws PermissionDeniedException;
+	void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException;
 
 	/**
 	 * view threads
