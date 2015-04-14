@@ -1,5 +1,7 @@
 package main.User;
 
+import com.sun.tools.javac.comp.Todo;
+import com.sun.xml.internal.bind.v2.TODO;
 import main.exceptions.PermissionDenied;
 import main.forum_contents.SubForum;
 import main.interfaces.*;
@@ -11,11 +13,13 @@ import org.apache.log4j.Logger;
 public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
     private UserI currentUser;
+    private String permission;
     private static Logger logger = Logger.getLogger(UserPermission.class.getName());
 
-    public UserPermission(UserI currentUser){
+    public UserPermission(UserI currentUser, String permission){
         logger.info("Creating new permissions for - " + currentUser.getUsername());
         this.currentUser = currentUser;
+        this.permission = permission;
     }
 
     @Override
@@ -36,13 +40,22 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     }
 
     private boolean canCreateSubForum(){
-        return false;
+        return permission.equals("Moderator") || permission.equals("Administrator");
     }
     /**
      * Delete a subForum from this forum
      */
-    public void deleteSubForum(SubForumI toDelete){
+    public void deleteSubForum(SubForumI toDelete) throws PermissionDenied {
+        if(canDeleteSunForum()) {
+            logger.info("The user - " + currentUser.getUsername() + " has permission to delete Sub-Forum");
+            // TODO
+        }
+        logger.error("The user - " + currentUser.getUsername() + " has no permission to delete Sub-Forum!");
+        throw new PermissionDenied("User has no permission to delete sub forum", currentUser);
+    }
 
+    private boolean canDeleteSunForum() {
+        return permission.equals("Moderator") || permission.equals("Administrator");
     }
 
     @Override
@@ -58,6 +71,11 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     @Override
     public String viewStatistics(ForumI forum) {
         return null;
+    }
+
+    @Override
+    public void addForum(ForumI forum) {
+
     }
 
     /**
