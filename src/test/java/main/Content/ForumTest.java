@@ -20,7 +20,7 @@ public class ForumTest {
 
     @Before
     public void setUp() throws Exception {
-        forum = new Forum(null);
+        forum = new Forum("ForumName", null);
     }
 
     @Test

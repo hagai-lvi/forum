@@ -23,6 +23,18 @@ public class Forum implements ForumI {
     private User admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
 
+    public Forum(ForumPolicyI policy){
+        this.policy = policy;
+        this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
+        this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
+        add_all_subforums_to_user(guest, "GUEST");
+        add_all_subforums_to_user(admin, "ADMINISTRATOR");
+        this._users.put("Guest", this.guest);
+        this._users.put("Admin", this.admin);
+        this.forum_name = "Default Forum Name";
+    }
+
+
     public Forum(String name, ForumPolicyI policy){
         this.policy = policy;
         this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
@@ -31,6 +43,7 @@ public class Forum implements ForumI {
         add_all_subforums_to_user(admin, "ADMINISTRATOR");
         this._users.put("Guest", this.guest);
         this._users.put("Admin", this.admin);
+        this.forum_name = name;
     }
 
 
@@ -49,6 +62,9 @@ public class Forum implements ForumI {
 
         SubForumI subForum = new SubForum(name,  this.policy.getSubforumPolicy());
         _subForums.put(name, subForum);
+        for (UserI user: _users.values()){
+            user.addSubForumPermission(new UserPermission("REGULAR", this, subForum));
+        }
         return subForum;
     }
 
