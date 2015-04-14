@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 
 /**
@@ -10,14 +11,14 @@ public interface SubForumI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void creatThread(MessageI message);
+	void creatThread(MessageI message) throws DoesNotComplyWithPolicyException;
 
 	String get_name();
 
 	/**
 	 * reply to a specific messgae
 	 */
-	void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException;
+	void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator

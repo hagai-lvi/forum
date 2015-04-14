@@ -1,12 +1,11 @@
 package main.forum_contents;
 
+import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
-import main.interfaces.MessageI;
-import main.interfaces.SubForumI;
-import main.interfaces.ThreadI;
-import main.interfaces.UserI;
+import main.interfaces.*;
 import org.apache.log4j.Logger;
 
+import java.security.Policy;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,23 +21,30 @@ public class SubForum implements SubForumI {
     private HashMap<MessageI, ThreadI> _threadByMessage = new HashMap<>();
     private HashMap<String, UserI> _moderators = new HashMap<String, UserI>();
     private static Logger logger = Logger.getLogger(Forum.class.getName());
+    private SubForumPolicyI subforum_policy;
 
 
-
-    public SubForum(String name){
+    public SubForum(String name, SubForumPolicyI subforum_policy){
         _name = name;
+        this.subforum_policy = subforum_policy;
     }
 
 
     @Override
-    public void creatThread(MessageI message) {
+    public void creatThread(MessageI message) throws DoesNotComplyWithPolicyException {
+        if (!subforum_policy.isValidMessage(message)) {
+            throw new DoesNotComplyWithPolicyException();
+        }
         ForumThread thread = new ForumThread(message);
         _threads.add(thread);
         _threadByMessage.put(message,thread);
     }
 
     @Override
-    public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException {
+    public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException {
+        if (!subforum_policy.isValidMessage(reply)){
+            throw new DoesNotComplyWithPolicyException();
+        }
         ThreadI _thread = _threadByMessage.get(original);
         if (_thread == null){
             logger.warn("User tried to delete already deleted message");
