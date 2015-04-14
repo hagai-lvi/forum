@@ -49,7 +49,7 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException {
         if(canDeleteSunForum()) {
             logger.info(permission + " has permission to delete Sub-Forum");
-            //TODO
+            deleteSubForum(toDelete);
         }
         else {
             logger.error(permission + " has no permission to delete Sub-Forum!");
