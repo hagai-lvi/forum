@@ -1,6 +1,7 @@
 package main.interfaces;
 
 import main.exceptions.DoesNotComplyWithPolicyException;
+import main.exceptions.MessageNotFoundException;
 import main.exceptions.PermissionDeniedException;
 
 /**
@@ -16,7 +17,7 @@ public interface SubForumPermissionI {
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(MessageI original, MessageI reply) throws PermissionDeniedException;
+	void replyToMessage(MessageI original, MessageI reply) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator
@@ -38,16 +39,6 @@ public interface SubForumPermissionI {
 	 * Set moderator for subforum
 	 */
 	void setModerator(UserI moderator) throws PermissionDeniedException;
-
-	/**
-	 * Ban moderator
-	 */
-	void banModerator(UserI moderatorToBan, long time) throws PermissionDeniedException;
-
-	/**
-	 * Send friend request to another user
-	 */
-	void sendFriendRequest(UserI newFriend) throws PermissionDeniedException;
 
 	/**
 	 * Get related subforum

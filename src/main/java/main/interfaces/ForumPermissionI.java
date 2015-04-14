@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 
@@ -46,5 +47,5 @@ public interface ForumPermissionI {
 	 */
 	boolean findForum(String name);
 
-	void createTread(MessageI message)throws PermissionDeniedException;
+	void createTread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 }
