@@ -2,10 +2,7 @@ package main.forum_contents;
 
 import main.User.User;
 import main.Utils.GmailSender;
-import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.SubForumDoesNotExsitsException;
-import main.exceptions.UserAlreadyExistsException;
+import main.exceptions.*;
 import main.interfaces.ForumI;
 import main.interfaces.ForumPolicyI;
 import main.interfaces.SubForumI;
@@ -27,7 +24,7 @@ public class Forum implements ForumI {
     private User admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
 
-    public Forum(ForumPolicyI policy) {
+    public Forum(ForumPolicyI policy) throws PermissionDeniedException {
         this.policy = policy;
         this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
         this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
@@ -60,7 +57,7 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException {
+    public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException {
         // Protective Programing
         if (userName.equals("") || userName == null || password.equals("") || password == null || eMail.equals("") || eMail == null)
             throw new InvalidUserCredentialsException();

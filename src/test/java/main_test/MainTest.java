@@ -159,7 +159,7 @@ public class MainTest {
 
 		//try create thread
 		try {
-			subForumPermission.createThread(msg, subForumPermission.getSubForum());
+			subForumPermission.createThread(msg);
 			fail("a guest cannot create a thread");
 			//} catch (PermissionDenied e){
 

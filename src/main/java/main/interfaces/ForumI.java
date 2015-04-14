@@ -1,6 +1,7 @@
 package main.interfaces;
 
 import main.exceptions.InvalidUserCredentialsException;
+import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.UserAlreadyExistsException;
 import main.forum_contents.SubForum;
@@ -24,7 +25,7 @@ public interface ForumI {
 	/**
 	 * Register a user to this forum
 	 */
-	UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException;
+	UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException;
 
 	/**
 	 * send an authentication email to the given email
