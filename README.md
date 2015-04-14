@@ -1,1 +1,1 @@
-[![Build Status](https://circleci.com/gh/hagai-lvi/forum.png?circle-token=:circle-token)](https://circleci.com/gh/hagai-lvi/forum.png?circle-token=:circle-token)
+[![Build Status](https://circleci.com/gh/hagai-lvi/forum.svg?&style=shield&circle-token=531d204907231af5a4d502b6715036d3dab1fb55)]
