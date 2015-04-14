@@ -8,7 +8,7 @@ public interface SubForumPermissionI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void createThread(MessageI message);
+	public void createThread(MessageI message, SubForumI subForum);
 
 	/**
 	 * reply to a specific message

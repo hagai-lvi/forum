@@ -127,7 +127,7 @@ public class User implements UserI {
     }
 
     @Override
-    public void createThread(MessageI message) {
+    public void createThread(MessageI message, SubForumI subForum) {
 
     }
 
