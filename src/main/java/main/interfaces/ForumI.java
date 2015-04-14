@@ -70,4 +70,9 @@ public interface ForumI {
 	void addUserType(String type);
 
 	boolean removeUserType(String type);
+
+	public void setAdmin(UserI admin);
+
+	public String viewStatistics();
+
 }
