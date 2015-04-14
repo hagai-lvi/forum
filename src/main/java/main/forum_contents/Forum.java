@@ -15,6 +15,10 @@ import java.util.HashMap;
  */
 public class Forum implements ForumI {
 
+    public static final String PERMISSION_REGULAR = "REGULAR";
+    public static final String GUEST_USER_NAME = "Guest user";
+    public static final String PERMISSION_GUEST = "GUEST";
+    public static final String PERMISSION_ADMIN = "ADMINISTRATOR";
     private String forum_name;
     private ForumPolicyI policy;
     private HashMap<String, SubForumI> _subForums = new HashMap<>();
@@ -27,10 +31,10 @@ public class Forum implements ForumI {
 
     public Forum(String name, ForumPolicyI policy){
         this.policy = policy;
-        this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
+        this.guest = new User(GUEST_USER_NAME, "no_pass", "nomail@nomail.com");
         this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
-        add_all_subforums_to_user(guest, "GUEST");
-        add_all_subforums_to_user(admin, "ADMINISTRATOR");
+        add_all_subforums_to_user(guest, PERMISSION_GUEST);
+        add_all_subforums_to_user(admin, PERMISSION_ADMIN);
         this._users.put("Guest", this.guest);
         this._users.put("Admin", this.admin);
         this.forum_name = name;
@@ -61,7 +65,14 @@ public class Forum implements ForumI {
         SubForumI subForum = new SubForum(name,  this.policy.getSubforumPolicy());
         _subForums.put(name, subForum);
         for (UserI user: _users.values()){
-            user.addSubForumPermission(new UserPermission("REGULAR", this, subForum));
+            UserPermission permission;
+            if (user.getUsername().equals(GUEST_USER_NAME)){
+                permission = new UserPermission(PERMISSION_GUEST, this, subForum);
+            }
+            else{
+                permission = new UserPermission(PERMISSION_REGULAR, this, subForum);
+            }
+            user.addSubForumPermission(permission);
         }
         return subForum;
     }
@@ -89,11 +100,11 @@ public class Forum implements ForumI {
         }
         if (!policy.isValidPassword(password)){
 
-            //throw new InvalidUserCredentialsException();    ---> uncomment if victor does the checking.
+            //throw new InvalidUserCredentialsException(); TODO    ---> uncomment if victor does the checking.
         }
         // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
-        add_all_subforums_to_user(new_user, "REGULAR");
+        add_all_subforums_to_user(new_user, PERMISSION_REGULAR);
         //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);
         return new_user;

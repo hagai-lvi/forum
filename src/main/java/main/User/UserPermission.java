@@ -9,7 +9,7 @@ import org.apache.log4j.Logger;
  */
     public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
-    public static final String PERMISSION_GUEST = "Guest";
+    public static final String PERMISSION_GUEST = "GUEST";
     private String permission;
     private ForumI forum;
     private SubForumI subforum;
