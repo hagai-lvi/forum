@@ -53,7 +53,7 @@
                     <version>2.17</version>
                     <configuration>
                         <redirectTestOutputToFile>true</redirectTestOutputToFile>
-                        <reportsDirectory>shippable/testresults</reportsDirectory>
+                        <reportsDirectory>../shippable/testresults</reportsDirectory>
                     </configuration>
                     <dependencies>
                         <dependency>
@@ -71,7 +71,7 @@
                         <format>xml</format>
                         <maxmem>256m</maxmem>
                         <aggregate>true</aggregate>
-                        <outputDirectory>shippable/codecoverage</outputDirectory>
+                        <outputDirectory>../shippable/codecoverage</outputDirectory>
                     </configuration>
                 </plugin>
             </plugins>
