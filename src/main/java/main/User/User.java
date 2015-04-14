@@ -4,6 +4,7 @@ import main.Utils.SecureString;
 import main.exceptions.PermissionDenied;
 import main.interfaces.*;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 
@@ -34,6 +35,7 @@ public class User implements UserI {
         numOfMessages = 0;
         this.isAuthenticated = true;
         this.authString = SecureString.nextUserAuthString();
+        this.subForumsPermissions = new ArrayList<SubForumPermissionI>();
     }
 
     public void addForum(ForumI forum){
