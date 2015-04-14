@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.PermissionDeniedException;
 
 /**
@@ -10,7 +11,7 @@ public interface SubForumPermissionI {
 	/**
 	 * create a thread in the subforum
 	 */
-	public void createThread(MessageI message) throws PermissionDeniedException;
+	public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * reply to a specific message
@@ -36,7 +37,7 @@ public interface SubForumPermissionI {
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException;
+	void setModerator(UserI moderator) throws PermissionDeniedException;
 
 	/**
 	 * Ban moderator
@@ -52,4 +53,6 @@ public interface SubForumPermissionI {
 	 * Get related subforum
 	 */
 	SubForumI getSubForum();
+
+	boolean findForum(String name);
 }

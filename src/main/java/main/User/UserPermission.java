@@ -1,5 +1,6 @@
 package main.User;
 
+import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.interfaces.*;
@@ -8,7 +9,7 @@ import org.apache.log4j.Logger;
 /**
  * Created by gabigiladov on 4/11/15.
  */
-public class UserPermission implements ForumPermissionI, SubForumPermissionI {
+    public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
     private String permission;
     private ForumI forum;
@@ -82,7 +83,24 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     }
 
     @Override
-    public void createThread(MessageI message) {
+    public boolean findForum(String name) {
+        return forum.getName().equals(name);
+    }
+
+    @Override
+    public void createTread(MessageI message) throws PermissionDeniedException {
+
+    }
+
+    @Override
+    public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+        if(canCreateThread())
+            subforum.creatThread(message);
+        else throw new PermissionDeniedException(permission + " has no permission to create Sub-Forum!");
+    }
+
+    private boolean canCreateThread() {
+        return !permission.equals("Guest");
 
     }
 

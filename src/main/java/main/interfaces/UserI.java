@@ -1,8 +1,11 @@
 package main.interfaces;
 
+import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.PermissionDeniedException;
+import main.forum_contents.SubForum;
 
 import java.util.Collection;
+import java.util.Vector;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -42,48 +45,42 @@ public interface UserI {
 	/**
 	 * view subForums
 	 */
-	SubForumPermissionI[] viewSubForums();
+	Vector<SubForumPermissionI> viewSubForums();
 
 	/**
 	 * Create a subforum in this forum
 	 */
-	SubForumI createSubForum(String name) throws PermissionDeniedException;
+	void createSubForum(String name, ForumI forum) throws PermissionDeniedException;
 
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete)throws PermissionDeniedException;
+	void deleteSubForum(SubForumI toDelete, ForumI forum)throws PermissionDeniedException;
 
 	/**
 	 * create a thread in the subforum
 	 */
-	public void createThread(MessageI message) throws PermissionDeniedException;
+	void createThread(MessageI message, SubForumI subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(MessageI original, MessageI reply)throws PermissionDeniedException;
+	void replyToMessage(SubForumI subforum, MessageI original, MessageI reply)throws PermissionDeniedException;
 
 	/**
 	 * Allows a user to report a moderator
 	 */
-	void reportModerator(String moderatorUsername, String reportMessage)throws PermissionDeniedException;
+	void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage)throws PermissionDeniedException;
 
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message)throws PermissionDeniedException;
-
-	/**
-	 * view threads
-	 */
-
-	ThreadI[] getThreads();
+	void deleteMessage(MessageI message, SubForumI subForum)throws PermissionDeniedException;
 
 	/**
 	 * Add new forum
 	 */
-	void addForum(ForumI forum)throws PermissionDeniedException;
+	void addForum(ForumI forum) throws PermissionDeniedException;
 
 	/**
 	 * Set new forum administrator
@@ -108,12 +105,7 @@ public interface UserI {
 	/**
 	 * Ban moderator
 	 */
-	void banModerator(UserI moderatorToBan, long time)throws PermissionDeniedException;
-
-	/**
-	 * Send friend request to another user
-	 */
-	void sendFriendRequest(UserI newFriend)throws PermissionDeniedException;
+	void banModerator(SubForumI subForum, UserI moderatorToBan, long time)throws PermissionDeniedException;
 
 	/**
 	 * Add permissions
