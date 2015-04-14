@@ -34,4 +34,9 @@ public interface ForumPermissionI {
 	 * Get statistics
 	 */
 	String viewStatistics(ForumI forum);
+
+	/**
+	 * Add new forum
+	 */
+	void addForum(ForumI forum);
 }
