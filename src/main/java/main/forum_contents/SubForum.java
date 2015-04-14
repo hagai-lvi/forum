@@ -68,7 +68,7 @@ public class SubForum implements SubForumI {
         }
     }
 
-    public String get_name(){
+    public String getName(){
         return this._name;
     }
 }

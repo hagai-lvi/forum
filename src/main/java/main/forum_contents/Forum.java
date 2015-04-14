@@ -47,7 +47,7 @@ public class Forum implements ForumI {
     }
 
 
-    public String get_name(){
+    public String getName(){
         return this.forum_name;
     }
     @Override
@@ -69,10 +69,10 @@ public class Forum implements ForumI {
     }
 
     public void deleteSubForum(SubForumI subforum) throws SubForumDoesNotExsitsException {
-        if (!_subForums.containsKey(subforum.get_name())){
+        if (!_subForums.containsKey(subforum.getName())){
             throw new SubForumDoesNotExsitsException();
         }
-        _subForums.remove(subforum.get_name());
+        _subForums.remove(subforum.getName());
     }
 
     private void add_all_subforums_to_user(UserI user, String perm){
