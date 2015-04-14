@@ -28,7 +28,7 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     }
 
     /**
-     * Create a subforum in this forum
+     * Create a subforum in this forum.
      */
     public void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
         if(canCreateSubForum()) {
