@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
  */
     public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
+    public static final String PERMISSION_GUEST = "Guest";
     private String permission;
     private ForumI forum;
     private SubForumI subforum;
@@ -105,7 +106,7 @@ import org.apache.log4j.Logger;
 
     @Override
     public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-        if(!permission.equals("Guest")) {
+        if( ! permission.equals(PERMISSION_GUEST)) {
             logger.info(permission + " has permission to create thread");
             subforum.creatThread(message);
         } else {
@@ -116,7 +117,7 @@ import org.apache.log4j.Logger;
 
    @Override
     public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
-        if(!permission.equals("Guest")) {
+        if(!permission.equals(PERMISSION_GUEST)) {
             logger.info(permission + " has permission to reply");
             subforum.replyToMessage(original, reply);
         } else {
@@ -127,7 +128,7 @@ import org.apache.log4j.Logger;
 
    @Override
     public void reportModerator(String moderatorUsername, String reportMessage, UserI reporter) throws PermissionDeniedException, ModeratorDoesNotExistsException {
-       if(!permission.equals("Guest")) {
+       if(!permission.equals(PERMISSION_GUEST)) {
            logger.info(permission + " has permission to report moderator");
            subforum.reportModerator(moderatorUsername, reportMessage, reporter);
        } else {
