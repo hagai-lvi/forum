@@ -154,12 +154,12 @@ public class MainTest {
 
 		Collection<SubForumPermissionI> subForumPermissionsCollection = guest.getSubForumPermission();
 
-		MessageI msg = new ForumMessage(guest,"I TRY TO CREATE MESSAGE NANA");
+		MessageI msg = new ForumMessage(null ,guest,"I TRY TO CREATE MESSAGE NANA", "");
 		SubForumPermissionI subForumPermission = subForumPermissionsCollection.iterator().next();
 
 		//try create thread
 		try {
-			subForumPermission.createThread(msg);
+			subForumPermission.createThread(msg, subForumPermission.getSubForum());
 			fail("a guest cannot create a thread");
 			//} catch (PermissionDenied e){
 
@@ -172,7 +172,7 @@ public class MainTest {
 		try{
 			//this test will not be include yet
 			//subForumPermission.replyToMessage(msg,msg);
-			MessageI reply = new ForumMessage(null, guest, "I TRY TO CREATE REPLY NANA");
+			MessageI reply = new ForumMessage(null, guest, "I TRY TO CREATE REPLY NANA", "");
 			subForumPermission.replyToMessage(msg, reply);
 			fail("a guest cannot reply to message");
 		} catch (PermissionDeniedException e) {
@@ -192,7 +192,12 @@ public class MainTest {
 		}
 
 		//try view threads
-		ThreadI[] threads = subForumPermission.getThreads();
+		ThreadI[] threads = new ThreadI[0];
+		try {
+			threads = subForumPermission.getThreads();
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		}
 		MessageI rootMessage = threads[0].getRootMessage();
 
 		//try delete message
@@ -298,7 +303,11 @@ public class MainTest {
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
 		for (Iterator<SubForumPermissionI> itr = subForumPermissionCol.iterator(); itr.hasNext();){
 			SubForumPermissionI subForumPermission = itr.next();
-			ThreadI[] threads = subForumPermission.getThreads();
+			try {
+				ThreadI[] threads = subForumPermission.getThreads();
+			} catch (PermissionDeniedException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -313,7 +322,7 @@ public class MainTest {
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
 		int n = subForumPermission.getThreads().length;
 		subForumPermission.createThread(new ForumMessage(user, "I created THREADDDDDD!@!@!@!@"));
-		assertEquals(n+1,subForumPermission.getThreads().length);
+		assertEquals(n + 1, subForumPermission.getThreads().length);
 	}
 
 	@Test
@@ -337,7 +346,7 @@ public class MainTest {
 		ForumI forum = _forumCollection.iterator().next();
 		int n = forum.getUserTypes().length;
 		forum.addUserType("GoldenX");
-		assertEquals(n+1,forum.getUserTypes().length);
+		assertEquals(n + 1, forum.getUserTypes().length);
 	}
 
 

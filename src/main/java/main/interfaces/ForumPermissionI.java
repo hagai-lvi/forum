@@ -23,20 +23,20 @@ public interface ForumPermissionI {
 	/**
 	 * Set new forum administrator
 	 */
-	void setAdmin(UserI admin, ForumI forum);
+	void setAdmin(UserI admin, ForumI forum)  throws PermissionDeniedException;
 
 	/**
 	 * Set policy for forum
 	 */
-	void setPolicy(ForumI forum, ForumPolicyI policy);
+	void setPolicy(ForumI forum, ForumPolicyI policy)  throws PermissionDeniedException;
 
 	/**
 	 * Get statistics
 	 */
-	String viewStatistics(ForumI forum);
+	String viewStatistics(ForumI forum)  throws PermissionDeniedException;
 
 	/**
 	 * Add new forum
 	 */
-	void addForum(ForumI forum);
+	void addForum(ForumI forum)  throws PermissionDeniedException;
 }

@@ -7,7 +7,7 @@ import main.interfaces.UserI;
  */
 public class PermissionDeniedException extends Exception {
 
-    public PermissionDeniedException(String message, UserI currentUser) {
-        super(currentUser.getUsername() + " " + message);
+    public PermissionDeniedException(String message) {
+        super(message);
     }
 }

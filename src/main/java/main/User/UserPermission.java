@@ -11,13 +11,15 @@ import org.apache.log4j.Logger;
  */
 public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
-    private UserI currentUser;
     private String permission;
+    private ForumI forum;
+    private SubForumI subforum;
     private static Logger logger = Logger.getLogger(UserPermission.class.getName());
 
-    public UserPermission(UserI currentUser, String permission){
-        logger.info("Creating new permissions for - " + currentUser.getUsername());
-        this.currentUser = currentUser;
+    public UserPermission(String permission, ForumI forum, SubForumI subforum){
+        logger.info("Creating new permissions for - " + permission);
+        this.forum = forum;
+        this.subforum = subforum;
         this.permission = permission;
     }
 
@@ -31,11 +33,16 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
      */
     public SubForumI createSubForum(String name) throws PermissionDenied{
         if(canCreateSubForum()) {
-            logger.info("The user - " + currentUser.getUsername() + " has permission to create Sub-Forum");
+            logger.info(permission + " has permission to create Sub-Forum");
             return new SubForum(name);
         }
+<<<<<<< Updated upstream
         logger.error("The user - " + currentUser.getUsername() + " has no permission to create Sub-Forum!");
         throw new PermissionDenied("User has no permission to create sub forum", currentUser);
+=======
+        logger.error(permission + " has no permission to create Sub-Forum!");
+        throw new PermissionDeniedException("User has no permission to create sub forum");
+>>>>>>> Stashed changes
     }
 
     private boolean canCreateSubForum(){
@@ -46,11 +53,16 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
      */
     public void deleteSubForum(SubForumI toDelete) throws PermissionDenied {
         if(canDeleteSunForum()) {
-            logger.info("The user - " + currentUser.getUsername() + " has permission to delete Sub-Forum");
+            logger.info(permission + " has permission to delete Sub-Forum");
             // TODO
         }
+<<<<<<< Updated upstream
         logger.error("The user - " + currentUser.getUsername() + " has no permission to delete Sub-Forum!");
         throw new PermissionDenied("User has no permission to delete sub forum", currentUser);
+=======
+        logger.error(permission + " has no permission to delete Sub-Forum!");
+        throw new PermissionDeniedException("User has no permission to delete sub forum");
+>>>>>>> Stashed changes
     }
 
     private boolean canDeleteSunForum() {
@@ -74,13 +86,6 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
     @Override
     public void addForum(ForumI forum) {
-
-    }
-
-    /**
-     * create a thread in the subforum
-     */
-    public void creatThread(MessageI message){
 
     }
 
@@ -128,5 +133,10 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     @Override
     public void sendFriendRequest(UserI newFriend) {
 
+    }
+
+    @Override
+    public SubForumI getSubForum() {
+        return subforum;
     }
 }

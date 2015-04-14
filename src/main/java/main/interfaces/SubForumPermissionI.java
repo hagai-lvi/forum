@@ -1,5 +1,7 @@
 package main.interfaces;
 
+import main.exceptions.PermissionDeniedException;
+
 /**
  * Created by hagai_lvi on 4/6/15.
  */
@@ -8,41 +10,46 @@ public interface SubForumPermissionI {
 	/**
 	 * create a thread in the subforum
 	 */
-	public void createThread(MessageI message, SubForumI subForum);
+	public void createThread(MessageI message, SubForumI subForum) throws PermissionDeniedException;
 
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(MessageI original, MessageI reply);
+	void replyToMessage(MessageI original, MessageI reply) throws PermissionDeniedException;
 
 	/**
 	 * Allows a user to report a moderator
 	 */
-	void reportModerator(String moderatorUsername, String reportMessage);
+	void reportModerator(String moderatorUsername, String reportMessage) throws PermissionDeniedException;
 
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message);
+	void deleteMessage(MessageI message) throws PermissionDeniedException;
 
 	/**
 	 * view threads
 	 */
 
-	ThreadI[] getThreads();
+	ThreadI[] getThreads() throws PermissionDeniedException;
 
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(SubForumI subForum, UserI moderator);
+	void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException;
 
 	/**
 	 * Ban moderator
 	 */
-	void banModerator(UserI moderatorToBan, long time);
+	void banModerator(UserI moderatorToBan, long time) throws PermissionDeniedException;
 
 	/**
 	 * Send friend request to another user
 	 */
-	void sendFriendRequest(UserI newFriend);
+	void sendFriendRequest(UserI newFriend) throws PermissionDeniedException;
+
+	/**
+	 * Get related subforum
+	 */
+	SubForumI getSubForum();
 }
