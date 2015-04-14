@@ -3,7 +3,6 @@ package main.User;
 import main.exceptions.PermissionDenied;
 import main.forum_contents.SubForum;
 import main.interfaces.*;
-
 import org.apache.log4j.Logger;
 
 /**

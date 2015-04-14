@@ -1,6 +1,5 @@
 package main.forum_contents;
 
-import data_structures.Tree;
 import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 

@@ -8,7 +8,8 @@ import main.interfaces.UserI;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by tomgond on 4/11/15.

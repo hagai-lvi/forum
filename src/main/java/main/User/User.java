@@ -7,7 +7,6 @@ import main.interfaces.MessageI;
 import main.interfaces.SubForumPermissionI;
 import main.interfaces.UserI;
 
-import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 

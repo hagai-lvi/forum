@@ -5,9 +5,7 @@ import main.interfaces.MessageI;
 import main.interfaces.SubForumI;
 import main.interfaces.ThreadI;
 import main.interfaces.UserI;
-import sun.org.mozilla.javascript.internal.ast.ArrayLiteral;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
