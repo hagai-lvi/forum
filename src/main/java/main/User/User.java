@@ -107,21 +107,6 @@ public class User implements UserI {
         return this.authString;
     }
 
-    @Override
-    public void removeMessage(MessageI msg) throws PermissionDenied {
-
-    }
-
-    @Override
-    public void addMessage(MessageI msg) {
-
-    }
-
-    @Override
-    public void removeForum(ForumI forum) {
-
-    }
-
     public Collection<SubForumPermissionI> getSubForumsPermissions() {
         return subForumsPermissions;
     }

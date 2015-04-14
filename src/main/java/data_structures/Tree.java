@@ -51,7 +51,7 @@ public class Tree<T> {
         }
 
         /**
-         * Find a node that contains the specified data. retuen null if non found
+         * Find a node that contains the specified data. return null if non found
          */
         public Node<T> findChild(T data){
 
