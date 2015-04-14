@@ -320,9 +320,22 @@ public class MainTest {
 		UserI user = forum.getUserList().iterator().next();
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
-		int n = subForumPermission.getThreads().length;
-		subForumPermission.createThread(new ForumMessage(user, "I created THREADDDDDD!@!@!@!@"));
-		assertEquals(n + 1, subForumPermission.getThreads().length);
+		int n = 0;
+		try {
+			n = subForumPermission.getThreads().length;
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		}
+		try {
+			subForumPermission.createThread(new ForumMessage(null, user, "I created THREADDDDDD!@!@!@!@", ""));
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		}
+		try {
+			assertEquals(n + 1, subForumPermission.getThreads().length);
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@Test
@@ -334,8 +347,13 @@ public class MainTest {
 		UserI user = forum.getUserList().iterator().next();
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
-		ThreadI firstThread = subForumPermission.getThreads()[0];
-		firstThread.getRootMessage().reply(new ForumMessage(user, "I post Message"));
+		ThreadI firstThread = null;
+		try {
+			firstThread = subForumPermission.getThreads()[0];
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		}
+		firstThread.getRootMessage().reply(new ForumMessage(null, user, "I post Message", ""));
 	}
 
 	@Test
@@ -393,7 +411,11 @@ public class MainTest {
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
 
 		//add check to see if moshe his a moderator.
-		subForumPermission.reportModerator("Moshe","he is not behave well!!");
+		try {
+			subForumPermission.reportModerator("Moshe","he is not behave well!!");
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		}
 
 	}
 
