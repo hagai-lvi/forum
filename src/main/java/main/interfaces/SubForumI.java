@@ -31,9 +31,6 @@ public interface SubForumI {
 	 */
 	void deleteMessage(MessageI message, UserI requesting_user);
 
-<<<<<<< Updated upstream
 	public void setModerator(UserI mod);
-=======
->>>>>>> Stashed changes
 
 }
