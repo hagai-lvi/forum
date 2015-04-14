@@ -18,7 +18,7 @@ public interface ForumPermissionI {
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete) throws PermissionDenied;
+	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException;
 
 	/**
 	 * Set new forum administrator
