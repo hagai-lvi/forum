@@ -52,27 +52,27 @@ public interface UserI {
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete);
+	void deleteSubForum(SubForumI toDelete)throws PermissionDeniedException;
 
 	/**
 	 * create a thread in the subforum
 	 */
-	public void createThread(MessageI message, SubForumI subForum);
+	public void createThread(MessageI message) throws PermissionDeniedException;
 
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(MessageI original, MessageI reply);
+	void replyToMessage(MessageI original, MessageI reply)throws PermissionDeniedException;
 
 	/**
 	 * Allows a user to report a moderator
 	 */
-	void reportModerator(String moderatorUsername, String reportMessage);
+	void reportModerator(String moderatorUsername, String reportMessage)throws PermissionDeniedException;
 
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message);
+	void deleteMessage(MessageI message)throws PermissionDeniedException;
 
 	/**
 	 * view threads
@@ -83,37 +83,37 @@ public interface UserI {
 	/**
 	 * Add new forum
 	 */
-	void addForum(ForumI forum);
+	void addForum(ForumI forum)throws PermissionDeniedException;
 
 	/**
 	 * Set new forum administrator
 	 */
-	void setAdmin(UserI admin, ForumI forum);
+	void setAdmin(UserI admin, ForumI forum)throws PermissionDeniedException;
 
 	/**
 	 * Set policy for forum
 	 */
-	void setPolicy(ForumI forum, ForumPolicyI policy);
+	void setPolicy(ForumI forum, ForumPolicyI policy)throws PermissionDeniedException;
 
 	/**
 	 * Get statistics
 	 */
-	String viewStatistics(ForumI forum);
+	String viewStatistics(ForumI forum) throws PermissionDeniedException;
 
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(SubForumI subForum, UserI moderator);
+	void setModerator(SubForumI subForum, UserI moderator)throws PermissionDeniedException;
 
 	/**
 	 * Ban moderator
 	 */
-	void banModerator(UserI moderatorToBan, long time);
+	void banModerator(UserI moderatorToBan, long time)throws PermissionDeniedException;
 
 	/**
 	 * Send friend request to another user
 	 */
-	void sendFriendRequest(UserI newFriend);
+	void sendFriendRequest(UserI newFriend)throws PermissionDeniedException;
 
 
 

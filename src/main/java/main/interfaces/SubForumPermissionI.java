@@ -10,7 +10,7 @@ public interface SubForumPermissionI {
 	/**
 	 * create a thread in the subforum
 	 */
-	public void createThread(MessageI message, SubForumI subForum) throws PermissionDeniedException;
+	public void createThread(MessageI message) throws PermissionDeniedException;
 
 	/**
 	 * reply to a specific message

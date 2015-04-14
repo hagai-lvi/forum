@@ -39,7 +39,7 @@ public class User implements UserI {
         this.forumsPermission = new Vector<ForumPermissionI>();
     }
 
-    public void addForum(ForumI forum){
+    public void addForum(ForumI forum) throws PermissionDeniedException{
         forumsPermission.elementAt(0).addForum(forum);
     }
 
@@ -127,7 +127,7 @@ public class User implements UserI {
     }
 
     @Override
-    public void createThread(MessageI message, SubForumI subForum) {
+    public void createThread(MessageI message) throws PermissionDeniedException {
 
     }
 

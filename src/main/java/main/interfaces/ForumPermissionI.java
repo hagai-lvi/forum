@@ -1,6 +1,7 @@
 package main.interfaces;
 
 import main.exceptions.PermissionDeniedException;
+import main.exceptions.SubForumAlreadyExistException;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -13,7 +14,7 @@ public interface ForumPermissionI {
 	/**
 	 * Create a subforum in this forum
 	 */
-	SubForumI createSubForum(String name) throws PermissionDeniedException;
+	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
 
 	/**
 	 * Delete a subForum from this forum
