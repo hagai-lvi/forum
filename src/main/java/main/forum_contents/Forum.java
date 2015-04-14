@@ -1,12 +1,10 @@
 package main.forum_contents;
 
 import main.User.User;
+import main.User.UserPermission;
 import main.Utils.GmailSender;
 import main.exceptions.*;
-import main.interfaces.ForumI;
-import main.interfaces.ForumPolicyI;
-import main.interfaces.SubForumI;
-import main.interfaces.UserI;
+import main.interfaces.*;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -24,12 +22,12 @@ public class Forum implements ForumI {
     private User admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
 
-    public Forum(ForumPolicyI policy) throws PermissionDeniedException {
+    public Forum(ForumPolicyI policy){
         this.policy = policy;
         this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
         this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
-        this.guest.addForum(this);
-        this.admin.addForum(this);
+        add_all_subforums_to_user(guest, "GUEST");
+        add_all_subforums_to_user(admin, "ADMINISTRATOR");
         this._users.put("Guest", this.guest);
         this._users.put("Admin", this.admin);
     }
@@ -56,6 +54,12 @@ public class Forum implements ForumI {
         _subForums.remove(subforum.get_name());
     }
 
+    private void add_all_subforums_to_user(UserI user, String perm){
+        for (SubForumI sub: _subForums.values()){
+            user.addSubForumPermission(new UserPermission(perm, this, sub));
+        }
+    }
+
     @Override
     public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException {
         // Protective Programing
@@ -70,6 +74,7 @@ public class Forum implements ForumI {
         }
         // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);
+        add_all_subforums_to_user(new_user, "regular");
         new_user.addForum(this);  // Gabi said this will be the logic
         //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);
