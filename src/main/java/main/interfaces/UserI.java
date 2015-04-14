@@ -115,6 +115,8 @@ public interface UserI {
 	 */
 	void sendFriendRequest(UserI newFriend)throws PermissionDeniedException;
 
-
-
+	/**
+	 * Add permissions
+	 */
+	void addSubForumPermission(SubForumPermissionI permission);
 }

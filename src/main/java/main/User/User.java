@@ -10,7 +10,7 @@ import java.util.Vector;
 /**
  * Created by gabigiladov on 4/11/15.
  */
-public class User implements UserI {
+      public class User implements UserI {
 
     private String authString = null;
     private String username;
@@ -179,6 +179,11 @@ public class User implements UserI {
     @Override
     public void sendFriendRequest(UserI newFriend) {
 
+    }
+
+    @Override
+    public void addSubForumPermission(SubForumPermissionI permission) {
+        this.subForumsPermissions.add(permission);
     }
 
     public Vector<SubForumPermissionI> getSubForumsPermissions() {
