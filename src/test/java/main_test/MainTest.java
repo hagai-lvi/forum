@@ -79,7 +79,7 @@ public class MainTest {
 	 * target: check initilize, should return true.
 	 */
 	@Test
-	public void Test_initilize(){
+	public void initializeTest(){
 		assertTrue(_facade.InitilizeSystem());
 	}
 
@@ -87,7 +87,7 @@ public class MainTest {
 	 * target: check adding forum to the system.
 	 */
 	@Test
-	public void Test_CreateForum(){
+	public void createForumTest(){
 
 		ForumI newForum;
 		ForumPolicyI newPolicy = new ForumPolicy_R1(2, "[a-z]*[!@#][a-z]*");
@@ -107,7 +107,7 @@ public class MainTest {
 	/**
 	 * target: set new policy for forum
 	 */
-	public void Test_SetPolicies(){
+	public void setPoliciesTest(){
 		ForumPolicyI newPolicy = new ForumPolicy_R1(2, "[a-z]*[!@#\\d]*[\\d]*");
 		ForumI forum = _forumCollection.iterator().next();
 		forum.setPolicy(newPolicy);
@@ -120,7 +120,7 @@ public class MainTest {
 	 * target: the test check the permission given to a guest.
 	 * check negative test like getting the right exception on violate his permission
 	 */
-	public void Test_GuestEntry(){
+	public void guestEntryTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI guest = forum.guestLogin();
 
@@ -187,7 +187,7 @@ public class MainTest {
 	 * check that the user exist in the list after register and that user cannot register twice
 	 * check if you get email authentication message in your inbox
 	 */
-	public void Test_Register() {
+	public void registerTest() {
 
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com");
@@ -210,7 +210,7 @@ public class MainTest {
 	 *  targer: check login usecase, try login to non exist user
 	 */
 	@Test
-	public void Test_Login(){
+	public void loginTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user;
 		try {
@@ -236,7 +236,7 @@ public class MainTest {
 	/**
 	 * target: check logout usecase
 	 */
-	public void Test_Logout(){
+	public void logoutTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user;
 		try {
@@ -254,7 +254,7 @@ public class MainTest {
 	/**
 	 * taget: check Create sub forum usecase
 	 */
-	public void Test_CreateSubForum(){
+	public void createSubForumTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		try {
 			forum.createSubForum("juggling");
@@ -267,7 +267,7 @@ public class MainTest {
 	/**
 	 * target: view sub forum
 	 */
-	public void Test_ViewSubForum(){
+	public void viewSubForumTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
@@ -285,7 +285,7 @@ public class MainTest {
 	/**
 	 * target: test usecase post thread
 	 */
-	public void Test_PostThread(){
+	public void postThreadTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
@@ -314,7 +314,7 @@ public class MainTest {
 	/**
 	 * target: test post message usecase
 	 */
-	public void Test_PostMessage(){
+	public void postMessageTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
@@ -365,7 +365,7 @@ public class MainTest {
 	/**
 	 * target: test cancel forum usecase
 	 */
-	public void Test_CancelForum(){
+	public void cancelForumTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI userA = forum.getUserList().iterator().next();
 
@@ -376,7 +376,7 @@ public class MainTest {
 	/**
 	 * target: check use case send report on moderator
 	 */
-	public void Test_ComplainOnModerator(){
+	public void complainOnModeratorTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
