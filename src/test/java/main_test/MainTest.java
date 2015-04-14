@@ -29,19 +29,19 @@ public class MainTest {
 	@Before
 	public void setUp() throws Exception
 	{
-		String[] Names = {"gil","tom","hagai", "gabi", "victor", "aria", "yoni", "moshe",
+		String[] names = {"gil","tom","hagai", "gabi", "victor", "aria", "yoni", "moshe",
 						  "tal", "chen", "bibi", "mor", "david", "dudinka", "aaa"};
 		_facade = Facade.getFacade();
 		ForumPolicyI policy = new ForumPolicy_R1(3,"[a-zA-Z]*[!@#$][a-zA-Z]");
 		for(int i=0;i<5;i++) {
-			ForumI newForum = new Forum(policy);
+			ForumI newForum = new Forum("Forum " + Integer.toString(i), policy);
 			_facade.addForum(newForum);
 
 			//add users to forums
 			for (int j=0;j<3;j++) {
 				try {
-					newForum.register(Names[i * 3 + j], "123456", "nobodyemail@nobody.com");
-				}catch (Throwable e){
+					newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
+				}catch (Exception e){
 
 				}
 				newForum.createSubForum("SubForum "+j +" In Forum" + i);
@@ -89,7 +89,7 @@ public class MainTest {
 
 		ForumI newForum;
 		ForumPolicyI newPolicy = new ForumPolicy_R1(2, "[a-z]*[!@#][a-z]*");
-		newForum = new Forum(newPolicy);
+		newForum = new Forum("Forum CreateForumTest" , newPolicy);
 		int numOfForums = _forumCollection.size();
 
 		_facade.addForum(newForum);

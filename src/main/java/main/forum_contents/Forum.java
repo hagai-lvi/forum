@@ -23,16 +23,6 @@ public class Forum implements ForumI {
     private UserI admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
 
-    public Forum(ForumPolicyI policy){
-        this.policy = policy;
-        this.guest = new User("Guest user", "no_pass", "nomail@nomail.com");
-        this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
-        add_all_subforums_to_user(guest, "GUEST");
-        add_all_subforums_to_user(admin, "ADMINISTRATOR");
-        this._users.put("Guest", this.guest);
-        this._users.put("Admin", this.admin);
-        this.forum_name = "Default Forum Name";
-    }
 
 
     public Forum(String name, ForumPolicyI policy){
