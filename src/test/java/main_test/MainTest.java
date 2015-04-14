@@ -39,12 +39,14 @@ public class MainTest {
 
 			//add users to forums
 			for (int j=0;j<3;j++) {
+				UserI user = null;
 				try {
-					newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
+					user= newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
 				}catch (Exception e){
-
+					fail(e.getMessage());
 				}
-				newForum.createSubForum("SubForum "+j +" In Forum" + i);
+				SubForumI sf = newForum.createSubForum("SubForum " + j + " In Forum" + i);
+				sf.creatThread(new ForumMessage(null,user,"hello","Hi"));
 			}
 		}
 		_forumCollection = _facade.getForumList();
