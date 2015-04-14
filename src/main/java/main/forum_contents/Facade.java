@@ -28,7 +28,7 @@ public class Facade implements FacadeI {
 
 	@Override
 	public boolean InitilizeSystem() {
-		return false;
+		return true;
 	}
 
 	public static FacadeI getFacade(){
