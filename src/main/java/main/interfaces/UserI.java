@@ -81,6 +81,11 @@ public interface UserI {
 	ThreadI[] getThreads();
 
 	/**
+	 * Add new forum
+	 */
+	void addForum(ForumI forum);
+
+	/**
 	 * Set new forum administrator
 	 */
 	void setAdmin(UserI admin, ForumI forum);

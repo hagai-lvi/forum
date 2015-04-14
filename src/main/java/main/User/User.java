@@ -4,8 +4,8 @@ import main.Utils.SecureString;
 import main.exceptions.PermissionDenied;
 import main.interfaces.*;
 
-import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.Vector;
 
 /**
  * Created by gabigiladov on 4/11/15.
@@ -19,7 +19,8 @@ public class User implements UserI {
     private GregorianCalendar signUpDate;
     private int seniority_in_days;
     private int numOfMessages;
-    private Collection<SubForumPermissionI> subForumsPermissions;
+    private Vector<SubForumPermissionI> subForumsPermissions;
+    private Vector<ForumPermissionI> forumsPermission;
     private boolean isAuthenticated;
     public void setUsername(String username) {
         this.username = username;
@@ -34,10 +35,12 @@ public class User implements UserI {
         numOfMessages = 0;
         this.isAuthenticated = true;
         this.authString = SecureString.nextUserAuthString();
+        this.subForumsPermissions = new Vector<SubForumPermissionI>();
+        this.forumsPermission = new Vector<ForumPermissionI>();
     }
 
     public void addForum(ForumI forum){
-        return; // TODO : add
+        forumsPermission.elementAt(0).addForum(forum);
     }
 
     /**
@@ -47,11 +50,13 @@ public class User implements UserI {
         return false;
     }
 
-    public void setAuthenticated(){ isAuthenticated = true;}
+    public void setAuthenticated(){
+        isAuthenticated = true;
+    }
     /**
          Get the list of all of the subforums of this user
      */
-    public Collection<SubForumPermissionI> getSubForumPermission() {
+    public Vector<SubForumPermissionI> getSubForumPermission() {
 
         return this.subForumsPermissions;
     }
@@ -176,11 +181,11 @@ public class User implements UserI {
 
     }
 
-    public Collection<SubForumPermissionI> getSubForumsPermissions() {
+    public Vector<SubForumPermissionI> getSubForumsPermissions() {
         return subForumsPermissions;
     }
 
-    public void setSubForumsPermissions(Collection<SubForumPermissionI> subForumsPermissions) {
+    public void setSubForumsPermissions(Vector<SubForumPermissionI> subForumsPermissions) {
         this.subForumsPermissions = subForumsPermissions;
     }
 }
