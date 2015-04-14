@@ -2,7 +2,6 @@ package main.forum_contents;
 
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
-import sun.plugin2.message.Message;
 
 import java.util.ArrayList;
 import java.util.Date;

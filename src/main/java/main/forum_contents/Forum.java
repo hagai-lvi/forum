@@ -10,6 +10,7 @@ import main.interfaces.ForumPolicyI;
 import main.interfaces.SubForumI;
 import main.interfaces.UserI;
 import org.apache.log4j.Logger;
+
 import java.util.Collection;
 import java.util.HashMap;
 
@@ -38,7 +39,7 @@ public class Forum implements ForumI {
         }
 
         SubForumI subForum = new SubForum(name);
-        _subForums.put(name,subForum);
+        _subForums.put(name, subForum);
         return subForum;
     }
 

@@ -7,7 +7,6 @@ import main.interfaces.MessageI;
 import main.interfaces.SubForumPermissionI;
 import main.interfaces.UserI;
 
-import java.security.SecureRandom;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 
@@ -108,21 +107,6 @@ public class User implements UserI {
 
     public String getUserAuthString(){
         return this.authString;
-    }
-
-    @Override
-    public void removeMessage(MessageI msg) throws PermissionDenied {
-
-    }
-
-    @Override
-    public void addMessage(MessageI msg) {
-
-    }
-
-    @Override
-    public void removeForum(ForumI forum) {
-
     }
 
     public Collection<SubForumPermissionI> getSubForumsPermissions() {

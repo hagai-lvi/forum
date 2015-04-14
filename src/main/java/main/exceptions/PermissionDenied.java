@@ -1,7 +1,5 @@
 package main.exceptions;
 
-import main.interfaces.MessageI;
-import main.interfaces.SubForumI;
 import main.interfaces.UserI;
 
 /**

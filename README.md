@@ -1,1 +1,1 @@
-[![Build Status](https://api.shippable.com/projects/5529001b5ab6cc1352c07c5d/badge?branchName=master)](https://app.shippable.com/projects/5529001b5ab6cc1352c07c5d/builds/latest)
+![Build Status](https://circleci.com/gh/hagai-lvi/forum.svg?&style=shield&circle-token=531d204907231af5a4d502b6715036d3dab1fb55)

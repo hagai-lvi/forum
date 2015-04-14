@@ -1,20 +1,22 @@
 package main_test;
 
-import junit.framework.*;
-import static org.junit.Assert.*;
-
 import main.User.User;
+import main.exceptions.InvalidUserCredentialsException;
+import main.exceptions.PermissionDenied;
+import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.UserAlreadyExistsException;
+import main.forum_contents.Facade;
+import main.forum_contents.Forum;
+import main.forum_contents.ForumMessage;
+import main.forum_contents.ForumPolicy_R1;
+import main.interfaces.*;
 import org.apache.log4j.Logger;
 import org.junit.*;
-import main.interfaces.*;
-import main.exceptions.*;
-import main.forum_contents.*;
-import org.junit.Test;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
+
+import static org.junit.Assert.*;
 
 
 /**

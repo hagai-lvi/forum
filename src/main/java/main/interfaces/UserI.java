@@ -27,9 +27,4 @@ public interface UserI {
 
 	String getUserAuthString();
 
-	void removeMessage(MessageI msg) throws PermissionDenied;
-
-	void addMessage(MessageI msg);
-
-	void removeForum(ForumI forum);
 }
