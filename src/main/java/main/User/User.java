@@ -47,6 +47,7 @@ public class User implements UserI {
         return false;
     }
 
+    public void setAuthenticated(){ isAuthenticated = true;}
     /**
          Get the list of all of the subforums of this user
      */
