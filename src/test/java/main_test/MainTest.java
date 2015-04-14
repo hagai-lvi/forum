@@ -46,35 +46,8 @@ public class MainTest {
 				}
 				newForum.createSubForum("SubForum "+j +" In Forum" + i);
 			}
-
 		}
-
-
-
 		_forumCollection = _facade.getForumList();
-
-
-	}
-
-
-	@BeforeClass
-	public static void beforeClass(){
-		System.out.println("Before class");
-	}
-
-	@Before
-	public void beforeTest(){
-	}
-
-	@After
-	public void afterTest(){
-		System.out.println("After test");
-
-	}
-
-	@AfterClass
-	public static void afterClass(){
-		System.out.println("After class");
 	}
 
 
