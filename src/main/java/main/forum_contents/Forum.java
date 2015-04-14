@@ -23,6 +23,7 @@ public class Forum implements ForumI {
     private ForumPolicyI policy;
     private HashMap<String, SubForumI> _subForums = new HashMap<>();
     private HashMap<String, UserI> _users = new HashMap<>();
+    private HashMap<String, UserType> _userTypes = new HashMap<String, UserType>();
     private UserI guest = null;
     private UserI admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
@@ -174,13 +175,13 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public String[] getUserTypes() {
-        return new String[0];
+    public Collection<UserType> getUserTypes() {
+        return _userTypes.values();
     }
 
     @Override
     public void addUserType(String type) {
-
+        this._userTypes.put(type, new UserType(type));
     }
 
     @Override

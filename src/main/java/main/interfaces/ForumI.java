@@ -4,6 +4,8 @@ import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;
 import main.exceptions.UserAlreadyExistsException;
+import main.forum_contents.SubForum;
+import main.forum_contents.UserType;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -64,7 +66,7 @@ public interface ForumI {
 	/**
 	 * manage forum user types
 	 */
-	String[] getUserTypes();
+	Collection<UserType> getUserTypes();
 
 	void addUserType(String type);
 
