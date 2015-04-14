@@ -2,13 +2,13 @@ package main.User;
 
 import main.Utils.SecureString;
 import main.exceptions.PermissionDenied;
-import main.forum_contents.SubForumPermission;
-import main.interfaces.*;
+import main.interfaces.ForumI;
+import main.interfaces.MessageI;
+import main.interfaces.SubForumPermissionI;
+import main.interfaces.UserI;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.HashMap;
 
 /**
  * Created by gabigiladov on 4/11/15.
@@ -22,7 +22,7 @@ public class User implements UserI {
     private GregorianCalendar signUpDate;
     private int seniority_in_days;
     private int numOfMessages;
-    private HashMap<String, SubForumPermissionI> subForumsPermissions;
+    private Collection<SubForumPermissionI> subForumsPermissions;
     private boolean isAuthenticated;
     public void setUsername(String username) {
         this.username = username;
@@ -37,23 +37,17 @@ public class User implements UserI {
         numOfMessages = 0;
         this.isAuthenticated = false;
         this.authString = SecureString.nextUserAuthString();
-        subForumsPermissions = new HashMap<String, SubForumPermissionI>();
     }
 
     public void addForum(ForumI forum){
-        for (SubForumI subf: forum.get_subForums().values()){
-            subForumsPermissions.put(subf.get_name(), new SubForumPermission(subf, this));
-        }
+        return; // TODO : add
     }
-
-
-
 
     /**
      * @return whether this user has authenticated his email address
      */
     public boolean isEmailAuthnticated() {
-        return isAuthenticated;
+        return false;
     }
 
     /**
@@ -62,8 +56,6 @@ public class User implements UserI {
     public Collection<SubForumPermissionI> getSubForumPermission() {
         return null;
     }
-
-    public void setAuthenticated() { this.isAuthenticated = true;}
 
     public String getUsername(){
 
@@ -115,11 +107,11 @@ public class User implements UserI {
         return this.authString;
     }
 
-    public HashMap<String, SubForumPermissionI> getSubForumsPermissions() {
+    public Collection<SubForumPermissionI> getSubForumsPermissions() {
         return subForumsPermissions;
     }
 
-    public void setSubForumsPermissions(HashMap<String, SubForumPermissionI> subForumsPermissions) {
+    public void setSubForumsPermissions(Collection<SubForumPermissionI> subForumsPermissions) {
         this.subForumsPermissions = subForumsPermissions;
     }
 }
