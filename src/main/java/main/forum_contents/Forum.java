@@ -4,6 +4,7 @@ import main.User.User;
 import main.Utils.GmailSender;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.SubForumDoesNotExsitsException;
 import main.exceptions.UserAlreadyExistsException;
 import main.interfaces.ForumI;
 import main.interfaces.ForumPolicyI;
@@ -49,6 +50,13 @@ public class Forum implements ForumI {
         SubForumI subForum = new SubForum(name,  this.policy.getSubforumPolicy());
         _subForums.put(name, subForum);
         return subForum;
+    }
+
+    public void deleteSubForum(SubForumI subforum) throws SubForumDoesNotExsitsException {
+        if (!_subForums.containsKey(subforum.get_name())){
+            throw new SubForumDoesNotExsitsException();
+        }
+        _subForums.remove(subforum.get_name());
     }
 
     @Override
