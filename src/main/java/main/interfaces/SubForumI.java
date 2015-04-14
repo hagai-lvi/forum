@@ -2,6 +2,7 @@ package main.interfaces;
 
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
+import main.exceptions.ModeratorDoesNotExistsException;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -23,10 +24,13 @@ public interface SubForumI {
 	/**
 	 * Allows a user to report a moderator
 	 */
-	void reportModerator(String moderatorUsername, String reportMessage, UserI reporter);
+	void reportModerator(String moderatorUsername, String reportMessage, UserI reporter) throws ModeratorDoesNotExistsException;
 
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
 	void deleteMessage(MessageI message, UserI requesting_user);
+
+	public void setModerator(UserI mod);
+
 }

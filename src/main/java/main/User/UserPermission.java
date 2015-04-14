@@ -1,5 +1,7 @@
 package main.User;
 
+import main.exceptions.DoesNotComplyWithPolicyException;
+import main.exceptions.MessageNotFoundException;
 import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.interfaces.*;
@@ -8,7 +10,7 @@ import org.apache.log4j.Logger;
 /**
  * Created by gabigiladov on 4/11/15.
  */
-public class UserPermission implements ForumPermissionI, SubForumPermissionI {
+    public class UserPermission implements ForumPermissionI, SubForumPermissionI {
 
     private String permission;
     private ForumI forum;
@@ -62,49 +64,96 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     }
 
     @Override
-    public void setAdmin(UserI admin, ForumI forum) {
+    public void setAdmin(UserI admin) throws PermissionDeniedException {
+        if(permission.equals("Super-Admin")) {
+            logger.info(permission + " has permission to add administrator");
+            forum.setAdmin(admin);
+        } else {
+            logger.error(permission + " has no permission to add administrator");
+            throw new PermissionDeniedException("User has no permission to add administrator");
+        }
+    }
+
+    @Override
+    public void setPolicy(ForumPolicyI policy) throws PermissionDeniedException {
+        if(permission.equals("Administrator")) {
+            logger.info(permission + " has permission to set policy");
+            forum.setPolicy(policy);
+        } else {
+            logger.error(permission + " has no permission to set policy");
+            throw new PermissionDeniedException("User has no permission to set policy");
+        }
+    }
+
+    @Override
+    public String viewStatistics() throws PermissionDeniedException {
+        if(permission.equals("Administrator")) {
+            logger.info(permission + " has permission to view statistics");
+            return forum.viewStatistics();
+        } else {
+            logger.error(permission + " has no permission to view statistics");
+            throw new PermissionDeniedException("User has no permission to view statistics");
+        }
+    }
+
+    @Override
+    public void addForum(ForumI forum) throws PermissionDeniedException {
 
     }
 
     @Override
-    public void setPolicy(ForumI forum, ForumPolicyI policy) {
-
+    public boolean findForum(String name) {
+        return forum.getName().equals(name);
     }
 
     @Override
-    public String viewStatistics(ForumI forum) {
-        return null;
+    public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+        if(!permission.equals("Guest")) {
+            logger.info(permission + " has permission to create thread");
+            subforum.creatThread(message);
+        } else {
+            logger.error(permission + " has no permission to create thread");
+            throw new PermissionDeniedException("User has no permission to create thread");
+        }
     }
 
-    @Override
-    public void addForum(ForumI forum) {
-
+   @Override
+    public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
+        if(!permission.equals("Guest")) {
+            logger.info(permission + " has permission to reply");
+            subforum.replyToMessage(original, reply);
+        } else {
+            logger.error(permission + " has no permission to reply");
+            throw new PermissionDeniedException("User has no permission to reply");
+        }
     }
 
-    @Override
-    public void createThread(MessageI message) {
-
-    }
-
-    /**
-     * reply to a specific message
-     */
-    public void replyToMessage(MessageI original, MessageI reply){
-
-    }
-
-    /**
-     * Allows a user to report a moderator
-     */
-    public void reportModerator(String moderatorUsername, String reportMessage){
-
+   @Override
+    public void reportModerator(String moderatorUsername, String reportMessage) throws PermissionDeniedException {
+       if(!permission.equals("Guest")) {
+           logger.info(permission + " has permission to report moderator");
+           subforum.reportModerator(moderatorUsername, reportMessage);
+       } else {
+           logger.error(permission + " has no permission to reply");
+           throw new PermissionDeniedException("User has no permission to reply");
+       }
     }
 
     /**
      * Delete a specific message if the message was create by the user that sent this request
      */
-    public void deleteMessage(MessageI message){
+    public void deleteMessage(MessageI message) throws PermissionDeniedException {
+        if(canDeleteMessage()) {
+            logger.info(permission + " has permission to delete message");
+            subforum.reportModerator(moderatorUsername, reportMessage);
+        } else {
+            logger.error(permission + " has no permission to delete message");
+            throw new PermissionDeniedException("User has no delete message");
+        }
+    }
 
+    private boolean canDeleteMessage() {
+        return false;
     }
 
     @Override
@@ -113,18 +162,14 @@ public class UserPermission implements ForumPermissionI, SubForumPermissionI {
     }
 
     @Override
-    public void setModerator(SubForumI subForum, UserI moderator) {
-
-    }
-
-    @Override
-    public void banModerator(UserI moderatorToBan, long time) {
-
-    }
-
-    @Override
-    public void sendFriendRequest(UserI newFriend) {
-
+    public void setModerator(UserI moderator) throws PermissionDeniedException {
+        if(permission.equals("")) {
+            logger.info(permission + " has permission to delete message");
+            subforum.reportModerator(moderatorUsername, reportMessage);
+        } else {
+            logger.error(permission + " has no permission to delete message");
+            throw new PermissionDeniedException("User has no delete message");
+        }
     }
 
     @Override

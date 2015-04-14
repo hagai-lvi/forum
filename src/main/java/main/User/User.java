@@ -1,7 +1,9 @@
 package main.User;
 
 import main.Utils.SecureString;
+import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.PermissionDeniedException;
+import main.exceptions.SubForumAlreadyExistException;
 import main.interfaces.*;
 
 import java.util.GregorianCalendar;
@@ -10,7 +12,7 @@ import java.util.Vector;
 /**
  * Created by gabigiladov on 4/11/15.
  */
-      public class User implements UserI {
+public class User implements UserI {
 
     private String authString = null;
     private String username;
@@ -112,73 +114,122 @@ import java.util.Vector;
     }
 
     @Override
-    public SubForumPermissionI[] viewSubForums() {
-        return new SubForumPermissionI[0];
+    public Vector<SubForumPermissionI> viewSubForums() {
+        return this.subForumsPermissions;
     }
 
     @Override
-    public SubForumI createSubForum(String name) throws PermissionDeniedException {
-        return null;
+    public void createSubForum(String name, ForumI forum) throws PermissionDeniedException {
+        for(int i = 0; i < forumsPermission.size(); i++) {
+            if(forumsPermission.elementAt(i).findForum(forum.getName())){
+                try {
+                    forumsPermission.elementAt(i).createSubForum(name);
+                    break;
+                } catch (SubForumAlreadyExistException e) {
+                    System.out.println("The SubForum is already exist!");;
+                }
+            }
+        }
     }
 
     @Override
-    public void deleteSubForum(SubForumI toDelete) {
-
+    public void deleteSubForum(SubForumI toDelete, ForumI forum) throws PermissionDeniedException{
+        for(int i = 0; i < forumsPermission.size(); i++) {
+            if(forumsPermission.elementAt(i).findForum(forum.getName())){
+                forumsPermission.elementAt(i).deleteSubForum(toDelete);
+                break;
+            }
+        }
     }
 
     @Override
-    public void createThread(MessageI message) throws PermissionDeniedException {
-
+    public void createThread(MessageI message, SubForumI subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+        for(int i = 0; i < subForumsPermissions.size(); i++) {
+            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
+                subForumsPermissions.elementAt(i).createThread(message);
+                break;
+            }
+        }
     }
 
     @Override
-    public void replyToMessage(MessageI original, MessageI reply) {
-
+    public void replyToMessage(SubForumI subforum, MessageI original, MessageI reply) throws PermissionDeniedException {
+        for(int i = 0; i < subForumsPermissions.size(); i++) {
+            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
+                subForumsPermissions.elementAt(i).replyToMessage(original, reply);
+                break;
+            }
+        }
     }
 
     @Override
-    public void reportModerator(String moderatorUsername, String reportMessage) {
-
+    public void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException {
+        for(int i = 0; i < subForumsPermissions.size(); i++) {
+            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
+                subForumsPermissions.elementAt(i).reportModerator(moderatorUsername, reportMessage);
+                break;
+            }
+        }
     }
 
     @Override
-    public void deleteMessage(MessageI message) {
-
+    public void deleteMessage(MessageI message, SubForumI subforum) throws PermissionDeniedException {
+        for(int i = 0; i < subForumsPermissions.size(); i++) {
+            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
+                subForumsPermissions.elementAt(i).deleteMessage(message);
+                break;
+            }
+        }
     }
 
     @Override
-    public ThreadI[] getThreads() {
-        return new ThreadI[0];
+    public void setAdmin(UserI admin, ForumI forum) throws PermissionDeniedException {
+        for(int i = 0; i < forumsPermission.size(); i++) {
+            if(forumsPermission.elementAt(i).findForum(forum.getName())){
+                forumsPermission.elementAt(i).setAdmin(admin);
+                break;
+            }
+        }
     }
 
     @Override
-    public void setAdmin(UserI admin, ForumI forum) {
-
+    public void setPolicy(ForumI forum, ForumPolicyI policy) throws PermissionDeniedException {
+        for(int i = 0; i < forumsPermission.size(); i++) {
+            if(forumsPermission.elementAt(i).findForum(forum.getName())){
+                forumsPermission.elementAt(i).setPolicy(policy);
+                break;
+            }
+        }
     }
 
     @Override
-    public void setPolicy(ForumI forum, ForumPolicyI policy) {
-
+    public String viewStatistics(ForumI forum) throws PermissionDeniedException {
+        for(int i = 0; i < forumsPermission.size(); i++) {
+            if(forumsPermission.elementAt(i).findForum(forum.getName())){
+                return forumsPermission.elementAt(i).viewStatistics();
+            }
+        }
+        return "Has no permission to view statistics";
     }
 
     @Override
-    public String viewStatistics(ForumI forum) {
-        return null;
+    public void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException {
+        for(int i = 0; i < subForumsPermissions.size(); i++) {
+            if(subForumsPermissions.elementAt(i).findForum(subForum.getName())){
+                subForumsPermissions.elementAt(i).setModerator(moderator);
+                break;
+            }
+        }
     }
 
     @Override
-    public void setModerator(SubForumI subForum, UserI moderator) {
-
-    }
-
-    @Override
-    public void banModerator(UserI moderatorToBan, long time) {
-
-    }
-
-    @Override
-    public void sendFriendRequest(UserI newFriend) {
-
+    public void banModerator(SubForumI subForum, UserI moderatorToBan, long time) throws PermissionDeniedException {
+        for(int i = 0; i < subForumsPermissions.size(); i++) {
+            if(subForumsPermissions.elementAt(i).findForum(subForum.getName())){
+                subForumsPermissions.elementAt(i).banModerator(moderatorToBan, time);
+                break;
+            }
+        }
     }
 
     @Override

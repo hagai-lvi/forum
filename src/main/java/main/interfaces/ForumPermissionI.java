@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 
@@ -24,20 +25,27 @@ public interface ForumPermissionI {
 	/**
 	 * Set new forum administrator
 	 */
-	void setAdmin(UserI admin, ForumI forum)  throws PermissionDeniedException;
+	void setAdmin(UserI admin)  throws PermissionDeniedException;
 
 	/**
 	 * Set policy for forum
 	 */
-	void setPolicy(ForumI forum, ForumPolicyI policy)  throws PermissionDeniedException;
+	void setPolicy(ForumPolicyI policy)  throws PermissionDeniedException;
 
 	/**
 	 * Get statistics
 	 */
-	String viewStatistics(ForumI forum)  throws PermissionDeniedException;
+	String viewStatistics()  throws PermissionDeniedException;
 
 	/**
 	 * Add new forum
 	 */
 	void addForum(ForumI forum)  throws PermissionDeniedException;
+
+	/**
+	 * Compare names
+	 */
+	boolean findForum(String name);
+
+	void createTread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 }

@@ -19,8 +19,8 @@ public class Forum implements ForumI {
     private ForumPolicyI policy;
     private HashMap<String, SubForumI> _subForums = new HashMap<>();
     private HashMap<String, UserI> _users = new HashMap<>();
-    private User guest = null;
-    private User admin = null;
+    private UserI guest = null;
+    private UserI admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
 
     public Forum(ForumPolicyI policy){
@@ -44,6 +44,14 @@ public class Forum implements ForumI {
         this._users.put("Guest", this.guest);
         this._users.put("Admin", this.admin);
         this.forum_name = name;
+    }
+
+    public void setAdmin(UserI admin){
+        this.admin = admin;
+    }
+
+    public String viewStatistics(){
+        return "No statistics yet";
     }
 
 
