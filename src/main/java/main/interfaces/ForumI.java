@@ -22,6 +22,7 @@ public interface ForumI {
 	 */
 	SubForumI createSubForum(String name) throws SubForumAlreadyExistException;
 
+	public String getName();
 
 	void deleteSubForum(SubForumI todelete) throws SubForumDoesNotExsitsException;
 	/**
