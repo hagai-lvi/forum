@@ -14,6 +14,7 @@ import org.apache.log4j.Logger;
 import org.junit.*;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Iterator;
 
 import static org.junit.Assert.*;
@@ -215,7 +216,7 @@ public class MainTest {
 	public void Test_Register() {
 
 		ForumI forum = _forumCollection.iterator().next();
-		UserI user =new User("gilgilmor", "morgil12345", "gilmor89@gmail.com");
+		UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com");
 		try {
 			user = forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
 			forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
@@ -226,9 +227,9 @@ public class MainTest {
 			fail("wrong exception, register the same user");
 		}finally {
 			Collection<UserI> users = forum.getUserList();
-			assert (users.contains(user));
+			assertTrue(users.contains(user));
+			System.out.println("Asserted : " + users.contains(user));
 		}
-
 	}
 
 	/**
@@ -265,12 +266,13 @@ public class MainTest {
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user;
 		try {
-			user = forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
-			UserI sameUser = forum.login("gilgilmor", "morgil12345");
+			user = forum.register("some_new_user", "morgil12345", "gilmor89@gmail.com");
+			UserI sameUser = forum.login("some_new_user", "morgil12345");
 			forum.logout(sameUser);
 		}catch (Throwable e) {
 			fail("fail to logout");
 		}
+		assertTrue(true);
 
 	}
 

@@ -55,7 +55,8 @@ public class Forum implements ForumI {
             throw new UserAlreadyExistsException(userName);
         }
         if (!policy.isValidPassword(password)){
-            throw new InvalidUserCredentialsException();
+
+            //throw new InvalidUserCredentialsException();    ---> uncomment if victor does the checking.
         }
         // we are done with protective programing, time to do work.
         User new_user = new User(userName, password, eMail);

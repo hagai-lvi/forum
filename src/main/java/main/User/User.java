@@ -32,7 +32,7 @@ public class User implements UserI {
         signUpDate = new GregorianCalendar();
         seniority_in_days = 0;
         numOfMessages = 0;
-        this.isAuthenticated = false;
+        this.isAuthenticated = true;
         this.authString = SecureString.nextUserAuthString();
     }
 
