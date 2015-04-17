@@ -332,7 +332,7 @@ public class MainTest {
 	/**
 	 * target test Friend Type requirement
 	 */
-	public void Test_FriendType(){
+	public void friendTypeTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		int n = forum.getUserTypes().size();
 		forum.addUserType("GoldenX");
