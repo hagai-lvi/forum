@@ -12,14 +12,14 @@ import java.util.Collection;
 public interface SubForumI {
 
 	/**
-	 * create a thread in the subforum
+	 * create a thread in the sub-forum
 	 */
-	void creatThread(MessageI message) throws DoesNotComplyWithPolicyException;
+	void createThread(MessageI message) throws DoesNotComplyWithPolicyException;
 
 	String getName();
 
 	/**
-	 * reply to a specific messgae
+	 * reply to a specific message
 	 */
 	void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException;
 
@@ -36,9 +36,7 @@ public interface SubForumI {
 	void setModerator(UserI mod);
 
 	/**
-	 * Return the threads in this subforum
+	 * Return the threads in this sub-forum
 	 */
 	Collection<ThreadI> getThreads();
-
-
 }

@@ -32,7 +32,7 @@ public class SubForum implements SubForumI {
 
 
     @Override
-    public void creatThread(MessageI message) throws DoesNotComplyWithPolicyException {
+    public void createThread(MessageI message) throws DoesNotComplyWithPolicyException {
         if (!subforumPolicy.isValidMessage(message)) {
             throw new DoesNotComplyWithPolicyException();
         }

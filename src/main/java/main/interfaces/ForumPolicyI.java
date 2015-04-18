@@ -40,6 +40,4 @@ public interface ForumPolicyI {
      * @param moderator - the designated moderator.
      */
     boolean isValidModerator(User moderator);
-
-    boolean isValidMessage(MessageI message);
 }

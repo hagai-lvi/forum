@@ -2,10 +2,10 @@ package main_test;
 
 import main.User.User;
 import main.exceptions.*;
-import main.forum_contents.Facade;
+import main.services_layer.Facade;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
-import main.forum_contents.ForumPolicy_R1;
+import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 import org.junit.*;
@@ -32,7 +32,7 @@ public class MainTest {
 		String[] names = {"gil","tom","hagai", "gabi", "victor", "aria", "yoni", "moshe",
 						  "tal", "chen", "bibi", "mor", "david", "dudinka", "aaa"};
 		_facade = Facade.getFacade();
-		ForumPolicyI policy = new ForumPolicy_R1(3,"[a-zA-Z]*[!@#$][a-zA-Z]");
+		ForumPolicyI policy = new ForumPolicy(3,"[a-zA-Z]*[!@#$][a-zA-Z]");
 		for(int i=0;i<5;i++) {
 			ForumI newForum = new Forum("Forum " + Integer.toString(i), policy);
 			_facade.addForum(newForum);
@@ -46,7 +46,7 @@ public class MainTest {
 					fail(e.getMessage());
 				}
 				SubForumI sf = newForum.createSubForum("SubForum " + j + " In Forum" + i);
-				sf.creatThread(new ForumMessage(null,user,"hello","Hi"));
+				sf.createThread(new ForumMessage(null, user, "hello", "Hi"));
 			}
 		}
 		_forumCollection = _facade.getForumList();
@@ -80,7 +80,7 @@ public class MainTest {
 	 */
 	@Test
 	public void initializeTest(){
-		assertTrue(_facade.InitilizeSystem());
+		//TODO
 	}
 
 	/**
@@ -90,7 +90,7 @@ public class MainTest {
 	public void createForumTest(){
 
 		ForumI newForum;
-		ForumPolicyI newPolicy = new ForumPolicy_R1(2, "[a-z]*[!@#][a-z]*");
+		ForumPolicyI newPolicy = new ForumPolicy(2, "[a-z]*[!@#][a-z]*");
 		newForum = new Forum("Forum CreateForumTest" , newPolicy);
 		int numOfForums = _forumCollection.size();
 
@@ -108,7 +108,7 @@ public class MainTest {
 	 * target: set new policy for forum
 	 */
 	public void setPoliciesTest(){
-		ForumPolicyI newPolicy = new ForumPolicy_R1(2, "[a-z]*[!@#\\d]*[\\d]*");
+		ForumPolicyI newPolicy = new ForumPolicy(2, "[a-z]*[!@#\\d]*[\\d]*");
 		ForumI forum = _forumCollection.iterator().next();
 		forum.setPolicy(newPolicy);
 
@@ -332,7 +332,7 @@ public class MainTest {
 	/**
 	 * target test Friend Type requirement
 	 */
-	public void Test_FriendType(){
+	public void friendTypeTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		int n = forum.getUserTypes().size();
 		forum.addUserType("GoldenX");

@@ -3,7 +3,7 @@ package main.Content;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.UserAlreadyExistsException;
 import main.forum_contents.Forum;
-import main.forum_contents.ForumPolicy_R1;
+import main.forum_contents.ForumPolicy;
 import main.interfaces.ForumI;
 import main.interfaces.ForumPolicyI;
 import main.interfaces.UserI;
@@ -22,7 +22,7 @@ public class ForumTest {
 
     @Before
     public void setUp() throws Exception {
-        ForumPolicyI policy = new ForumPolicy_R1(5,"a");
+        ForumPolicyI policy = new ForumPolicy(5,"a");
         forum = new Forum("ForumName", policy);
     }
 
