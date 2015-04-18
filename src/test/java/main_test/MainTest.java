@@ -2,7 +2,7 @@ package main_test;
 
 import main.User.User;
 import main.exceptions.*;
-import main.forum_contents.Facade;
+import main.services_layer.Facade;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy_R1;
@@ -80,7 +80,7 @@ public class MainTest {
 	 */
 	@Test
 	public void initializeTest(){
-		assertTrue(_facade.InitilizeSystem());
+		//TODO
 	}
 
 	/**
@@ -332,7 +332,7 @@ public class MainTest {
 	/**
 	 * target test Friend Type requirement
 	 */
-	public void Test_FriendType(){
+	public void friendTypeTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		int n = forum.getUserTypes().size();
 		forum.addUserType("GoldenX");
