@@ -1,6 +1,8 @@
-package main.forum_contents;
+package main.Content;
 import junit.framework.TestCase;
 import main.User.User;
+import main.forum_contents.ForumPolicy_R1;
+
 import java.util.GregorianCalendar;
 
 /**
