@@ -8,6 +8,10 @@ import main.interfaces.UserI;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.GregorianCalendar;
+
 import static org.junit.Assert.*;
 
 /**
@@ -41,42 +45,54 @@ public class UserTest {
 
     @Test
     public void testSetAuthenticated() throws Exception {
-
-    }
-
-    @Test
-    public void testGetSubForumPermission() throws Exception {
-
+        assertFalse(user.isEmailAuthenticated());
+        user.setAuthenticated();
+        assertTrue(user.isEmailAuthenticated());
     }
 
     @Test
     public void testGetUsername() throws Exception {
-
+        String name = "Orli";
+        assertEquals(user.getUsername(), "Gabi");
+        user.setUsername(name);
+        assertEquals(user.getUsername(), name);
     }
 
     @Test
     public void testGetPassword() throws Exception {
-
+        assertEquals(user.getPassword(), "123456");
+        user.setPassword("gabi123");
+        assertFalse(user.getPassword().equals("123456"));
+        assertTrue(user.getPassword().equals("gabi123"));
     }
 
     @Test
     public void testSetPassword() throws Exception {
-
+        user.setPassword("gabi123");
+        assertFalse(user.getPassword().equals("123456"));
+        assertTrue(user.getPassword().equals("gabi123"));
     }
 
     @Test
     public void testGetEmail() throws Exception {
-
+        assertTrue(user.getEmail().equals("mail@gmail.com"));
+        user.setEmail("mail2@gmail.com");
+        assertTrue(user.getEmail().equals("mail2@gmail.com"));
     }
 
     @Test
     public void testSetEmail() throws Exception {
-
+        user.setEmail("mail2@gmail.com");
+        assertTrue(user.getEmail().equals("mail2@gmail.com"));
     }
 
     @Test
     public void testGetSignUpDate() throws Exception {
-
+        GregorianCalendar date = user.getSignUpDate();
+        Calendar today =  GregorianCalendar.getInstance();
+        assertEquals(date.get(Calendar.YEAR), today.get(Calendar.YEAR));
+        assertEquals(date.get(Calendar.MONTH), today.get(Calendar.MONTH));
+        assertEquals(date.get(Calendar.DAY_OF_MONTH), today.get(Calendar.DAY_OF_MONTH));
     }
 
     @Test

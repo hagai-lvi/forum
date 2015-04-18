@@ -6,6 +6,7 @@ import main.exceptions.ModeratorDoesNotExistsException;
 import main.exceptions.PermissionDeniedException;
 
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.Vector;
 
 /**
@@ -118,4 +119,10 @@ public interface UserI {
 	 * Get email message and compares to real authenticated string
 	 */
 	void setAuthenticated();
+
+	void setPassword(String password);
+
+	void setEmail(String email);
+
+	GregorianCalendar getSignUpDate();
 }

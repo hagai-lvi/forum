@@ -56,7 +56,6 @@ public class User implements UserI {
          Get the list of all of the subforums of this user
      */
     public Vector<SubForumPermissionI> getSubForumPermission() {
-
         return this.subForumsPermissions;
     }
 
