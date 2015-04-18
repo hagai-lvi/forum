@@ -192,4 +192,54 @@ public class Forum implements ForumI {
     public String toString(){
         return getName();
     }
+
+    public String getForum_name() {
+        return forum_name;
+    }
+
+    public void setForum_name(String forum_name) {
+        this.forum_name = forum_name;
+    }
+
+    public ForumPolicyI getPolicy() {
+        return policy;
+    }
+
+    public HashMap<String, SubForumI> get_subForums() {
+        return _subForums;
+    }
+
+    public void set_subForums(HashMap<String, SubForumI> _subForums) {
+        this._subForums = _subForums;
+    }
+
+    public HashMap<String, UserI> get_users() {
+        return _users;
+    }
+
+    public void set_users(HashMap<String, UserI> _users) {
+        this._users = _users;
+    }
+
+    public HashMap<String, UserType> get_userTypes() {
+        return _userTypes;
+    }
+
+    public void set_userTypes(HashMap<String, UserType> _userTypes) {
+        this._userTypes = _userTypes;
+    }
+
+    public UserI getGuest() {
+        return guest;
+    }
+
+    public void setGuest(UserI guest) {
+        this.guest = guest;
+    }
+
+    public UserI getAdmin() {
+        return admin;
+    }
+
+    public Forum(){}
 }

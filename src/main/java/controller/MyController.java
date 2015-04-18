@@ -7,6 +7,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
@@ -14,14 +15,13 @@ import javax.servlet.http.HttpSession;
  * Created by hagai_lvi on 4/18/15.
  */
 @Controller
-//@RequestMapping("/facade")
 public class MyController {
 	@RequestMapping(value = "/facade",method = RequestMethod.GET)
 	public void printWelcome(ModelMap model, HttpSession session) {
 		FacadeI f = Facade.getFacade();
 			model.addAttribute("message", "Facade controller");
 			model.addAttribute("size", f.getForumList().size());
-			model.addAttribute("forumList", f.getForumList().iterator());
+			model.addAttribute("forumList", f.getForumList());
 	}
 
 	@RequestMapping(value = "/addForum",method = RequestMethod.POST)
@@ -29,6 +29,12 @@ public class MyController {
 		FacadeI f = Facade.getFacade();
 		f.addForum(new Forum(forumName, null));
 		model.addAttribute("forumName", forumName);
+	}
+
+
+	@RequestMapping(value = "/login",method = RequestMethod.POST)
+	public void login(ModelMap model, @RequestParam String forum) {
+		model.addAttribute("forumName", forum);
 	}
 
 

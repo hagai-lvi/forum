@@ -11,7 +11,12 @@
 
 
         <c:forEach var="forum" items="${forumList}">
-            ${forum}<br/>
+            ${forum}
+
+            <form action="login" method="POST">
+                <input type="submit" value="${forum}" name="forum"/>
+            </form>
+            <br/>
         </c:forEach>
 
     </tr>
