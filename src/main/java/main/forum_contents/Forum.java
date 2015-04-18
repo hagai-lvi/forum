@@ -187,4 +187,9 @@ public class Forum implements ForumI {
     public boolean removeUserType(String type) {
         return false;
     }
+
+    @Override
+    public String toString(){
+        return getName();
+    }
 }
