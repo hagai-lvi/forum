@@ -1,5 +1,6 @@
 package main.services_layer;
 
+import main.forum_contents.Forum;
 import main.interfaces.FacadeI;
 import main.interfaces.ForumI;
 import main.interfaces.MessageI;
@@ -14,7 +15,12 @@ import java.util.Collection;
 public class Facade implements FacadeI {
 	private static Facade theFacade = new Facade();
 
-	private Facade(){}
+	private Facade(){
+		//TODO remove, for demo only
+		addForum(new Forum("A",null));
+		addForum(new Forum("B",null));
+		addForum(new Forum("C",null));
+	}
 
 	private Collection<ForumI> forums = new ArrayList<>();
 
