@@ -1,4 +1,4 @@
-package main.forum_contents;
+package main.services_layer;
 
 import main.interfaces.FacadeI;
 import main.interfaces.ForumI;
