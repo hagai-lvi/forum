@@ -80,7 +80,7 @@ public class MainTest {
 	 */
 	@Test
 	public void initializeTest(){
-		assertTrue(_facade.InitilizeSystem());
+		//TODO
 	}
 
 	/**
