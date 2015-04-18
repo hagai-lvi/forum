@@ -11,24 +11,23 @@ import java.util.GregorianCalendar;
 /**
  * Created by victor on 4/11/2015.
  */
-public class ForumPolicy_R1 implements ForumPolicyI, SubForumPolicyI{
+public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
    // private Forum forum;
-    private static Logger logger = Logger.getLogger(ForumPolicy_R1.class.getName());
+    private static Logger logger = Logger.getLogger(ForumPolicy.class.getName());
     private final String forbiddenWords[];
     private final int GOLDEN_USER_SENIORITY = 12; // The required seniority in months.
     private final int SILVER_USER_SENIORITY = 4;
 
     private int maxModerators;
     private String passwordRegex;
-
-    public ForumPolicy_R1(int maxModerators, String passwordRegex) {
+//TODO - define parameters according to  requirements.
+    public ForumPolicy(int maxModerators, String passwordRegex) {
         this.maxModerators = maxModerators;
         this.passwordRegex = passwordRegex;
         forbiddenWords = new String[2];
         forbiddenWords[0] = "stupid";
         forbiddenWords[1] = "dumb";
-        //this.forum = forum;
     }
 
     @java.lang.Override

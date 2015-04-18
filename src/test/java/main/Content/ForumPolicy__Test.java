@@ -2,7 +2,7 @@ package main.Content;
 import junit.framework.TestCase;
 import main.User.User;
 import main.forum_contents.ForumMessage;
-import main.forum_contents.ForumPolicy_R1;
+import main.forum_contents.ForumPolicy;
 import main.interfaces.MessageI;
 
 import java.util.GregorianCalendar;
@@ -10,11 +10,11 @@ import java.util.GregorianCalendar;
 /**
  * Created by victor on 4/11/2015.
  */
-public class ForumPolicy_R1_Test extends TestCase {
-    ForumPolicy_R1 fp;
+public class ForumPolicy__Test extends TestCase {
+    ForumPolicy fp;
     public void setUp() throws Exception {
         super.setUp();
-        fp = new ForumPolicy_R1(3, "[a-z]*");
+        fp = new ForumPolicy(3, "[a-z]*");
     }
 
     public void tearDown() throws Exception {
