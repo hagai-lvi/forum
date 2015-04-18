@@ -14,15 +14,18 @@ public interface ForumPolicyI {
      */
 	boolean isValidPassword(String password);
 
-
+    /**
+     * Returns the SubForum portion of the forum policy.
+     */
     SubForumPolicyI getSubforumPolicy();
+
     /**
      * Each member in this forum must have a password that matches the given regex
      */
 	void setPasswordRegex(String regex);
 
     /**
-     * Each subforum under this forum can have at most numOfModerators moderators
+     * Each sub-forum under this forum can have at most numOfModerators moderators
      */
     void setMaxModerators(int numOfModerators);
 
@@ -37,4 +40,6 @@ public interface ForumPolicyI {
      * @param moderator - the designated moderator.
      */
     boolean isValidModerator(User moderator);
+
+    boolean isValidMessage(MessageI message);
 }

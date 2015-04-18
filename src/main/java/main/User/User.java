@@ -1,9 +1,7 @@
 package main.User;
 
 import main.Utils.SecureString;
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.PermissionDeniedException;
-import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.*;
 import main.interfaces.*;
 
 import java.util.GregorianCalendar;
@@ -19,7 +17,7 @@ public class User implements UserI {
     private String password;
     private String email;
     private GregorianCalendar signUpDate;
-    private int seniority_in_days;
+    private int seniorityInDays;
     private int numOfMessages;
     private Vector<SubForumPermissionI> subForumsPermissions;
     private Vector<ForumPermissionI> forumsPermission;
@@ -33,9 +31,9 @@ public class User implements UserI {
         this.password = password;
         this.email    = email;
         signUpDate = new GregorianCalendar();
-        seniority_in_days = 0;
+        seniorityInDays = 0;
         numOfMessages = 0;
-        this.isAuthenticated = true;
+        this.isAuthenticated = true; //TODO should be false, set to true for testing purpose
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<SubForumPermissionI>();
         this.forumsPermission = new Vector<ForumPermissionI>();
@@ -93,12 +91,12 @@ public class User implements UserI {
         this.signUpDate = signUpDate;
     }
 
-    public int getSeniority_in_days() {
-        return seniority_in_days;
+    public int getSeniorityInDays() {
+        return seniorityInDays;
     }
 
-    public void setSeniority_in_days(int seniority_in_days) {
-        this.seniority_in_days = seniority_in_days;
+    public void setSeniorityInDays(int seniorityInDays) {
+        this.seniorityInDays = seniorityInDays;
     }
 
     public int getNumOfMessages() {
@@ -153,7 +151,7 @@ public class User implements UserI {
     }
 
     @Override
-    public void replyToMessage(SubForumI subforum, MessageI original, MessageI reply) throws PermissionDeniedException {
+    public void replyToMessage(SubForumI subforum, MessageI original, MessageI reply) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
         for(int i = 0; i < subForumsPermissions.size(); i++) {
             if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
                 subForumsPermissions.elementAt(i).replyToMessage(original, reply);
@@ -163,10 +161,10 @@ public class User implements UserI {
     }
 
     @Override
-    public void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException {
+    public void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
         for(int i = 0; i < subForumsPermissions.size(); i++) {
             if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
-                subForumsPermissions.elementAt(i).reportModerator(moderatorUsername, reportMessage);
+                subForumsPermissions.elementAt(i).reportModerator(moderatorUsername, reportMessage, this);
                 break;
             }
         }
@@ -176,7 +174,7 @@ public class User implements UserI {
     public void deleteMessage(MessageI message, SubForumI subforum) throws PermissionDeniedException {
         for(int i = 0; i < subForumsPermissions.size(); i++) {
             if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
-                subForumsPermissions.elementAt(i).deleteMessage(message);
+                subForumsPermissions.elementAt(i).deleteMessage(message, this);
                 break;
             }
         }
@@ -223,13 +221,14 @@ public class User implements UserI {
     }
 
     @Override
-    public void banModerator(SubForumI subForum, UserI moderatorToBan, long time) throws PermissionDeniedException {
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subForum.getName())){
-                subForumsPermissions.elementAt(i).banModerator(moderatorToBan, time);
-                break;
-            }
-        }
+    public void banModerator(SubForumI subForum, UserI moderatorToBan, long time) {
+        throw new RuntimeException("Not yet implemented");
+//        for(int i = 0; i < subForumsPermissions.size(); i++) {
+//            if(subForumsPermissions.elementAt(i).findForum(subForum.getName())){
+//                subForumsPermissions.elementAt(i).banModerator(moderatorToBan, time);
+//                break;
+//            }
+//        }
     }
 
     @Override

@@ -6,7 +6,7 @@ import main.exceptions.ModeratorDoesNotExistsException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 
-import java.security.Policy;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -22,18 +22,18 @@ public class SubForum implements SubForumI {
     private HashMap<MessageI, ThreadI> _threadByMessage = new HashMap<>();
     private HashMap<String, UserI> _moderators = new HashMap<String, UserI>();
     private static Logger logger = Logger.getLogger(Forum.class.getName());
-    private SubForumPolicyI subforum_policy;
+    private SubForumPolicyI subforumPolicy;
 
 
-    public SubForum(String name, SubForumPolicyI subforum_policy){
+    public SubForum(String name, SubForumPolicyI subforumPolicy){
         _name = name;
-        this.subforum_policy = subforum_policy;
+        this.subforumPolicy = subforumPolicy;
     }
 
 
     @Override
     public void creatThread(MessageI message) throws DoesNotComplyWithPolicyException {
-        if (!subforum_policy.isValidMessage(message)) {
+        if (!subforumPolicy.isValidMessage(message)) {
             throw new DoesNotComplyWithPolicyException();
         }
         ForumThread thread = new ForumThread(message);
@@ -43,7 +43,7 @@ public class SubForum implements SubForumI {
 
     @Override
     public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException {
-        if (!subforum_policy.isValidMessage(reply)){
+        if (!subforumPolicy.isValidMessage(reply)){
             throw new DoesNotComplyWithPolicyException();
         }
         ThreadI _thread = _threadByMessage.get(original);
@@ -68,8 +68,8 @@ public class SubForum implements SubForumI {
     }
 
     @Override
-    public void deleteMessage(MessageI message, UserI requesting_user) {
-        if (message.getUser() == requesting_user){
+    public void deleteMessage(MessageI message, UserI requestingUser) {
+        if (message.getUser() == requestingUser){
             message.removeMessage();
             if (_threadByMessage.containsKey(message)){
                 _threadByMessage.remove(message);
@@ -77,7 +77,13 @@ public class SubForum implements SubForumI {
         }
     }
 
+    @Override
     public String getName(){
         return this._name;
+    }
+
+    @Override
+    public Collection<ThreadI> getThreads(){
+        return _threads;
     }
 }
