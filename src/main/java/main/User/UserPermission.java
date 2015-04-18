@@ -95,11 +95,6 @@ import org.apache.log4j.Logger;
     }
 
     @Override
-    public void addForum(ForumI forum) throws PermissionDeniedException {
-
-    }
-
-    @Override
     public boolean findForum(String name) {
         return forum.getName().equals(name);
     }

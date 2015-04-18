@@ -123,7 +123,7 @@ public class Forum implements ForumI {
         }
     }
 
-    public boolean enterUserAuthenticationString(User user, String auth_string){
+    public boolean enterUserAuthenticationString(UserI user, String auth_string){
         try{
             if (user.getUserAuthString().equals(auth_string)){
                 user.setAuthenticated();

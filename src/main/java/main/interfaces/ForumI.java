@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.User.User;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;
@@ -76,4 +77,5 @@ public interface ForumI {
 
 	public String viewStatistics();
 
+	boolean enterUserAuthenticationString(UserI user, String auth_string);
 }

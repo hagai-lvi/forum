@@ -37,11 +37,6 @@ public interface ForumPermissionI {
 	String viewStatistics()  throws PermissionDeniedException;
 
 	/**
-	 * Add new forum
-	 */
-	void addForum(ForumI forum)  throws PermissionDeniedException;
-
-	/**
 	 * Compare names
 	 */
 	boolean findForum(String name);

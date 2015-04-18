@@ -12,6 +12,7 @@ import java.util.Vector;
  */
 public class User implements UserI {
 
+
     private String authString = null;
     private String username;
     private String password;
@@ -22,9 +23,6 @@ public class User implements UserI {
     private Vector<SubForumPermissionI> subForumsPermissions;
     private Vector<ForumPermissionI> forumsPermission;
     private boolean isAuthenticated;
-    public void setUsername(String username) {
-        this.username = username;
-    }
 
     public User(String username, String password, String email) {
         this.username = username;
@@ -33,26 +31,27 @@ public class User implements UserI {
         signUpDate = new GregorianCalendar();
         seniorityInDays = 0;
         numOfMessages = 0;
-        this.isAuthenticated = true; //TODO should be false, set to true for testing purpose
+        this.isAuthenticated = false;
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<SubForumPermissionI>();
         this.forumsPermission = new Vector<ForumPermissionI>();
     }
-
-    public void addForum(ForumI forum) throws PermissionDeniedException{
-        forumsPermission.elementAt(0).addForum(forum);
+    public String getAuthString() {
+        return authString;
     }
 
-    /**
-     * @return whether this user has authenticated his email address
-     */
-    public boolean isEmailAuthnticated() {
-        return false;
+    public void setAuthString(String authString) {
+        this.authString = authString;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 
     public void setAuthenticated(){
         isAuthenticated = true;
     }
+
     /**
          Get the list of all of the subforums of this user
      */
@@ -109,6 +108,11 @@ public class User implements UserI {
 
     public String getUserAuthString(){
         return this.authString;
+    }
+
+    @Override
+    public boolean isEmailAuthenticated() {
+        return isAuthenticated;
     }
 
     @Override

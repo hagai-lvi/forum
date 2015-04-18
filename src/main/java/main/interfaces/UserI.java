@@ -13,10 +13,6 @@ import java.util.Vector;
  */
 public interface UserI {
 
-	/**
-	 * @return whether this user has authenticated his email address
-	 */
-	boolean isEmailAuthnticated();
 
 	/**
 	 * Get the list of all of the subforums of this user
@@ -79,11 +75,6 @@ public interface UserI {
 	void deleteMessage(MessageI message, SubForumI subForum)throws PermissionDeniedException;
 
 	/**
-	 * Add new forum
-	 */
-	void addForum(ForumI forum) throws PermissionDeniedException;
-
-	/**
 	 * Set new forum administrator
 	 */
 	void setAdmin(UserI admin, ForumI forum)throws PermissionDeniedException;
@@ -112,4 +103,19 @@ public interface UserI {
 	 * Add permissions
 	 */
 	void addSubForumPermission(SubForumPermissionI permission);
+
+	/**
+	 * Set username
+	 */
+	void setUsername(String name);
+
+	/**
+	 * @return whether this user has authenticated his email address
+	 */
+	boolean isEmailAuthenticated();
+
+	/**
+	 * Get email message and compares to real authenticated string
+	 */
+	void setAuthenticated();
 }
