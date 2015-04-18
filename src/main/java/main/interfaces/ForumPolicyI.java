@@ -14,8 +14,11 @@ public interface ForumPolicyI {
      */
 	boolean isValidPassword(String password);
 
-
+    /**
+     * Returns the SubForum portion of the forum policy.
+     */
     SubForumPolicyI getSubforumPolicy();
+
     /**
      * Each member in this forum must have a password that matches the given regex
      */

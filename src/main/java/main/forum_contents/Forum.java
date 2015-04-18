@@ -6,7 +6,6 @@ import main.Utils.GmailSender;
 import main.exceptions.*;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
-
 import java.util.Collection;
 import java.util.HashMap;
 

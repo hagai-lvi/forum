@@ -2,9 +2,9 @@ package main.forum_contents;
 
 import main.User.User;
 import main.interfaces.ForumPolicyI;
+import main.interfaces.SubForumPolicyI;
 import main.interfaces.MessageI;
 import org.apache.log4j.Logger;
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
