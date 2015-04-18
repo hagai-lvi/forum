@@ -14,6 +14,11 @@ public interface FacadeI {
 	Collection<ForumI> getForumList();
 
 	/**
+	 * Get the list of subforums in the specified forum
+	 */
+	Collection<SubForumI> getSubForumList(ForumI forum);
+
+	/**
 	 * Add a forum to the system, requires login with permissions
 	 * TODO who checks the permissions
 	 */
@@ -49,5 +54,10 @@ public interface FacadeI {
 	 * Create a new thread in the specified subforum
 	 */
 	void createNewThread(SubForumI subforum, String srcMessageTitle, String srcMessageBody);
+
+	/**
+	 * submit a complaint about a moderator
+	 */
+	void reportModerator(String moderatorUserName, String reportMessage);
 
 }

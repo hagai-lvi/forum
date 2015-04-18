@@ -24,6 +24,11 @@ public class Facade implements FacadeI {
 	}
 
 	@Override
+	public Collection<SubForumI> getSubForumList(ForumI forum) {
+		return null;
+	}
+
+	@Override
 	public void addForum(ForumI toAdd) {
 		forums.add(toAdd);
 	}
@@ -55,6 +60,11 @@ public class Facade implements FacadeI {
 
 	@Override
 	public void createNewThread(SubForumI subforum, String srcMessageTitle, String srcMessageBody) {
+
+	}
+
+	@Override
+	public void reportModerator(String moderatorUserName, String reportMessage) {
 
 	}
 
