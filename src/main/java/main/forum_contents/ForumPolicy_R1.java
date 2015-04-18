@@ -13,9 +13,9 @@ import java.util.GregorianCalendar;
  */
 public class ForumPolicy_R1 implements ForumPolicyI, SubForumPolicyI{
 
-    private Forum forum;
+   // private Forum forum;
     private static Logger logger = Logger.getLogger(ForumPolicy_R1.class.getName());
-
+    private final String forbiddenWords[];
     private final int GOLDEN_USER_SENIORITY = 12; // The required seniority in months.
     private final int SILVER_USER_SENIORITY = 4;
 
@@ -25,6 +25,9 @@ public class ForumPolicy_R1 implements ForumPolicyI, SubForumPolicyI{
     public ForumPolicy_R1(int maxModerators, String passwordRegex) {
         this.maxModerators = maxModerators;
         this.passwordRegex = passwordRegex;
+        forbiddenWords = new String[2];
+        forbiddenWords[0] = "stupid";
+        forbiddenWords[1] = "dumb";
         //this.forum = forum;
     }
 
@@ -80,6 +83,11 @@ public class ForumPolicy_R1 implements ForumPolicyI, SubForumPolicyI{
 
     @Override
     public boolean isValidMessage(MessageI message) {
-        return true;
+        boolean valid = true;
+        for (String word : forbiddenWords){
+            valid = valid & (!message.getMessageText().contains(word) & !message.getMessageTitle().contains(word));
+            if (!valid) { break; }
+        }
+        return valid;
     }
 }

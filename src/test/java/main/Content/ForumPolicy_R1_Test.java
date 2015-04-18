@@ -1,7 +1,9 @@
 package main.Content;
 import junit.framework.TestCase;
 import main.User.User;
+import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy_R1;
+import main.interfaces.MessageI;
 
 import java.util.GregorianCalendar;
 
@@ -46,7 +48,7 @@ public class ForumPolicy_R1_Test extends TestCase {
 
     public void testIsNotValidAdmin() throws Exception {
         User man = new User("man", "man", "man");
-        man.setSignUpDate(new GregorianCalendar(2015,12,12));
+        man.setSignUpDate(new GregorianCalendar(2015, 12, 12));
         assertFalse(fp.isValidAdmin(man));
     }
 
@@ -61,4 +63,26 @@ public class ForumPolicy_R1_Test extends TestCase {
         man.setSignUpDate(new GregorianCalendar(2015,12,12));
         assertFalse(fp.isValidModerator(man));
     }
+
+    public void testIsValidMessage() throws Exception {
+        MessageI msg = new ForumMessage(null, null, "Some valid text.", "Title");
+        assertTrue(fp.isValidMessage(msg));
+    }
+
+    public void testIsNotValidMessage() throws Exception {
+        MessageI msg = new ForumMessage(null, null, "Some stupid invalid text.", "Title");
+        assertFalse(fp.isValidMessage(msg));
+    }
+
+    public void testIsValidTitle() throws Exception {
+        MessageI msg = new ForumMessage(null, null, "Some valid text.", "Title");
+        assertTrue(fp.isValidMessage(msg));
+    }
+
+    public void testIsNotValidTitle() throws Exception {
+        MessageI msg = new ForumMessage(null, null, "Some stupid invalid text.", "dumb title");
+        assertFalse(fp.isValidMessage(msg));
+    }
+
+
 }

@@ -108,7 +108,7 @@ import org.apache.log4j.Logger;
     public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
         if( ! permission.equals(PERMISSION_GUEST)) {
             logger.info(permission + " has permission to create thread");
-            subforum.creatThread(message);
+            subforum.createThread(message);
         } else {
             logger.error(permission + " has no permission to create thread");
             throw new PermissionDeniedException("User has no permission to create thread");

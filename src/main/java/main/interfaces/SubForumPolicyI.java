@@ -5,7 +5,5 @@ package main.interfaces;
  */
 public interface SubForumPolicyI {
 
-    public boolean isValidMessage(MessageI message);
-
-
+    boolean isValidMessage(MessageI message);
 }

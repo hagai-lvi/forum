@@ -46,7 +46,7 @@ public class MainTest {
 					fail(e.getMessage());
 				}
 				SubForumI sf = newForum.createSubForum("SubForum " + j + " In Forum" + i);
-				sf.creatThread(new ForumMessage(null,user,"hello","Hi"));
+				sf.createThread(new ForumMessage(null, user, "hello", "Hi"));
 			}
 		}
 		_forumCollection = _facade.getForumList();

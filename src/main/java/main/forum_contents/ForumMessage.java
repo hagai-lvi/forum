@@ -71,4 +71,15 @@ public class ForumMessage implements MessageI {
 	public void removeMessage(){
 		this.isDeleted = true;
 	}
+
+	public String getMessageText(){
+
+		return messageText;
+	}
+
+	public String getMessageTitle(){
+		return messageTitle;
+	}
+
+
 }
