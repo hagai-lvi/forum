@@ -48,6 +48,10 @@ public class Forum implements ForumI {
         return "No statistics yet";
     }
 
+    //TODO remove
+    public Forum getForum(){
+        return this;
+    }
 
     public String getName(){
         return this.forum_name;

@@ -1,4 +1,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <html>
 <body>
 <h1>Message : ${message}</h1>
@@ -12,15 +13,20 @@
 
         <c:forEach var="forum" items="${forumList}">
             ${forum}
+            <c:out value="${forum.viewStatistics()}"/>
 
             <form action="login" method="POST">
-                <input type="submit" value="${forum}" name="forum"/>
+                <input type="submit" value=${forum.getForum()} name="forum"/>
             </form>
             <br/>
         </c:forEach>
 
     </tr>
 </table>
+
+<form:form method="post" action="/login">
+    <form:label path="name"></form:label>
+</form:form>
 
 <h1>Create new Forum:</h1><br/>
 <form action="addForum" method="POST">

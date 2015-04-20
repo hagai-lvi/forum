@@ -5,9 +5,9 @@ import main.interfaces.FacadeI;
 import main.services_layer.Facade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpSession;
 
@@ -33,8 +33,8 @@ public class MyController {
 
 
 	@RequestMapping(value = "/login",method = RequestMethod.POST)
-	public void login(ModelMap model, @RequestParam String forum) {
-		model.addAttribute("forumName", forum);
+	public void login(ModelMap model, @ModelAttribute Forum forum) {
+		model.addAttribute("forumName", forum.getName());
 	}
 
 
