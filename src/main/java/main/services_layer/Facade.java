@@ -1,9 +1,9 @@
 package main.services_layer;
 
-import main.interfaces.FacadeI;
-import main.interfaces.ForumI;
-import main.interfaces.MessageI;
-import main.interfaces.SubForumI;
+import main.exceptions.*;
+import main.forum_contents.ForumMessage;
+import main.forum_contents.SubForum;
+import main.interfaces.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -25,47 +25,50 @@ public class Facade implements FacadeI {
 
 	@Override
 	public Collection<SubForumI> getSubForumList(ForumI forum) {
-		return null;
+		return forum.getSubForums().values();
+		//TODO forum.subforums should return collection and not hashmap
 	}
 
 	@Override
 	public void addForum(ForumI toAdd) {
+		//TODO shouldn't be a part of the facade, super-admin only
 		forums.add(toAdd);
 	}
 
 	@Override
-	public void addSubforum(ForumI forum, SubForumI subforum) {
+	public void createSubforum(ForumI forum, String subforumName, UserI user) throws PermissionDeniedException {
+		user.createSubForum(subforumName, forum);
+	}
+
+	@Override
+	public void register(ForumI forum, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
+		forum.register(userName, password, email);
+	}
+
+	@Override
+	public void login(ForumI forum, String userName, String password) throws InvalidUserCredentialsException {
+		forum.login(userName, password);
+	}
+
+	@Override
+	public void logout(ForumI forum, UserI user) {
+		forum.logout(user);
+	}
+
+	@Override
+	public void addReply(UserI user, SubForumI subForum, MessageI src, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
+		user.replyToMessage(subForum,src,title, body);
 
 	}
 
 	@Override
-	public void register(ForumI forum, String userName, String password, String email) {
-
+	public void createNewThread(UserI user, SubForumI subforum, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+		user.createThread(new ForumMessage(null, null, null, null), subforum);//move the message creation to the user
 	}
 
 	@Override
-	public void login(ForumI forum, String userName, String password) {
-
-	}
-
-	@Override
-	public void logout() {
-
-	}
-
-	@Override
-	public void addReply(MessageI src, String title, String body) {
-
-	}
-
-	@Override
-	public void createNewThread(SubForumI subforum, String srcMessageTitle, String srcMessageBody) {
-
-	}
-
-	@Override
-	public void reportModerator(String moderatorUserName, String reportMessage) {
-
+	public void reportModerator(UserI user, SubForumI subforum, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
+		user.reportModerator(subforum, moderatorUserName, reportMessage);
 	}
 
 	public static FacadeI getFacade(){

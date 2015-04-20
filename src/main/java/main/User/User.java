@@ -154,10 +154,10 @@ public class User implements UserI {
     }
 
     @Override
-    public void replyToMessage(SubForumI subforum, MessageI original, MessageI reply) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
+    public void replyToMessage(SubForumI subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
         for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
-                subForumsPermissions.elementAt(i).replyToMessage(original, reply);
+            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){//TODO need to search
+//                subForumsPermissions.elementAt(i).replyToMessage(original, reply);
                 break;
             }
         }
