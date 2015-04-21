@@ -32,11 +32,25 @@ public class Forum implements ForumI {
 
     public Forum(String name, ForumPolicyI policy){
         this.policy = policy;
+        initGuest();
+        initAdmin();//TODO should be initialized?
         addAllSubforumsToUser(guest, PERMISSION_GUEST);
         addAllSubforumsToUser(admin, PERMISSION_ADMIN);
         this._users.put("Guest", this.guest);
         this._users.put("Admin", this.admin);
         this.forum_name = name;
+    }
+
+    private void initAdmin() {
+        ForumPermissionI adminPermission =
+                UserForumPermission.createUserForumPermissions(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN, this);
+        this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com", adminPermission);
+    }
+
+    private void initGuest() {
+        ForumPermissionI guestPermission =
+                UserForumPermission.createUserForumPermissions(UserForumPermission.PERMISSIONS.PERMISSIONS_GUEST, this);
+        this.guest = new User(GUEST_USER_NAME, "no_pass", "nomail@nomail.com", guestPermission);
     }
 
     public void setAdmin(UserI admin){

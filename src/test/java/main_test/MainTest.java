@@ -39,12 +39,8 @@ public class MainTest {
 
 			//add users to forums
 			for (int j=0;j<3;j++) {
-				UserI user = null;
-				try {
-					user= newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
-				}catch (Exception e){
-					fail(e.getMessage());
-				}
+				UserI user= newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
+
 				SubForumI sf = newForum.createSubForum("SubForum " + j + " In Forum" + i);
 				sf.createThread(new ForumMessage(null, user, "hello", "Hi"));
 			}
