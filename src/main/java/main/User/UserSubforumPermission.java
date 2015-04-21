@@ -3,6 +3,7 @@ package main.User;
 import main.exceptions.*;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
+import javax.persistence.*;
 
 /**
  * Created by gabigiladov on 4/11/15.

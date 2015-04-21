@@ -7,6 +7,8 @@ import main.interfaces.MessageI;
 import org.apache.log4j.Logger;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import javax.persistence.*;
+
 
 /**
  * Created by victor on 4/11/2015.
