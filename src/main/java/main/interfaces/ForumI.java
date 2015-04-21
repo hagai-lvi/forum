@@ -24,7 +24,7 @@ public interface ForumI {
 	 */
 	SubForumI createSubForum(String name) throws SubForumAlreadyExistException;
 
-	public String getName();
+	String getName();
 
 	void deleteSubForum(SubForumI todelete) throws SubForumDoesNotExsitsException;
 	/**
@@ -73,8 +73,8 @@ public interface ForumI {
 
 	boolean removeUserType(String type);
 
-	public void setAdmin(UserI admin);
+	void setAdmin(UserI admin);
 
-	public String viewStatistics();
+	String viewStatistics();
 
 }

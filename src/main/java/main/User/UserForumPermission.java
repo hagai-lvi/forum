@@ -15,7 +15,7 @@ public class UserForumPermission implements ForumPermissionI {
 	public enum PERMISSIONS{
 		PERMISSIONS_GUEST,
 		PERMISSIONS_USER,
-		PERMISSIONS_ADMIN;
+		PERMISSIONS_ADMIN
 	}
 	//TODO add logger
 	private final ForumI forum;

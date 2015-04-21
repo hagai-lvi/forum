@@ -39,6 +39,7 @@ public class User implements UserI {
     /**
      * @return whether this user has authenticated his email address
      */
+    @Override
     public boolean isEmailAuthnticated() {
         return false;
     }
@@ -49,14 +50,17 @@ public class User implements UserI {
     /**
          Get the list of all of the subforums of this user
      */
+    @Override
     public Vector<SubForumPermissionI> getSubForumPermission() {
         return this.subForumsPermissions;
     }
 
+    @Override
     public String getUsername(){
         return username;
     }
 
+    @Override
     public String getPassword(){
         return password;
     }
@@ -65,6 +69,7 @@ public class User implements UserI {
         this.password = password;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
@@ -93,6 +98,7 @@ public class User implements UserI {
         this.numOfMessages = numOfMessages;
     }
 
+    @Override
     public String getUserAuthString(){
         return this.authString;
     }
