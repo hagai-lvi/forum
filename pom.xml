@@ -52,8 +52,9 @@
         <dependency>
             <groupId>org.hibernate</groupId>
             <artifactId>hibernate-validator</artifactId>
-            <version>${hibernate-validator-version}</version>
+            <version>4.3.2.Final</version>
         </dependency>
+
 
 
 
