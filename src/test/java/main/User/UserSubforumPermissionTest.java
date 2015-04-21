@@ -7,11 +7,11 @@ import org.junit.Test;
 /**
  * Created by gabigiladov on 4/11/15.
  */
-public class UserPermissionTest {
+public class UserSubforumPermissionTest {
 
     @Before
     public void setUp() throws Exception {
-        UserI user = new User("Gabi", "123456", "mail");
+        UserI user = new User("Gabi", "123456", "mail",null);
     }
 
     @Test

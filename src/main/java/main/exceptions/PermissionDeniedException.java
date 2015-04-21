@@ -1,7 +1,5 @@
 package main.exceptions;
 
-import main.interfaces.UserI;
-
 /**
  * Created by gabigiladov on 4/11/15.
  */

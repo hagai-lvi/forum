@@ -39,12 +39,8 @@ public class MainTest {
 
 			//add users to forums
 			for (int j=0;j<3;j++) {
-				UserI user = null;
-				try {
-					user= newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
-				}catch (Exception e){
-					fail(e.getMessage());
-				}
+				UserI user= newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
+
 				SubForumI sf = newForum.createSubForum("SubForum " + j + " In Forum" + i);
 				sf.createThread(new ForumMessage(null, user, "hello", "Hi"));
 			}
@@ -100,7 +96,7 @@ public class MainTest {
 		assertEquals(numOfForums + 1, newCollection.size());
 
 
-		assert (newCollection.contains(newForum));
+		assertTrue(newCollection.contains(newForum));
 	}
 
 	@Test
@@ -111,8 +107,6 @@ public class MainTest {
 		ForumPolicyI newPolicy = new ForumPolicy(2, "[a-z]*[!@#\\d]*[\\d]*");
 		ForumI forum = _forumCollection.iterator().next();
 		forum.setPolicy(newPolicy);
-
-
 	}
 
 	@Test
@@ -190,7 +184,7 @@ public class MainTest {
 	public void registerTest() {
 
 		ForumI forum = _forumCollection.iterator().next();
-		UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com");
+		UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com", null);
 		try {
 			user = forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
 			forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");

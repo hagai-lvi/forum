@@ -20,54 +20,48 @@ public class User implements UserI {
     private int seniorityInDays;
     private int numOfMessages;
     private Vector<SubForumPermissionI> subForumsPermissions;
-    private Vector<ForumPermissionI> forumsPermission;
-    private boolean isAuthenticated;
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    private ForumPermissionI forumPermissions;
+    private boolean isEmailAuthenticated;
 
-    public User(String username, String password, String email) {
+    public User(String username, String password, String email, ForumPermissionI forumPermissions) {
         this.username = username;
         this.password = password;
         this.email    = email;
         signUpDate = new GregorianCalendar();
         seniorityInDays = 0;
         numOfMessages = 0;
-        this.isAuthenticated = true; //TODO should be false, set to true for testing purpose
+        this.isEmailAuthenticated = false; //TODO should be false, set to true for testing purpose
         this.authString = SecureString.nextUserAuthString();
-        this.subForumsPermissions = new Vector<SubForumPermissionI>();
-        this.forumsPermission = new Vector<ForumPermissionI>();
-    }
-
-    public void addForum(ForumI forum) throws PermissionDeniedException{
-        forumsPermission.elementAt(0).addForum(forum);
+        this.subForumsPermissions = new Vector<>();
+        this.forumPermissions = forumPermissions;
     }
 
     /**
      * @return whether this user has authenticated his email address
      */
+    @Override
     public boolean isEmailAuthnticated() {
         return false;
     }
 
     public void setAuthenticated(){
-        isAuthenticated = true;
+        isEmailAuthenticated = true;
     }
     /**
          Get the list of all of the subforums of this user
      */
+    @Override
     public Vector<SubForumPermissionI> getSubForumPermission() {
-
         return this.subForumsPermissions;
     }
 
+    @Override
     public String getUsername(){
-
         return username;
     }
 
+    @Override
     public String getPassword(){
-
         return password;
     }
 
@@ -75,6 +69,7 @@ public class User implements UserI {
         this.password = password;
     }
 
+    @Override
     public String getEmail() {
         return email;
     }
@@ -85,10 +80,6 @@ public class User implements UserI {
 
     public GregorianCalendar getSignUpDate() {
         return signUpDate;
-    }
-
-    public void setSignUpDate(GregorianCalendar signUpDate) {
-        this.signUpDate = signUpDate;
     }
 
     public int getSeniorityInDays() {
@@ -107,6 +98,7 @@ public class User implements UserI {
         this.numOfMessages = numOfMessages;
     }
 
+    @Override
     public String getUserAuthString(){
         return this.authString;
     }
@@ -117,27 +109,13 @@ public class User implements UserI {
     }
 
     @Override
-    public void createSubForum(String name, ForumI forum) throws PermissionDeniedException {
-        for(int i = 0; i < forumsPermission.size(); i++) {
-            if(forumsPermission.elementAt(i).findForum(forum.getName())){
-                try {
-                    forumsPermission.elementAt(i).createSubForum(name);
-                    break;
-                } catch (SubForumAlreadyExistException e) {
-                    System.out.println("The SubForum is already exist!");;
-                }
-            }
-        }
+    public void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
+        forumPermissions.createSubForum(name);
     }
 
     @Override
-    public void deleteSubForum(SubForumI toDelete, ForumI forum) throws PermissionDeniedException{
-        for(int i = 0; i < forumsPermission.size(); i++) {
-            if(forumsPermission.elementAt(i).findForum(forum.getName())){
-                forumsPermission.elementAt(i).deleteSubForum(toDelete);
-                break;
-            }
-        }
+    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException {
+        forumPermissions.deleteSubForum(toDelete);
     }
 
     @Override
@@ -181,37 +159,24 @@ public class User implements UserI {
     }
 
     @Override
-    public void setAdmin(UserI admin, ForumI forum) throws PermissionDeniedException {
-        for(int i = 0; i < forumsPermission.size(); i++) {
-            if(forumsPermission.elementAt(i).findForum(forum.getName())){
-                forumsPermission.elementAt(i).setAdmin(admin);
-                break;
-            }
-        }
+    public void setAdmin(UserI admin) throws PermissionDeniedException {
+        forumPermissions.setAdmin(admin);
     }
 
     @Override
-    public void setPolicy(ForumI forum, ForumPolicyI policy) throws PermissionDeniedException {
-        for(int i = 0; i < forumsPermission.size(); i++) {
-            if(forumsPermission.elementAt(i).findForum(forum.getName())){
-                forumsPermission.elementAt(i).setPolicy(policy);
-                break;
-            }
-        }
+    public void setPolicy(ForumPolicyI policy) throws PermissionDeniedException {
+        forumPermissions.setPolicy(policy);
     }
 
     @Override
     public String viewStatistics(ForumI forum) throws PermissionDeniedException {
-        for(int i = 0; i < forumsPermission.size(); i++) {
-            if(forumsPermission.elementAt(i).findForum(forum.getName())){
-                return forumsPermission.elementAt(i).viewStatistics();
-            }
-        }
-        return "Has no permission to view statistics";
+        //TODO
+        throw new RuntimeException("Not yet implemented");
     }
 
     @Override
     public void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException {
+        //TODO
         for(int i = 0; i < subForumsPermissions.size(); i++) {
             if(subForumsPermissions.elementAt(i).findForum(subForum.getName())){
                 subForumsPermissions.elementAt(i).setModerator(moderator);
@@ -224,7 +189,7 @@ public class User implements UserI {
     public void banModerator(SubForumI subForum, UserI moderatorToBan, long time) {
         throw new RuntimeException("Not yet implemented");
 //        for(int i = 0; i < subForumsPermissions.size(); i++) {
-//            if(subForumsPermissions.elementAt(i).findForum(subForum.getName())){
+//            if(subForumsPermissions.elementAt(i).findSubforum(subForum.getName())){
 //                subForumsPermissions.elementAt(i).banModerator(moderatorToBan, time);
 //                break;
 //            }
@@ -242,5 +207,12 @@ public class User implements UserI {
 
     public void setSubForumsPermissions(Vector<SubForumPermissionI> subForumsPermissions) {
         this.subForumsPermissions = subForumsPermissions;
+    }
+
+    /**
+     * This method is for testing purposes only, TODO need to think how to remove it
+     */
+    public void setSignUpDate(GregorianCalendar signUpDate){
+        this.signUpDate = signUpDate;
     }
 }

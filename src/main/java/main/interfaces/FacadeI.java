@@ -11,7 +11,6 @@ public interface FacadeI {
 
 	/**
 	 * Get the list of forums in the system
-	 * @return
 	 */
 	Collection<ForumI> getForumList();
 
