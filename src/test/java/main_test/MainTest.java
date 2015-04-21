@@ -96,7 +96,7 @@ public class MainTest {
 		assertEquals(numOfForums + 1, newCollection.size());
 
 
-		assert (newCollection.contains(newForum));
+		assertTrue(newCollection.contains(newForum));
 	}
 
 	@Test
@@ -107,8 +107,6 @@ public class MainTest {
 		ForumPolicyI newPolicy = new ForumPolicy(2, "[a-z]*[!@#\\d]*[\\d]*");
 		ForumI forum = _forumCollection.iterator().next();
 		forum.setPolicy(newPolicy);
-
-
 	}
 
 	@Test
