@@ -41,7 +41,7 @@ public interface FacadeI {
 	 * Login to the specified forum
 	 * TODO what should happen?
 	 */
-	void login(ForumI forum, String userName, String password ) throws InvalidUserCredentialsException;
+	UserI login(ForumI forum, String userName, String password ) throws InvalidUserCredentialsException;
 
 
 	/**

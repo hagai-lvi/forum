@@ -46,8 +46,8 @@ public class Facade implements FacadeI {
 	}
 
 	@Override
-	public void login(ForumI forum, String userName, String password) throws InvalidUserCredentialsException {
-		forum.login(userName, password);
+	public UserI login(ForumI forum, String userName, String password) throws InvalidUserCredentialsException {
+		return forum.login(userName, password);
 	}
 
 	@Override

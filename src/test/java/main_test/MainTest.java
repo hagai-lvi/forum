@@ -393,4 +393,43 @@ public class MainTest {
 
 	}
 
+	@Test
+	/**
+	 * target: check regular user entrance: login + get Sub Forum List + view sub forum threads
+	 */
+	public void integration1(){
+		ForumI forum = _facade.getForumList().iterator().next();
+		try {
+			UserI user = _facade.login(forum, "gil", "123456");
+			assertNotNull(user);
+			_facade.getSubForumList(forum);
+		}catch (InvalidUserCredentialsException e){
+			fail("the user exist! but fail to find");
+		}
+
+	}
+
+	@Test
+	/**
+	 * target: user login, remove message, and other user try to se it
+	 */
+	public void integration2(){
+
+	}
+
+	@Test
+	/**
+	 * target: change policy that have conflict with the former policy.
+	 */
+	public void integration3(){
+
+	}
+
+	@Test
+	/**
+	 * target: user try to be admin when he cannot (
+	 */
+	public void integration4(){
+
+	}
 }
