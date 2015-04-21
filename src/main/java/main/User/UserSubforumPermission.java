@@ -3,28 +3,24 @@ package main.User;
 import main.exceptions.*;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
+import javax.persistence.*;
 
 /**
  * Created by gabigiladov on 4/11/15.
  */
-    public class UserPermission implements ForumPermissionI, SubForumPermissionI {
+    public class UserSubforumPermission implements SubForumPermissionI {
 
     public static final String PERMISSION_GUEST = "GUEST";
     private String permission;
     private ForumI forum;
     private SubForumI subforum;
-    private static Logger logger = Logger.getLogger(UserPermission.class.getName());
+    private static Logger logger = Logger.getLogger(UserSubforumPermission.class.getName());
 
-    public UserPermission(String permission, ForumI forum, SubForumI subforum){
+    public UserSubforumPermission(String permission, ForumI forum, SubForumI subforum){
         logger.info("Creating new permissions for - " + permission);
         this.forum = forum;
         this.subforum = subforum;
         this.permission = permission;
-    }
-
-    @Override
-    public SubForumPermissionI[] viewSubForums() {
-        return new SubForumPermissionI[0];
     }
 
     /**
@@ -59,44 +55,6 @@ import org.apache.log4j.Logger;
 
     private boolean canDeleteSunForum() {
         return permission.equals("Moderator") || permission.equals("Administrator");
-    }
-
-    @Override
-    public void setAdmin(UserI admin) throws PermissionDeniedException {
-        if(permission.equals("Super-Admin")) {
-            logger.info(permission + " has permission to add administrator");
-            forum.setAdmin(admin);
-        } else {
-            logger.error(permission + " has no permission to add administrator");
-            throw new PermissionDeniedException("User has no permission to add administrator");
-        }
-    }
-
-    @Override
-    public void setPolicy(ForumPolicyI policy) throws PermissionDeniedException {
-        if(permission.equals("Administrator")) {
-            logger.info(permission + " has permission to set policy");
-            forum.setPolicy(policy);
-        } else {
-            logger.error(permission + " has no permission to set policy");
-            throw new PermissionDeniedException("User has no permission to set policy");
-        }
-    }
-
-    @Override
-    public String viewStatistics() throws PermissionDeniedException {
-        if(permission.equals("Administrator")) {
-            logger.info(permission + " has permission to view statistics");
-            return forum.viewStatistics();
-        } else {
-            logger.error(permission + " has no permission to view statistics");
-            throw new PermissionDeniedException("User has no permission to view statistics");
-        }
-    }
-
-    @Override
-    public boolean findForum(String name) {
-        return forum.getName().equals(name);
     }
 
     @Override
@@ -146,10 +104,6 @@ import org.apache.log4j.Logger;
         }
     }
 
-    private boolean canDeleteMessage() {
-        return false;
-    }
-
     @Override
     public ThreadI[] getThreads() {
         return subforum.getThreads().toArray(new ThreadI[0]);
@@ -169,5 +123,16 @@ import org.apache.log4j.Logger;
     @Override
     public SubForumI getSubForum() {
         return subforum;
+    }
+
+    @Override
+    public boolean findForum(String name) {
+        //TODO what is this method for?
+        return false;
+    }
+
+    private boolean canDeleteMessage() {
+        //TODO implement
+        return false;
     }
 }

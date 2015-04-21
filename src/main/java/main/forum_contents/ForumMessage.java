@@ -3,9 +3,10 @@ package main.forum_contents;
 import main.exceptions.PermissionDeniedException;
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
-
 import java.util.ArrayList;
 import java.util.Date;
+import javax.persistence.*;
+
 
 /**
  * Created by hagai_lvi on 4/11/15.

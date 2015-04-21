@@ -1,5 +1,6 @@
 package main_test;
 
+import main.Person;
 import main.User.User;
 import main.exceptions.*;
 import main.services_layer.Facade;
@@ -8,7 +9,16 @@ import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
+import org.hibernate.HibernateException;
+import org.hibernate.SessionFactory;
+import org.hibernate.Session;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
 import org.junit.*;
+
+import java.nio.file.Paths;
+import java.sql.*;
+
 
 import java.util.Collection;
 import java.util.Iterator;
@@ -39,12 +49,8 @@ public class MainTest {
 
 			//add users to forums
 			for (int j=0;j<3;j++) {
-				UserI user = null;
-				try {
-					user= newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
-				}catch (Exception e){
-					fail(e.getMessage());
-				}
+				UserI user= newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
+
 				SubForumI sf = newForum.createSubForum("SubForum " + j + " In Forum" + i);
 				sf.createThread(new ForumMessage(null, user, "hello", "Hi"));
 			}
@@ -83,6 +89,55 @@ public class MainTest {
 		//TODO
 	}
 
+
+	@Test
+	public void connectToDB() throws SQLException {
+		Connection conn = null;
+		try {
+			conn =
+					DriverManager.getConnection("jdbc:mysql://localhost/WORLD?" +
+							"user=sa&password=Aa123456");
+			// Do something with the Connection
+
+		} catch (SQLException ex) {
+			// handle any errors
+			System.out.println("SQLException: " + ex.getMessage());
+			System.out.println("SQLState: " + ex.getSQLState());
+			System.out.println("VendorError: " + ex.getErrorCode());
+		}
+		assert conn != null;
+		Statement stmt = conn.createStatement() ;
+		String query = "select * from CITY;" ;
+		ResultSet rs = stmt.executeQuery(query) ;
+		ResultSetMetaData rsmd = rs.getMetaData();
+		System.out.println("querying SELECT * FROM XXX");
+		int columnsNumber = rsmd.getColumnCount();
+		while (rs.next()) {
+			for (int i = 1; i <= columnsNumber; i++) {
+				if (i > 1) System.out.print(",  ");
+				String columnValue = rs.getString(i);
+				System.out.print(columnValue + " " + rsmd.getColumnName(i));
+			}
+			System.out.println("");
+		}
+	}
+
+
+	@Test
+	public void fuckHibernate(){
+		System.out.println("Hibernate + MySQL");
+		Session session = HibernateSessionFactory.getSessionFactory().openSession();
+
+		session.beginTransaction();
+		Person person = new Person();
+
+		person.setName("FOO");
+
+		session.save(person);
+		session.getTransaction().commit();
+	}
+
+
 	/**
 	 * target: check adding forum to the system.
 	 */
@@ -100,7 +155,7 @@ public class MainTest {
 		assertEquals(numOfForums + 1, newCollection.size());
 
 
-		assert (newCollection.contains(newForum));
+		assertTrue(newCollection.contains(newForum));
 	}
 
 	@Test
@@ -111,8 +166,6 @@ public class MainTest {
 		ForumPolicyI newPolicy = new ForumPolicy(2, "[a-z]*[!@#\\d]*[\\d]*");
 		ForumI forum = _forumCollection.iterator().next();
 		forum.setPolicy(newPolicy);
-
-
 	}
 
 	@Test
@@ -190,7 +243,7 @@ public class MainTest {
 	public void registerTest() {
 
 		ForumI forum = _forumCollection.iterator().next();
-		UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com");
+		UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com", null);
 		try {
 			user = forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
 			forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
@@ -393,4 +446,43 @@ public class MainTest {
 
 	}
 
+	@Test
+	/**
+	 * target: check regular user entrance: login + get Sub Forum List + view sub forum threads
+	 */
+	public void integration1(){
+		ForumI forum = _facade.getForumList().iterator().next();
+		try {
+			UserI user = _facade.login(forum, "gil", "123456");
+			assertNotNull(user);
+			_facade.getSubForumList(forum);
+		}catch (InvalidUserCredentialsException e){
+			fail("the user exist! but fail to find");
+		}
+
+	}
+
+	@Test
+	/**
+	 * target: user login, remove message, and other user try to se it
+	 */
+	public void integration2(){
+
+	}
+
+	@Test
+	/**
+	 * target: change policy that have conflict with the former policy.
+	 */
+	public void integration3(){
+
+	}
+
+	@Test
+	/**
+	 * target: user try to be admin when he cannot (
+	 */
+	public void integration4(){
+
+	}
 }

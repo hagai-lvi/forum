@@ -5,11 +5,9 @@ import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;
 import main.exceptions.UserAlreadyExistsException;
-import main.forum_contents.SubForum;
 import main.forum_contents.UserType;
 
 import java.util.Collection;
-import java.util.HashMap;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -17,14 +15,17 @@ import java.util.HashMap;
 public interface ForumI {
 
 
-	HashMap<String, SubForumI> getSubForums();
+	/**
+	 * @return the subforums in this forum
+	 */
+	Collection<SubForumI> getSubForums();
 
 	/**
 	 * Create a subforum in this forum
 	 */
 	SubForumI createSubForum(String name) throws SubForumAlreadyExistException;
 
-	public String getName();
+	String getName();
 
 	void deleteSubForum(SubForumI todelete) throws SubForumDoesNotExsitsException;
 	/**
@@ -73,9 +74,9 @@ public interface ForumI {
 
 	boolean removeUserType(String type);
 
-	public void setAdmin(UserI admin);
+	void setAdmin(UserI admin);
 
-	public String viewStatistics();
+	String viewStatistics();
 
 	boolean enterUserAuthenticationString(UserI user, String auth_string);
 }

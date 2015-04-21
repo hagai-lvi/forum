@@ -1,9 +1,6 @@
 package main.interfaces;
 
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.MessageNotFoundException;
-import main.exceptions.ModeratorDoesNotExistsException;
-import main.exceptions.PermissionDeniedException;
+import main.exceptions.*;
 
 import java.util.Collection;
 import java.util.GregorianCalendar;
@@ -45,15 +42,12 @@ public interface UserI {
 	 */
 	Vector<SubForumPermissionI> viewSubForums();
 
-	/**
-	 * Create a subforum in this forum
-	 */
-	void createSubForum(String name, ForumI forum) throws PermissionDeniedException;
+	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
 
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete, ForumI forum)throws PermissionDeniedException;
+	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException;
 
 	/**
 	 * create a thread in the subforum
@@ -78,12 +72,12 @@ public interface UserI {
 	/**
 	 * Set new forum administrator
 	 */
-	void setAdmin(UserI admin, ForumI forum)throws PermissionDeniedException;
+	void setAdmin(UserI admin)throws PermissionDeniedException;
 
 	/**
 	 * Set policy for forum
 	 */
-	void setPolicy(ForumI forum, ForumPolicyI policy)throws PermissionDeniedException;
+	void setPolicy(ForumPolicyI policy)throws PermissionDeniedException;
 
 	/**
 	 * Get statistics

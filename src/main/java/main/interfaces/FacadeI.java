@@ -11,7 +11,6 @@ public interface FacadeI {
 
 	/**
 	 * Get the list of forums in the system
-	 * @return
 	 */
 	Collection<ForumI> getForumList();
 
@@ -30,7 +29,7 @@ public interface FacadeI {
 	 * Create a subforum in the specified forum.
 	 * The Policy will be derived from the forum
 	 */
-	void createSubforum(ForumI forum, String subforumName, UserI user) throws PermissionDeniedException;
+	void createSubforum(String subforumName, UserI user) throws PermissionDeniedException, SubForumAlreadyExistException;
 
 	/**
 	 * register a user to the specified forum
@@ -41,7 +40,7 @@ public interface FacadeI {
 	 * Login to the specified forum
 	 * TODO what should happen?
 	 */
-	void login(ForumI forum, String userName, String password ) throws InvalidUserCredentialsException;
+	UserI login(ForumI forum, String userName, String password ) throws InvalidUserCredentialsException;
 
 
 	/**

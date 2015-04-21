@@ -2,7 +2,6 @@ package main.services_layer;
 
 import main.exceptions.*;
 import main.forum_contents.ForumMessage;
-import main.forum_contents.SubForum;
 import main.interfaces.*;
 
 import java.util.ArrayList;
@@ -25,7 +24,7 @@ public class Facade implements FacadeI {
 
 	@Override
 	public Collection<SubForumI> getSubForumList(ForumI forum) {
-		return forum.getSubForums().values();
+		return forum.getSubForums();
 		//TODO forum.subforums should return collection and not hashmap
 	}
 
@@ -36,8 +35,8 @@ public class Facade implements FacadeI {
 	}
 
 	@Override
-	public void createSubforum(ForumI forum, String subforumName, UserI user) throws PermissionDeniedException {
-		user.createSubForum(subforumName, forum);
+	public void createSubforum(String subforumName, UserI user) throws PermissionDeniedException, SubForumAlreadyExistException {
+		user.createSubForum(subforumName);
 	}
 
 	@Override
@@ -46,8 +45,8 @@ public class Facade implements FacadeI {
 	}
 
 	@Override
-	public void login(ForumI forum, String userName, String password) throws InvalidUserCredentialsException {
-		forum.login(userName, password);
+	public UserI login(ForumI forum, String userName, String password) throws InvalidUserCredentialsException {
+		return forum.login(userName, password);
 	}
 
 	@Override

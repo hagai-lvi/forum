@@ -2,15 +2,20 @@ package main.interfaces;
 
 import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.SubForumDoesNotExsitsException;
+
+import java.util.Collection;
 
 /**
  * Created by hagai_lvi on 4/6/15.
  */
 public interface ForumPermissionI {
 	/**
-	 * view subForums
+	 * get subForums in this forum
+	 * TODO should return subforums or subforums-permissions?
 	 */
-	SubForumPermissionI[] viewSubForums();
+	Collection<SubForumI> getSubForums();
+
 	/**
 	 * Create a subforum in this forum
 	 */
@@ -19,10 +24,10 @@ public interface ForumPermissionI {
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException;
+	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException;
 
 	/**
-	 * Set new forum administrator
+	 * Set this user to be forum administrator
 	 */
 	void setAdmin(UserI admin)  throws PermissionDeniedException;
 
@@ -37,8 +42,8 @@ public interface ForumPermissionI {
 	String viewStatistics()  throws PermissionDeniedException;
 
 	/**
-	 * Compare names
+	 * Find a subforum in this forum according to it's name
 	 */
-	boolean findForum(String name);
+	boolean findSubforum(String name);
 
 }
