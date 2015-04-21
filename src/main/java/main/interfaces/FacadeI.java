@@ -29,7 +29,7 @@ public interface FacadeI {
 	 * Create a subforum in the specified forum.
 	 * The Policy will be derived from the forum
 	 */
-	void createSubforum(ForumI forum, String subforumName, UserI user) throws PermissionDeniedException;
+	void createSubforum(String subforumName, UserI user) throws PermissionDeniedException, SubForumAlreadyExistException;
 
 	/**
 	 * register a user to the specified forum
