@@ -1,7 +1,8 @@
 package main.forum_contents;
 
 import main.User.User;
-import main.User.UserPermission;
+import main.User.UserForumPermission;
+import main.User.UserSubforumPermission;
 import main.Utils.GmailSender;
 import main.exceptions.*;
 import main.interfaces.*;
@@ -31,8 +32,6 @@ public class Forum implements ForumI {
 
     public Forum(String name, ForumPolicyI policy){
         this.policy = policy;
-        this.guest = new User(GUEST_USER_NAME, "no_pass", "nomail@nomail.com");
-        this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com");
         addAllSubforumsToUser(guest, PERMISSION_GUEST);
         addAllSubforumsToUser(admin, PERMISSION_ADMIN);
         this._users.put("Guest", this.guest);
@@ -52,8 +51,9 @@ public class Forum implements ForumI {
     public String getName(){
         return this.forum_name;
     }
+
     @Override
-    public HashMap<String, SubForumI> getSubForums(){ return _subForums;}
+    public Collection<SubForumI> getSubForums(){ return _subForums.values();}
 
 
     @Override
@@ -65,12 +65,12 @@ public class Forum implements ForumI {
         SubForumI subForum = new SubForum(name,  this.policy.getSubforumPolicy());
         _subForums.put(name, subForum);
         for (UserI user: _users.values()){
-            UserPermission permission;
+            UserSubforumPermission permission;
             if (user.getUsername().equals(GUEST_USER_NAME)){
-                permission = new UserPermission(PERMISSION_GUEST, this, subForum);
+                permission = new UserSubforumPermission(PERMISSION_GUEST, this, subForum);
             }
             else{
-                permission = new UserPermission(PERMISSION_REGULAR, this, subForum);
+                permission = new UserSubforumPermission(PERMISSION_REGULAR, this, subForum);
             }
             user.addSubForumPermission(permission);
         }
@@ -86,7 +86,7 @@ public class Forum implements ForumI {
 
     private void addAllSubforumsToUser(UserI user, String perm){
         for (SubForumI sub: _subForums.values()){
-            user.addSubForumPermission(new UserPermission(perm, this, sub));
+            user.addSubForumPermission(new UserSubforumPermission(perm, this, sub));
         }
     }
 
@@ -103,7 +103,9 @@ public class Forum implements ForumI {
             //throw new InvalidUserCredentialsException(); TODO    ---> uncomment if victor does the checking.
         }
         // we are done with protective programing, time to do work.
-        User new_user = new User(userName, password, eMail);
+        ForumPermissionI userPermissions = UserForumPermission.
+                createUserForumPermissions(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,this);
+        User new_user = new User(userName, password, eMail, userPermissions);
         addAllSubforumsToUser(new_user, PERMISSION_REGULAR);
         //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);

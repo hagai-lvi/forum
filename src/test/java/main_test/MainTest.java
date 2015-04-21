@@ -190,7 +190,7 @@ public class MainTest {
 	public void registerTest() {
 
 		ForumI forum = _forumCollection.iterator().next();
-		UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com");
+		UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com", null);
 		try {
 			user = forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
 			forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
