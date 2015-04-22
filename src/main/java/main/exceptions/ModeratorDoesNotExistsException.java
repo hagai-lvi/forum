@@ -5,5 +5,5 @@ package main.exceptions;
  * Created by hagai on 07/04/15.
  */
 //TODO add reason? like user not found, password doesn't match etc
-public class ModeratorDoesNotExistsException extends Throwable {
+public class ModeratorDoesNotExistsException extends Exception {
 }

@@ -161,6 +161,8 @@ public class MainTest {
 		ForumPolicyI newPolicy = new ForumPolicy(2, "[a-z]*[!@#\\d]*[\\d]*");
 		ForumI forum = _forumCollection.iterator().next();
 		forum.setPolicy(newPolicy);
+
+		//TODO make sure that the policy is actually added and that it has an effect
 	}
 
 	@Test
