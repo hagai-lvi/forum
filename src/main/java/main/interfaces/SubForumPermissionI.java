@@ -28,7 +28,7 @@ public interface SubForumPermissionI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException;
+	void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException, MessageNotFoundException;
 
 	/**
 	 * view threads

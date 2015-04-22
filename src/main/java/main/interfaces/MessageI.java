@@ -10,10 +10,6 @@ public interface MessageI {
 	 */
 	UserI getUser();
 
-    /**
-     * Add a reply to this message
-     */
-    void reply(MessageI reply);
 
     /**
      * @return the text content of the message

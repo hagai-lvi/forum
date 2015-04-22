@@ -18,9 +18,13 @@ public class SubForum implements SubForumI {
 
 
     private String _name;
+
+    /**
+     * a list of all of the threads in this subforum
+     */
     private List<ThreadI> _threads = new LinkedList<>();
-    private HashMap<MessageI, ThreadI> _threadByMessage = new HashMap<>();
-    private HashMap<String, UserI> _moderators = new HashMap<String, UserI>();
+
+    private HashMap<String, UserI> _moderators = new HashMap<>();
     private static Logger logger = Logger.getLogger(Forum.class.getName());
     private SubForumPolicyI subforumPolicy;
 
@@ -38,7 +42,6 @@ public class SubForum implements SubForumI {
         }
         ForumThread thread = new ForumThread(message);
         _threads.add(thread);
-        _threadByMessage.put(message,thread);
     }
 
     @Override
@@ -46,12 +49,12 @@ public class SubForum implements SubForumI {
         if (!subforumPolicy.isValidMessage(reply)){
             throw new DoesNotComplyWithPolicyException();
         }
-        ThreadI _thread = _threadByMessage.get(original);
-        if (_thread == null){
+        ThreadI thread = findThread(original);
+        if (thread == null){
             logger.warn("User tried to reply to already deleted thread");
             throw new MessageNotFoundException(original, this);
         }
-        original.reply(reply);
+        thread.addReply(reply, original);
     }
 
     public void setModerator(UserI mod){
@@ -68,13 +71,20 @@ public class SubForum implements SubForumI {
     }
 
     @Override
-    public void deleteMessage(MessageI message, UserI requestingUser) {
-        if (message.getUser() == requestingUser){
-            message.removeMessage();
-            if (_threadByMessage.containsKey(message)){
-                _threadByMessage.remove(message);
+    public void deleteMessage(MessageI message, UserI requestingUser) throws MessageNotFoundException {
+        message.removeMessage(); //TODO remove
+        ThreadI thread = findThread(message);
+        if (thread != null){
+            if (message.equals(thread.getRootMessage())){
+                //need to remove this thread from the subforum
+                _threads.remove(thread);
             }
+            thread.remove(message);
         }
+        else {
+            throw new MessageNotFoundException(message, this);
+        }
+
     }
 
     @Override
@@ -85,5 +95,17 @@ public class SubForum implements SubForumI {
     @Override
     public Collection<ThreadI> getThreads(){
         return _threads;
+    }
+
+    /**
+     * Find the thread that contains the specified message
+     */
+    private ThreadI findThread(MessageI message){
+        for (ThreadI t: _threads){
+            if (t.contains(message)){
+                return t;
+            }
+        }
+        return null;
     }
 }

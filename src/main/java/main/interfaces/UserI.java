@@ -55,12 +55,12 @@ public interface UserI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void createThread(MessageI message, SubForumI subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(SubForumI subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
+	void replyToMessage(SubForumPermissionI subforumPermissions, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator
@@ -70,7 +70,7 @@ public interface UserI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, SubForumI subForum)throws PermissionDeniedException;
+	void deleteMessage(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, MessageNotFoundException;
 
 	/**
 	 * Set new forum administrator

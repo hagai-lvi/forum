@@ -2,6 +2,7 @@ package main.User;
 
 import main.Utils.SecureString;
 import main.exceptions.*;
+import main.forum_contents.ForumMessage;
 import main.interfaces.*;
 import javax.persistence.*;
 import java.util.GregorianCalendar;
@@ -119,23 +120,13 @@ public class User implements UserI {
     }
 
     @Override
-    public void createThread(MessageI message, SubForumI subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
-                subForumsPermissions.elementAt(i).createThread(message);
-                break;
-            }
-        }
+    public void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+        subForumPermission.createThread(message);
     }
 
     @Override
-    public void replyToMessage(SubForumI subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){//TODO need to search
-//                subForumsPermissions.elementAt(i).replyToMessage(original, reply);
-                break;
-            }
-        }
+    public void replyToMessage(SubForumPermissionI subForumPermission, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
+        subForumPermission.replyToMessage(original,new ForumMessage(original, this, msgBody, msgTitle));
     }
 
     @Override
@@ -149,13 +140,9 @@ public class User implements UserI {
     }
 
     @Override
-    public void deleteMessage(MessageI message, SubForumI subforum) throws PermissionDeniedException {
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
-                subForumsPermissions.elementAt(i).deleteMessage(message, this);
-                break;
-            }
-        }
+    public void deleteMessage(MessageI message, SubForumPermissionI subForumPermission)
+            throws PermissionDeniedException, MessageNotFoundException {
+        subForumPermission.deleteMessage(message, this);
     }
 
     @Override

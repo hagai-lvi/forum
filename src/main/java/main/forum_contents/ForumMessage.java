@@ -13,7 +13,7 @@ import javax.persistence.*;
  */
 public class ForumMessage implements MessageI {
 
-	ForumMessage reply_message;
+	MessageI reply_message;
 	UserI writingUser;
 	String messageText;
 	String messageTitle;
@@ -22,7 +22,7 @@ public class ForumMessage implements MessageI {
 	boolean isDeleted = false;
 
 
-	public ForumMessage(ForumMessage reply_to, UserI user, String messageText, String messageTitle){
+	public ForumMessage(MessageI reply_to, UserI user, String messageText, String messageTitle){
 		this.writingUser = user;
 		this.messageText = messageText;
 		this.reply_message = reply_to;
@@ -45,12 +45,7 @@ public class ForumMessage implements MessageI {
 	}
 	public Date getDate()  { return writingTime; }
 
-	@Override
-	public void reply(MessageI reply) {
-		this.replays.add(reply);
-	}
-
-	public ForumMessage get_replayed_message(){
+	public MessageI get_replayed_message(){
 		return reply_message;
 	}
 

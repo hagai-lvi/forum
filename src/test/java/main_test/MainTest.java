@@ -3,12 +3,14 @@ package main_test;
 import main.Person;
 import main.User.User;
 import main.exceptions.*;
-import main.services_layer.Facade;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
+import main.services_layer.Facade;
 import org.apache.log4j.Logger;
+import org.junit.Before;
+import org.junit.Test;
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;
 import org.hibernate.Session;
@@ -39,6 +41,7 @@ public class MainTest {
 	@Before
 	public void setUp() throws Exception
 	{
+		_facade = Facade.dropAllData();
 		String[] names = {"gil","tom","hagai", "gabi", "victor", "aria", "yoni", "moshe",
 						  "tal", "chen", "bibi", "mor", "david", "dudinka", "aaa"};
 		_facade = Facade.getFacade();
@@ -173,7 +176,7 @@ public class MainTest {
 	 * target: the test check the permission given to a guest.
 	 * check negative test like getting the right exception on violate his permission
 	 */
-	public void guestEntryTest(){
+	public void guestEntryTest() throws MessageNotFoundException {
 		ForumI forum = _forumCollection.iterator().next();
 		UserI guest = forum.guestLogin();
 
@@ -367,18 +370,16 @@ public class MainTest {
 	/**
 	 * target: test post message usecase
 	 */
-	public void postMessageTest(){
+	public void postMessageTest() throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
-		ThreadI firstThread = null;
-		try {
-			firstThread = subForumPermission.getThreads()[0];
-		} catch (PermissionDeniedException e) {
-			e.printStackTrace();
-		}
-		firstThread.getRootMessage().reply(new ForumMessage(null, user, "I post Message", ""));
+
+		ThreadI firstThread = subForumPermission.getThreads()[0];
+//		firstThread.addReply(firstThread.getRootMessage(), new ForumMessage(firstThread.getRootMessage(), user, "I post Message", ""));
+
+		_facade.addReply(user, subForumPermission, firstThread.getRootMessage(), "a", "b");
 	}
 
 	@Test
@@ -462,27 +463,4 @@ public class MainTest {
 
 	}
 
-	@Test
-	/**
-	 * target: user login, remove message, and other user try to se it
-	 */
-	public void integration2(){
-
-	}
-
-	@Test
-	/**
-	 * target: change policy that have conflict with the former policy.
-	 */
-	public void integration3(){
-
-	}
-
-	@Test
-	/**
-	 * target: user try to be admin when he cannot (
-	 */
-	public void integration4(){
-
-	}
 }

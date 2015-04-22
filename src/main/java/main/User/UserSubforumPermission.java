@@ -94,8 +94,8 @@ import javax.persistence.*;
      * Delete a specific message if the message was create by the user that sent this request
      */
     @Override
-    public void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException {
-        if(canDeleteMessage()) {
+    public void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException, MessageNotFoundException {
+        if(canDeleteMessage(message, deleter)) {
             logger.info(permission + " has permission to delete message");
             subforum.deleteMessage(message, deleter);
         } else {
@@ -131,8 +131,7 @@ import javax.persistence.*;
         return false;
     }
 
-    private boolean canDeleteMessage() {
-        //TODO implement
-        return false;
+    private boolean canDeleteMessage(MessageI message, UserI deleter) {
+        return message.getUser().equals(deleter);
     }
 }
