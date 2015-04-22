@@ -4,7 +4,7 @@ import main.Utils.SecureString;
 import main.exceptions.*;
 import main.forum_contents.ForumMessage;
 import main.interfaces.*;
-import javax.persistence.*;
+
 import java.util.GregorianCalendar;
 import java.util.Vector;
 

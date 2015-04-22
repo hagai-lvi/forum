@@ -4,12 +4,15 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.Utils.GmailSender;
-import main.exceptions.*;
+import main.exceptions.InvalidUserCredentialsException;
+import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.SubForumDoesNotExsitsException;
+import main.exceptions.UserAlreadyExistsException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
+
 import java.util.Collection;
 import java.util.HashMap;
-import javax.persistence.*;
 
 
 

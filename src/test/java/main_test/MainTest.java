@@ -9,19 +9,12 @@ import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
 import main.services_layer.Facade;
 import org.apache.log4j.Logger;
-import org.junit.Before;
-import org.junit.Test;
-import org.hibernate.HibernateException;
-import org.hibernate.SessionFactory;
 import org.hibernate.Session;
-import org.hibernate.cfg.AnnotationConfiguration;
-import org.hibernate.cfg.Configuration;
-import org.junit.*;
+import org.junit.Before;
+import org.junit.Ignore;
+import org.junit.Test;
 
-import java.nio.file.Paths;
 import java.sql.*;
-
-
 import java.util.Collection;
 import java.util.Iterator;
 
@@ -93,7 +86,7 @@ public class MainTest {
 	}
 
 
-	@Test
+	@Ignore@Test
 	public void connectToDB() throws SQLException {
 		Connection conn = null;
 		try {
@@ -126,7 +119,7 @@ public class MainTest {
 	}
 
 
-	@Test
+	@Ignore@Test
 	public void fuckHibernate(){
 		System.out.println("Hibernate + MySQL");
 		Session session = HibernateSessionFactory.getSessionFactory().openSession();
