@@ -2,7 +2,6 @@ package main.interfaces;
 
 import main.exceptions.*;
 
-import java.util.Collection;
 import java.util.Vector;
 
 /**
@@ -18,7 +17,7 @@ public interface UserI {
 	/**
 	 * Get the list of all of the subforums of this user
 	 */
-	Collection<SubForumPermissionI> getSubForumPermission();
+	Vector<SubForumPermissionI> getSubForumsPermissions();
 
 	/**
 	 * Get username
@@ -39,11 +38,6 @@ public interface UserI {
 	 * Get authentication string
 	 */
 	String getUserAuthString();
-
-	/**
-	 * view subForums
-	 */
-	Vector<SubForumPermissionI> viewSubForums();
 
 	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
 

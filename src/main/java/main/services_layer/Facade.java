@@ -23,8 +23,8 @@ public class Facade implements FacadeI {
 	}
 
 	@Override
-	public Collection<SubForumI> getSubForumList(ForumI forum) {
-		return forum.getSubForums();
+	public Collection<SubForumPermissionI> getSubForumList(UserI user) {
+		return user.getSubForumsPermissions();
 	}
 
 	@Override

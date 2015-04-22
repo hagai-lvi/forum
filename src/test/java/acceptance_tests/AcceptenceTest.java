@@ -5,6 +5,8 @@ import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
 import main.services_layer.Facade;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -15,41 +17,28 @@ import static org.junit.Assert.assertEquals;
 public class AcceptenceTest {
 
 
+	public static final String USER_NAME = "user";
+	public static final String PASS = "pass";
+	private Forum myForum;
+	private UserI user;
+
 	@Test
 	/**
 	 * target: user login, remove message, and other user try to se it
 	 */
 	public void integration2() throws UserAlreadyExistsException, InvalidUserCredentialsException,
 			SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException {
-		//init
 		FacadeI facade = Facade.getFacade();
-		final String user = "user";
-		final String pass = "pass";
 
-
-		ForumPolicyI policy = new ForumPolicy(1,".*");
-		Forum forum = new Forum("MyForum",policy);
-		facade.addForum(forum);
-
-
-		UserI admin = facade.login(forum, Forum.ADMIN_USERNAME, Forum.ADMIN_PASSWORD);
-
-		facade.createSubforum("SF",admin);
-
-		facade.register(forum, user, pass, "me@me.me");
-		UserI u = facade.login(forum, user, pass);
-		//Test
-
-		SubForumPermissionI sf = u.viewSubForums().get(0);
+		SubForumPermissionI sf = user.getSubForumsPermissions().get(0);
 		String body = "body";
-		facade.createNewThread(u, sf, "title", body);
-		MessageI rootMessage = u.viewSubForums().get(0).getThreads()[0].getRootMessage();
+		facade.createNewThread(user, sf, "title", body);
+		MessageI rootMessage = user.getSubForumsPermissions().get(0).getThreads()[0].getRootMessage();
 		assertEquals(body,
 				rootMessage.getMessageText());
-		u.deleteMessage(rootMessage, sf);
+		user.deleteMessage(rootMessage, sf);
 
-
-		assertEquals(0, u.viewSubForums().get(0).getThreads().length);
+		assertEquals(0, user.getSubForumsPermissions().get(0).getThreads().length);
 	}
 
 	@Test
@@ -57,7 +46,7 @@ public class AcceptenceTest {
 	 * target: change policy that have conflict with the former policy.
 	 */
 	public void integration3(){
-
+		//TODO this functionality is not yet implemented
 	}
 
 	@Test
@@ -65,6 +54,27 @@ public class AcceptenceTest {
 	 * target: user try to be admin when he cannot (
 	 */
 	public void integration4(){
-
+		//TODO this functionality is not yet implemented
 	}
+
+	@Before
+	public void init() throws InvalidUserCredentialsException, PermissionDeniedException, SubForumAlreadyExistException, UserAlreadyExistsException {
+		FacadeI facade = Facade.getFacade();
+		ForumPolicyI policy = new ForumPolicy(1,".*");
+		myForum = new Forum("MyForum", policy);
+		facade.addForum(myForum);
+
+		UserI admin = facade.login(myForum, Forum.ADMIN_USERNAME, Forum.ADMIN_PASSWORD);
+
+		facade.createSubforum("SF", admin);
+
+		facade.register(myForum, USER_NAME, PASS, "me@me.me");
+		user = facade.login(myForum, USER_NAME, PASS);
+	}
+
+	@After
+	public void cleanUp(){
+		Facade.dropAllData();
+	}
+
 }

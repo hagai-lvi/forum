@@ -16,10 +16,8 @@ public interface FacadeI {
 
 	/**
 	 * Get the list of subforums in the specified forum
-	 * @deprecated need to remove this method
 	 */
-	@Deprecated
-	Collection<SubForumI> getSubForumList(ForumI forum);
+	Collection<SubForumPermissionI> getSubForumList(UserI user);
 
 	/**
 	 * Add a forum to the system, requires login with permissions

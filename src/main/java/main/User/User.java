@@ -52,7 +52,7 @@ public class User implements UserI {
          Get the list of all of the subforums of this user
      */
     @Override
-    public Vector<SubForumPermissionI> getSubForumPermission() {
+    public Vector<SubForumPermissionI> getSubForumsPermissions() {
         return this.subForumsPermissions;
     }
 
@@ -102,11 +102,6 @@ public class User implements UserI {
     @Override
     public String getUserAuthString(){
         return this.authString;
-    }
-
-    @Override
-    public Vector<SubForumPermissionI> viewSubForums() {
-        return this.subForumsPermissions;
     }
 
     @Override
@@ -186,10 +181,6 @@ public class User implements UserI {
     @Override
     public void addSubForumPermission(SubForumPermissionI permission) {
         this.subForumsPermissions.add(permission);
-    }
-
-    public Vector<SubForumPermissionI> getSubForumsPermissions() {
-        return subForumsPermissions;
     }
 
     public void setSubForumsPermissions(Vector<SubForumPermissionI> subForumsPermissions) {

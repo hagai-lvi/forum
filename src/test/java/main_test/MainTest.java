@@ -174,7 +174,7 @@ public class MainTest {
 		ForumI forum = _forumCollection.iterator().next();
 		UserI guest = forum.guestLogin();
 
-		Collection<SubForumPermissionI> subForumPermissionsCollection = guest.getSubForumPermission();
+		Collection<SubForumPermissionI> subForumPermissionsCollection = guest.getSubForumsPermissions();
 
 		MessageI msg = new ForumMessage(null ,guest,"I TRY TO CREATE MESSAGE NANA", "");
 		SubForumPermissionI subForumPermission = subForumPermissionsCollection.iterator().next();
@@ -314,7 +314,7 @@ public class MainTest {
 	public void viewSubForumTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
-		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
+		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumsPermissions();
 		for (SubForumPermissionI subForumPermission : subForumPermissionCol) {
 			ThreadI[] threads = subForumPermission.getThreads();
 		}
@@ -327,7 +327,7 @@ public class MainTest {
 	public void postThreadTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
-		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
+		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumsPermissions();
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
 		int n;
 		n = subForumPermission.getThreads().length;
@@ -346,7 +346,7 @@ public class MainTest {
 	public void postMessageTest() throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
-		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
+		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumsPermissions();
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
 
 		ThreadI firstThread = subForumPermission.getThreads()[0];
@@ -406,7 +406,7 @@ public class MainTest {
 	public void complainOnModeratorTest(){
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
-		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
+		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumsPermissions();
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
 
 		//add check to see if moshe his a moderator.
@@ -428,7 +428,7 @@ public class MainTest {
 		try {
 			UserI user = _facade.login(forum, "gil", "123456");
 			assertNotNull(user);
-			_facade.getSubForumList(forum);
+			_facade.getSubForumList(user);
 		}catch (InvalidUserCredentialsException e){
 			fail("the user exist! but fail to find");
 		}
