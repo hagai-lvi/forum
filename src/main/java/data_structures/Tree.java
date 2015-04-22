@@ -31,6 +31,10 @@ public class Tree<T> {
     }
 
     public T findNode(T data) {
+        if (root == null){
+            return null;
+        }
+
         Node<T> node = root.findChild(data);
         if (node == null){
             return null;
