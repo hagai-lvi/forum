@@ -20,8 +20,8 @@ public interface MessageI {
      * @return the title of the meassage
      */
     String getMessageTitle();
+
     /**
-     * @param detph
      * @return the message details along with the details of all replies up to depth
      */
     String printSubTree(int detph);

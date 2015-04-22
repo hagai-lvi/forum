@@ -28,16 +28,7 @@ public class ForumTest {
 
     @Test
     public void testRegisterGood() throws Exception {
-        UserI user = null;
-        try {
-            user = forum.register("username", "pass", "user@somemail.com");
-        }
-        catch(UserAlreadyExistsException e){
-             assertTrue(false);
-        }
-        catch(InvalidUserCredentialsException e) {
-             assertTrue(false);
-        }
+        UserI user = forum.register("username", "pass", "user@somemail.com");
         assertEquals(user.getUsername(), "username");
         assertEquals(user.getPassword(), "pass");
         assertEquals(user.getEmail(), "user@somemail.com");
@@ -52,9 +43,7 @@ public class ForumTest {
         }
         catch(UserAlreadyExistsException e){
             assertTrue(true);  // we should raise exception caus the user exists
-        }
-        catch (InvalidUserCredentialsException e) {
-            assertTrue(false);
+            //TODO should the test fail?
         }
     }
 

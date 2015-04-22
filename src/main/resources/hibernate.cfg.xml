@@ -11,12 +11,12 @@
         <property name="hibernate.connection.password">Aa123456</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="show_sql">true</property>
-        <mapping class="main.forum_contents.Forum"></mapping>
-        <mapping class="main.forum_contents.SubForum"></mapping>
-        <mapping class="main.forum_contents.ForumMessage"></mapping>
-        <mapping class="main.forum_contents.ForumPolicy"></mapping>
-        <mapping class="main.forum_contents.UserType"></mapping>
-        <mapping class="main.User.User"></mapping>
-        <mapping class="main.User.UserPermission"></mapping>
+        <mapping class="main.forum_contents.Forum"/>
+        <mapping class="main.forum_contents.SubForum"/>
+        <mapping class="main.forum_contents.ForumMessage"/>
+        <mapping class="main.forum_contents.ForumPolicy"/>
+        <mapping class="main.forum_contents.UserType"/>
+        <mapping class="main.User.User"/>
+        <mapping class="main.User.UserPermission"/>
     </session-factory>
 </hibernate-configuration>

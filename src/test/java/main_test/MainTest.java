@@ -16,7 +16,6 @@ import org.junit.Test;
 
 import java.sql.*;
 import java.util.Collection;
-import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
@@ -205,9 +204,7 @@ public class MainTest {
 		try{
 			subForumPermission.reportModerator("Moshe","He is so bad Moderator",guest);
 			fail("a guest cannot create a report on moderator");
-		} catch (ModeratorDoesNotExistsException e) {//TODO need to define the expected result
-			//expected exception
-		} catch (PermissionDeniedException e) {
+		} catch (ModeratorDoesNotExistsException | PermissionDeniedException e) {//TODO need to define the expected result
 			//expected exception
 		}
 
@@ -316,8 +313,7 @@ public class MainTest {
 		ForumI forum = _forumCollection.iterator().next();
 		UserI user = forum.getUserList().iterator().next();
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
-		for (Iterator<SubForumPermissionI> itr = subForumPermissionCol.iterator(); itr.hasNext();){
-			SubForumPermissionI subForumPermission = itr.next();
+		for (SubForumPermissionI subForumPermission : subForumPermissionCol) {
 			ThreadI[] threads = subForumPermission.getThreads();
 		}
 	}
@@ -335,9 +331,7 @@ public class MainTest {
 		n = subForumPermission.getThreads().length;
 		try {
 			subForumPermission.createThread(new ForumMessage(null, user, "I created THREADDDDDD!@!@!@!@", ""));
-		} catch (PermissionDeniedException e) {
-			e.printStackTrace();
-		} catch (DoesNotComplyWithPolicyException e) {
+		} catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
 			e.printStackTrace();
 		}
 		assertEquals(n + 1, subForumPermission.getThreads().length);
@@ -371,7 +365,7 @@ public class MainTest {
 	}
 
 
-	/**
+	/*
 	@Test
 	 * target: test remove message usecase, check that user can remove only
 	 * 			his messages.
@@ -416,10 +410,9 @@ public class MainTest {
 		//add check to see if moshe his a moderator.
 		try {
 			subForumPermission.reportModerator("Moshe","he is not behave well!!", user);
-		} catch (PermissionDeniedException e) {
+		} catch (PermissionDeniedException | ModeratorDoesNotExistsException e) {
 			e.printStackTrace();
-		} catch (ModeratorDoesNotExistsException e) {
-			e.printStackTrace();
+			//TODO should the test fail?
 		}
 
 	}
