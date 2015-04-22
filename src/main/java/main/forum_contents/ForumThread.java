@@ -11,7 +11,7 @@ import main.interfaces.ThreadI;
  */
 public class ForumThread implements ThreadI{
 
-    Tree<MessageI> messages;
+    private Tree<MessageI> messages;
 
 
     public ForumThread(MessageI initialMessage){

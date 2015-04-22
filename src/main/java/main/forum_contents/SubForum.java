@@ -57,6 +57,7 @@ public class SubForum implements SubForumI {
         thread.addReply(reply, original);
     }
 
+    @Override
     public void setModerator(UserI mod){
         _moderators.put(mod.getUsername(), mod);
     }

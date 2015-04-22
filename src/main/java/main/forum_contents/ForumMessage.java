@@ -13,13 +13,13 @@ import java.util.Date;
  */
 public class ForumMessage implements MessageI {
 
-	MessageI reply_message;
-	UserI writingUser;
-	String messageText;
-	String messageTitle;
-	Date writingTime;
-	ArrayList<MessageI> replays;
-	boolean isDeleted = false;
+	private MessageI reply_message;
+	private final UserI writingUser;
+	private String messageText;
+	private final String messageTitle;
+	private final Date writingTime;
+	private ArrayList<MessageI> replays;
+	private boolean isDeleted = false;
 
 
 	public ForumMessage(MessageI reply_to, UserI user, String messageText, String messageTitle){
@@ -28,7 +28,7 @@ public class ForumMessage implements MessageI {
 		this.reply_message = reply_to;
 		this.messageTitle = messageTitle;
 		writingTime = new Date();
-		replays = new ArrayList<MessageI>();
+		replays = new ArrayList<>();
 	}
 
 	public void editText(UserI user, String newText) throws PermissionDeniedException {
@@ -49,6 +49,7 @@ public class ForumMessage implements MessageI {
 		return reply_message;
 	}
 
+	@Override
 	public String printSubTree(int depth){
 		if (isDeleted){
 			return "";
@@ -64,15 +65,18 @@ public class ForumMessage implements MessageI {
 		return ans;
 	}
 
+	@Override
 	public void removeMessage(){
 		this.isDeleted = true;
 	}
 
+	@Override
 	public String getMessageText(){
 
 		return messageText;
 	}
 
+	@Override
 	public String getMessageTitle(){
 		return messageTitle;
 	}

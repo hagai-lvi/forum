@@ -11,12 +11,14 @@ import java.util.GregorianCalendar;
  * Created by victor on 4/11/2015.
  */
 public class ForumPolicyTest extends TestCase {
-    ForumPolicy fp;
+    private ForumPolicy fp;
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         fp = new ForumPolicy(3, "[a-z]*");
     }
 
+    @Override
     public void tearDown() throws Exception {
     }
 

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class ForumTest {
 
-    ForumI forum = null;
+    private ForumI forum = null;
 
     @Before
     public void setUp() throws Exception {

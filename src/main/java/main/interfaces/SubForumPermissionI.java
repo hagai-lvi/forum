@@ -13,7 +13,7 @@ public interface SubForumPermissionI {
 	/**
 	 * create a thread in the subforum
 	 */
-	public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * reply to a specific message
@@ -34,7 +34,7 @@ public interface SubForumPermissionI {
 	 * view threads
 	 */
 
-	ThreadI[] getThreads() throws PermissionDeniedException;
+	ThreadI[] getThreads();
 
 	/**
 	 * Set moderator for subforum

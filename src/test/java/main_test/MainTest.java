@@ -25,8 +25,8 @@ import static org.junit.Assert.*;
  * Created by hagai_lvi on 4/6/15.
  */
 public class MainTest {
-	FacadeI _facade;
-	Collection<ForumI> _forumCollection;
+	private FacadeI _facade;
+	private Collection<ForumI> _forumCollection;
 
 	private static Logger logger = Logger.getLogger(MainTest.class.getName());
 
@@ -212,12 +212,8 @@ public class MainTest {
 		}
 
 		//try view threads
-		ThreadI[] threads = null;
-		try {
-			threads = subForumPermission.getThreads();
-		} catch (PermissionDeniedException e) {
-			fail("expected to have permission");
-		}
+		ThreadI[] threads;
+		threads = subForumPermission.getThreads();
 		MessageI rootMessage = threads[0].getRootMessage();
 
 		//try delete message
@@ -322,11 +318,7 @@ public class MainTest {
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
 		for (Iterator<SubForumPermissionI> itr = subForumPermissionCol.iterator(); itr.hasNext();){
 			SubForumPermissionI subForumPermission = itr.next();
-			try {
-				ThreadI[] threads = subForumPermission.getThreads();
-			} catch (PermissionDeniedException e) {
-				e.printStackTrace();
-			}
+			ThreadI[] threads = subForumPermission.getThreads();
 		}
 	}
 
@@ -339,12 +331,8 @@ public class MainTest {
 		UserI user = forum.getUserList().iterator().next();
 		Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumPermission();
 		SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
-		int n = 0;
-		try {
-			n = subForumPermission.getThreads().length;
-		} catch (PermissionDeniedException e) {
-			e.printStackTrace();
-		}
+		int n;
+		n = subForumPermission.getThreads().length;
 		try {
 			subForumPermission.createThread(new ForumMessage(null, user, "I created THREADDDDDD!@!@!@!@", ""));
 		} catch (PermissionDeniedException e) {
@@ -352,11 +340,7 @@ public class MainTest {
 		} catch (DoesNotComplyWithPolicyException e) {
 			e.printStackTrace();
 		}
-		try {
-			assertEquals(n + 1, subForumPermission.getThreads().length);
-		} catch (PermissionDeniedException e) {
-			e.printStackTrace();
-		}
+		assertEquals(n + 1, subForumPermission.getThreads().length);
 	}
 
 	@Test

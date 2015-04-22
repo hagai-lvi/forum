@@ -29,7 +29,7 @@ public interface ForumPermissionI {
 	/**
 	 * Set this user to be forum administrator
 	 */
-	void setAdmin(UserI admin)  throws PermissionDeniedException;
+	void setAdmin(UserI admin);
 
 	/**
 	 * Set policy for forum
@@ -39,7 +39,7 @@ public interface ForumPermissionI {
 	/**
 	 * Get statistics
 	 */
-	String viewStatistics()  throws PermissionDeniedException;
+	String viewStatistics();
 
 	/**
 	 * Find a subforum in this forum according to it's name

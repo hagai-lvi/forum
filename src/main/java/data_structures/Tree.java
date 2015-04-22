@@ -14,7 +14,7 @@ public class Tree<T> {
     private Node<T> root;
 
     public Tree(T rootData) {
-        root = new Node<T>(rootData, null);
+        root = new Node<>(rootData, null);
     }
 
     public void add(T dataToAdd, T ancestor) throws NodeNotFoundException {

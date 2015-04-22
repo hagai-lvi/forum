@@ -66,7 +66,7 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public void setAdmin(UserI admin) throws PermissionDeniedException {
+	public void setAdmin(UserI admin){
 		permissions = PERMISSIONS.PERMISSIONS_ADMIN;
 
 	}
@@ -80,7 +80,7 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public String viewStatistics() throws PermissionDeniedException {
+	public String viewStatistics() {
 		//TODO
 		return null;
 	}

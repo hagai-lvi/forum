@@ -21,20 +21,21 @@ import java.util.HashMap;
  */
 public class Forum implements ForumI {
 
+    //TODO use enum permissions, fix all occurences of 'Guest' or 'Admin' in the code
     public static final String PERMISSION_REGULAR = "REGULAR";
     public static final String GUEST_USER_NAME = "Guest user";
     public static final String PERMISSION_GUEST = "GUEST";
     public static final String PERMISSION_ADMIN = "ADMINISTRATOR";
     public static final String ADMIN_USERNAME = "ADMIN";
     public static final String ADMIN_PASSWORD = "ADMIN";
-    private String forum_name;
+    private final String forum_name;
     private ForumPolicyI policy;
     private HashMap<String, SubForumI> _subForums = new HashMap<>();
     private HashMap<String, UserI> _users = new HashMap<>();
-    private HashMap<String, UserType> _userTypes = new HashMap<String, UserType>();
+    private HashMap<String, UserType> _userTypes = new HashMap<>();
     private UserI guest;
     private UserI admin;
-    private static Logger logger = Logger.getLogger(Forum.class.getName());
+    private static final Logger logger = Logger.getLogger(Forum.class.getName());
 
 
 
@@ -61,15 +62,18 @@ public class Forum implements ForumI {
         this.guest = new User(GUEST_USER_NAME, "no_pass", "nomail@nomail.com", guestPermission);
     }
 
+    @Override
     public void setAdmin(UserI admin){
         this.admin = admin;
     }
 
+    @Override
     public String viewStatistics(){
         return "No statistics yet";
     }
 
 
+    @Override
     public String getName(){
         return this.forum_name;
     }
@@ -99,6 +103,7 @@ public class Forum implements ForumI {
         return subForum;
     }
 
+    @Override
     public void deleteSubForum(SubForumI subforum) throws SubForumDoesNotExsitsException {
         if (!_subForums.containsKey(subforum.getName())){
             throw new SubForumDoesNotExsitsException();
@@ -184,7 +189,6 @@ public class Forum implements ForumI {
     @Override
     public void logout(UserI user) {
         //what should happen?  --> nothing.
-        return;
     }
 
     @Override

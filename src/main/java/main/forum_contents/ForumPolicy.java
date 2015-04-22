@@ -16,7 +16,7 @@ import java.util.GregorianCalendar;
 public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
    // private Forum forum;
-    private static Logger logger = Logger.getLogger(ForumPolicy.class.getName());
+    private static final Logger logger = Logger.getLogger(ForumPolicy.class.getName());
     private final String forbiddenWords[];
     private final int GOLDEN_USER_SENIORITY = 12; // The required seniority in months.
     private final int SILVER_USER_SENIORITY = 4;
