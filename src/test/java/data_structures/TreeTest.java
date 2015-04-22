@@ -51,7 +51,7 @@ public class TreeTest {
 
 	@Test
 	public void testRemoveRoot() throws Exception {
-		fail();
+		fail();;
 		tree.remove(0);
 		assertNull(tree.findNode(0));
 		assertNull(tree.findNode(1));
