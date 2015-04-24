@@ -2,6 +2,8 @@ package main.interfaces;
 
 import main.exceptions.*;
 
+import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 /**

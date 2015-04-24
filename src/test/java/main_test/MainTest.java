@@ -2,6 +2,7 @@ package main_test;
 
 import main.Person;
 import main.User.User;
+import main.User.UserForumPermission;
 import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
@@ -85,7 +86,7 @@ public class MainTest {
 	}
 
 
-	@Ignore@Test
+	@Test
 	public void connectToDB() throws SQLException {
 		Connection conn = null;
 		try {
@@ -118,17 +119,15 @@ public class MainTest {
 	}
 
 
-	@Ignore@Test
+	@Test
 	public void fuckHibernate(){
 		System.out.println("Hibernate + MySQL");
 		Session session = HibernateSessionFactory.getSessionFactory().openSession();
 
 		session.beginTransaction();
-		Person person = new Person();
+		User blaa = new User("unammeee", "passss", "fooo@foo.com", new UserForumPermission());
 
-		person.setName("FOO");
-
-		session.save(person);
+		session.save(blaa);
 		session.getTransaction().commit();
 	}
 

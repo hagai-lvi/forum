@@ -3,22 +3,29 @@ package main.forum_contents;
 import main.exceptions.PermissionDeniedException;
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
+import main.User.User;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 
 /**
  * Created by hagai_lvi on 4/11/15.
  */
+@Entity
 public class ForumMessage implements MessageI {
 
+	@OneToOne(targetEntity = ForumMessage.class)
 	private MessageI reply_message;
-	private final UserI writingUser;
+	@OneToOne(targetEntity = User.class)
+	private UserI writingUser;
 	private String messageText;
-	private final String messageTitle;
-	private final Date writingTime;
-	private ArrayList<MessageI> replays;
+	private String messageTitle;
+	private Date writingTime;
+	@OneToMany(targetEntity = ForumMessage.class, cascade = CascadeType.ALL)
+	private List<MessageI> replays;
 	private boolean isDeleted = false;
 
 
@@ -29,6 +36,9 @@ public class ForumMessage implements MessageI {
 		this.messageTitle = messageTitle;
 		writingTime = new Date();
 		replays = new ArrayList<>();
+	}
+
+	public ForumMessage() {
 	}
 
 	public void editText(UserI user, String newText) throws PermissionDeniedException {
@@ -82,4 +92,14 @@ public class ForumMessage implements MessageI {
 	}
 
 
+	@Id
+	private String id;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 }

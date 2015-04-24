@@ -6,16 +6,23 @@ import main.exceptions.NodeNotFoundException;
 import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 
+import javax.persistence.*;
+
 /**
  * Created by hagai on 07/04/15.
  */
+@Entity
 public class ForumThread implements ThreadI{
 
+    @Transient //TODO : hagai, It's a mess to persist this kind of tree, we could use default implementation which is supported by hibernate
     private Tree<MessageI> messages;
 
 
     public ForumThread(MessageI initialMessage){
         messages = new Tree<>(initialMessage);
+    }
+
+    public ForumThread() {
     }
 
     @Override
@@ -46,5 +53,16 @@ public class ForumThread implements ThreadI{
     @Override
     public void remove(MessageI message) {
         messages.remove(message);
+    }
+
+    @Id
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

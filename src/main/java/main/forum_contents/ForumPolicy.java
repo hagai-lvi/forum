@@ -6,6 +6,10 @@ import main.interfaces.MessageI;
 import main.interfaces.SubForumPolicyI;
 import org.apache.log4j.Logger;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import javax.persistence.Transient;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -13,11 +17,13 @@ import java.util.GregorianCalendar;
 /**
  * Created by victor on 4/11/2015.
  */
+@Entity
 public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
    // private Forum forum;
     private static final Logger logger = Logger.getLogger(ForumPolicy.class.getName());
-    private final String forbiddenWords[];
+    @Transient // TODO  - This is not a way to save collection, it will not be saved
+    private String forbiddenWords[];
     private final int GOLDEN_USER_SENIORITY = 12; // The required seniority in months.
     private final int SILVER_USER_SENIORITY = 4;
 
@@ -30,6 +36,9 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         forbiddenWords = new String[2];
         forbiddenWords[0] = "stupid";
         forbiddenWords[1] = "dumb";
+    }
+
+    public ForumPolicy() {
     }
 
     @java.lang.Override
@@ -90,5 +99,16 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
             if (!valid) { break; }
         }
         return valid;
+    }
+
+    @Id
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

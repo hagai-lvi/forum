@@ -4,34 +4,40 @@ import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
 import main.interfaces.*;
+import main.User.User;
 import org.apache.log4j.Logger;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import javax.persistence.*;
+import java.util.*;
 
 /**
  * Created by hagai on 07/04/15.
  */
+@Entity
 public class SubForum implements SubForumI {
 
-
+    @Id
     private String _name;
 
     /**
      * a list of all of the threads in this subforum
      */
+    @OneToMany(targetEntity = ForumThread.class, cascade = CascadeType.ALL)
     private List<ThreadI> _threads = new LinkedList<>();
 
-    private HashMap<String, UserI> _moderators = new HashMap<>();
+    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
+    private Map<String, UserI> _moderators = new HashMap<>();
     private static Logger logger = Logger.getLogger(Forum.class.getName());
+    @OneToOne(targetEntity = ForumPolicy.class)
     private SubForumPolicyI subforumPolicy;
 
 
     public SubForum(String name, SubForumPolicyI subforumPolicy){
         _name = name;
         this.subforumPolicy = subforumPolicy;
+    }
+
+    public SubForum() {
     }
 
 

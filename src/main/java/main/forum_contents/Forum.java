@@ -11,14 +11,17 @@ import main.exceptions.UserAlreadyExistsException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashMap;
-
+import java.util.Map;
 
 
 /**
  * Created by hagai on 07/04/15.
  */
+
+@Entity
 public class Forum implements ForumI {
 
     //TODO use enum permissions, fix all occurences of 'Guest' or 'Admin' in the code
@@ -28,12 +31,24 @@ public class Forum implements ForumI {
     public static final String PERMISSION_ADMIN = "ADMINISTRATOR";
     public static final String ADMIN_USERNAME = "ADMIN";
     public static final String ADMIN_PASSWORD = "ADMIN";
-    private final String forum_name;
+    private String forum_name;
+    @OneToOne(targetEntity = ForumPolicy.class)
     private ForumPolicyI policy;
-    private HashMap<String, SubForumI> _subForums = new HashMap<>();
-    private HashMap<String, UserI> _users = new HashMap<>();
-    private HashMap<String, UserType> _userTypes = new HashMap<>();
+    @OneToMany(targetEntity = SubForum.class, cascade = CascadeType.ALL)
+    @MapKey(name="_name")
+    private Map<String, SubForumI> _subForums = new HashMap<>();
+
+    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
+    private Map<String, UserI> _users = new HashMap<>();
+
+    @OneToMany(targetEntity =  UserType.class, cascade = CascadeType.ALL)
+    private Map<String, UserType> _userTypes = new HashMap<>();
+
+    @OneToOne(targetEntity = User.class)
+
     private UserI guest;
+
+    @OneToOne(targetEntity = User.class)
     private UserI admin;
     private static final Logger logger = Logger.getLogger(Forum.class.getName());
 
@@ -48,6 +63,9 @@ public class Forum implements ForumI {
         this._users.put("Guest", this.guest);
         this._users.put(this.admin.getUsername(), this.admin);
         this.forum_name = name;
+    }
+
+    public Forum() {
     }
 
     private void initAdmin() {
@@ -214,5 +232,16 @@ public class Forum implements ForumI {
     @Override
     public boolean removeUserType(String type) {
         return false;
+    }
+
+    @Id
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
