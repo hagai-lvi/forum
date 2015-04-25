@@ -1,10 +1,5 @@
 package main.services_layer;
 
-import main.forum_contents.Forum;
-import main.interfaces.FacadeI;
-import main.interfaces.ForumI;
-import main.interfaces.MessageI;
-import main.interfaces.SubForumI;
 import main.exceptions.*;
 import main.forum_contents.ForumMessage;
 import main.interfaces.*;
@@ -20,9 +15,9 @@ public class Facade implements FacadeI {
 
 	private Facade(){
 		//TODO remove, for demo only
-		addForum(new Forum("A",null));
-		addForum(new Forum("B",null));
-		addForum(new Forum("C",null));
+//		addForum(new Forum("A",null));
+//		addForum(new Forum("B",null));
+//		addForum(new Forum("C",null));
 	}
 
 	private HashMap<String,ForumI> forums = new HashMap<>();
@@ -45,7 +40,7 @@ public class Facade implements FacadeI {
 	@Override
 	public void addForum(ForumI toAdd) {
 		//TODO shouldn't be a part of the facade, super-admin only
-		forums.add(toAdd);
+		forums.put(toAdd.getName(), toAdd);
 	}
 
 	@Override

@@ -31,8 +31,10 @@ public class Forum implements ForumI {
     public static final String ADMIN_USERNAME = "ADMIN";
     public static final String ADMIN_PASSWORD = "ADMIN";
     private String forum_name;
+
     @OneToOne(targetEntity = ForumPolicy.class)
     private ForumPolicyI policy;
+
     @OneToMany(targetEntity = SubForum.class, cascade = CascadeType.ALL)
     @MapKey(name="_name")
     private Map<String, SubForumI> _subForums = new HashMap<>();
@@ -265,30 +267,6 @@ public class Forum implements ForumI {
         return policy;
     }
 
-    public HashMap<String, SubForumI> get_subForums() {
-        return _subForums;
-    }
-
-    public void set_subForums(HashMap<String, SubForumI> _subForums) {
-        this._subForums = _subForums;
-    }
-
-    public HashMap<String, UserI> get_users() {
-        return _users;
-    }
-
-    public void set_users(HashMap<String, UserI> _users) {
-        this._users = _users;
-    }
-
-    public HashMap<String, UserType> get_userTypes() {
-        return _userTypes;
-    }
-
-    public void set_userTypes(HashMap<String, UserType> _userTypes) {
-        this._userTypes = _userTypes;
-    }
-
     public UserI getGuest() {
         return guest;
     }
@@ -301,5 +279,4 @@ public class Forum implements ForumI {
         return admin;
     }
 
-    public Forum(){}
 }
