@@ -10,13 +10,15 @@ import java.util.GregorianCalendar;
 /**
  * Created by victor on 4/11/2015.
  */
-public class ForumPolicy__Test extends TestCase {
-    ForumPolicy fp;
+public class ForumPolicyTest extends TestCase {
+    private ForumPolicy fp;
+    @Override
     public void setUp() throws Exception {
         super.setUp();
         fp = new ForumPolicy(3, "[a-z]*");
     }
 
+    @Override
     public void tearDown() throws Exception {
     }
 
@@ -41,26 +43,24 @@ public class ForumPolicy__Test extends TestCase {
     }
 
     public void testIsValidAdmin() throws Exception {
-        User man = new User("man", "man", "man");
-        man.setSignUpDate(new GregorianCalendar(2013, 12, 12));
+        User man = createUser();
         assertTrue(fp.isValidAdmin(man));
     }
 
     public void testIsNotValidAdmin() throws Exception {
-        User man = new User("man", "man", "man");
-        man.setSignUpDate(new GregorianCalendar(2015, 12, 12));
+        User man = createUser();
+        man.setSignUpDate(new GregorianCalendar());
         assertFalse(fp.isValidAdmin(man));
     }
 
     public void testIsValidModerator() throws Exception {
-        User man = new User("man", "man", "man");
-        man.setSignUpDate(new GregorianCalendar(2013,12,12));
+        User man = createUser();
         assertTrue(fp.isValidModerator(man));
     }
 
     public void testIsNotValidModerator() throws Exception {
-        User man = new User("man", "man", "man");
-        man.setSignUpDate(new GregorianCalendar(2015,12,12));
+        User man = createUser();
+        man.setSignUpDate(new GregorianCalendar());
         assertFalse(fp.isValidModerator(man));
     }
 
@@ -84,5 +84,12 @@ public class ForumPolicy__Test extends TestCase {
         assertFalse(fp.isValidMessage(msg));
     }
 
+
+
+    private User createUser() {
+        User user = new User("man", "man", "man", null);
+        user.setSignUpDate(new GregorianCalendar(1948,1,1));
+        return user;
+    }
 
 }

@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC
+        "-//Hibernate/Hibernate Configuration DTD//EN"
+        "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+    <session-factory>
+        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
+        <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
+        <property name="hibernate.connection.url">jdbc:mysql://localhost/WORLD</property>
+        <property name="hibernate.connection.username">root</property>
+        <property name="hibernate.connection.password">Aa123456</property>
+        <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
+        <property name="hbm2ddl.auto">create</property>
+        <property name="show_sql">true</property>
+        <mapping class="main.forum_contents.Forum"/>
+        <mapping class="main.forum_contents.SubForum"/>
+        <mapping class="main.forum_contents.ForumMessage"/>
+        <mapping class="main.forum_contents.ForumThread"/>
+        <mapping class="main.forum_contents.ForumPolicy"/>
+        <mapping class="main.forum_contents.UserType"/>
+        <mapping class="data_structures.Tree"/>
+        <mapping class="main.User.User"/>
+        <mapping class="main.User.UserSubforumPermission"/>
+        <mapping class="main.User.UserForumPermission"/>
+    </session-factory>
+</hibernate-configuration>

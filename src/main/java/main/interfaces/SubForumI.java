@@ -31,7 +31,7 @@ public interface SubForumI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, UserI requestingUser);
+	void deleteMessage(MessageI message, UserI requestingUser) throws MessageNotFoundException;
 
 	void setModerator(UserI mod);
 

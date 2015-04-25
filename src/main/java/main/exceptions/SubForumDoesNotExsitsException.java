@@ -1,9 +1,7 @@
 package main.exceptions;
 
 /**
- * Mark that a login has failed due to invalid credentials
- * Created by hagai on 07/04/15.
+ * Mark that the specified subforum doesn not exist
  */
-//TODO add reason? like user not found, password doesn't match etc
-public class SubForumDoesNotExsitsException extends Throwable {
+public class SubForumDoesNotExsitsException extends Exception {
 }

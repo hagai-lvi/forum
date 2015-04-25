@@ -1,30 +1,36 @@
 package main.User;
 
 import main.exceptions.*;
+import main.forum_contents.SubForum;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
+import main.forum_contents.Forum;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * Created by gabigiladov on 4/11/15.
  */
-    public class UserPermission implements ForumPermissionI, SubForumPermissionI {
+@Entity
+    public class UserSubforumPermission implements SubForumPermissionI {
 
     public static final String PERMISSION_GUEST = "GUEST";
     private String permission;
+    @OneToOne(targetEntity = Forum.class)
     private ForumI forum;
+    @OneToOne(targetEntity = SubForum.class)
     private SubForumI subforum;
-    private static Logger logger = Logger.getLogger(UserPermission.class.getName());
+    private static Logger logger = Logger.getLogger(UserSubforumPermission.class.getName());
 
-    public UserPermission(String permission, ForumI forum, SubForumI subforum){
+    public UserSubforumPermission(String permission, ForumI forum, SubForumI subforum){
         logger.info("Creating new permissions for - " + permission);
         this.forum = forum;
         this.subforum = subforum;
         this.permission = permission;
     }
 
-    @Override
-    public SubForumPermissionI[] viewSubForums() {
-        return new SubForumPermissionI[0];
+    public UserSubforumPermission() {
     }
 
     /**
@@ -59,49 +65,6 @@ import org.apache.log4j.Logger;
 
     private boolean canDeleteSunForum() {
         return permission.equals("Moderator") || permission.equals("Administrator");
-    }
-
-    @Override
-    public void setAdmin(UserI admin) throws PermissionDeniedException {
-        if(permission.equals("Super-Admin")) {
-            logger.info(permission + " has permission to add administrator");
-            forum.setAdmin(admin);
-        } else {
-            logger.error(permission + " has no permission to add administrator");
-            throw new PermissionDeniedException("User has no permission to add administrator");
-        }
-    }
-
-    @Override
-    public void setPolicy(ForumPolicyI policy) throws PermissionDeniedException {
-        if(permission.equals("Administrator")) {
-            logger.info(permission + " has permission to set policy");
-            forum.setPolicy(policy);
-        } else {
-            logger.error(permission + " has no permission to set policy");
-            throw new PermissionDeniedException("User has no permission to set policy");
-        }
-    }
-
-    @Override
-    public String viewStatistics() throws PermissionDeniedException {
-        if(permission.equals("Administrator")) {
-            logger.info(permission + " has permission to view statistics");
-            return forum.viewStatistics();
-        } else {
-            logger.error(permission + " has no permission to view statistics");
-            throw new PermissionDeniedException("User has no permission to view statistics");
-        }
-    }
-
-    @Override
-    public void addForum(ForumI forum) throws PermissionDeniedException {
-
-    }
-
-    @Override
-    public boolean findForum(String name) {
-        return forum.getName().equals(name);
     }
 
     @Override
@@ -141,18 +104,14 @@ import org.apache.log4j.Logger;
      * Delete a specific message if the message was create by the user that sent this request
      */
     @Override
-    public void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException {
-        if(canDeleteMessage()) {
+    public void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException, MessageNotFoundException {
+        if(canDeleteMessage(message, deleter)) {
             logger.info(permission + " has permission to delete message");
             subforum.deleteMessage(message, deleter);
         } else {
             logger.error(permission + " has no permission to delete message");
             throw new PermissionDeniedException("User has no delete message");
         }
-    }
-
-    private boolean canDeleteMessage() {
-        return false;
     }
 
     @Override
@@ -174,5 +133,26 @@ import org.apache.log4j.Logger;
     @Override
     public SubForumI getSubForum() {
         return subforum;
+    }
+
+    @Override
+    public boolean findForum(String name) {
+        //TODO what is this method for?
+        return false;
+    }
+
+    private boolean canDeleteMessage(MessageI message, UserI deleter) {
+        return message.getUser().equals(deleter);
+    }
+
+    @Id
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

@@ -1,5 +1,7 @@
 package main.interfaces;
 
+import main.exceptions.*;
+
 import java.util.Collection;
 
 /**
@@ -15,14 +17,13 @@ public interface FacadeI {
 
 	/**
 	 * Get the list of forums in the system
-	 * @return
 	 */
 	Collection<ForumI> getForumList();
 
 	/**
 	 * Get the list of subforums in the specified forum
 	 */
-	Collection<SubForumI> getSubForumList(ForumI forum);
+	Collection<SubForumPermissionI> getSubForumList(UserI user);
 
 	/**
 	 * Add a forum to the system, requires login with permissions
@@ -31,39 +32,41 @@ public interface FacadeI {
 	void addForum(ForumI toAdd);
 
 	/**
-	 * Add a subforum to the specified forum
+	 * Create a subforum in the specified forum.
+	 * The Policy will be derived from the forum
 	 */
-	void addSubforum(ForumI forum, SubForumI subforum);
+	void createSubforum(String subforumName, UserI user) throws PermissionDeniedException, SubForumAlreadyExistException;
 
 	/**
 	 * register a user to the specified forum
 	 */
-	void register(ForumI forum, String userName, String password, String email);
+	void register(ForumI forum, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException;
 
 	/**
 	 * Login to the specified forum
 	 * TODO what should happen?
 	 */
-	void login(ForumI forum, String userName, String password );
+	UserI login(ForumI forum, String userName, String password ) throws InvalidUserCredentialsException;
+
 
 	/**
 	 * TODO what should happen?
 	 */
-	void logout();
+	void logout(ForumI forum, UserI user);
 
 	/**
 	 * Reply to a specific message
 	 */
-	void addReply(MessageI src, String title, String body);
+	void addReply(UserI user, SubForumPermissionI subforumPermissions, MessageI src, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Create a new thread in the specified subforum
 	 */
-	void createNewThread(SubForumI subforum, String srcMessageTitle, String srcMessageBody);
+	void createNewThread(UserI user, SubForumPermissionI subforumPermission, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * submit a complaint about a moderator
 	 */
-	void reportModerator(String moderatorUserName, String reportMessage);
+	void reportModerator(UserI user,SubForumI subforum , String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException;
 
 }

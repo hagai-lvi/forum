@@ -1,11 +1,9 @@
 package main.interfaces;
 
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.MessageNotFoundException;
-import main.exceptions.ModeratorDoesNotExistsException;
-import main.exceptions.PermissionDeniedException;
+import main.exceptions.*;
 
 import java.util.Collection;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -21,7 +19,7 @@ public interface UserI {
 	/**
 	 * Get the list of all of the subforums of this user
 	 */
-	Collection<SubForumPermissionI> getSubForumPermission();
+	Vector<SubForumPermissionI> getSubForumsPermissions();
 
 	/**
 	 * Get username
@@ -43,30 +41,22 @@ public interface UserI {
 	 */
 	String getUserAuthString();
 
-	/**
-	 * view subForums
-	 */
-	Vector<SubForumPermissionI> viewSubForums();
-
-	/**
-	 * Create a subforum in this forum
-	 */
-	void createSubForum(String name, ForumI forum) throws PermissionDeniedException;
+	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
 
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete, ForumI forum)throws PermissionDeniedException;
+	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException;
 
 	/**
 	 * create a thread in the subforum
 	 */
-	void createThread(MessageI message, SubForumI subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(SubForumI subforum, MessageI original, MessageI reply) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
+	void replyToMessage(SubForumPermissionI subforumPermissions, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator
@@ -76,22 +66,17 @@ public interface UserI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, SubForumI subForum)throws PermissionDeniedException;
-
-	/**
-	 * Add new forum
-	 */
-	void addForum(ForumI forum) throws PermissionDeniedException;
+	void deleteMessage(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, MessageNotFoundException;
 
 	/**
 	 * Set new forum administrator
 	 */
-	void setAdmin(UserI admin, ForumI forum)throws PermissionDeniedException;
+	void setAdmin(UserI admin)throws PermissionDeniedException;
 
 	/**
 	 * Set policy for forum
 	 */
-	void setPolicy(ForumI forum, ForumPolicyI policy)throws PermissionDeniedException;
+	void setPolicy(ForumPolicyI policy)throws PermissionDeniedException;
 
 	/**
 	 * Get statistics

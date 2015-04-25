@@ -13,7 +13,7 @@ public interface SubForumPermissionI {
 	/**
 	 * create a thread in the subforum
 	 */
-	public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * reply to a specific message
@@ -28,13 +28,13 @@ public interface SubForumPermissionI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException;
+	void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException, MessageNotFoundException;
 
 	/**
 	 * view threads
 	 */
 
-	ThreadI[] getThreads() throws PermissionDeniedException;
+	ThreadI[] getThreads();
 
 	/**
 	 * Set moderator for subforum
