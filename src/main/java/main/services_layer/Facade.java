@@ -14,10 +14,6 @@ public class Facade implements FacadeI {
 	private static Facade theFacade = new Facade();
 
 	private Facade(){
-		//TODO remove, for demo only
-//		addForum(new Forum("A",null));
-//		addForum(new Forum("B",null));
-//		addForum(new Forum("C",null));
 	}
 
 	private HashMap<String,ForumI> forums = new HashMap<>();
@@ -49,8 +45,8 @@ public class Facade implements FacadeI {
 	}
 
 	@Override
-	public void register(ForumI forum, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
-		forum.register(userName, password, email);
+	public UserI register(ForumI forum, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
+		return forum.register(userName, password, email);
 	}
 
 	@Override

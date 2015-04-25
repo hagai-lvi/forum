@@ -40,7 +40,7 @@ public interface FacadeI {
 	/**
 	 * register a user to the specified forum
 	 */
-	void register(ForumI forum, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException;
+	UserI register(ForumI forum, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException;
 
 	/**
 	 * Login to the specified forum

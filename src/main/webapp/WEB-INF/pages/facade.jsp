@@ -13,7 +13,7 @@
         <c:forEach var="forum" items="${forumList}">
             ${forum}
 
-            <form action="login" method="POST">
+            <form action="login_page" method="POST">
                 <input type="submit" value=${forum.getForum()} name="forum" />
             </form>
             <br/>
