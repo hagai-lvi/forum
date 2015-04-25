@@ -11,22 +11,20 @@
     <tr>
 
 
-        <c:forEach var="forum" items="${forumList}">
-            ${forum}
-            <c:out value="${forum.viewStatistics()}"/>
 
-            <form action="login" method="POST">
-                <input type="submit" value=${forum.getForum()} name="forum"/>
-            </form>
+        <c:forEach var="forum" items="${forumList}">
+<form:form method="POST" action="login" modelAttribute="command">
+            ${forum}
+                    <input type="submit" value=${forum} />
+
             <br/>
+</form:form>
         </c:forEach>
+
+
 
     </tr>
 </table>
-
-<form:form method="post" action="/login">
-    <form:label path="name"></form:label>
-</form:form>
 
 <h1>Create new Forum:</h1><br/>
 <form action="addForum" method="POST">

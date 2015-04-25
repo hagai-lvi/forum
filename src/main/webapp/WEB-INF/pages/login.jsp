@@ -11,7 +11,8 @@
     <title></title>
 </head>
 <body>
-<h1>You tried to login to forum ${forumName}</h1>
-<h1>Messgae: ${message}</h1>
+
+<h1>You tried to login to forum ${forum.forum_name}</h1>
+<h1>Messgae: </h1>
 </body>
 </html>

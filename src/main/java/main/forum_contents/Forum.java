@@ -27,8 +27,6 @@ public class Forum implements ForumI {
     private UserI admin = null;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
 
-
-
     public Forum(String name, ForumPolicyI policy){
         this.policy = policy;
         this.guest = new User(GUEST_USER_NAME, "no_pass", "nomail@nomail.com");
