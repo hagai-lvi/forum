@@ -19,7 +19,7 @@ import javax.persistence.OneToOne;
         PERMISSIONS_GUEST,
         PERMISSIONS_USER,
         PERMISSIONS_ADMIN,
-        PERMISSIONS_MODERATOR;
+        PERMISSIONS_SUPERADMIN;
     }
 
     private PERMISSIONS permission;
@@ -81,7 +81,7 @@ import javax.persistence.OneToOne;
             subforum.deleteMessage(message, deleter);
         } else {
             logger.error(permission + " has no permission to delete message");
-            throw new PermissionDeniedException("User has no delete message");
+            throw new PermissionDeniedException("User has no permission delete message");
         }
     }
 
