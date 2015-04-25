@@ -2,24 +2,32 @@ package main.User;
 
 import main.Utils.SecureString;
 import main.exceptions.*;
+import main.forum_contents.ForumMessage;
+import main.forum_contents.SubForum;
 import main.interfaces.*;
+
 import javax.persistence.*;
+import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Vector;
 
 /**
  * Created by gabigiladov on 4/11/15.
  */
+@Entity
 public class User implements UserI {
 
     private String authString = null;
+    @Id
     private String username;
     private String password;
     private String email;
     private GregorianCalendar signUpDate;
     private int seniorityInDays;
     private int numOfMessages;
-    private Vector<SubForumPermissionI> subForumsPermissions;
+    @OneToMany(targetEntity = UserSubforumPermission.class, cascade = CascadeType.ALL)
+    private Collection<SubForumPermissionI> subForumsPermissions;
+    @OneToOne(targetEntity = UserForumPermission.class, cascade = CascadeType.ALL)
     private ForumPermissionI forumPermissions;
     private boolean isEmailAuthenticated;
 
@@ -34,6 +42,9 @@ public class User implements UserI {
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<>();
         this.forumPermissions = forumPermissions;
+    }
+
+    public User() {
     }
 
     /**
@@ -51,8 +62,8 @@ public class User implements UserI {
          Get the list of all of the subforums of this user
      */
     @Override
-    public Vector<SubForumPermissionI> getSubForumPermission() {
-        return this.subForumsPermissions;
+    public Vector<SubForumPermissionI> getSubForumsPermissions() {
+        return (Vector<SubForumPermissionI>)this.subForumsPermissions;
     }
 
     @Override
@@ -104,11 +115,6 @@ public class User implements UserI {
     }
 
     @Override
-    public Vector<SubForumPermissionI> viewSubForums() {
-        return this.subForumsPermissions;
-    }
-
-    @Override
     public void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
         forumPermissions.createSubForum(name);
     }
@@ -119,43 +125,29 @@ public class User implements UserI {
     }
 
     @Override
-    public void createThread(MessageI message, SubForumI subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
-                subForumsPermissions.elementAt(i).createThread(message);
-                break;
-            }
-        }
+    public void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+        subForumPermission.createThread(message);
     }
 
     @Override
-    public void replyToMessage(SubForumI subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){//TODO need to search
-//                subForumsPermissions.elementAt(i).replyToMessage(original, reply);
-                break;
-            }
-        }
+    public void replyToMessage(SubForumPermissionI subForumPermission, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
+        subForumPermission.replyToMessage(original,new ForumMessage(original, this, msgBody, msgTitle));
     }
 
     @Override
     public void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
         for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
-                subForumsPermissions.elementAt(i).reportModerator(moderatorUsername, reportMessage, this);
+            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).findForum(subforum.getName())){
+                ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).reportModerator(moderatorUsername, reportMessage, this);
                 break;
             }
         }
     }
 
     @Override
-    public void deleteMessage(MessageI message, SubForumI subforum) throws PermissionDeniedException {
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subforum.getName())){
-                subForumsPermissions.elementAt(i).deleteMessage(message, this);
-                break;
-            }
-        }
+    public void deleteMessage(MessageI message, SubForumPermissionI subForumPermission)
+            throws PermissionDeniedException, MessageNotFoundException {
+        subForumPermission.deleteMessage(message, this);
     }
 
     @Override
@@ -178,8 +170,8 @@ public class User implements UserI {
     public void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException {
         //TODO
         for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(subForumsPermissions.elementAt(i).findForum(subForum.getName())){
-                subForumsPermissions.elementAt(i).setModerator(moderator);
+            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).findForum(subForum.getName())){
+                ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).setModerator(moderator);
                 break;
             }
         }
@@ -201,10 +193,6 @@ public class User implements UserI {
         this.subForumsPermissions.add(permission);
     }
 
-    public Vector<SubForumPermissionI> getSubForumsPermissions() {
-        return subForumsPermissions;
-    }
-
     public void setSubForumsPermissions(Vector<SubForumPermissionI> subForumsPermissions) {
         this.subForumsPermissions = subForumsPermissions;
     }
@@ -215,4 +203,5 @@ public class User implements UserI {
     public void setSignUpDate(GregorianCalendar signUpDate){
         this.signUpDate = signUpDate;
     }
+
 }

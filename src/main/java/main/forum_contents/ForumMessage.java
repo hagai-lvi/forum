@@ -3,32 +3,42 @@ package main.forum_contents;
 import main.exceptions.PermissionDeniedException;
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
+import main.User.User;
+
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.Date;
-import javax.persistence.*;
+import java.util.List;
 
 
 /**
  * Created by hagai_lvi on 4/11/15.
  */
+@Entity
 public class ForumMessage implements MessageI {
 
-	ForumMessage reply_message;
-	UserI writingUser;
-	String messageText;
-	String messageTitle;
-	Date writingTime;
-	ArrayList<MessageI> replays;
-	boolean isDeleted = false;
+	@OneToOne(targetEntity = ForumMessage.class)
+	private MessageI reply_message;
+	@OneToOne(targetEntity = User.class)
+	private UserI writingUser;
+	private String messageText;
+	private String messageTitle;
+	private Date writingTime;
+	@OneToMany(targetEntity = ForumMessage.class, cascade = CascadeType.ALL)
+	private List<MessageI> replays;
+	private boolean isDeleted = false;
 
 
-	public ForumMessage(ForumMessage reply_to, UserI user, String messageText, String messageTitle){
+	public ForumMessage(MessageI reply_to, UserI user, String messageText, String messageTitle){
 		this.writingUser = user;
 		this.messageText = messageText;
 		this.reply_message = reply_to;
 		this.messageTitle = messageTitle;
 		writingTime = new Date();
-		replays = new ArrayList<MessageI>();
+		replays = new ArrayList<>();
+	}
+
+	public ForumMessage() {
 	}
 
 	public void editText(UserI user, String newText) throws PermissionDeniedException {
@@ -45,15 +55,11 @@ public class ForumMessage implements MessageI {
 	}
 	public Date getDate()  { return writingTime; }
 
-	@Override
-	public void reply(MessageI reply) {
-		this.replays.add(reply);
-	}
-
-	public ForumMessage get_replayed_message(){
+	public MessageI get_replayed_message(){
 		return reply_message;
 	}
 
+	@Override
 	public String printSubTree(int depth){
 		if (isDeleted){
 			return "";
@@ -69,18 +75,31 @@ public class ForumMessage implements MessageI {
 		return ans;
 	}
 
+	@Override
 	public void removeMessage(){
 		this.isDeleted = true;
 	}
 
+	@Override
 	public String getMessageText(){
 
 		return messageText;
 	}
 
+	@Override
 	public String getMessageTitle(){
 		return messageTitle;
 	}
 
 
+	@Id
+	private String id;
+
+	public String getId() {
+		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
+	}
 }

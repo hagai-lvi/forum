@@ -2,6 +2,7 @@ package data_structures;
 
 import main.exceptions.NodeNotFoundException;
 
+import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,10 +11,11 @@ import java.util.List;
  * @param <T>
  */
 public class Tree<T> {
+    // TODO handle the case in which the root is null (might happen after calling remove())
     private Node<T> root;
 
     public Tree(T rootData) {
-        root = new Node<T>(rootData, null);
+        root = new Node<>(rootData, null);
     }
 
     public void add(T dataToAdd, T ancestor) throws NodeNotFoundException {
@@ -29,8 +31,28 @@ public class Tree<T> {
         return root.getData();
     }
 
-    private Node<T> findNode(T data) {
-        return root.findChild(data);
+    public T findNode(T data) {
+        if (root == null){
+            return null;
+        }
+
+        Node<T> node = root.findChild(data);
+        if (node == null){
+            return null;
+        }
+        else{
+            return node.data;
+        }
+    }
+
+    public void remove(T data) {
+        Node<T> child = root.findChild(data);
+        if (child == root){
+            root = null;
+        }
+        else {
+            child.parent.children.remove(child);
+        }
     }
 
 

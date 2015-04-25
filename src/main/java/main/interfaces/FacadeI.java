@@ -17,7 +17,7 @@ public interface FacadeI {
 	/**
 	 * Get the list of subforums in the specified forum
 	 */
-	Collection<SubForumI> getSubForumList(ForumI forum);
+	Collection<SubForumPermissionI> getSubForumList(UserI user);
 
 	/**
 	 * Add a forum to the system, requires login with permissions
@@ -51,12 +51,12 @@ public interface FacadeI {
 	/**
 	 * Reply to a specific message
 	 */
-	void addReply(UserI user, SubForumI subforum, MessageI src, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException;
+	void addReply(UserI user, SubForumPermissionI subforumPermissions, MessageI src, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Create a new thread in the specified subforum
 	 */
-	void createNewThread(UserI user, SubForumI subforum, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	void createNewThread(UserI user, SubForumPermissionI subforumPermission, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * submit a complaint about a moderator

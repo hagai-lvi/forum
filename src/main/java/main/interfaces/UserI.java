@@ -3,7 +3,7 @@ package main.interfaces;
 import main.exceptions.*;
 
 import java.util.Collection;
-import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.Vector;
 
 /**
@@ -11,11 +11,15 @@ import java.util.Vector;
  */
 public interface UserI {
 
+	/**
+	 * @return whether this user has authenticated his email address
+	 */
+	boolean isEmailAuthnticated();
 
 	/**
 	 * Get the list of all of the subforums of this user
 	 */
-	Collection<SubForumPermissionI> getSubForumPermission();
+	Vector<SubForumPermissionI> getSubForumsPermissions();
 
 	/**
 	 * Get username
@@ -37,11 +41,6 @@ public interface UserI {
 	 */
 	String getUserAuthString();
 
-	/**
-	 * view subForums
-	 */
-	Vector<SubForumPermissionI> viewSubForums();
-
 	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
 
 	/**
@@ -52,12 +51,12 @@ public interface UserI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void createThread(MessageI message, SubForumI subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(SubForumI subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
+	void replyToMessage(SubForumPermissionI subforumPermissions, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator
@@ -67,7 +66,7 @@ public interface UserI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, SubForumI subForum)throws PermissionDeniedException;
+	void deleteMessage(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, MessageNotFoundException;
 
 	/**
 	 * Set new forum administrator
@@ -98,25 +97,4 @@ public interface UserI {
 	 * Add permissions
 	 */
 	void addSubForumPermission(SubForumPermissionI permission);
-
-	/**
-	 * Set username
-	 */
-	void setUsername(String name);
-
-	/**
-	 * @return whether this user has authenticated his email address
-	 */
-	boolean isEmailAuthenticated();
-
-	/**
-	 * Get email message and compares to real authenticated string
-	 */
-	void setAuthenticated();
-
-	void setPassword(String password);
-
-	void setEmail(String email);
-
-	GregorianCalendar getSignUpDate();
 }

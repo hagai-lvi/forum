@@ -1,7 +1,6 @@
 package main.interfaces;
 
 import main.User.User;
-import main.forum_contents.SubForum;
 
 /**
  * Created by hagai_lvi on 4/6/15.

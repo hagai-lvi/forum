@@ -23,9 +23,8 @@ public class Facade implements FacadeI {
 	}
 
 	@Override
-	public Collection<SubForumI> getSubForumList(ForumI forum) {
-		return forum.getSubForums();
-		//TODO forum.subforums should return collection and not hashmap
+	public Collection<SubForumPermissionI> getSubForumList(UserI user) {
+		return user.getSubForumsPermissions();
 	}
 
 	@Override
@@ -55,14 +54,15 @@ public class Facade implements FacadeI {
 	}
 
 	@Override
-	public void addReply(UserI user, SubForumI subForum, MessageI src, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
-		user.replyToMessage(subForum,src,title, body);
+	public void addReply(UserI user, SubForumPermissionI subForumPermission, MessageI src, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
+		user.replyToMessage(subForumPermission, src, title, body);
 
 	}
 
 	@Override
-	public void createNewThread(UserI user, SubForumI subforum, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-		user.createThread(new ForumMessage(null, null, null, null), subforum);//move the message creation to the user
+	public void createNewThread(UserI user, SubForumPermissionI subForumPermission, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+		//TODO
+		user.createThread(new ForumMessage(null, user, srcMessageBody, srcMessageTitle), subForumPermission);//move the message creation to the user
 	}
 
 	@Override
@@ -70,7 +70,13 @@ public class Facade implements FacadeI {
 		user.reportModerator(subforum, moderatorUserName, reportMessage);
 	}
 
+
 	public static FacadeI getFacade(){
+		return theFacade;
+	}
+
+	public static FacadeI dropAllData(){
+		theFacade = new Facade();
 		return theFacade;
 	}
 }

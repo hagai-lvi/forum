@@ -3,14 +3,21 @@ package main.User;
 import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;
+import main.forum_contents.Forum;
 import main.interfaces.*;
 
+import javax.persistence.*;
 import java.util.Collection;
 
 /**
  * Created by hagai_lvi on 4/20/15.
  */
+
+@Entity
 public class UserForumPermission implements ForumPermissionI {
+
+	public UserForumPermission() {
+	}
 
 	public enum PERMISSIONS{
 		PERMISSIONS_GUEST,
@@ -18,7 +25,9 @@ public class UserForumPermission implements ForumPermissionI {
 		PERMISSIONS_ADMIN
 	}
 	//TODO add logger
-	private final ForumI forum;
+
+	@OneToOne(targetEntity = Forum.class)
+	private ForumI forum;
 	private PERMISSIONS permissions;
 
 	private UserForumPermission(PERMISSIONS permissions, ForumI forum){
@@ -66,7 +75,7 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public void setAdmin(UserI admin) throws PermissionDeniedException {
+	public void setAdmin(UserI admin){
 		permissions = PERMISSIONS.PERMISSIONS_ADMIN;
 
 	}
@@ -80,7 +89,7 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public String viewStatistics() throws PermissionDeniedException {
+	public String viewStatistics() {
 		//TODO
 		return null;
 	}
@@ -88,5 +97,16 @@ public class UserForumPermission implements ForumPermissionI {
 	@Override
 	public boolean findSubforum(String name) {
 		return false;
+	}
+
+	@Id @GeneratedValue(strategy=GenerationType.AUTO)
+	private Integer id;
+
+	public Integer getId() {
+		return id;
+	}
+
+	public void setId(Integer id) {
+		this.id = id;
 	}
 }

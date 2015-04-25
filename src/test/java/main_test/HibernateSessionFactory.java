@@ -3,11 +3,12 @@ package main_test;
 /**
  * Created by xkcd2 on 4/21/2015.
 */
-        import org.hibernate.SessionFactory;
-        import org.hibernate.cfg.AnnotationConfiguration;
-        import org.hibernate.cfg.Configuration;
-        import org.hibernate.service.ServiceRegistry;
-        import org.hibernate.service.ServiceRegistryBuilder;
+
+import org.hibernate.SessionFactory;
+import org.hibernate.cfg.AnnotationConfiguration;
+import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
+import org.hibernate.service.ServiceRegistryBuilder;
 
 public class HibernateSessionFactory {
 

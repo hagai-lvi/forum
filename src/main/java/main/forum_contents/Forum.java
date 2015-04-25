@@ -4,32 +4,53 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.Utils.GmailSender;
-import main.exceptions.*;
+import main.exceptions.InvalidUserCredentialsException;
+import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.SubForumDoesNotExsitsException;
+import main.exceptions.UserAlreadyExistsException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
+
+import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashMap;
-import javax.persistence.*;
-
+import java.util.Map;
 
 
 /**
  * Created by hagai on 07/04/15.
  */
+
+@Entity
 public class Forum implements ForumI {
 
+    //TODO use enum permissions, fix all occurences of 'Guest' or 'Admin' in the code
     public static final String PERMISSION_REGULAR = "REGULAR";
     public static final String GUEST_USER_NAME = "Guest user";
     public static final String PERMISSION_GUEST = "GUEST";
     public static final String PERMISSION_ADMIN = "ADMINISTRATOR";
+    public static final String ADMIN_USERNAME = "ADMIN";
+    public static final String ADMIN_PASSWORD = "ADMIN";
     private String forum_name;
+    @OneToOne(targetEntity = ForumPolicy.class)
     private ForumPolicyI policy;
-    private HashMap<String, SubForumI> _subForums = new HashMap<>();
-    private HashMap<String, UserI> _users = new HashMap<>();
-    private HashMap<String, UserType> _userTypes = new HashMap<String, UserType>();
-    private UserI guest = null;
-    private UserI admin = null;
-    private static Logger logger = Logger.getLogger(Forum.class.getName());
+    @OneToMany(targetEntity = SubForum.class, cascade = CascadeType.ALL)
+    @MapKey(name="_name")
+    private Map<String, SubForumI> _subForums = new HashMap<>();
+
+    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
+    private Map<String, UserI> _users = new HashMap<>();
+
+    @OneToMany(targetEntity =  UserType.class, cascade = CascadeType.ALL)
+    private Map<String, UserType> _userTypes = new HashMap<>();
+
+    @OneToOne(targetEntity = User.class)
+
+    private UserI guest;
+
+    @OneToOne(targetEntity = User.class)
+    private UserI admin;
+    private static final Logger logger = Logger.getLogger(Forum.class.getName());
 
 
 
@@ -40,14 +61,17 @@ public class Forum implements ForumI {
         addAllSubforumsToUser(guest, PERMISSION_GUEST);
         addAllSubforumsToUser(admin, PERMISSION_ADMIN);
         this._users.put("Guest", this.guest);
-        this._users.put("Admin", this.admin);
+        this._users.put(this.admin.getUsername(), this.admin);
         this.forum_name = name;
+    }
+
+    public Forum() {
     }
 
     private void initAdmin() {
         ForumPermissionI adminPermission =
                 UserForumPermission.createUserForumPermissions(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN, this);
-        this.admin = new User("Forum Admin", "zubur123", "forumadmin@nomail.com", adminPermission);
+        this.admin = new User(ADMIN_USERNAME, ADMIN_PASSWORD, "forumadmin@nomail.com", adminPermission);
     }
 
     private void initGuest() {
@@ -56,15 +80,18 @@ public class Forum implements ForumI {
         this.guest = new User(GUEST_USER_NAME, "no_pass", "nomail@nomail.com", guestPermission);
     }
 
+    @Override
     public void setAdmin(UserI admin){
         this.admin = admin;
     }
 
+    @Override
     public String viewStatistics(){
         return "No statistics yet";
     }
 
 
+    @Override
     public String getName(){
         return this.forum_name;
     }
@@ -94,6 +121,7 @@ public class Forum implements ForumI {
         return subForum;
     }
 
+    @Override
     public void deleteSubForum(SubForumI subforum) throws SubForumDoesNotExsitsException {
         if (!_subForums.containsKey(subforum.getName())){
             throw new SubForumDoesNotExsitsException();
@@ -179,7 +207,6 @@ public class Forum implements ForumI {
     @Override
     public void logout(UserI user) {
         //what should happen?  --> nothing.
-        return;
     }
 
     @Override
@@ -205,5 +232,16 @@ public class Forum implements ForumI {
     @Override
     public boolean removeUserType(String type) {
         return false;
+    }
+
+    @Id
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }

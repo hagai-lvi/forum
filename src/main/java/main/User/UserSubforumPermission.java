@@ -1,18 +1,25 @@
 package main.User;
 
 import main.exceptions.*;
+import main.forum_contents.SubForum;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
-import javax.persistence.*;
+import main.forum_contents.Forum;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * Created by gabigiladov on 4/11/15.
  */
+@Entity
     public class UserSubforumPermission implements SubForumPermissionI {
 
     public static final String PERMISSION_GUEST = "GUEST";
     private String permission;
+    @OneToOne(targetEntity = Forum.class)
     private ForumI forum;
+    @OneToOne(targetEntity = SubForum.class)
     private SubForumI subforum;
     private static Logger logger = Logger.getLogger(UserSubforumPermission.class.getName());
 
@@ -21,6 +28,9 @@ import javax.persistence.*;
         this.forum = forum;
         this.subforum = subforum;
         this.permission = permission;
+    }
+
+    public UserSubforumPermission() {
     }
 
     /**
@@ -94,8 +104,8 @@ import javax.persistence.*;
      * Delete a specific message if the message was create by the user that sent this request
      */
     @Override
-    public void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException {
-        if(canDeleteMessage()) {
+    public void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException, MessageNotFoundException {
+        if(canDeleteMessage(message, deleter)) {
             logger.info(permission + " has permission to delete message");
             subforum.deleteMessage(message, deleter);
         } else {
@@ -131,8 +141,18 @@ import javax.persistence.*;
         return false;
     }
 
-    private boolean canDeleteMessage() {
-        //TODO implement
-        return false;
+    private boolean canDeleteMessage(MessageI message, UserI deleter) {
+        return message.getUser().equals(deleter);
+    }
+
+    @Id
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
     }
 }
