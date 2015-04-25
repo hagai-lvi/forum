@@ -13,5 +13,8 @@
 <body>
 <h1>Forum ${forumName} added</h1>
 <a href='/forum-system/facade'>Click here to go back to facade page</a>
+
+
+<h1>Forum list: ${forumList} </h1>
 </body>
 </html>

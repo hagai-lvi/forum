@@ -13,5 +13,22 @@
 <body>
 <h1>You tried to login to forum ${forumName}</h1>
 <h1>Messgae: ${message}</h1>
+
+<h2>Signup Details</h2>
+<form action="facade" method="get">
+  <br/>Username:<input type="text" name="username">
+  <br/>Password:<input type="password" name="password">
+  <br/><input type="submit" value="Submit">
+</form>
+
+
+<h2>Register Details</h2>
+<form action="facade" method="get">
+  <br/>Username:<input type="text" name="username">
+  <br/>Password:<input type="password" name="password">
+  <br/>Email:<input type="text" name="email">
+  <br/><input type="submit" value="Submit">
+</form>
+
 </body>
 </html>

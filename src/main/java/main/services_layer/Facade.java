@@ -6,8 +6,8 @@ import main.interfaces.ForumI;
 import main.interfaces.MessageI;
 import main.interfaces.SubForumI;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -22,11 +22,16 @@ public class Facade implements FacadeI {
 		addForum(new Forum("C",null));
 	}
 
-	private Collection<ForumI> forums = new ArrayList<>();
+	private HashMap<String,ForumI> forums = new HashMap<>();
+
+	@Override
+	public ForumI getForumByName(String forumName){
+		return forums.get(forumName);
+	}
 
 	@Override
 	public Collection<ForumI> getForumList() {
-		return forums;
+		return forums.values();
 	}
 
 	@Override
@@ -36,7 +41,7 @@ public class Facade implements FacadeI {
 
 	@Override
 	public void addForum(ForumI toAdd) {
-		forums.add(toAdd);
+		forums.put(toAdd.getName(), toAdd);
 	}
 
 	@Override

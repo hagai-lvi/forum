@@ -10,7 +10,6 @@
        bgcolor="#FFFFFF" border="1"   cellspacing="0">
     <tr>
 
-
         <c:forEach var="forum" items="${forumList}">
             ${forum}
             <c:out value="${forum.viewStatistics()}"/>
@@ -24,15 +23,11 @@
     </tr>
 </table>
 
-<form:form method="post" action="/login">
-    <form:label path="name"></form:label>
-</form:form>
-
 <h1>Create new Forum:</h1><br/>
-<form action="addForum" method="POST">
+<form:form modelAttribute="forumList" action="addForum" method="POST" >
     <input type="text" id="forumName" name="forumName" />
     <input type="submit" value="Submit" />
-</form>
+</form:form>
 
 </body>
 </html>

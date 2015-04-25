@@ -8,6 +8,12 @@ import java.util.Collection;
 public interface FacadeI {
 
 	/**
+	 * Return a forum with the specified name, or null if no such forum exists
+	 * TODO throw an exception if no such forum exists?
+	 */
+	ForumI getForumByName(String forumName);
+
+	/**
 	 * Get the list of forums in the system
 	 * @return
 	 */
