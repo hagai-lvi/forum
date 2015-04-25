@@ -67,7 +67,7 @@ public class UserForumPermission implements ForumPermissionI {
 
 	@Override
 	public void setAdmin(UserI admin) throws PermissionDeniedException {
-		if(permissions.equals(PERMISSIONS.PERMISSIONS_GUEST))
+		if(permissions.equals(PERMISSIONS.PERMISSIONS_SUPERADMIN))
 			forum.setAdmin(admin);
 		else throw new PermissionDeniedException("User has no permission to set administrator");
 	}

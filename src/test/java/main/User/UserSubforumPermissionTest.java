@@ -25,11 +25,6 @@ public class UserSubforumPermissionTest {
     }
 
     @Test
-    public void testCreatThread() throws Exception {
-
-    }
-
-    @Test
     public void testReplyToMessage() throws Exception {
 
     }

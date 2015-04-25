@@ -20,6 +20,7 @@ public class UserTest {
 
     private UserI user;
     private UserI user2;
+    private UserI user3;
     private ForumI forum;
     private ForumPolicyI policy;
 
@@ -31,8 +32,11 @@ public class UserTest {
         forum = new Forum("Sport", policy);
         ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
         ForumPermissionI permission2 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission3 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_SUPERADMIN,forum);
         user = new User("Gabi", "123456", "mail@gmail.com", permission);
         user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
+        user3 = new User("Tom", "abcde", "mail2@gmail.com", permission3);
+
     }
 
 
@@ -153,11 +157,16 @@ public class UserTest {
     }
 
     @Test(expected = PermissionDeniedException.class)
-    public void testSetAdmin() throws Exception {
+    public void testSetAdminWithoutPermission() throws Exception {
         ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
-        user2.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
+        user2.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
     }
 
+    @Test
+    public void testSetAdmin() throws Exception {
+        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        user3.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
+    }
 
     @Test
     public void testViewStatistics() throws Exception {
