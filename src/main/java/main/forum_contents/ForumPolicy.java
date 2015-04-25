@@ -38,9 +38,6 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         forbiddenWords[1] = "dumb";
     }
 
-    public ForumPolicy() {
-    }
-
     @java.lang.Override
     public boolean isValidPassword(String password) {
         return password.matches(passwordRegex);

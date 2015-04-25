@@ -38,8 +38,6 @@ public class ForumMessage implements MessageI {
 		replays = new ArrayList<>();
 	}
 
-	public ForumMessage() {
-	}
 
 	public void editText(UserI user, String newText) throws PermissionDeniedException {
 		if (user != this.writingUser){
@@ -50,8 +48,8 @@ public class ForumMessage implements MessageI {
 
 
 	@Override
-	public UserI getUser() {
-		return writingUser;
+	public String getUser() {
+		return writingUser.getUsername();
 	}
 	public Date getDate()  { return writingTime; }
 
@@ -60,17 +58,13 @@ public class ForumMessage implements MessageI {
 	}
 
 	@Override
-	public String printSubTree(int depth){
+	public String printSubTree(){
 		if (isDeleted){
-			return "";
+			return "The message has been deleted";
 		}
-		String ans = "";
-		for (int i = 0; i < depth ; i++){
-			ans += "	";
-		}
-		ans = "--> " + this.messageText;
+		String ans = this.messageText;
 		for (MessageI m: replays){
-			ans += "\n " + m.printSubTree(depth+1);
+			ans += "--> " + m.getMessageText();
 		}
 		return ans;
 	}
@@ -102,4 +96,9 @@ public class ForumMessage implements MessageI {
 	public void setId(String id) {
 		this.id = id;
 	}
+
+	public void addReply(MessageI reply){
+		this.replays.add(reply);
+	}
+
 }

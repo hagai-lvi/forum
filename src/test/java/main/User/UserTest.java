@@ -1,16 +1,15 @@
 package main.User;
 
-import main.forum_contents.Forum;
-import main.forum_contents.ForumPolicy;
-import main.interfaces.ForumI;
-import main.interfaces.ForumPolicyI;
-import main.interfaces.UserI;
+import main.exceptions.PermissionDeniedException;
+import main.forum_contents.*;
+import main.interfaces.*;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Calendar;
-import java.util.Date;
+import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.Iterator;
 
 import static org.junit.Assert.*;
 
@@ -20,24 +19,26 @@ import static org.junit.Assert.*;
 public class UserTest {
 
     private UserI user;
+    private UserI user2;
+    private ForumI forum;
+    private ForumPolicyI policy;
 
     @Before
     public void setUp() throws Exception {
-        user = new User("Gabi", "123456", "mail@gmail.com");
+        int maxModerators = 1;
+        String regex = "a-b";
+        policy = new ForumPolicy(maxModerators, regex);
+        forum = new Forum("Sport", policy);
+        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
+        ForumPermissionI permission2 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        user = new User("Gabi", "123456", "mail@gmail.com", permission);
+        user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
     }
 
-    @Test
-    public void testSetUsername() throws Exception {
-        String name = "Orli";
-        assertFalse(user.getUsername().equals(name));
-        user.setUsername(name);
-        assertTrue(user.getUsername().equals(name));
-    }
 
     @Test
     public void testIsEmailAuthenticated() throws Exception {
         assertFalse(user.isEmailAuthenticated());
-        ForumI forum = new Forum("Sport", new ForumPolicy(1, "someRegex"));
         forum.sendAuthenticationEMail(user);
         assertFalse(forum.enterUserAuthenticationString(user, "bullshit"));
         assertTrue(forum.enterUserAuthenticationString(user, user.getUserAuthString()));
@@ -52,39 +53,9 @@ public class UserTest {
 
     @Test
     public void testGetUsername() throws Exception {
-        String name = "Orli";
         assertEquals(user.getUsername(), "Gabi");
-        user.setUsername(name);
-        assertEquals(user.getUsername(), name);
     }
 
-    @Test
-    public void testGetPassword() throws Exception {
-        assertEquals(user.getPassword(), "123456");
-        user.setPassword("gabi123");
-        assertFalse(user.getPassword().equals("123456"));
-        assertTrue(user.getPassword().equals("gabi123"));
-    }
-
-    @Test
-    public void testSetPassword() throws Exception {
-        user.setPassword("gabi123");
-        assertFalse(user.getPassword().equals("123456"));
-        assertTrue(user.getPassword().equals("gabi123"));
-    }
-
-    @Test
-    public void testGetEmail() throws Exception {
-        assertTrue(user.getEmail().equals("mail@gmail.com"));
-        user.setEmail("mail2@gmail.com");
-        assertTrue(user.getEmail().equals("mail2@gmail.com"));
-    }
-
-    @Test
-    public void testSetEmail() throws Exception {
-        user.setEmail("mail2@gmail.com");
-        assertTrue(user.getEmail().equals("mail2@gmail.com"));
-    }
 
     @Test
     public void testGetSignUpDate() throws Exception {
@@ -95,80 +66,98 @@ public class UserTest {
         assertEquals(date.get(Calendar.DAY_OF_MONTH), today.get(Calendar.DAY_OF_MONTH));
     }
 
-    @Test
-    public void testSetSignUpDate() throws Exception {
 
+    @Test(expected=PermissionDeniedException.class)
+    public void testCreateSubForumForRegularUser() throws Exception {
+        user.createSubForum("Football"); // PermissionDeniedException expected
     }
 
     @Test
-    public void testGetSeniorityInDays() throws Exception {
+    public void testCreateSubForumForAdmin() throws Exception {
+        Collection<SubForumI> subForums = forum.getSubForums();
+        SubForumI subforum = new SubForum("Football", policy.getSubforumPolicy());
+        assertFalse(contains(subForums, subforum));
+        user2.createSubForum("Football");
+        subForums = forum.getSubForums();
+        assertTrue(contains(subForums, subforum));
+    }
 
+    private boolean contains(Collection<SubForumI> subForums, SubForumI subforum) {
+        Iterator it = subForums.iterator();
+        while(it.hasNext()) {
+            SubForumI subf = (SubForumI) it.next();
+            if(subf.getName().equals(subforum.getName()))
+               return true;
+        }
+        return false;
+    }
+
+    @Test(expected=PermissionDeniedException.class)
+    public void testDeleteSubForumForRegularUser() throws Exception {
+        SubForumI subforum = new SubForum("Football", policy.getSubforumPolicy());
+        user.deleteSubForum(subforum); // PermissionDeniedException expected
     }
 
     @Test
-    public void testSetSeniorityInDays() throws Exception {
-
-    }
-
-    @Test
-    public void testGetNumOfMessages() throws Exception {
-
-    }
-
-    @Test
-    public void testSetNumOfMessages() throws Exception {
-
-    }
-
-    @Test
-    public void testGetUserAuthString() throws Exception {
-
-    }
-
-    @Test
-    public void testViewSubForums() throws Exception {
-
-    }
-
-    @Test
-    public void testCreateSubForum() throws Exception {
-
-    }
-
-    @Test
-    public void testDeleteSubForum() throws Exception {
-
+    public void testDeleteSubForumForAdmin() throws Exception {
+        Collection<SubForumI> subForums = forum.getSubForums();
+        SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
+        user2.createSubForum("Baseball");
+        subForums = forum.getSubForums();
+        assertTrue(contains(subForums, subforum));
+        user2.deleteSubForum(subforum);
+        subForums = forum.getSubForums();
+        assertFalse(contains(subForums, subforum));
     }
 
     @Test
     public void testCreateThread() throws Exception {
-
+        user2.createSubForum("Football");
+        SubForumPermissionI permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
+        MessageI message = new ForumMessage(null, user, "Flow", "Mega Flow");
+        user2.createThread(message, permission);
+        assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
     }
 
     @Test
     public void testReplyToMessage() throws Exception {
-
+        user2.createSubForum("Football");
+        SubForumPermissionI permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
+        MessageI message = new ForumMessage(null, user, "Flow", "Mega Flow");
+        user2.createThread(message, permission);
+        user2.replyToMessage(permission, message, "WTF", "Help");
+        user.replyToMessage(permission, message, "WTF", "Yeah!");
+        assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
     }
 
     @Test
-    public void testReportModerator() throws Exception {
-
+    public void testDeleteMessageS() throws Exception {
+        user2.createSubForum("Football");
+        SubForumPermissionI permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
+        MessageI message = new ForumMessage(null, user, "Flow", "Mega Flow");
+        user2.createThread(message, permission);
+        user2.replyToMessage(permission, message, "WTF", "Help");
+        user.replyToMessage(permission, message, "WTF", "Yeah!");
+        assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
+        user.deleteMessage(message, permission);
+        assertEquals(message.printSubTree(), "The message has been deleted");
     }
 
-    @Test
-    public void testDeleteMessage() throws Exception {
-
+    @Test(expected = PermissionDeniedException.class)
+    public void testDeleteMessageWithoutPermission() throws Exception {
+        user2.createSubForum("Football");
+        SubForumPermissionI permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
+        MessageI message = new ForumMessage(null, user, "Flow", "Mega Flow");
+        user2.createThread(message, permission);
+        user2.deleteMessage(message, permission); // PermissionDeniedException expected
     }
 
-    @Test
+    @Test(expected = PermissionDeniedException.class)
     public void testSetAdmin() throws Exception {
-
+        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        user2.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
     }
 
-    @Test
-    public void testSetPolicy() throws Exception {
-
-    }
 
     @Test
     public void testViewStatistics() throws Exception {
@@ -191,173 +180,9 @@ public class UserTest {
     }
 
     @Test
-    public void testGetSubForumsPermissions() throws Exception {
-
-    }
-
-    @Test
-    public void testSetSubForumsPermissions() throws Exception {
-
-    }
-
-
-    @Test
-    public void testSetUsername1() throws Exception {
-
-    }
-
-    @Test
-    public void testAddForum1() throws Exception {
-
-    }
-
-    @Test
-    public void testIsEmailAuthnticated1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetAuthenticated1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetSubForumPermission1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetUsername1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetPassword1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetPassword1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetEmail1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetEmail1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetSignUpDate1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetSignUpDate1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetSeniorityInDays1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetSeniorityInDays1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetNumOfMessages1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetNumOfMessages1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetUserAuthString1() throws Exception {
-
-    }
-
-    @Test
-    public void testViewSubForums1() throws Exception {
-
-    }
-
-    @Test
-    public void testCreateSubForum1() throws Exception {
-
-    }
-
-    @Test
-    public void testDeleteSubForum1() throws Exception {
-
-    }
-
-    @Test
-    public void testCreateThread1() throws Exception {
-
-    }
-
-    @Test
-    public void testReplyToMessage1() throws Exception {
-
-    }
-
-    @Test
-    public void testReportModerator1() throws Exception {
-
-    }
-
-    @Test
-    public void testDeleteMessage1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetAdmin1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetPolicy1() throws Exception {
-
-    }
-
-    @Test
-    public void testViewStatistics1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetModerator1() throws Exception {
-
-    }
-
-    @Test
-    public void testBanModerator1() throws Exception {
-
-    }
-
-    @Test
-    public void testAddSubForumPermission1() throws Exception {
-
-    }
-
-    @Test
-    public void testGetSubForumsPermissions1() throws Exception {
-
-    }
-
-    @Test
-    public void testSetSubForumsPermissions1() throws Exception {
-
+    public void testReportModerator() throws Exception {
+        // SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
+        // user.setModerator(subforum, user2);
+        // user.reportModerator(subforum, "Gabi", "The Worst Moderator Ever");
     }
 }

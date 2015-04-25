@@ -37,9 +37,6 @@ public class SubForum implements SubForumI {
         this.subforumPolicy = subforumPolicy;
     }
 
-    public SubForum() {
-    }
-
 
     @Override
     public void createThread(MessageI message) throws DoesNotComplyWithPolicyException {
@@ -78,7 +75,7 @@ public class SubForum implements SubForumI {
     }
 
     @Override
-    public void deleteMessage(MessageI message, UserI requestingUser) throws MessageNotFoundException {
+    public void deleteMessage(MessageI message, String requestingUser) throws MessageNotFoundException {
         message.removeMessage(); //TODO remove
         ThreadI thread = findThread(message);
         if (thread != null){

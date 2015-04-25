@@ -22,8 +22,6 @@ public class ForumThread implements ThreadI{
         messages = new Tree<>(initialMessage);
     }
 
-    public ForumThread() {
-    }
 
     @Override
     public MessageI getRootMessage() {
@@ -39,6 +37,7 @@ public class ForumThread implements ThreadI{
     public void addReply(MessageI reply, MessageI original) throws MessageNotFoundException {
         try {
             messages.add(reply, original);
+            original.addReply(reply);
         } catch (NodeNotFoundException e) {
             //TODO fix the exception
             throw new MessageNotFoundException(original, null);

@@ -3,7 +3,6 @@ package main.User;
 import main.Utils.SecureString;
 import main.exceptions.*;
 import main.forum_contents.ForumMessage;
-import main.forum_contents.SubForum;
 import main.interfaces.*;
 
 import javax.persistence.*;
@@ -38,22 +37,21 @@ public class User implements UserI {
         signUpDate = new GregorianCalendar();
         seniorityInDays = 0;
         numOfMessages = 0;
-        this.isEmailAuthenticated = false; //TODO should be false, set to true for testing purpose
+        this.isEmailAuthenticated = false;
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<>();
         this.forumPermissions = forumPermissions;
-    }
-
-    public User() {
     }
 
     /**
      * @return whether this user has authenticated his email address
      */
     @Override
-    public boolean isEmailAuthnticated() {
-        return false;
+    public boolean isEmailAuthenticated() {
+        return isEmailAuthenticated;
     }
+
+
 
     public void setAuthenticated(){
         isEmailAuthenticated = true;
@@ -85,28 +83,8 @@ public class User implements UserI {
         return email;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
     public GregorianCalendar getSignUpDate() {
         return signUpDate;
-    }
-
-    public int getSeniorityInDays() {
-        return seniorityInDays;
-    }
-
-    public void setSeniorityInDays(int seniorityInDays) {
-        this.seniorityInDays = seniorityInDays;
-    }
-
-    public int getNumOfMessages() {
-        return numOfMessages;
-    }
-
-    public void setNumOfMessages(int numOfMessages) {
-        this.numOfMessages = numOfMessages;
     }
 
     @Override
@@ -147,7 +125,7 @@ public class User implements UserI {
     @Override
     public void deleteMessage(MessageI message, SubForumPermissionI subForumPermission)
             throws PermissionDeniedException, MessageNotFoundException {
-        subForumPermission.deleteMessage(message, this);
+        subForumPermission.deleteMessage(message, this.username);
     }
 
     @Override

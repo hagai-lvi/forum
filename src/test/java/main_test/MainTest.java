@@ -125,7 +125,7 @@ public class MainTest {
 		Session session = HibernateSessionFactory.getSessionFactory().openSession();
 
 		session.beginTransaction();
-		User blaa = new User("unammeee", "passss", "fooo@foo.com", new UserForumPermission());
+		User blaa = new User("unammeee", "passss", "fooo@foo.com", new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN, _forumCollection.iterator().next()));
 
 		session.save(blaa);
 		session.getTransaction().commit();
@@ -216,7 +216,7 @@ public class MainTest {
 
 		//try delete message
 		try{
-			subForumPermission.deleteMessage(rootMessage,guest);
+			subForumPermission.deleteMessage(rootMessage,guest.getUsername());
 			fail("a guest cannot delete message");
 
 		} catch (PermissionDeniedException e) {

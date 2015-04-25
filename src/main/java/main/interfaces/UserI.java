@@ -3,6 +3,7 @@ package main.interfaces;
 import main.exceptions.*;
 
 import java.util.Collection;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.Vector;
 
@@ -14,13 +15,15 @@ public interface UserI {
 	/**
 	 * @return whether this user has authenticated his email address
 	 */
-	boolean isEmailAuthnticated();
+	boolean isEmailAuthenticated();
 
+	void setAuthenticated();
 	/**
 	 * Get the list of all of the subforums of this user
 	 */
 	Vector<SubForumPermissionI> getSubForumsPermissions();
 
+	GregorianCalendar getSignUpDate();
 	/**
 	 * Get username
 	 */
