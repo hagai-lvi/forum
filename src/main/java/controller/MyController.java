@@ -2,7 +2,6 @@ package controller;
 
 import main.forum_contents.Forum;
 import main.interfaces.FacadeI;
-import main.interfaces.UserI;
 import main.services_layer.Facade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -20,16 +19,7 @@ public class MyController {
 	@RequestMapping(value = "/facade",method = RequestMethod.GET)
 	public void printWelcome(ModelMap model, HttpSession session) {
 
-		if (session.getAttribute("user") != null){
-
-			UserI user = (UserI) session.getAttribute("user");
-			model.addAttribute("message", "logged in as " + user.getUsername());
-		}
-		else{
-			model.addAttribute("message", "you are not logged in");
-		}
 		FacadeI f = Facade.getFacade();
-		model.addAttribute("size", f.getForumList().size());
 		model.addAttribute("forumList", f.getForumList());
 	}
 

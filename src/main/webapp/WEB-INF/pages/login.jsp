@@ -1,3 +1,4 @@
+<%-- TODO fix indentation with CSS --%>
 <%--
   Created by IntelliJ IDEA.
   User: hagai_lvi
@@ -11,14 +12,13 @@
     <title></title>
 </head>
 <body>
-<h1>You tried to login to forum ${forumName}</h1>
-<h1>Messgae: ${message}</h1>
+<h1>Welcome to forum ${forumName}</h1>
 
 <h2>Signup Details</h2>
-<form action="facade" method="get">
-  <br/>Username:<input type="text" name="username">
-  <br/>Password:<input type="password" name="password">
-  <br/><input type="submit" value="Submit">
+<form action="forum_homepage.jsp" method="post">
+  <br/>Username:<input type="text" name="username" placeholder="username">
+  <br/>Password:<input type="password" name="password" placeholder="password">
+  <br/><input type="submit" value="Login">
 </form>
 
 
