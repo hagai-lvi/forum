@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%-- TODO fix indentation with CSS --%>
 <%--
   Created by IntelliJ IDEA.
@@ -10,25 +11,56 @@
 <html>
 <head>
     <title>${forumName} Login</title>
+  <link href="<c:url value="/resources/css/align-text.css" />" rel="stylesheet">
 </head>
-<body>
+<body class="basic-grey">
 <h1>Welcome to forum ${forumName}</h1>
 
-<h2>Sign In</h2>
 <form action="forum_homepage" method="post">
-  <br/>Username:<input type="text" name="username" placeholder="username">
-  <br/>Password:<input type="password" name="password" placeholder="password">
-  <br/><input type="submit" value="Login">
+  <h1>Sign In</h1>
+  <label>
+    <span>Username :</span>
+    <input type="text" name="username" placeholder="username" />
+  </label>
+
+  <label>
+    <span>Password :</span>
+    <input type="password" name="password" placeholder="Password" />
+  </label>
+
+
+  <label>
+    <span>&nbsp;</span>
+    <input type="submit" class="button" value="Login" />
+  </label>
 </form>
 
 
-<h2>Register</h2>
+
+
 <form action="register" method="post">
-  <br/>Username:<input type="text" name="username">
-  <br/>Password:<input type="password" name="password">
-  <br/>Email:<input type="text" name="email">
-  <br/><input type="submit" value="Register">
+  <h1>Sign UP</h1>
+  <label>
+    <span>Username :</span>
+    <input type="text" name="username" placeholder="username" />
+  </label>
+
+  <label>
+    <span>Password :</span>
+    <input type="password" name="password" placeholder="Password" />
+  </label>
+
+  <label>
+    <span>Email :</span>
+    <input type="email" name="email" placeholder="Valid Email Address" />
+  </label>
+
+  <label>
+    <span>&nbsp;</span>
+    <input type="submit" class="button" value="Register" on />
+  </label>
 </form>
+
 
 </body>
 </html>

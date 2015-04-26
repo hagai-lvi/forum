@@ -1,3 +1,4 @@
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
   User: hagai_lvi
@@ -12,7 +13,8 @@
 </head>
 <body>
 <h1>Forum ${forumName} added</h1>
-<a href='/forum-system/facade'>Click here to go back to facade page</a>
+<a href="<c:url value="facade"/>">Click here to go back to facade page</a>
+
 
 
 <h1>Forum list: ${forumList} </h1>

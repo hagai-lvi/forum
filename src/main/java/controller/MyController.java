@@ -26,8 +26,7 @@ public class MyController {
 	public static final String SESSION_FORUM_ATTR = "forum";
 
 	@RequestMapping(value = "/facade",method = RequestMethod.GET)
-	public void printWelcome(ModelMap model, HttpSession session) {
-
+	public void showFacade(ModelMap model) {
 		FacadeI f = Facade.getFacade();
 		model.addAttribute("forumList", f.getForumList());
 	}
