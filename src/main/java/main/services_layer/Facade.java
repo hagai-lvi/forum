@@ -75,6 +75,11 @@ public class Facade implements FacadeI {
 		user.reportModerator(subforum, moderatorUserName, reportMessage);
 	}
 
+	@Override
+	public SubForumPermissionI getSubforumByName(UserI user, String subForumName) {
+		return user.getSubForumsPermissionsByName(subForumName);
+	}
+
 	public static FacadeI getFacade(){
 		return theFacade;
 	}

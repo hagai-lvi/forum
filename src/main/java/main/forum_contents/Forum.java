@@ -111,7 +111,7 @@ public class Forum implements ForumI {
             throw new SubForumAlreadyExistException(name,this);
         }
 
-        SubForumI subForum = new SubForum(name,  this.policy.getSubforumPolicy());
+        SubForumI subForum = new SubForum(name,  this.policy.getsubforumpolicy());
         _subForums.put(name, subForum);
         for (UserI user: _users.values()){
             UserSubforumPermission permission;
@@ -150,7 +150,7 @@ public class Forum implements ForumI {
         }
         if (!policy.isValidPassword(password)){
 
-            //throw new InvalidUserCredentialsException(); TODO    ---> uncomment if victor does the checking.
+            throw new InvalidUserCredentialsException(); //TODO    ---> uncomment if victor does the checking.
         }
         // we are done with protective programing, time to do work.
         ForumPermissionI userPermissions = UserForumPermission.

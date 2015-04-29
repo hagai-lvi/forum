@@ -10,6 +10,7 @@
     text-shadow: 1px 1px 1px #FFF;
     border:1px solid #E4E4E4;
 }
+
 .basic-grey h1 {
     font-size: 25px;
     padding: 0px 0px 10px 40px;
@@ -34,7 +35,7 @@
     margin-top: 10px;
     color: #888;
 }
-.basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey input[type="password"], .basic-grey textarea, .basic-grey select {
+.basic-grey input[type="text"], .basic-grey input[type="email"], .basic-grey input[type="password"], .basic-grey input[type="number"], .basic-grey textarea, .basic-grey select {
     border: 1px solid #DADADA;
     color: #888;
     height: 30px;

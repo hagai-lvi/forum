@@ -46,4 +46,8 @@ public interface ForumPermissionI {
 	 */
 	boolean findSubforum(String name);
 
+	/**
+	 * Check if the user has admin privileges
+	 */
+	boolean isAdmin();
 }

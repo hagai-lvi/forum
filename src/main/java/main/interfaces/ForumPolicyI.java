@@ -16,7 +16,7 @@ public interface ForumPolicyI {
     /**
      * Returns the SubForum portion of the forum policy.
      */
-    SubForumPolicyI getSubforumPolicy();
+    SubForumPolicyI getsubforumpolicy();
 
     /**
      * Each member in this forum must have a password that matches the given regex

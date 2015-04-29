@@ -8,7 +8,6 @@ import org.apache.log4j.Logger;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Transient;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -47,9 +46,10 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     }
 
     @Override
-    public SubForumPolicyI getSubforumPolicy() {
+    public SubForumPolicyI getsubforumpolicy() {
         return this;
     }
+
 
     public int getMaxModerators() {
         return maxModerators;

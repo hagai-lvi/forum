@@ -5,13 +5,14 @@
 
 <head>
     <title> Forum system facade</title>
+    <link href="<c:url value="/resources/css/align-text.css" />" rel="stylesheet">
 </head>
-<body >
+<body class="basic-grey">
 <h1>Welcome to the forums system</h1>
 
 
 
-<table>
+<table >
     <tr>
 
         <c:forEach var="forum" items="${forumList}">
@@ -25,25 +26,16 @@
 
     </tr>
 </table>
-
-<form:form>
-<label>
-        <c:forEach var="forum" items="${forumList}">
-            ${forum}
-
-            <form action="login_page" method="POST">
-                <input type="submit" value=${forum.getForum()} name="forum" />
-            </form>
-            <br/>
-        </c:forEach>
-</label>
-</form:form>
+<br/>
+<br/>
 
 <%-- TODO should be available to super-admin only --%>
-<h1>Create new Forum:</h1><br/>
-<form:form modelAttribute="forumList" action="addForum" method="POST" >
-    <input type="text" placeholder="forum name"  id="forumName" name="forumName" />
-    <input type="submit" value="Create forum" />
+<form:form action="addForum" method="POST" >
+    <h1>Create new Forum:</h1><br/>
+    <input type="text" placeholder="Forum Name"  id="forumName" name="forumName" /><br/>
+    <input type="number" placeholder="Maximal Number Of Moderators" name="numOfModerators"/><br/>
+    <input type="text" placeholder="Password Regex"  name="passRegex"/><br/>
+    <input type="submit" value="Create forum" /><br/>
 </form:form>
 
 </body>

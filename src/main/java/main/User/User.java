@@ -3,7 +3,6 @@ package main.User;
 import main.Utils.SecureString;
 import main.exceptions.*;
 import main.forum_contents.ForumMessage;
-import main.forum_contents.SubForum;
 import main.interfaces.*;
 
 import javax.persistence.*;
@@ -191,6 +190,22 @@ public class User implements UserI {
     @Override
     public void addSubForumPermission(SubForumPermissionI permission) {
         this.subForumsPermissions.add(permission);
+    }
+
+    @Override
+    public boolean isAdmin() {
+        return forumPermissions.isAdmin();
+    }
+
+    @Override
+    public SubForumPermissionI getSubForumsPermissionsByName(String subForumName) {
+        Vector<SubForumPermissionI> subForumsPermissions = getSubForumsPermissions();
+        for (SubForumPermissionI sf: subForumsPermissions){
+            if (sf.getSubForum().getName().equals(subForumName)){
+                return sf;
+            }
+        }
+        return null;
     }
 
     public void setSubForumsPermissions(Vector<SubForumPermissionI> subForumsPermissions) {

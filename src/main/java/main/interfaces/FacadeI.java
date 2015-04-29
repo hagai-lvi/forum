@@ -69,4 +69,8 @@ public interface FacadeI {
 	 */
 	void reportModerator(UserI user,SubForumI subforum , String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException;
 
+	/**
+	 * Get the permission to the specified subforum for the specified user.
+	 */
+	SubForumPermissionI getSubforumByName(UserI user, String subForumName);
 }

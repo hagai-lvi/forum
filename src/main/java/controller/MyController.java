@@ -1,13 +1,10 @@
 package controller;
 
-import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.UserAlreadyExistsException;
+import main.User.User;
+import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
-import main.interfaces.FacadeI;
-import main.interfaces.ForumI;
-import main.interfaces.ForumPolicyI;
-import main.interfaces.UserI;
+import main.interfaces.*;
 import main.services_layer.Facade;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -24,39 +21,57 @@ public class MyController {
 
 	public static final String SESSION_USER_ATTR = "user";
 	public static final String SESSION_FORUM_ATTR = "forum";
+	public static final String SESSION_SUBFORUM_ATTR = "subforum";
 
+	/**
+	 * Shows a facade with all the available forums in the system
+	 */
 	@RequestMapping(value = "/facade",method = RequestMethod.GET)
 	public void showFacade(ModelMap model) {
 		FacadeI f = Facade.getFacade();
 		model.addAttribute("forumList", f.getForumList());
 	}
 
-	@RequestMapping(value = "/facade",method = RequestMethod.POST)
-	public void afterLogin(ModelMap model, HttpSession session) {
-
-		FacadeI f = Facade.getFacade();
-		model.addAttribute("size", f.getForumList().size());
-		model.addAttribute("forumList", f.getForumList());
-	}
-
+	/**
+	 * Send a request to create a new forum in the system
+	 */
 	@RequestMapping(value = "/addForum",method = RequestMethod.POST)
-	public void add(ModelMap model, String forumName) {
+	public void addForum(ModelMap model, String forumName, int numOfModerators, String passRegex) {
 		FacadeI f = Facade.getFacade();
-		f.addForum(new Forum(forumName, null));
+		ForumPolicyI policy = new ForumPolicy(numOfModerators, passRegex);
+		f.addForum(new Forum(forumName, policy));
 		model.addAttribute("forumName", forumName);
 	}
 
 
+	/**
+	 * Send a request to create a new sub forum in the currently used forum
+	 */
+	@RequestMapping(value = "/addSubforum",method = RequestMethod.POST)
+	public void addSubforum(ModelMap model, HttpSession session, String subforumName) throws SubForumAlreadyExistException, PermissionDeniedException {
+		FacadeI f = Facade.getFacade();
+		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
+		f.createSubforum(subforumName, user);
+		model.addAttribute("subforumName", subforumName);
+	}
+
+
+	/**
+	 * Shows a login/register page
+	 */
 	@RequestMapping(value = "/login_page",method = RequestMethod.POST)
-	public void loginPage(ModelMap model, HttpSession session, String forum) {
+	public void loginForm(ModelMap model, HttpSession session, String forum) {
 		model.addAttribute("forumName", forum);
 		FacadeI facade = Facade.getFacade();
 		session.setAttribute(SESSION_FORUM_ATTR, facade.getForumByName(forum));
 	}
 
 
+	/**
+	 * redirects to the current forum home page after a login
+	 */
 	@RequestMapping(value = "forum_homepage",method = RequestMethod.POST)
-	public String showHomepage(ModelMap model, HttpSession session, String username, String password) throws InvalidUserCredentialsException {
+	public String loginToForum(ModelMap model, HttpSession session, String username, String password) throws InvalidUserCredentialsException {
 		FacadeI facade = Facade.getFacade();
 		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
 		UserI user = facade.login(forum, username, password); //TODO handle exception thrown from login
@@ -65,6 +80,21 @@ public class MyController {
 		return "forum_homepage";
 	}
 
+	/**
+	 * Redirects to the forum home page, assumes that a user has already logged in
+	 */
+	@RequestMapping(value = "forum_homepage",method = RequestMethod.GET)
+	public String showForumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException {
+		FacadeI facade = Facade.getFacade();
+		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
+		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
+		preperaForumHomepageModel(model, facade, forum, user);
+		return "forum_homepage";
+	}
+
+	/**
+	 * Register a user to the current forum
+	 */
 	@RequestMapping(value = "register",method = RequestMethod.POST)
 	public String register(ModelMap model, HttpSession session, String username, String password, String email)
 			throws UserAlreadyExistsException, InvalidUserCredentialsException {
@@ -85,7 +115,7 @@ public class MyController {
 		FacadeI f = Facade.getFacade();
 
 		ForumPolicyI p = new ForumPolicy(10,".*");
-		f.addForum(new Forum("A",p));
+		f.addForum(new Forum("A", p));
 
 		p = new ForumPolicy(10,".*");
 		f.addForum(new Forum("B", p));
@@ -99,7 +129,46 @@ public class MyController {
 		model.addAttribute("forumName", forum);
 		model.addAttribute("user", user.getUsername());
 		model.addAttribute("numberOfSubforums", facade.getSubForumList(user).size());
+		model.addAttribute("isAdmin", user.isAdmin());
+		model.addAttribute("subforumsList", forum.getSubForums());
 	}
 
+
+	/**
+	 * redirects to the current forum home page after a login
+	 */
+	@RequestMapping(value = "subforum_homepage",method = RequestMethod.POST)
+	public String showSubforumHomepage(ModelMap model, HttpSession session, String subforumName) throws InvalidUserCredentialsException {
+		FacadeI facade = Facade.getFacade();
+		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
+		User user = (User) session.getAttribute(SESSION_USER_ATTR);
+		SubForumPermissionI subforum = facade.getSubforumByName(user, subforumName);
+		session.setAttribute(SESSION_SUBFORUM_ATTR, subforum);
+		preperaSubforumHomepageModel(model, facade, subforum, user);
+		return "subforum_homepage";
+	}
+
+	private void preperaSubforumHomepageModel(ModelMap model, FacadeI facade, SubForumPermissionI subforum, User user) {
+		ThreadI[] threads = subforum.getThreads();
+		model.addAttribute("subforumName", subforum.getSubForum().getName());
+		model.addAttribute("user", user.getUsername());
+		model.addAttribute("numberOfthreads", threads.length);
+//		model.addAttribute("isModerator", user.isAdmin()); TODO
+		model.addAttribute("threadsList", threads);
+
+	}
+
+
+	/**
+	 * Send a request to create a new sub forum in the currently used forum
+	 */
+	@RequestMapping(value = "/addThread",method = RequestMethod.POST)
+	public void addThread(ModelMap model, HttpSession session, String srcMsgTitle, String srcMsgBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+		FacadeI f = Facade.getFacade();
+		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
+		SubForumPermissionI subforum = (SubForumPermissionI)session.getAttribute(SESSION_SUBFORUM_ATTR);
+		f.createNewThread(user, subforum,srcMsgTitle, srcMsgBody);
+		model.addAttribute("threadTitle", srcMsgTitle);
+	}
 
 }

@@ -2,8 +2,6 @@ package main.interfaces;
 
 import main.exceptions.*;
 
-import java.util.Collection;
-import java.util.List;
 import java.util.Vector;
 
 /**
@@ -97,4 +95,15 @@ public interface UserI {
 	 * Add permissions
 	 */
 	void addSubForumPermission(SubForumPermissionI permission);
+
+	/**
+	 * Check if this user has admin privileges
+	 */
+	boolean isAdmin();
+
+	/**
+	 * Return subforum with the specified name, or null if non exist.
+	 * TODO throw exception if non exist?
+	 */
+	SubForumPermissionI getSubForumsPermissionsByName(String subForumName);
 }
