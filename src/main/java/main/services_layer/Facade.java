@@ -80,6 +80,11 @@ public class Facade implements FacadeI {
 		return user.getSubForumsPermissionsByName(subForumName);
 	}
 
+	@Override
+	public ThreadI getThreadById(SubForumPermissionI sf, long id) {
+		return sf.getThreadById(id);
+	}
+
 	public static FacadeI getFacade(){
 		return theFacade;
 	}

@@ -15,6 +15,9 @@ import javax.persistence.OneToOne;
 @Entity
     public class UserSubforumPermission implements SubForumPermissionI {
 
+    public UserSubforumPermission() {
+    }
+
     public enum PERMISSIONS{
         PERMISSIONS_GUEST,
         PERMISSIONS_USER,
@@ -110,6 +113,17 @@ import javax.persistence.OneToOne;
     public boolean findForum(String name) {
         //TODO what is this method for?
         return false;
+    }
+
+    @Override
+    public ThreadI getThreadById(long id) {
+        ThreadI[] threads = getThreads();
+        for (ThreadI t: threads){
+            if (t.getID() == id){
+                return t;
+            }
+        }
+        return null;
     }
 
     private boolean canDeleteMessage(MessageI message, String deleter) {

@@ -7,7 +7,6 @@ import main.forum_contents.Forum;
 import main.interfaces.*;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 /**
  * Created by hagai_lvi on 4/20/15.
@@ -15,6 +14,9 @@ import java.util.Collection;
 
 @Entity
 public class UserForumPermission implements ForumPermissionI {
+
+	public UserForumPermission() {
+	}
 
 	public enum PERMISSIONS{
 		PERMISSIONS_GUEST,

@@ -96,4 +96,9 @@ public class Proxy implements FacadeI {
     public SubForumPermissionI getSubforumByName(UserI user, String subForumName) {
         return null;//TODO
     }
+
+    @Override
+    public ThreadI getThreadById(SubForumPermissionI sf, long id) {
+        return null;//TODO
+    }
 }

@@ -14,4 +14,6 @@ public interface ThreadI {
 	boolean contains(MessageI message);
 
 	void remove(MessageI message);
+
+	long getID();
 }

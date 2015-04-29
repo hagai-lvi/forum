@@ -73,4 +73,9 @@ public interface FacadeI {
 	 * Get the permission to the specified subforum for the specified user.
 	 */
 	SubForumPermissionI getSubforumByName(UserI user, String subForumName);
+
+	/**
+	 * Return a thread with the specified id
+	 */
+	ThreadI getThreadById(SubForumPermissionI sf, long id);
 }

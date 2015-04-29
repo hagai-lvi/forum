@@ -47,4 +47,6 @@ public interface SubForumPermissionI {
 	SubForumI getSubForum();
 
 	boolean findForum(String name);
+
+	ThreadI getThreadById(long id);
 }

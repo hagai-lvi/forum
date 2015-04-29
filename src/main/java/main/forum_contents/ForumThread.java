@@ -7,19 +7,29 @@ import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 
 import javax.persistence.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Created by hagai on 07/04/15.
  */
 @Entity
 public class ForumThread implements ThreadI{
+    private final static AtomicInteger ID_GENERATOR = new AtomicInteger();
 
     @Transient //TODO : hagai, It's a mess to persist this kind of tree, we could use default implementation which is supported by hibernate
     private Tree<MessageI> messages;
 
+    @Id
+    private long id;
+
 
     public ForumThread(MessageI initialMessage){
         messages = new Tree<>(initialMessage);
+		id = ID_GENERATOR.incrementAndGet();
+
+    }
+
+    public ForumThread() {
     }
 
 
@@ -54,14 +64,14 @@ public class ForumThread implements ThreadI{
         messages.remove(message);
     }
 
-    @Id
-    private String id;
-
-    public String getId() {
-        return id;
+    @Override
+    public long getID() {
+        return this.id;
     }
 
-    public void setId(String id) {
+
+
+    public void setId(long id) {
         this.id = id;
     }
 }

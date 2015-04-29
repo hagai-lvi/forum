@@ -6,11 +6,15 @@ import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
 import main.services_layer.Facade;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 /**
@@ -18,6 +22,7 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 public class MyController {
+	private Logger logger = Logger.getLogger(this.getClass());
 
 	public static final String SESSION_USER_ATTR = "user";
 	public static final String SESSION_FORUM_ATTR = "forum";
@@ -148,6 +153,19 @@ public class MyController {
 		return "subforum_homepage";
 	}
 
+	/**
+	 * Called when the user is already logged in and the subforum is listed in the httpsession
+	 */
+	@RequestMapping(value = "subforum_homepage",method = RequestMethod.GET)
+	public String refreshSubforumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException {
+		FacadeI facade = Facade.getFacade();
+		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
+		User user = (User) session.getAttribute(SESSION_USER_ATTR);
+		SubForumPermissionI subforum = (SubForumPermissionI) session.getAttribute(SESSION_SUBFORUM_ATTR);
+		preperaSubforumHomepageModel(model, facade, subforum, user);
+		return "subforum_homepage";
+	}
+
 	private void preperaSubforumHomepageModel(ModelMap model, FacadeI facade, SubForumPermissionI subforum, User user) {
 		ThreadI[] threads = subforum.getThreads();
 		model.addAttribute("subforumName", subforum.getSubForum().getName());
@@ -167,8 +185,33 @@ public class MyController {
 		FacadeI f = Facade.getFacade();
 		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
 		SubForumPermissionI subforum = (SubForumPermissionI)session.getAttribute(SESSION_SUBFORUM_ATTR);
-		f.createNewThread(user, subforum,srcMsgTitle, srcMsgBody);
+		f.createNewThread(user, subforum, srcMsgTitle, srcMsgBody);
 		model.addAttribute("threadTitle", srcMsgTitle);
 	}
 
+
+
+	/**
+	 * Called when the user is already logged in and the subforum is listed in the httpsession
+	 */
+	@RequestMapping(value = "thread_view",method = RequestMethod.GET)
+	public String showThread(ModelMap model, HttpSession session, long threadID){
+		SubForumPermissionI sf = (SubForumPermissionI) session.getAttribute(SESSION_SUBFORUM_ATTR);
+		FacadeI facade = Facade.getFacade();
+		ThreadI thread = facade.getThreadById(sf, threadID);
+		model.addAttribute("thread", thread);
+		return "thread_view";
+	}
+
+	@ExceptionHandler(Exception.class)
+	public ModelAndView handleError(HttpServletRequest req, Exception exception) {
+		logger.error("Request: " + req.getRequestURL() + " raised an exception", exception);
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("error_message", exception.getMessage());
+		mav.addObject("exception", exception);
+		mav.addObject("url", req.getRequestURL());
+		mav.setViewName("error");
+		return mav;
+	}
 }

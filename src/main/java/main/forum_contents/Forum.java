@@ -143,14 +143,18 @@ public class Forum implements ForumI {
     @Override
     public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException {
         // Protective Programing
-        if (userName.equals("") || userName == null || password.equals("") || password == null || eMail.equals("") || eMail == null)
-            throw new InvalidUserCredentialsException();
+        if (userName == null || userName.equals("") )
+            throw new InvalidUserCredentialsException("User name can not be empty");
+        if (password == null || password.equals(""))
+            throw new InvalidUserCredentialsException("Password can not be empty");
+        if (eMail == null || eMail.equals(""))
+            throw new InvalidUserCredentialsException("Email can not be empty");
         if (_users.containsKey(userName)){
             throw new UserAlreadyExistsException(userName);
         }
         if (!policy.isValidPassword(password)){
 
-            throw new InvalidUserCredentialsException(); //TODO    ---> uncomment if victor does the checking.
+            throw new InvalidUserCredentialsException("The password does not match the forum policy"); //TODO    ---> uncomment if victor does the checking.
         }
         // we are done with protective programing, time to do work.
         ForumPermissionI userPermissions = UserForumPermission.
@@ -200,7 +204,7 @@ public class Forum implements ForumI {
             return _users.get(username);
         }
         else {
-            throw new InvalidUserCredentialsException();
+            throw new InvalidUserCredentialsException("The user does not exist in the system or the password does not match");
         }
     }
 

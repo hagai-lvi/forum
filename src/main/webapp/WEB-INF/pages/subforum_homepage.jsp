@@ -43,8 +43,8 @@
         <c:forEach var="thread" items="${threadsList}">
             ${thread.getRootMessage().getMessageTitle()}
 
-            <form action="subforum_homepage" method="POST">
-                <input type="submit" value=${thread.getRootMessage().getMessageTitle()} name="subforumName" />
+            <form action="thread_view" method="GET">
+                <input type="submit" value=${thread.getID()} name="threadID" />
             </form>
             <br/>
         </c:forEach>
