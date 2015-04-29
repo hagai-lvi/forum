@@ -39,7 +39,7 @@ public class MainTest {
 		String[] names = {"gil","tom","hagai", "gabi", "victor", "aria", "yoni", "moshe",
 						  "tal", "chen", "bibi", "mor", "david", "dudinka", "aaa"};
 		_facade = Facade.getFacade();
-		ForumPolicyI policy = new ForumPolicy(3,"[a-zA-Z]*[!@#$][a-zA-Z]");
+		ForumPolicyI policy = new ForumPolicy(3,".*");
 		for(int i=0;i<5;i++) {
 			ForumI newForum = new Forum("Forum " + Integer.toString(i), policy);
 			_facade.addForum(newForum);
@@ -126,7 +126,7 @@ public class MainTest {
 		Session session = HibernateSessionFactory.getSessionFactory().openSession();
 
 		session.beginTransaction();
-		User blaa = new User("unammeee", "passss", "fooo@foo.com", new UserForumPermission());
+		User blaa = new User("unammeee", "passss", "fooo@foo.com", new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER, null));
 
 		session.save(blaa);
 		session.getTransaction().commit();
@@ -217,7 +217,7 @@ public class MainTest {
 
 		//try delete message
 		try{
-			subForumPermission.deleteMessage(rootMessage,guest);
+			subForumPermission.deleteMessage(rootMessage,guest.getUsername());
 			fail("a guest cannot delete message");
 
 		} catch (PermissionDeniedException e) {

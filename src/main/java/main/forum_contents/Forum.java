@@ -66,6 +66,9 @@ public class Forum implements ForumI {
         this.forum_name = name;
     }
 
+    public Forum() {
+    }
+
     private void initAdmin() {
         ForumPermissionI adminPermission =
                 UserForumPermission.createUserForumPermissions(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN, this);
@@ -108,7 +111,7 @@ public class Forum implements ForumI {
             throw new SubForumAlreadyExistException(name,this);
         }
 
-        SubForumI subForum = new SubForum(name,  this.policy.getsubforumpolicy());
+        SubForumI subForum = new SubForum(name,  this.policy.getSubforumPolicy());
         _subForums.put(name, subForum);
         for (UserI user: _users.values()){
             UserSubforumPermission permission;

@@ -23,6 +23,11 @@ public class Proxy implements FacadeI {
 
 
     @Override
+    public ForumI getForumByName(String forumName) {
+        return null;//TODO
+    }
+
+    @Override
     public Collection<ForumI> getForumList() {
         if(this.real!=null)
             return this.real.getForumList();
@@ -49,9 +54,11 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void register(ForumI forum, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
+    public UserI register(ForumI forum, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
         if(this.real!=null)
-            this.real.register(forum, userName, password, email);
+            return this.real.register(forum, userName, password, email);
+        else
+            return null;
     }
 
     @Override
@@ -83,5 +90,10 @@ public class Proxy implements FacadeI {
     public void reportModerator(UserI user, SubForumI subforum, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
         if(this.real!=null)
             this.real.reportModerator(user, subforum, moderatorUserName, reportMessage);
+    }
+
+    @Override
+    public SubForumPermissionI getSubforumByName(UserI user, String subForumName) {
+        return null;//TODO
     }
 }

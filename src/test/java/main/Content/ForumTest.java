@@ -22,7 +22,7 @@ public class ForumTest {
 
     @Before
     public void setUp() throws Exception {
-        ForumPolicyI policy = new ForumPolicy(5,"a");
+        ForumPolicyI policy = new ForumPolicy(5,".*");
         forum = new Forum("ForumName", policy);
     }
 

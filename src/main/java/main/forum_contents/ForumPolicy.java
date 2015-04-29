@@ -43,7 +43,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     }
 
     @Override
-    public SubForumPolicyI getsubforumpolicy() {
+    public SubForumPolicyI getSubforumPolicy() {
         return this;
     }
 
