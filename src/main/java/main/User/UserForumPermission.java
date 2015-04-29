@@ -16,13 +16,11 @@ import java.util.Collection;
 @Entity
 public class UserForumPermission implements ForumPermissionI {
 
-	public UserForumPermission() {
-	}
-
 	public enum PERMISSIONS{
 		PERMISSIONS_GUEST,
 		PERMISSIONS_USER,
-		PERMISSIONS_ADMIN
+		PERMISSIONS_ADMIN,
+		PERMISSIONS_SUPERADMIN
 	}
 	//TODO add logger
 
@@ -30,7 +28,7 @@ public class UserForumPermission implements ForumPermissionI {
 	private ForumI forum;
 	private PERMISSIONS permissions;
 
-	private UserForumPermission(PERMISSIONS permissions, ForumI forum){
+	public UserForumPermission(PERMISSIONS permissions, ForumI forum){
 		//TODO use state for permissions? should the permissions be final?
 		this.forum = forum;
 		this.permissions = permissions;
@@ -45,13 +43,6 @@ public class UserForumPermission implements ForumPermissionI {
 			throw new IllegalArgumentException("There is no such forum permissions: " + permissions);
 		}
 		return new UserForumPermission(permissions, forum);
-	}
-
-
-	@Override
-	public Collection<SubForumI> getSubForums() {
-		//TODO
-		return null;
 	}
 
 	@Override
@@ -75,9 +66,10 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public void setAdmin(UserI admin){
-		permissions = PERMISSIONS.PERMISSIONS_ADMIN;
-
+	public void setAdmin(UserI admin) throws PermissionDeniedException {
+		if(permissions.equals(PERMISSIONS.PERMISSIONS_SUPERADMIN))
+			forum.setAdmin(admin);
+		else throw new PermissionDeniedException("User has no permission to set administrator");
 	}
 
 	@Override
@@ -109,4 +101,6 @@ public class UserForumPermission implements ForumPermissionI {
 	public void setId(Integer id) {
 		this.id = id;
 	}
+
+
 }

@@ -10,11 +10,6 @@ import java.util.Collection;
  * Created by hagai_lvi on 4/6/15.
  */
 public interface ForumPermissionI {
-	/**
-	 * get subForums in this forum
-	 * TODO should return subforums or subforums-permissions?
-	 */
-	Collection<SubForumI> getSubForums();
 
 	/**
 	 * Create a subforum in this forum
@@ -29,7 +24,7 @@ public interface ForumPermissionI {
 	/**
 	 * Set this user to be forum administrator
 	 */
-	void setAdmin(UserI admin);
+	void setAdmin(UserI admin) throws PermissionDeniedException;
 
 	/**
 	 * Set policy for forum

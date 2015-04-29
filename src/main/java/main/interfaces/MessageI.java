@@ -8,7 +8,7 @@ public interface MessageI {
 	/**
 	 * @return the user that created this message
 	 */
-	UserI getUser();
+	String getUser();
 
 
     /**
@@ -22,12 +22,14 @@ public interface MessageI {
     String getMessageTitle();
 
     /**
-     * @return the message details along with the details of all replies up to depth
+     * @return the message details along with the details of all replies
      */
-    String printSubTree(int detph);
+    String printSubTree();
 
     /**
      * Deletes the message from the forum along with all replies to it
      */
     void removeMessage();
+
+    void addReply(MessageI reply);
 }

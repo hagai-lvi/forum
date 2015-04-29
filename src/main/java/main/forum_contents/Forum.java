@@ -59,14 +59,11 @@ public class Forum implements ForumI {
         this.policy = policy;
         initGuest();
         initAdmin();//TODO should be initialized?
-        addAllSubforumsToUser(guest, PERMISSION_GUEST);
-        addAllSubforumsToUser(admin, PERMISSION_ADMIN);
+        addAllSubforumsToUser(guest, UserSubforumPermission.PERMISSIONS.PERMISSIONS_GUEST);
+        addAllSubforumsToUser(admin, UserSubforumPermission.PERMISSIONS.PERMISSIONS_ADMIN);
         this._users.put("Guest", this.guest);
         this._users.put(this.admin.getUsername(), this.admin);
         this.forum_name = name;
-    }
-
-    public Forum() {
     }
 
     private void initAdmin() {
@@ -116,10 +113,10 @@ public class Forum implements ForumI {
         for (UserI user: _users.values()){
             UserSubforumPermission permission;
             if (user.getUsername().equals(GUEST_USER_NAME)){
-                permission = new UserSubforumPermission(PERMISSION_GUEST, this, subForum);
+                permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_GUEST, this, subForum);
             }
             else{
-                permission = new UserSubforumPermission(PERMISSION_REGULAR, this, subForum);
+                permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, this, subForum);
             }
             user.addSubForumPermission(permission);
         }
@@ -134,7 +131,7 @@ public class Forum implements ForumI {
         _subForums.remove(subforum.getName());
     }
 
-    private void addAllSubforumsToUser(UserI user, String perm){
+    private void addAllSubforumsToUser(UserI user, UserSubforumPermission.PERMISSIONS perm){
         for (SubForumI sub: _subForums.values()){
             user.addSubForumPermission(new UserSubforumPermission(perm, this, sub));
         }
@@ -156,7 +153,7 @@ public class Forum implements ForumI {
         ForumPermissionI userPermissions = UserForumPermission.
                 createUserForumPermissions(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,this);
         User new_user = new User(userName, password, eMail, userPermissions);
-        addAllSubforumsToUser(new_user, PERMISSION_REGULAR);
+        addAllSubforumsToUser(new_user, UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER);
         //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);
         return new_user;
@@ -175,7 +172,7 @@ public class Forum implements ForumI {
         }
     }
 
-    public boolean enterUserAuthenticationString(User user, String auth_string){
+    public boolean enterUserAuthenticationString(UserI user, String auth_string){
         try{
             if (user.getUserAuthString().equals(auth_string)){
                 user.setAuthenticated();

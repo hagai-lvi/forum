@@ -15,61 +15,32 @@ import javax.persistence.OneToOne;
 @Entity
     public class UserSubforumPermission implements SubForumPermissionI {
 
-    public static final String PERMISSION_GUEST = "GUEST";
-    private String permission;
+    public enum PERMISSIONS{
+        PERMISSIONS_GUEST,
+        PERMISSIONS_USER,
+        PERMISSIONS_ADMIN,
+        PERMISSIONS_SUPERADMIN;
+    }
+
+    private PERMISSIONS permission;
     @OneToOne(targetEntity = Forum.class)
     private ForumI forum;
     @OneToOne(targetEntity = SubForum.class)
     private SubForumI subforum;
     private static Logger logger = Logger.getLogger(UserSubforumPermission.class.getName());
 
-    public UserSubforumPermission(String permission, ForumI forum, SubForumI subforum){
+    public UserSubforumPermission(PERMISSIONS permission, ForumI forum, SubForumI subforum){
         logger.info("Creating new permissions for - " + permission);
         this.forum = forum;
         this.subforum = subforum;
         this.permission = permission;
     }
 
-    public UserSubforumPermission() {
-    }
 
-    /**
-     * Create a subforum in this forum.
-     */
-    public void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
-        if(canCreateSubForum()) {
-            logger.info(permission + " has permission to create Sub-Forum");
-            forum.createSubForum(name);
-        } else {
-            logger.error(permission + " has no permission to create Sub-Forum!");
-            throw new PermissionDeniedException("User has no permission to create sub forum");
-        }
-    }
-
-    private boolean canCreateSubForum(){
-        return permission.equals("Moderator") || permission.equals("Administrator");
-    }
-    /**
-     * Delete a subForum from this forum
-     */
-    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException {
-        if(canDeleteSunForum()) {
-            logger.info(permission + " has permission to delete Sub-Forum");
-            deleteSubForum(toDelete);
-        }
-        else {
-            logger.error(permission + " has no permission to delete Sub-Forum!");
-            throw new PermissionDeniedException("User has no permission to delete sub forum");
-        }
-    }
-
-    private boolean canDeleteSunForum() {
-        return permission.equals("Moderator") || permission.equals("Administrator");
-    }
 
     @Override
     public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-        if( ! permission.equals(PERMISSION_GUEST)) {
+        if( ! permission.equals(PERMISSIONS.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to create thread");
             subforum.createThread(message);
         } else {
@@ -80,7 +51,7 @@ import javax.persistence.OneToOne;
 
    @Override
     public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
-        if(!permission.equals(PERMISSION_GUEST)) {
+        if(!permission.equals(PERMISSIONS.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to reply");
             subforum.replyToMessage(original, reply);
         } else {
@@ -91,7 +62,7 @@ import javax.persistence.OneToOne;
 
    @Override
     public void reportModerator(String moderatorUsername, String reportMessage, UserI reporter) throws PermissionDeniedException, ModeratorDoesNotExistsException {
-       if(!permission.equals(PERMISSION_GUEST)) {
+       if(!permission.equals(PERMISSIONS.PERMISSIONS_GUEST)) {
            logger.info(permission + " has permission to report moderator");
            subforum.reportModerator(moderatorUsername, reportMessage, reporter);
        } else {
@@ -104,13 +75,13 @@ import javax.persistence.OneToOne;
      * Delete a specific message if the message was create by the user that sent this request
      */
     @Override
-    public void deleteMessage(MessageI message, UserI deleter) throws PermissionDeniedException, MessageNotFoundException {
+    public void deleteMessage(MessageI message, String deleter) throws PermissionDeniedException, MessageNotFoundException {
         if(canDeleteMessage(message, deleter)) {
             logger.info(permission + " has permission to delete message");
             subforum.deleteMessage(message, deleter);
         } else {
             logger.error(permission + " has no permission to delete message");
-            throw new PermissionDeniedException("User has no delete message");
+            throw new PermissionDeniedException("User has no permission delete message");
         }
     }
 
@@ -121,7 +92,7 @@ import javax.persistence.OneToOne;
 
     @Override
     public void setModerator(UserI moderator) throws PermissionDeniedException {
-        if( permission.equals("Administrator")) {
+        if( permission.equals(PERMISSIONS.PERMISSIONS_ADMIN)) {
             logger.info(permission + " has permission to set moderator");
             subforum.setModerator(moderator);
         } else {
@@ -141,7 +112,7 @@ import javax.persistence.OneToOne;
         return false;
     }
 
-    private boolean canDeleteMessage(MessageI message, UserI deleter) {
+    private boolean canDeleteMessage(MessageI message, String deleter) {
         return message.getUser().equals(deleter);
     }
 
