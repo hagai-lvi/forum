@@ -6,10 +6,8 @@ import main.interfaces.MessageI;
 import main.interfaces.SubForumPolicyI;
 import org.apache.log4j.Logger;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Transient;
+import javax.annotation.Generated;
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -103,14 +101,14 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         return valid;
     }
 
-    @Id
-    private String id;
+    @Id @GeneratedValue(strategy=GenerationType.AUTO)
+    private Integer id;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }

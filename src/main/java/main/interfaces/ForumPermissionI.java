@@ -41,4 +41,6 @@ public interface ForumPermissionI {
 	 */
 	boolean findSubforum(String name);
 
+	Integer getId();
+
 }

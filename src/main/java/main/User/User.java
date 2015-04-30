@@ -17,7 +17,6 @@ import java.util.Vector;
 public class User implements UserI {
 
     private String authString = null;
-    @Id
     private String username;
     private String password;
     private String email;
@@ -183,6 +182,17 @@ public class User implements UserI {
      */
     public void setSignUpDate(GregorianCalendar signUpDate){
         this.signUpDate = signUpDate;
+    }
+
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
+
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
     }
 
 }
