@@ -43,6 +43,9 @@ public class User implements UserI {
         this.forumPermissions = forumPermissions;
     }
 
+    public User() {
+    }
+
     /**
      * @return whether this user has authenticated his email address
      */

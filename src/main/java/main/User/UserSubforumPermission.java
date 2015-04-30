@@ -15,6 +15,9 @@ import javax.persistence.OneToOne;
 @Entity
     public class UserSubforumPermission implements SubForumPermissionI {
 
+    public UserSubforumPermission() {
+    }
+
     public enum PERMISSIONS{
         PERMISSIONS_GUEST,
         PERMISSIONS_USER,

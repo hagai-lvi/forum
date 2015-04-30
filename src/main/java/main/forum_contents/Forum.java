@@ -31,9 +31,12 @@ public class Forum implements ForumI {
     public static final String PERMISSION_ADMIN = "ADMINISTRATOR";
     public static final String ADMIN_USERNAME = "ADMIN";
     public static final String ADMIN_PASSWORD = "ADMIN";
+
+    @Id
     private String forum_name;
-    @OneToOne(targetEntity = ForumPolicy.class)
+    @OneToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL)
     private ForumPolicyI policy;
+
     @OneToMany(targetEntity = SubForum.class, cascade = CascadeType.ALL)
     @MapKey(name="_name")
     private Map<String, SubForumI> _subForums = new HashMap<>();
@@ -44,11 +47,11 @@ public class Forum implements ForumI {
     @OneToMany(targetEntity =  UserType.class, cascade = CascadeType.ALL)
     private Map<String, UserType> _userTypes = new HashMap<>();
 
-    @OneToOne(targetEntity = User.class)
+    @OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
 
     private UserI guest;
 
-    @OneToOne(targetEntity = User.class)
+    @OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
     private UserI admin;
     private static final Logger logger = Logger.getLogger(Forum.class.getName());
 
@@ -63,6 +66,9 @@ public class Forum implements ForumI {
         this._users.put("Guest", this.guest);
         this._users.put(this.admin.getUsername(), this.admin);
         this.forum_name = name;
+    }
+
+    public Forum() {  // needed here for hibernate
     }
 
     private void initAdmin() {
@@ -231,14 +237,4 @@ public class Forum implements ForumI {
         return false;
     }
 
-    @Id
-    private String id;
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
 }

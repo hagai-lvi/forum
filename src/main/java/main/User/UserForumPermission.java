@@ -16,6 +16,9 @@ import java.util.Collection;
 @Entity
 public class UserForumPermission implements ForumPermissionI {
 
+	public UserForumPermission() {
+	}
+
 	public enum PERMISSIONS{
 		PERMISSIONS_GUEST,
 		PERMISSIONS_USER,

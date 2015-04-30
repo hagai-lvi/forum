@@ -91,7 +91,7 @@ public class ProjectTest {
         try {
             conn =
                     DriverManager.getConnection("jdbc:mysql://localhost/WORLD?" +
-                            "user=sa&password=Aa123456");
+                            "user=root&password=Aa123456");
             // Do something with the Connection
 
         } catch (SQLException ex) {

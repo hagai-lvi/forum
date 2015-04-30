@@ -17,9 +17,9 @@ import java.util.List;
 @Entity
 public class ForumMessage implements MessageI {
 
-	@OneToOne(targetEntity = ForumMessage.class)
+	@OneToOne(targetEntity = ForumMessage.class, cascade = CascadeType.ALL)
 	private MessageI reply_message;
-	@OneToOne(targetEntity = User.class)
+	@OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
 	private UserI writingUser;
 	private String messageText;
 	private String messageTitle;
@@ -36,6 +36,9 @@ public class ForumMessage implements MessageI {
 		this.messageTitle = messageTitle;
 		writingTime = new Date();
 		replays = new ArrayList<>();
+	}
+
+	public ForumMessage() {
 	}
 
 

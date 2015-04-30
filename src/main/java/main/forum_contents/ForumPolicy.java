@@ -21,6 +21,7 @@ import java.util.GregorianCalendar;
 public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
    // private Forum forum;
+    @Transient
     private static final Logger logger = Logger.getLogger(ForumPolicy.class.getName());
     @Transient // TODO  - This is not a way to save collection, it will not be saved
     private String forbiddenWords[];
@@ -29,6 +30,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
     private int maxModerators;
     private String passwordRegex;
+
 //TODO - define parameters according to  requirements.
     public ForumPolicy(int maxModerators, String passwordRegex) {
         this.maxModerators = maxModerators;
@@ -36,6 +38,9 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         forbiddenWords = new String[2];
         forbiddenWords[0] = "stupid";
         forbiddenWords[1] = "dumb";
+    }
+
+    public ForumPolicy() {
     }
 
     @java.lang.Override

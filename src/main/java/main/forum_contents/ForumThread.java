@@ -22,6 +22,9 @@ public class ForumThread implements ThreadI{
         messages = new Tree<>(initialMessage);
     }
 
+    public ForumThread() {
+    }
+
 
     @Override
     public MessageI getRootMessage() {
