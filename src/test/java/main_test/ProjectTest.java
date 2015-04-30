@@ -118,19 +118,6 @@ public class ProjectTest {
     }
 
 
-    @Test
-    public void fuckHibernate(){
-        System.out.println("Hibernate + MySQL");
-        Session session = HibernateSessionFactory.getSessionFactory().openSession();
-
-        session.beginTransaction();
-        User blaa = new User("unammeee", "passss", "fooo@foo.com", new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN, _forumCollection.iterator().next()));
-
-        session.save(blaa);
-        session.getTransaction().commit();
-    }
-
-
     /**
      * target: check adding forum to the system.
      */
