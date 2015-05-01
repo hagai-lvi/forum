@@ -12,6 +12,7 @@ import main.services_layer.Facade;
 import org.apache.log4j.Logger;
 import org.hibernate.Session;
 import org.junit.Before;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.sql.*;
@@ -85,7 +86,7 @@ public class ProjectTest {
     }
 
 
-    @Test
+    @Test @Ignore
     public void connectToDB() throws SQLException {
         Connection conn = null;
         try {
