@@ -4,12 +4,15 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.Utils.GmailSender;
+import main.Utils.HibernateSessionFactory;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;
 import main.exceptions.UserAlreadyExistsException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -31,6 +34,7 @@ public class Forum implements ForumI {
     public static final String PERMISSION_ADMIN = "ADMINISTRATOR";
     public static final String ADMIN_USERNAME = "ADMIN";
     public static final String ADMIN_PASSWORD = "ADMIN";
+    public static SessionFactory session_Factory;
 
     @Id
     private String forum_name;
@@ -58,6 +62,9 @@ public class Forum implements ForumI {
 
 
     public Forum(String name, ForumPolicyI policy){
+        if (session_Factory == null){
+            session_Factory = HibernateSessionFactory.getSessionFactory();
+        }
         this.policy = policy;
         initGuest();
         initAdmin();//TODO should be initialized?
@@ -66,6 +73,7 @@ public class Forum implements ForumI {
         this._users.put("Guest", this.guest);
         this._users.put(this.admin.getUsername(), this.admin);
         this.forum_name = name;
+        this.saveOrUpdate();
     }
 
     public Forum() {  // needed here for hibernate
@@ -86,6 +94,7 @@ public class Forum implements ForumI {
     @Override
     public void setAdmin(UserI admin){
         this.admin = admin;
+        Update();
     }
 
     @Override
@@ -121,6 +130,7 @@ public class Forum implements ForumI {
             }
             user.addSubForumPermission(permission);
         }
+        Update();
         return subForum;
     }
 
@@ -130,6 +140,7 @@ public class Forum implements ForumI {
             throw new SubForumDoesNotExsitsException();
         }
         _subForums.remove(subforum.getName());
+        Update();
     }
 
     private void addAllSubforumsToUser(UserI user, UserSubforumPermission.PERMISSIONS perm){
@@ -157,6 +168,7 @@ public class Forum implements ForumI {
         addAllSubforumsToUser(new_user, UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER);
         //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);
+        Update();
         return new_user;
     }
 
@@ -215,6 +227,7 @@ public class Forum implements ForumI {
     @Override
     public void setPolicy(ForumPolicyI policy) {
         this.policy = policy;
+        Update();
     }
 
     @Override
@@ -230,11 +243,43 @@ public class Forum implements ForumI {
     @Override
     public void addUserType(String type) {
         this._userTypes.put(type, new UserType(type));
+        Update();
     }
 
     @Override
     public boolean removeUserType(String type) {
         return false;
+    }
+
+    public void save(){    // save the forum to the database
+        Session session = session_Factory.openSession();
+        session.beginTransaction();
+        session.save(this);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public static Forum load(String forum_name){
+        Session sess = session_Factory.openSession();
+        Forum f =  (Forum)sess.load(Forum.class, forum_name);
+        sess.close();
+        return f;
+    }
+
+    public void saveOrUpdate(){    // save the forum to the database
+        Session session = session_Factory.openSession();
+        session.beginTransaction();
+        session.saveOrUpdate(this);
+        session.getTransaction().commit();
+        session.close();
+    }
+
+    public void Update(){    // save the forum to the database
+        Session session = session_Factory.openSession();
+        session.beginTransaction();
+        session.update(this);
+        session.getTransaction().commit();
+        session.close();
     }
 
 }

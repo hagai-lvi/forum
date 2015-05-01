@@ -62,8 +62,8 @@ public class User implements UserI {
          Get the list of all of the subforums of this user
      */
     @Override
-    public Vector<SubForumPermissionI> getSubForumsPermissions() {
-        return (Vector<SubForumPermissionI>)this.subForumsPermissions;
+    public Collection<SubForumPermissionI> getSubForumsPermissions() {
+        return subForumsPermissions;
     }
 
     @Override

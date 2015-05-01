@@ -57,14 +57,14 @@ public class ForumThread implements ThreadI{
         messages.remove(message);
     }
 
-    @Id
-    private String id;
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 }
