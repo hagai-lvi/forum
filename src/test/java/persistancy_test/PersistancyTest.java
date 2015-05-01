@@ -1,6 +1,5 @@
 package persistancy_test;
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import junit.framework.TestCase;
 import main.User.User;
 import main.User.UserForumPermission;
@@ -13,6 +12,7 @@ import main_test.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.junit.Before;
 import org.junit.FixMethodOrder;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
 
@@ -55,7 +55,7 @@ public class PersistancyTest extends TestCase{
         assertEquals(p.getPasswordRegex(), "abc");
     }
 
-    @Test @Ignore  // added ignore flag because creating a forum automatically saves to db, so no need to save.
+    @Test  // added ignore flag because creating a forum automatically saves to db, so no need to save.
     public void test3Forum_Save(){
         session.beginTransaction();
         Forum forum = new Forum("Some forum", forum_p);
