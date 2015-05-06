@@ -16,6 +16,11 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ForumThread implements ThreadI{
     private final static AtomicInteger ID_GENERATOR = new AtomicInteger();
 
+    @Override
+    public Tree<MessageI> getMessages() {
+        return messages;
+    }
+
     @Transient //TODO : hagai, It's a mess to persist this kind of tree, we could use default implementation which is supported by hibernate
     private Tree<MessageI> messages;
 

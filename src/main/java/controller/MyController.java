@@ -1,5 +1,6 @@
 package controller;
 
+import data_structures.TreeNode;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
@@ -200,6 +201,14 @@ public class MyController {
 		FacadeI facade = Facade.getFacade();
 		ThreadI thread = facade.getThreadById(sf, threadID);
 		model.addAttribute("thread", thread);
+		model.addAttribute("node", thread.getMessages().getRootNode());
+		return "thread_view";
+	}
+
+	//TODO remove, for testing only
+	@RequestMapping(value = "abc",method = RequestMethod.GET)
+	public static String showThread(ModelMap model, HttpServletRequest request){
+		model.addAttribute("node", TreeNode.getNodeTree());
 		return "thread_view";
 	}
 

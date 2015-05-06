@@ -8,9 +8,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-    <title></title>
+  <title></title>
 </head>
 <body>
 <h1>Thread ${thread.getRootMessage().getMessageTitle()}</h1>
+
+
+<%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
+<h3><c:out value="${node.data.getMessageTitle()}"/> :</h3>
+<c:out value="${node.data.getMessageText()}"/>
+<myTags:threadTree node="${root}"/>
+
+
 </body>
 </html>
