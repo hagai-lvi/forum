@@ -7,9 +7,7 @@ import main.exceptions.NodeNotFoundException;
 import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.persistence.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -26,9 +24,6 @@ public class ForumThread implements ThreadI{
 
     @Transient //TODO : hagai, It's a mess to persist this kind of tree, we could use default implementation which is supported by hibernate
     private Tree<MessageI> messages;
-
-    @Id
-    private long id;
 
     public ForumThread(MessageI initialMessage){
         messages = new Tree<>(initialMessage);
@@ -77,8 +72,9 @@ public class ForumThread implements ThreadI{
 
     @Override //TODO add tests
     public MessageI getMessageById(int id) {
-        TreeNode<MessageI> root = messages.getRootNode();
-        return getMessageById(id, root);
+		TreeNode<MessageI> root = messages.getRootNode();
+		return getMessageById(id, root);
+	}
     public int getId() {
         return id;
     }
@@ -100,7 +96,6 @@ public class ForumThread implements ThreadI{
     }
 
 
-    public void setId(long id) {
     public void setId(int id) {
         this.id = id;
     }
