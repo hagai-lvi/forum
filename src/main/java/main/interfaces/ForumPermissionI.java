@@ -45,4 +45,6 @@ public interface ForumPermissionI {
 	 * Check if the user has admin privileges
 	 */
 	boolean isAdmin();
+	Integer getId();
+
 }

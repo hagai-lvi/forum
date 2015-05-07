@@ -6,9 +6,8 @@ import main.interfaces.MessageI;
 import main.interfaces.SubForumPolicyI;
 import org.apache.log4j.Logger;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Transient;
+import javax.annotation.Generated;
+import javax.persistence.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 
@@ -20,6 +19,7 @@ import java.util.GregorianCalendar;
 public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
    // private Forum forum;
+    @Transient
     private static final Logger logger = Logger.getLogger(ForumPolicy.class.getName());
     @Transient // TODO  - This is not a way to save collection, it will not be saved
     private String forbiddenWords[];
@@ -28,6 +28,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
     private int maxModerators;
     private String passwordRegex;
+
 //TODO - define parameters according to  requirements.
     public ForumPolicy(int maxModerators, String passwordRegex) {
         this.maxModerators = maxModerators;
@@ -35,6 +36,9 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         forbiddenWords = new String[2];
         forbiddenWords[0] = "stupid";
         forbiddenWords[1] = "dumb";
+    }
+
+    public ForumPolicy() {
     }
 
     @java.lang.Override
@@ -46,7 +50,6 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     public SubForumPolicyI getSubforumPolicy() {
         return this;
     }
-
 
     public int getMaxModerators() {
         return maxModerators;
@@ -98,14 +101,14 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         return valid;
     }
 
-    @Id
-    private String id;
+    @Id @GeneratedValue(strategy=GenerationType.AUTO)
+    private Integer id;
 
-    public String getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }

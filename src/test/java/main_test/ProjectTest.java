@@ -1,5 +1,6 @@
 package main_test;
 
+import main.Person;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.exceptions.*;
@@ -85,13 +86,13 @@ public class ProjectTest {
     }
 
 
-    @Ignore@Test
+    @Test @Ignore
     public void connectToDB() throws SQLException {
         Connection conn = null;
         try {
             conn =
                     DriverManager.getConnection("jdbc:mysql://localhost/WORLD?" +
-                            "user=sa&password=Aa123456");
+                            "user=root&password=Aa123456");
             // Do something with the Connection
 
         } catch (SQLException ex) {
@@ -115,19 +116,6 @@ public class ProjectTest {
             }
             System.out.println("");
         }
-    }
-
-
-    @Ignore@Test
-    public void fuckHibernate(){
-        System.out.println("Hibernate + MySQL");
-        Session session = HibernateSessionFactory.getSessionFactory().openSession();
-
-        session.beginTransaction();
-        User blaa = new User("unammeee", "passss", "fooo@foo.com", new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN, _forumCollection.iterator().next()));
-
-        session.save(blaa);
-        session.getTransaction().commit();
     }
 
 

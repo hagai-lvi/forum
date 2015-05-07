@@ -4,12 +4,15 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.Utils.GmailSender;
+import main.Utils.HibernateSessionFactory;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;
 import main.exceptions.UserAlreadyExistsException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
+import org.hibernate.SessionFactory;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -30,9 +33,11 @@ public class Forum implements ForumI {
     public static final String PERMISSION_ADMIN = "ADMINISTRATOR";
     public static final String ADMIN_USERNAME = "ADMIN";
     public static final String ADMIN_PASSWORD = "ADMIN";
-    private String forum_name;
+    public static SessionFactory session_Factory;
 
-    @OneToOne(targetEntity = ForumPolicy.class)
+    @Id
+    private String forum_name;
+    @OneToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL)
     private ForumPolicyI policy;
 
     @OneToMany(targetEntity = SubForum.class, cascade = CascadeType.ALL)
@@ -45,17 +50,20 @@ public class Forum implements ForumI {
     @OneToMany(targetEntity =  UserType.class, cascade = CascadeType.ALL)
     private Map<String, UserType> _userTypes = new HashMap<>();
 
-    @OneToOne(targetEntity = User.class)
+    @OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
 
     private UserI guest;
 
-    @OneToOne(targetEntity = User.class)
+    @OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
     private UserI admin;
     private static final Logger logger = Logger.getLogger(Forum.class.getName());
 
 
 
     public Forum(String name, ForumPolicyI policy){
+        if (session_Factory == null){
+            session_Factory = HibernateSessionFactory.getSessionFactory();
+        }
         this.policy = policy;
         initGuest();
         initAdmin();//TODO should be initialized?
@@ -64,9 +72,10 @@ public class Forum implements ForumI {
         this._users.put("Guest", this.guest);
         this._users.put(this.admin.getUsername(), this.admin);
         this.forum_name = name;
+        this.saveOrUpdate();
     }
 
-    public Forum() {
+    public Forum() {  // needed here for hibernate
     }
 
     private void initAdmin() {
@@ -84,6 +93,7 @@ public class Forum implements ForumI {
     @Override
     public void setAdmin(UserI admin){
         this.admin = admin;
+        Update();
     }
 
     @Override
@@ -123,6 +133,7 @@ public class Forum implements ForumI {
             }
             user.addSubForumPermission(permission);
         }
+        Update();
         return subForum;
     }
 
@@ -132,6 +143,7 @@ public class Forum implements ForumI {
             throw new SubForumDoesNotExsitsException();
         }
         _subForums.remove(subforum.getName());
+        Update();
     }
 
     private void addAllSubforumsToUser(UserI user, UserSubforumPermission.PERMISSIONS perm){
@@ -163,6 +175,7 @@ public class Forum implements ForumI {
         addAllSubforumsToUser(new_user, UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER);
         //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
         _users.put(userName, new_user);
+        Update();
         return new_user;
     }
 
@@ -221,6 +234,7 @@ public class Forum implements ForumI {
     @Override
     public void setPolicy(ForumPolicyI policy) {
         this.policy = policy;
+        Update();
     }
 
     @Override
@@ -236,6 +250,7 @@ public class Forum implements ForumI {
     @Override
     public void addUserType(String type) {
         this._userTypes.put(type, new UserType(type));
+        Update();
     }
 
     @Override
@@ -243,44 +258,26 @@ public class Forum implements ForumI {
         return false;
     }
 
-    @Id
-    private String id;
-
-    public String getId() {
-        return id;
+    public void save(){    // save the forum to the database
+        Session session = session_Factory.openSession();
+        session.beginTransaction();
+        session.save(this);
+        session.getTransaction().commit();
+        session.close();
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public static Forum load(String forum_name){
+        Session sess = session_Factory.openSession();
+        Forum f =  (Forum)sess.load(Forum.class, forum_name);
+        sess.close();
+        return f;
     }
 
-    @Override
-    public String toString(){
-        return getName();
+    public void saveOrUpdate(){    // save the forum to the database
+        Session session = session_Factory.openSession();
+        session.beginTransaction();
+        session.saveOrUpdate(this);
+        session.getTransaction().commit();
+        session.close();
     }
-
-    public String getForum_name() {
-        return forum_name;
-    }
-
-    public void setForum_name(String forum_name) {
-        this.forum_name = forum_name;
-    }
-
-    public ForumPolicyI getPolicy() {
-        return policy;
-    }
-
-    public UserI getGuest() {
-        return guest;
-    }
-
-    public void setGuest(UserI guest) {
-        this.guest = guest;
-    }
-
-    public UserI getAdmin() {
-        return admin;
-    }
-
 }

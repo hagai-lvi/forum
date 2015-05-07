@@ -28,13 +28,16 @@ public class SubForum implements SubForumI {
     @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
     private Map<String, UserI> _moderators = new HashMap<>();
     private static Logger logger = Logger.getLogger(Forum.class.getName());
-    @OneToOne(targetEntity = ForumPolicy.class)
+    @OneToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL)
     private SubForumPolicyI subforumPolicy;
 
 
     public SubForum(String name, SubForumPolicyI subforumPolicy){
         _name = name;
         this.subforumPolicy = subforumPolicy;
+    }
+
+    public SubForum() {   // this is needed for hibernate
     }
 
 
