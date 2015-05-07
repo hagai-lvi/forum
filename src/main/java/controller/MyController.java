@@ -23,6 +23,7 @@ import javax.servlet.http.HttpSession;
  */
 @Controller
 public class MyController {
+	public static final String SESSION_THREAD_ATTR = "thread";
 	private Logger logger = Logger.getLogger(this.getClass());
 
 	public static final String SESSION_USER_ATTR = "user";
@@ -200,6 +201,19 @@ public class MyController {
 		SubForumPermissionI sf = (SubForumPermissionI) session.getAttribute(SESSION_SUBFORUM_ATTR);
 		FacadeI facade = Facade.getFacade();
 		ThreadI thread = facade.getThreadById(sf, threadID);
+		session.setAttribute(SESSION_THREAD_ATTR,thread);
+		model.addAttribute("thread", thread);
+		model.addAttribute("node", thread.getMessages().getRootNode());
+		return "thread_view";
+	}
+
+	@RequestMapping(value = "thread_view",method = RequestMethod.POST)
+	public String addMessageAndShowThread(ModelMap model, HttpSession session, String newMsgTitle, String newMsgBody, Long messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
+		SubForumPermissionI sf = (SubForumPermissionI) session.getAttribute(SESSION_SUBFORUM_ATTR);
+		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
+		FacadeI facade = Facade.getFacade();
+		facade.addReply(user, sf, facade.getMessageByID(messageID.intValue()/*TODO use long*/),newMsgTitle, newMsgBody);
+		ThreadI thread = (ThreadI) session.getAttribute(SESSION_THREAD_ATTR);
 		model.addAttribute("thread", thread);
 		model.addAttribute("node", thread.getMessages().getRootNode());
 		return "thread_view";
@@ -211,6 +225,18 @@ public class MyController {
 		model.addAttribute("node", TreeNode.getNodeTree());
 		return "thread_view";
 	}
+
+	@RequestMapping(value = "/reply_to_message",method = RequestMethod.POST)
+	public String addReplyMessage(ModelMap model, HttpSession session, Long messageID) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+//		FacadeI f = Facade.getFacade();
+//		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
+//		SubForumPermissionI subforum = (SubForumPermissionI)session.getAttribute(SESSION_SUBFORUM_ATTR);
+//		f.createNewThread(user, subforum, srcMsgTitle, srcMsgBody);
+//		model.addAttribute("threadTitle", srcMsgTitle);
+		model.addAttribute("messageID", messageID);
+		return "reply_to_message";
+	}
+
 
 	@ExceptionHandler(Exception.class)
 	public ModelAndView handleError(HttpServletRequest req, Exception exception) {

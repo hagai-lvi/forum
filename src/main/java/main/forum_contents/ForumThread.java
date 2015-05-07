@@ -1,12 +1,15 @@
 package main.forum_contents;
 
 import data_structures.Tree;
+import data_structures.TreeNode;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.NodeNotFoundException;
 import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Transient;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -74,6 +77,27 @@ public class ForumThread implements ThreadI{
         return this.id;
     }
 
+    @Override //TODO add tests
+    public MessageI getMessageById(int id) {
+        TreeNode<MessageI> root = messages.getRootNode();
+        return getMessageById(id, root);
+    }
+
+    private MessageI getMessageById(int id, TreeNode<MessageI> root){
+        if (root == null){
+            return null;
+        }
+        if (root.getData().getId().equals(Long.toString(id))){
+            return root.getData();
+        }
+        for (TreeNode<MessageI> messageNode : root.getChildren()){
+            MessageI message = getMessageById(id, messageNode);
+            if (message != null){
+                return message;
+            }
+        }
+        return null;
+    }
 
 
     public void setId(long id) {

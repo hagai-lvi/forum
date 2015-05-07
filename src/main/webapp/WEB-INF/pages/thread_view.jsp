@@ -1,14 +1,12 @@
 <%--
-  Created by IntelliJ IDEA.
   User: hagai_lvi
   Date: 4/29/15
   Time: 9:00 AM
-  To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-  <title></title>
+    <title></title>
 </head>
 <body>
 <h1>Thread ${thread.getRootMessage().getMessageTitle()}</h1>
@@ -19,6 +17,10 @@
 
 <h3><c:out value="${node.data.getMessageTitle()}"/> :</h3>
 <c:out value="${node.data.getMessageText()}"/>
+<form action="reply_to_message" method="post">
+    <input hidden name="messageID" value=${node.data.getId()}>
+    <input type="submit" value="Add reply"/>
+</form>
 <myTags:threadTree node="${root}"/>
 
 

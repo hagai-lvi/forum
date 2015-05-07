@@ -19,4 +19,6 @@ public interface ThreadI {
 	void remove(MessageI message);
 
 	long getID();
+
+	MessageI getMessageById(int id);
 }

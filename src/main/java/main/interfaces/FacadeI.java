@@ -78,4 +78,11 @@ public interface FacadeI {
 	 * Return a thread with the specified id
 	 */
 	ThreadI getThreadById(SubForumPermissionI sf, long id);
+
+	/**
+	 * Return the message with the specified ID
+	 */
+	MessageI getMessageByID(int id);
+
+
 }

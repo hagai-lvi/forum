@@ -85,6 +85,22 @@ public class Facade implements FacadeI {
 		return sf.getThreadById(id);
 	}
 
+	//TODO move implementation into the domain componnents
+	@Override
+	public MessageI getMessageByID(int id) {
+		for (ForumI f: forums.values()){
+			for (SubForumI sf: f.getSubForums()){
+				for (ThreadI t: sf.getThreads()){
+					MessageI messageById = t.getMessageById(id);
+					if (messageById != null){
+						return messageById;
+					}
+				}
+			}
+		}
+		return null;
+	}
+
 	public static FacadeI getFacade(){
 		return theFacade;
 	}

@@ -31,5 +31,9 @@ public interface MessageI {
      */
     void removeMessage();
 
+    String getId();
+
+    void setId(String id);
+
     void addReply(MessageI reply);
 }

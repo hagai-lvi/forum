@@ -101,4 +101,9 @@ public class Proxy implements FacadeI {
     public ThreadI getThreadById(SubForumPermissionI sf, long id) {
         return null;//TODO
     }
+
+    @Override
+    public MessageI getMessageByID(int id) {
+        return null;//TODO
+    }
 }
