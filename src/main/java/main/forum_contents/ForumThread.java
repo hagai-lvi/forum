@@ -30,10 +30,14 @@ public class ForumThread implements ThreadI{
     @Id
     private long id;
 
+
     public ForumThread(MessageI initialMessage){
         messages = new Tree<>(initialMessage);
 		id = ID_GENERATOR.incrementAndGet();
 
+    }
+
+    public ForumThread() {
     }
 
 
@@ -72,15 +76,11 @@ public class ForumThread implements ThreadI{
     public long getID() {
         return this.id;
     }
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
 
     @Override //TODO add tests
     public MessageI getMessageById(int id) {
         TreeNode<MessageI> root = messages.getRootNode();
         return getMessageById(id, root);
-    public int getId() {
-        return id;
     }
 
     private MessageI getMessageById(int id, TreeNode<MessageI> root){
@@ -101,7 +101,6 @@ public class ForumThread implements ThreadI{
 
 
     public void setId(long id) {
-    public void setId(int id) {
         this.id = id;
     }
 }

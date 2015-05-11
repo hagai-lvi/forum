@@ -17,6 +17,7 @@ import java.util.Vector;
 public class User implements UserI {
 
     private String authString = null;
+    @Id
     private String username;
     private String password;
     private String email;
@@ -42,9 +43,6 @@ public class User implements UserI {
         this.forumPermissions = forumPermissions;
     }
 
-    public User() {
-    }
-
     /**
      * @return whether this user has authenticated his email address
      */
@@ -62,8 +60,8 @@ public class User implements UserI {
          Get the list of all of the subforums of this user
      */
     @Override
-    public Collection<SubForumPermissionI> getSubForumsPermissions() {
-        return subForumsPermissions;
+    public Vector<SubForumPermissionI> getSubForumsPermissions() {
+        return (Vector<SubForumPermissionI>)this.subForumsPermissions;
     }
 
     @Override
@@ -198,17 +196,6 @@ public class User implements UserI {
      */
     public void setSignUpDate(GregorianCalendar signUpDate){
         this.signUpDate = signUpDate;
-    }
-
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
     }
 
 }

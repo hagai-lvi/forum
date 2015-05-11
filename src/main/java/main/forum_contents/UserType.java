@@ -2,8 +2,6 @@ package main.forum_contents;
 
 
 import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
 /**
@@ -18,19 +16,17 @@ public class UserType {
         this.name = name;
     }
 
-
+    @Id
+    private String id;
 
     public UserType() {
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
-
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

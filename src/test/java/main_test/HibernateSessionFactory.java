@@ -16,6 +16,7 @@ public class HibernateSessionFactory {
 
     private static SessionFactory buildSessionFactory() {
         try {
+            // Create the SessionFactory from hibernate.cfg.xml
             Configuration configuration = new AnnotationConfiguration();
             configuration.configure();
             ServiceRegistry serviceRegistry = new ServiceRegistryBuilder().applySettings(configuration.getProperties()).buildServiceRegistry();

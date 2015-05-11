@@ -18,9 +18,9 @@ import java.util.concurrent.atomic.AtomicLong;
 @Entity
 public class ForumMessage implements MessageI {
 
-	@OneToOne(targetEntity = ForumMessage.class, cascade = CascadeType.ALL)
+	@OneToOne(targetEntity = ForumMessage.class)
 	private MessageI reply_message;
-	@OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
+	@OneToOne(targetEntity = User.class)
 	private UserI writingUser;
 	private String messageText;
 	private String messageTitle;
@@ -40,9 +40,6 @@ public class ForumMessage implements MessageI {
 		writingTime = new Date();
 		replays = new ArrayList<>();
 		this.id = Long.toString(idCounter.incrementAndGet());
-	}
-
-	public ForumMessage() {
 	}
 
 	public ForumMessage() {

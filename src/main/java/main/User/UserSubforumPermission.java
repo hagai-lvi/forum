@@ -5,8 +5,9 @@ import main.forum_contents.SubForum;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 import main.forum_contents.Forum;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
 
 /**
  * Created by gabigiladov on 4/11/15.
@@ -129,14 +130,14 @@ import javax.persistence.*;
         return message.getUser().equals(deleter);
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private int id;
+    @Id
+    private String id;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 }

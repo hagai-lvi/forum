@@ -1,6 +1,5 @@
 package acceptance_tests;
 
-import com.google.common.collect.Iterables;
 import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
@@ -9,8 +8,6 @@ import main.services_layer.Facade;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.Vector;
 
 import static org.junit.Assert.assertEquals;
 
@@ -33,15 +30,15 @@ public class AcceptenceTest {
 			SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException {
 		FacadeI facade = Facade.getFacade();
 
-		SubForumPermissionI sf = Iterables.get(user.getSubForumsPermissions(), 0);
+		SubForumPermissionI sf = user.getSubForumsPermissions().get(0);
 		String body = "body";
 		facade.createNewThread(user, sf, "title", body);
-		MessageI rootMessage = Iterables.get(user.getSubForumsPermissions(), 0).getThreads()[0].getRootMessage();
+		MessageI rootMessage = user.getSubForumsPermissions().get(0).getThreads()[0].getRootMessage();
 		assertEquals(body,
 				rootMessage.getMessageText());
 		user.deleteMessage(rootMessage, sf);
 
-		assertEquals(0, Iterables.get(user.getSubForumsPermissions(), 0).getThreads().length);
+		assertEquals(0, user.getSubForumsPermissions().get(0).getThreads().length);
 	}
 
 	@Test

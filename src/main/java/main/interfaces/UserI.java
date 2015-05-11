@@ -22,7 +22,7 @@ public interface UserI {
 	/**
 	 * Get the list of all of the subforums of this user
 	 */
-	Collection<SubForumPermissionI> getSubForumsPermissions();
+	Vector<SubForumPermissionI> getSubForumsPermissions();
 
 	GregorianCalendar getSignUpDate();
 	/**
