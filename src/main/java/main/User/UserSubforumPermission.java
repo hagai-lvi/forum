@@ -21,7 +21,7 @@ import javax.persistence.*;
         PERMISSIONS_GUEST,
         PERMISSIONS_USER,
         PERMISSIONS_ADMIN,
-        PERMISSIONS_SUPERADMIN;
+        PERMISSIONS_SUPERADMIN,
     }
 
     private PERMISSIONS permission;
@@ -88,6 +88,11 @@ import javax.persistence.*;
     }
 
     @Override
+    public void editMessage(MessageI originalMessage, MessageI newMessage) {
+        originalMessage.editText(newMessage.getMessageText());
+    }
+
+    @Override
     public ThreadI[] getThreads() {
         return subforum.getThreads().toArray(new ThreadI[0]);
     }
@@ -113,6 +118,8 @@ import javax.persistence.*;
         //TODO what is this method for?
         return false;
     }
+
+
 
     private boolean canDeleteMessage(MessageI message, String deleter) {
         return message.getUser().equals(deleter);

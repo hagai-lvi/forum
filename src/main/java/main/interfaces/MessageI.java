@@ -1,11 +1,17 @@
 package main.interfaces;
 
+import main.exceptions.PermissionDeniedException;
+
 /**
  * Created by hagai_lvi on 4/6/15.
  */
 public interface MessageI {
 
-	/**
+   // void editText(UserI user, String newText) throws PermissionDeniedException;
+
+    void editText(/*UserI user,*/ String newText)/* throws PermissionDeniedException */;
+
+    /**
 	 * @return the user that created this message
 	 */
 	String getUser();

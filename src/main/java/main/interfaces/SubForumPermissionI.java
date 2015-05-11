@@ -31,6 +31,11 @@ public interface SubForumPermissionI {
 	void deleteMessage(MessageI message, String deleter) throws PermissionDeniedException, MessageNotFoundException;
 
 	/**
+	 * Edit an existing message.
+	 */
+	 void editMessage(MessageI originalMessage, MessageI newMessage);
+
+	 /**
 	 * view threads
 	 */
 

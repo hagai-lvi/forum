@@ -41,11 +41,12 @@ public class ForumMessage implements MessageI {
 	public ForumMessage() {
 	}
 
-
-	public void editText(UserI user, String newText) throws PermissionDeniedException {
-		if (user != this.writingUser){
+	@Override
+	public void editText(/*UserI user,*/ String newText)/* throws PermissionDeniedException */{
+		/*if (user != this.writingUser){
 			throw new PermissionDeniedException("User can't edit message");
-		}
+		}*/ //Why should this be checked here?
+		//Todo resolve check permissions issue here.
 		this.messageText = newText;
 	}
 
