@@ -45,6 +45,9 @@ public class ForumMessage implements MessageI {
 	public ForumMessage() {
 	}
 
+	public ForumMessage() {
+	}
+
 
 	public void editText(UserI user, String newText) throws PermissionDeniedException {
 		if (user != this.writingUser){

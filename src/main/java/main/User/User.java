@@ -111,7 +111,7 @@ public class User implements UserI {
 
     @Override
     public void replyToMessage(SubForumPermissionI subForumPermission, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
-        subForumPermission.replyToMessage(original, new ForumMessage(original, this, msgBody, msgTitle));
+        subForumPermission.replyToMessage(original,new ForumMessage(original, this, msgBody, msgTitle));
     }
 
     @Override
@@ -180,7 +180,7 @@ public class User implements UserI {
 
     @Override
     public SubForumPermissionI getSubForumsPermissionsByName(String subForumName) {
-        Collection<SubForumPermissionI> subForumsPermissions = getSubForumsPermissions();
+        Vector<SubForumPermissionI> subForumsPermissions = getSubForumsPermissions();
         for (SubForumPermissionI sf: subForumsPermissions){
             if (sf.getSubForum().getName().equals(subForumName)){
                 return sf;
