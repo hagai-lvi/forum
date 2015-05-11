@@ -280,13 +280,4 @@ public class Forum implements ForumI {
         session.getTransaction().commit();
         session.close();
     }
-
-    public void Update(){    // save the forum to the database
-        Session session = session_Factory.openSession();
-        session.beginTransaction();
-        session.update(this);
-        session.getTransaction().commit();
-        session.close();
-    }
-
 }
