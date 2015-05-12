@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.User.UserSubforumPermission;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
@@ -52,4 +53,6 @@ public interface SubForumPermissionI {
 	SubForumI getSubForum();
 
 	boolean findForum(String name);
+
+	boolean isModerator();
 }

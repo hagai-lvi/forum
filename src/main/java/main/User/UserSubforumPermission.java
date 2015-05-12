@@ -22,6 +22,7 @@ import javax.persistence.*;
         PERMISSIONS_USER,
         PERMISSIONS_ADMIN,
         PERMISSIONS_SUPERADMIN,
+        PERMISSIONS_MODERATOR
     }
 
     private PERMISSIONS permission;
@@ -120,7 +121,6 @@ import javax.persistence.*;
     }
 
 
-
     private boolean canDeleteMessage(MessageI message, String deleter) {
         return message.getUser().equals(deleter);
     }
@@ -135,4 +135,9 @@ import javax.persistence.*;
     public void setId(int id) {
         this.id = id;
     }
+
+    public boolean isModerator() {
+        return permission.equals(PERMISSIONS.PERMISSIONS_MODERATOR);
+    }
+
 }
