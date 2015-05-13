@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.User.UserSubforumPermission;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
@@ -31,6 +32,11 @@ public interface SubForumPermissionI {
 	void deleteMessage(MessageI message, String deleter) throws PermissionDeniedException, MessageNotFoundException;
 
 	/**
+	 * Edit an existing message.
+	 */
+	 void editMessage(MessageI originalMessage, MessageI newMessage);
+
+	 /**
 	 * view threads
 	 */
 
@@ -49,4 +55,6 @@ public interface SubForumPermissionI {
 	boolean findForum(String name);
 
 	ThreadI getThreadById(long id);
+
+	boolean isModerator();
 }

@@ -10,6 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.fail;
 
 /**
  * Created by hagai_lvi on 4/21/15.
@@ -22,6 +24,24 @@ public class AcceptenceTest {
 	private Forum myForum;
 	private UserI user;
 
+
+	@Test
+	/**
+	 * target: check regular user entrance: login + get Sub Forum List + view sub forum threads
+	 */
+	public void integration1(){
+		FacadeI _facade = Facade.getFacade();
+
+		ForumI forum = _facade.getForumList().iterator().next();
+		try {
+			UserI user = _facade.login(forum, "gil", "123456");
+			assertNotNull(user);
+			_facade.getSubForumList(user);
+		}catch (InvalidUserCredentialsException e){
+			fail("the user exist! but fail to find");
+		}
+
+	}
 	@Test
 	/**
 	 * target: user login, remove message, and other user try to se it

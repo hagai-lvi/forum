@@ -32,13 +32,13 @@ public class UserSubforumPermissionTest {
         policy = new ForumPolicy(maxModerators, regex);
         forum = new Forum("Sport", policy);
         subforum = new SubForum("Sport", policy.getSubforumPolicy());
-        permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER,forum, subforum);
-        permission2 = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum, subforum);
-        permission3 = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_SUPERADMIN,forum, subforum);
+        permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER,forum, subforum);
+        permission2 = new UserSubforumPermission(Permissions.PERMISSIONS_ADMIN,forum, subforum);
+        permission3 = new UserSubforumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum, subforum);
     }
     @Test
     public void testCreateThread() throws Exception {
-        ForumPermissionI permission4 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
+        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow", "Mega Flow");
         permission2.createThread(message);
         assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
@@ -46,7 +46,7 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testReplyToMessage() throws Exception {
-        ForumPermissionI permission4 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
+        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow", "Mega Flow");
         permission2.createThread(message);
         permission2.replyToMessage(message, new ForumMessage(message, new User("Gabi", "123", "aa@mail.com", permission4), "Help", "aaa"));
@@ -55,7 +55,7 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testDeleteMessageS() throws Exception {
-        ForumPermissionI permission4 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
+        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow", "Mega Flow");
         permission2.createThread(message);
         permission2.replyToMessage(message, new ForumMessage(message, new User("Gabi", "123", "aa@mail.com", permission4), "Help", "aaa"));
@@ -66,7 +66,7 @@ public class UserSubforumPermissionTest {
 
     @Test(expected = PermissionDeniedException.class)
     public void testDeleteMessageWithoutPermission() throws Exception {
-        ForumPermissionI permission4 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
+        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow", "Mega Flow");
         permission2.createThread(message);
         permission.deleteMessage(message, "Victor"); // PermissionDeniedException expected
