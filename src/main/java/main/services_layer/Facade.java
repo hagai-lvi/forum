@@ -18,11 +18,116 @@ public class Facade implements FacadeI {
 	private Collection<ForumI> forums = new ArrayList<>();
 
 	@Override
-	public Collection<ForumI> getForumList() {
-		return forums;
+	public void initilize() {
+
 	}
 
 	@Override
+	public Collection<ExForumI> getForumList() {
+		return null; //TODO
+	}
+
+	@Override
+	public Collection<ExSubForumI> getSubForumList(int sessionId) {
+		return null; //TODO
+	}
+
+	@Override
+	public void addForum(String username, String password, String forumName, String regex, int numberOfModerators) {
+
+	}
+
+	@Override
+	public void createSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException {
+
+	}
+
+	@Override
+	public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
+
+	}
+
+	@Override
+	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException {
+		return 0;
+	}
+
+	@Override
+	public void logout(int sessionId) {
+
+	}
+
+	@Override
+	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
+
+	}
+
+	@Override
+	public void createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+
+	}
+
+	@Override
+	public void reportModerator(int sessionId, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
+
+	}
+
+	@Override
+	public String getUserAuthString(String forumName, String username, String password, String authenticationString) throws InvalidUserCredentialsException {
+		return null;
+	}
+
+	@Override
+	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException {
+
+	}
+
+	@Override
+	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException {
+
+	}
+
+	@Override
+	public int guestEntry(String forumName) {
+		return 0;
+	}
+
+	@Override
+	public void addUserType(int sessionId, String typeName, int seniority, int numOfMessages, int connectionTime) {
+
+	}
+
+	@Override
+	public void removeForum(String username, String password, String forumName) {
+
+	}
+
+	@Override
+	public void editMessage(int sessionId, int messageId, String title, String text) {
+
+	}
+
+	@Override
+	public void removeModerator(int sessionId, String moderatorName) {
+
+	}
+
+	@Override
+	public String viewModeratorStatistics(int sessionsId) {
+		return null;
+	}
+
+	@Override
+	public String viewSuperManagerStatistics(int sessionId) {
+		return null;
+	}
+
+	@Override
+	public String viewSessions(int sessionId) {
+		return null;
+	}
+
+	/*@Override
 	public Collection<SubForumPermissionI> getSubForumList(UserI user) {
 		return user.getSubForumsPermissions();
 	}
@@ -73,7 +178,7 @@ public class Facade implements FacadeI {
 	//TODO
 	//public void
 
-
+*/
 	public static FacadeI getFacade(){
 		return theFacade;
 	}
@@ -82,4 +187,5 @@ public class Facade implements FacadeI {
 		theFacade = new Facade();
 		return theFacade;
 	}
+
 }

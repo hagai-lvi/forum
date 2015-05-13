@@ -45,7 +45,7 @@ public interface FacadeI {
 	 * Login to the specified forum
 	 * Returns session id
 	 */
-	int login(String forum_name, String userName, String password) throws InvalidUserCredentialsException;
+	int login(String forumName, String userName, String password) throws InvalidUserCredentialsException;
 
 
 	/**
@@ -72,42 +72,13 @@ public interface FacadeI {
 	/**
 	 * Get authentication string
 	 */
-	String getUserAuthString(String forum_name, String username, String password, String authenticationString) throws InvalidUserCredentialsException;
+	String getUserAuthString(String forumName, String username, String password, String authenticationString) throws InvalidUserCredentialsException;
 
-	/**
-	 * Delete a subForum from this forum
-	 */
-	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException;
-
-	/**
-	 * create a thread in the subforum
-	 */
-	void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
-
-	/**
-	 * reply to a specific message
-	 */
-	void replyToMessage(SubForumPermissionI subforumPermissions, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
 	void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException;
-
-	/**
-	 * Set new forum administrator
-	 */
-	void setAdmin(UserI admin)throws PermissionDeniedException;
-
-	/**
-	 * Set policy for forum
-	 */
-	void setPolicy(ForumPolicyI policy)throws PermissionDeniedException;
-
-	/**
-	 * Get statistics
-	 */
-	String viewStatistics(ForumI forum) throws PermissionDeniedException;
 
 	/**
 	 * Set moderator for subforum
@@ -117,7 +88,7 @@ public interface FacadeI {
 	/**
 	 * guest entry usecase, return session id
 	 */
-	int guestEntry(string forumName);
+	int guestEntry(String forumName);
 
 	/**
 	 * user type, connectionTime = the time the user was login
