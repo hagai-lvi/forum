@@ -6,6 +6,9 @@
         <param name="Target" value="System.out"/>
         <layout class="org.apache.log4j.SimpleLayout"/>
     </appender>
+    <logger name="org.hibernate">
+        <level value="ERROR"/>
+    </logger>
 
 
     <root>
