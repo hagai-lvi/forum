@@ -6,18 +6,12 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
-import main.forum_contents.SubForum;
 import main.interfaces.ForumPermissionI;
-import main.interfaces.ForumPolicyI;
 import main_test.HibernateSessionFactory;
 import org.hibernate.Session;
-import org.junit.Before;
 import org.junit.FixMethodOrder;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
-
-import static org.junit.Assert.*;
 /**
  * Created by hagai_lvi on 4/22/15.
  */

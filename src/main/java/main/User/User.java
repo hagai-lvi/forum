@@ -109,7 +109,7 @@ public class User implements UserI {
 
     @Override
     public void replyToMessage(SubForumPermissionI subForumPermission, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
-        subForumPermission.replyToMessage(original,new ForumMessage(original, this, msgBody, msgTitle));
+        subForumPermission.replyToMessage(original, new ForumMessage(original, this, msgBody, msgTitle));
     }
 
     @Override
@@ -187,6 +187,17 @@ public class User implements UserI {
         return null;
     }
 
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
+
+    @Override
+    public Integer getId() {
+        return id;
+    }
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
     public void setSubForumsPermissions(Vector<SubForumPermissionI> subForumsPermissions) {
         this.subForumsPermissions = subForumsPermissions;
     }
@@ -197,5 +208,6 @@ public class User implements UserI {
     public void setSignUpDate(GregorianCalendar signUpDate){
         this.signUpDate = signUpDate;
     }
+
 
 }

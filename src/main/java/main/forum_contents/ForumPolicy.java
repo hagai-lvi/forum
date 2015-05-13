@@ -99,13 +99,13 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     }
 
     @Id
-    private String id;
+    private Integer id;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 }

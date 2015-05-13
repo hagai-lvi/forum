@@ -2,10 +2,7 @@ package main.interfaces;
 
 import main.exceptions.*;
 
-import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.List;
-
 import java.util.Vector;
 
 /**
@@ -112,4 +109,6 @@ public interface UserI {
 	 * TODO throw exception if non exist?
 	 */
 	SubForumPermissionI getSubForumsPermissionsByName(String subForumName);
+
+	Integer getId();
 }

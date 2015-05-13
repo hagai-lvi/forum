@@ -4,8 +4,6 @@ import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;
 
-import java.util.Collection;
-
 /**
  * Created by hagai_lvi on 4/6/15.
  */
@@ -45,4 +43,6 @@ public interface ForumPermissionI {
 	 * Check if the user has admin privileges
 	 */
 	boolean isAdmin();
+
+	Integer getId();
 }

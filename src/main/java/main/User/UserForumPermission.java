@@ -49,7 +49,7 @@ public class UserForumPermission implements ForumPermissionI {
 		forum.createSubForum(name);
 	}
 
-	private boolean isAdmin() {
+	public boolean isAdmin() {
 		return permissions.compareTo(Permissions.PERMISSIONS_ADMIN) >= 0;
 	}
 
