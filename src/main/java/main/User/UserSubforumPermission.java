@@ -17,22 +17,14 @@ import javax.persistence.*;
     public UserSubforumPermission() {
     }
 
-    public enum PERMISSIONS{
-        PERMISSIONS_GUEST,
-        PERMISSIONS_USER,
-        PERMISSIONS_ADMIN,
-        PERMISSIONS_SUPERADMIN,
-        PERMISSIONS_MODERATOR
-    }
-
-    private PERMISSIONS permission;
+    private Permissions permission;
     @OneToOne(targetEntity = Forum.class)
     private ForumI forum;
     @OneToOne(targetEntity = SubForum.class)
     private SubForumI subforum;
     private static Logger logger = Logger.getLogger(UserSubforumPermission.class.getName());
 
-    public UserSubforumPermission(PERMISSIONS permission, ForumI forum, SubForumI subforum){
+    public UserSubforumPermission(Permissions permission, ForumI forum, SubForumI subforum){
         logger.info("Creating new permissions for - " + permission);
         this.forum = forum;
         this.subforum = subforum;
@@ -43,7 +35,7 @@ import javax.persistence.*;
 
     @Override
     public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-        if( ! permission.equals(PERMISSIONS.PERMISSIONS_GUEST)) {
+        if( ! permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to create thread");
             subforum.createThread(message);
         } else {
@@ -54,7 +46,7 @@ import javax.persistence.*;
 
    @Override
     public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
-        if(!permission.equals(PERMISSIONS.PERMISSIONS_GUEST)) {
+        if(!permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to reply");
             subforum.replyToMessage(original, reply);
         } else {
@@ -65,7 +57,7 @@ import javax.persistence.*;
 
    @Override
     public void reportModerator(String moderatorUsername, String reportMessage, UserI reporter) throws PermissionDeniedException, ModeratorDoesNotExistsException {
-       if(!permission.equals(PERMISSIONS.PERMISSIONS_GUEST)) {
+       if(!permission.equals(Permissions.PERMISSIONS_GUEST)) {
            logger.info(permission + " has permission to report moderator");
            subforum.reportModerator(moderatorUsername, reportMessage, reporter);
        } else {
@@ -100,7 +92,7 @@ import javax.persistence.*;
 
     @Override
     public void setModerator(UserI moderator) throws PermissionDeniedException {
-        if( permission.equals(PERMISSIONS.PERMISSIONS_ADMIN)) {
+        if( permission.equals(Permissions.PERMISSIONS_ADMIN)) {
             logger.info(permission + " has permission to set moderator");
             subforum.setModerator(moderator);
         } else {
@@ -137,7 +129,7 @@ import javax.persistence.*;
     }
 
     public boolean isModerator() {
-        return permission.equals(PERMISSIONS.PERMISSIONS_MODERATOR);
+        return permission.equals(Permissions.PERMISSIONS_MODERATOR);
     }
 
 }
