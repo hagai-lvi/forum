@@ -1,6 +1,7 @@
 package main_test;
 
 import main.Person;
+import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
@@ -454,7 +455,7 @@ public class ProjectTest {
         UserI user = forum.getUserList().iterator().next();
         MessageI mes = new ForumMessage(null, user, "Zrima", "Over Zrima");
         try {
-            user.createThread(mes, new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next()));
+            user.createThread(mes, new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next()));
         } catch (PermissionDeniedException e) {
             assertTrue(false);
         } catch (DoesNotComplyWithPolicyException e) {
@@ -471,8 +472,8 @@ public class ProjectTest {
     */
     public void setModeratorTest() {
         ForumI forum =_forumCollection.iterator().next();
-        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
-        ForumPermissionI permission2 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         UserI user = new User("Gabi", "123456", "mail@gmail.com", permission);
         UserI user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
         SubForumI subf = forum.getSubForums().iterator().next();
@@ -498,8 +499,8 @@ public class ProjectTest {
     */
     public void cancelModeratorTest() {
         ForumI forum =_forumCollection.iterator().next();
-        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
-        ForumPermissionI permission2 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         UserI user = new User("Gabi", "123456", "mail@gmail.com", permission);
         UserI user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
         SubForumI subf = forum.getSubForums().iterator().next();
@@ -523,8 +524,8 @@ public class ProjectTest {
     */
     public void getUpdatesFromModeratorTest() {
         ForumI forum =_forumCollection.iterator().next();
-        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
-        ForumPermissionI permission2 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_MODERATOR,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_MODERATOR,forum);
         UserI user = new User("Gabi", "123456", "mail@gmail.com", permission);
         UserI user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
         SubForumI subf = forum.getSubForums().iterator().next();
@@ -547,8 +548,8 @@ public class ProjectTest {
      */
     public void getUpdatesFromSuperManagerTest() {
         ForumI forum =_forumCollection.iterator().next();
-        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
-        ForumPermissionI permission2 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         UserI user = new User("Gabi", "123456", "mail@gmail.com", permission);
         UserI user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
         SubForumI subf = forum.getSubForums().iterator().next();

@@ -19,30 +19,24 @@ public class UserForumPermission implements ForumPermissionI {
 	public UserForumPermission() {
 	}
 
-	public enum PERMISSIONS{
-		PERMISSIONS_GUEST,
-		PERMISSIONS_USER,
-		PERMISSIONS_ADMIN,
-		PERMISSIONS_MODERATOR, PERMISSIONS_SUPERADMIN
-	}
 	//TODO add logger
 
 	@OneToOne(targetEntity = Forum.class)
 	private ForumI forum;
-	private PERMISSIONS permissions;
+	private Permissions permissions;
 
-	public UserForumPermission(PERMISSIONS permissions, ForumI forum){
+	public UserForumPermission(Permissions permissions, ForumI forum){
 		//TODO use state for permissions? should the permissions be final?
 		this.forum = forum;
 		this.permissions = permissions;
 	}
 
-	public static ForumPermissionI createUserForumPermissions(PERMISSIONS permissions, ForumI forum){
+	public static ForumPermissionI createUserForumPermissions(Permissions permissions, ForumI forum){
 		if (forum == null){
 			throw new IllegalArgumentException("forum can not be nul");
 		}
-		if ((!(permissions.compareTo(PERMISSIONS.PERMISSIONS_GUEST) >=  0)
-				&& (permissions.compareTo(PERMISSIONS.PERMISSIONS_ADMIN) <= 0))){
+		if ((!(permissions.compareTo(Permissions.PERMISSIONS_GUEST) >=  0)
+				&& (permissions.compareTo(Permissions.PERMISSIONS_ADMIN) <= 0))){
 			throw new IllegalArgumentException("There is no such forum permissions: " + permissions);
 		}
 		return new UserForumPermission(permissions, forum);
@@ -57,7 +51,7 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	private boolean isAdmin() {
-		return permissions.compareTo(PERMISSIONS.PERMISSIONS_ADMIN) >= 0;
+		return permissions.compareTo(Permissions.PERMISSIONS_ADMIN) >= 0;
 	}
 
 	@Override
@@ -70,7 +64,7 @@ public class UserForumPermission implements ForumPermissionI {
 
 	@Override
 	public void setAdmin(UserI admin) throws PermissionDeniedException {
-		if(permissions.equals(PERMISSIONS.PERMISSIONS_SUPERADMIN))
+		if(permissions.equals(Permissions.PERMISSIONS_SUPERADMIN))
 			forum.setAdmin(admin);
 		else throw new PermissionDeniedException("User has no permission to set administrator");
 	}

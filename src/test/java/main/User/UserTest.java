@@ -30,9 +30,9 @@ public class UserTest {
         String regex = "a-b";
         policy = new ForumPolicy(maxModerators, regex);
         forum = new Forum("Sport", policy);
-        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
-        ForumPermissionI permission2 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
-        ForumPermissionI permission3 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_SUPERADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission3 = new UserForumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum);
         user = new User("Gabi", "123456", "mail@gmail.com", permission);
         user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
         user3 = new User("Tom", "abcde", "mail2@gmail.com", permission3);
@@ -117,7 +117,7 @@ public class UserTest {
     @Test
     public void testCreateThread() throws Exception {
         user2.createSubForum("Football");
-        SubForumPermissionI permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
+        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(null, user, "Flow", "Mega Flow");
         user2.createThread(message, permission);
         assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
@@ -126,7 +126,7 @@ public class UserTest {
     @Test
     public void testReplyToMessage() throws Exception {
         user2.createSubForum("Football");
-        SubForumPermissionI permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
+        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(null, user, "Flow", "Mega Flow");
         user2.createThread(message, permission);
         user2.replyToMessage(permission, message, "WTF", "Help");
@@ -137,7 +137,7 @@ public class UserTest {
     @Test
     public void testDeleteMessageS() throws Exception {
         user2.createSubForum("Football");
-        SubForumPermissionI permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
+        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(null, user, "Flow", "Mega Flow");
         user2.createThread(message, permission);
         user2.replyToMessage(permission, message, "WTF", "Help");
@@ -150,7 +150,7 @@ public class UserTest {
     @Test(expected = PermissionDeniedException.class)
     public void testDeleteMessageWithoutPermission() throws Exception {
         user2.createSubForum("Football");
-        SubForumPermissionI permission = new UserSubforumPermission(UserSubforumPermission.PERMISSIONS.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
+        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(null, user, "Flow", "Mega Flow");
         user2.createThread(message, permission);
         user2.deleteMessage(message, permission); // PermissionDeniedException expected
@@ -158,13 +158,13 @@ public class UserTest {
 
     @Test(expected = PermissionDeniedException.class)
     public void testSetAdminWithoutPermission() throws Exception {
-        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         user2.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
     }
 
     @Test
     public void testSetAdmin() throws Exception {
-        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         user3.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
     }
 

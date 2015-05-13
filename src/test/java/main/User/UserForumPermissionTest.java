@@ -30,9 +30,9 @@ public class UserForumPermissionTest {
         String regex = "a-b";
         policy = new ForumPolicy(maxModerators, regex);
         forum = new Forum("Sport", policy);
-        permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_USER,forum);
-        permission2 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
-        permission3 = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_SUPERADMIN,forum);
+        permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
+        permission3 = new UserForumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum);
 
     }
 
@@ -83,13 +83,13 @@ public class UserForumPermissionTest {
 
     @Test(expected = PermissionDeniedException.class)
     public void testSetAdminWithoutPermission() throws Exception {
-        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         permission2.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
     }
 
     @Test
     public void testSetAdmin() throws Exception {
-        ForumPermissionI permission = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         permission3.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
     }
 

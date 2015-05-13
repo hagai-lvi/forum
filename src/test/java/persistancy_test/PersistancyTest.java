@@ -1,6 +1,7 @@
 package persistancy_test;
 
 import junit.framework.TestCase;
+import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.forum_contents.Forum;
@@ -74,7 +75,7 @@ public class PersistancyTest extends TestCase{
     @Test
     public void test5ForumPermissions_Save(){
         session.beginTransaction();
-        forum_per = new UserForumPermission(UserForumPermission.PERMISSIONS.PERMISSIONS_ADMIN, forum);
+        forum_per = new UserForumPermission(Permissions.PERMISSIONS_ADMIN, forum);
         session.save(forum_per);
         fper_id = forum_per.getId();
         session.getTransaction().commit();
