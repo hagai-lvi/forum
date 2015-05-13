@@ -70,6 +70,9 @@ public class Facade implements FacadeI {
 		user.reportModerator(subforum, moderatorUserName, reportMessage);
 	}
 
+	//TODO
+	//public void
+
 
 	public static FacadeI getFacade(){
 		return theFacade;
