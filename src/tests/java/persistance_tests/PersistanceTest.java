@@ -1,4 +1,4 @@
-package persistancy_tests;
+package persistance_tests;
 
 import junit.framework.TestCase;
 import main.User.Permissions;
@@ -7,7 +7,7 @@ import main.User.UserForumPermission;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.ForumPermissionI;
-import main_test.HibernateSessionFactory;
+import tests_infrastructure.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -18,7 +18,7 @@ import org.junit.runners.MethodSorters;
  */
 
 @FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class PersistancyTest extends TestCase{
+public class PersistanceTest extends TestCase{
 
     private Session session;
     private static Integer policy_id;

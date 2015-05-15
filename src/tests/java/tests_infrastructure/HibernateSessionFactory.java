@@ -1,4 +1,4 @@
-package main_test;
+package tests_infrastructure;
 
 /**
  * Created by xkcd2 on 4/21/2015.

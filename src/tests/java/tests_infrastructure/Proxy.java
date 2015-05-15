@@ -1,4 +1,4 @@
-package main_test;
+package tests_infrastructure;
 
 import main.exceptions.*;
 import main.interfaces.*;

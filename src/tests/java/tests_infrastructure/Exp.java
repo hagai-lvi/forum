@@ -1,4 +1,4 @@
-package main_test;
+package tests_infrastructure;
 
 import main.exceptions.EmailNotAuthanticatedException;
 import main.exceptions.InvalidUserCredentialsException;

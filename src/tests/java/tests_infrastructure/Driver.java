@@ -1,4 +1,4 @@
-package main_test;
+package tests_infrastructure;
 
 import main.interfaces.FacadeI;
 import main.services_layer.Facade;
