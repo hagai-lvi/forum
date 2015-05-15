@@ -1,9 +1,8 @@
 package main.forum_contents;
 
-import main.exceptions.PermissionDeniedException;
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
-import main.User.User;
+import main.user.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;

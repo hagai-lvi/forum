@@ -1,8 +1,8 @@
 package unit_tests.User;
 
-import main.User.Permissions;
-import main.User.User;
-import main.User.UserForumPermission;
+import main.user.Permissions;
+import main.user.User;
+import main.user.UserForumPermission;
 import main.exceptions.PermissionDeniedException;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
@@ -12,7 +12,6 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
-import java.util.Iterator;
 
 import static org.junit.Assert.*;
 

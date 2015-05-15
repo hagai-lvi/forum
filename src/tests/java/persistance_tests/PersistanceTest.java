@@ -1,9 +1,9 @@
 package persistance_tests;
 
 import junit.framework.TestCase;
-import main.User.Permissions;
-import main.User.User;
-import main.User.UserForumPermission;
+import main.user.Permissions;
+import main.user.User;
+import main.user.UserForumPermission;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.ForumPermissionI;

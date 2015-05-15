@@ -1,6 +1,5 @@
 package main.interfaces;
 
-import main.User.UserSubforumPermission;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;

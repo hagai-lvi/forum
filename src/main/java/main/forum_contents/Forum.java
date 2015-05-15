@@ -1,12 +1,11 @@
 package main.forum_contents;
 
-import main.Persistancy.HibernatePersistancyAbstractor;
-import main.User.Permissions;
-import main.User.User;
-import main.User.UserForumPermission;
-import main.User.UserSubforumPermission;
-import main.Utils.GmailSender;
-import main.Persistancy.HibernateSessionFactory;
+import main.persistance.HibernatePersistancyAbstractor;
+import main.user.Permissions;
+import main.user.User;
+import main.user.UserForumPermission;
+import main.user.UserSubforumPermission;
+import main.utils.GmailSender;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;

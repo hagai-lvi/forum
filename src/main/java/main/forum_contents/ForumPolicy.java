@@ -1,6 +1,5 @@
 package main.forum_contents;
 
-import main.User.User;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 

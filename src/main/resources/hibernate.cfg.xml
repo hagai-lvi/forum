@@ -19,8 +19,8 @@
         <mapping class="main.forum_contents.ForumPolicy"/>
         <mapping class="main.forum_contents.UserType"/>
         <mapping class="data_structures.Tree"/>
-        <mapping class="main.User.User"/>
-        <mapping class="main.User.UserSubforumPermission"/>
-        <mapping class="main.User.UserForumPermission"/>
+        <mapping class="main.user.User"/>
+        <mapping class="main.user.UserSubforumPermission"/>
+        <mapping class="main.user.UserForumPermission"/>
     </session-factory>
 </hibernate-configuration>

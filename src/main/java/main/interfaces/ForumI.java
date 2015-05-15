@@ -1,6 +1,5 @@
 package main.interfaces;
 
-import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.UserType;
 
