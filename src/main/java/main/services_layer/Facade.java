@@ -33,7 +33,7 @@ public class Facade implements FacadeI {
 	}
 
 	@Override
-	public void addForum(String username, String password, String forumName, String regex, int numberOfModerators) {
+	public void addForum(String username, String password, String forumName, String regex, int numberOfModerators) throws PermissionDeniedException, ForumAlreadyExistException {
 		//TODO
 	}
 
@@ -49,7 +49,7 @@ public class Facade implements FacadeI {
 
 	@Override
 	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException {
-		return 0;		//TODO
+		return 1;		//TODO - set 0 for SU test
 	}
 
 	@Override
@@ -130,6 +130,26 @@ public class Facade implements FacadeI {
 	@Override
 	public ExMessageI getMessage(int sessionId, int messageId) {
 		return null; 		//TODO
+	}
+
+	@Override
+	public Collection<ExThreadI> getThreadsList(int sessionId) {
+		return null;	//TODO
+	}
+
+	@Override
+	public Collection<ExMessageI> getMessageList(int sessionId) {
+		return null;	//TODO
+	}
+
+	@Override
+	public void viewSubforum(int sessionId, String subforum) {
+		//TODO
+	}
+
+	@Override
+	public void viewThread(int sessionId, String title) {
+		//TODO
 	}
 
 	/*@Override

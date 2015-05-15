@@ -20,13 +20,10 @@ public class AcceptanceTests {
 	/**
 	 * target: Check whether a user can log in and view sub-forums.
 	 */
-	public void test_RegisterLoginAndViewSubforums(){
-
-
+	public void test_RegisterLoginAndViewSubforums() throws InvalidUserCredentialsException, UserAlreadyExistsException{
 		try {
 			_facade.register("forum", "user", "pass", "mail@mail.com");
 			int sessionID = _facade.login("forum", "user", "pass");
-			assertNotEquals(sessionID, 0);
 			_facade.getSubForumList(sessionID);
 		}catch (InvalidUserCredentialsException e){
 			fail("User failed to log in!");
@@ -81,8 +78,47 @@ public class AcceptanceTests {
 		} catch (DoesNotComplyWithPolicyException e) {
 			fail("Policy violation!");
 		} catch (MessageNotFoundException e) {
-			assertFalse(false);
+			//pass
 		}
+	}
+
+	@Test
+	/**
+	 * target - Check if an expelled moderator keeps his privileges.
+	 */
+	public void test_removeModThenTryToEditMessage(){
+		try {
+			//add new user
+			_facade.register("forum", "user", "pass", "mail@mail.com");
+			//login as SU
+			int sessionId = _facade.login("forum", "admin", "pass");
+			_facade.viewSubforum(sessionId, "subforum");
+			//set user as subforum mod
+			_facade.setModerator(sessionId, "user");
+			_facade.createNewThread(sessionId, "title", "body");
+			_facade.viewThread(sessionId, "title");
+			//get id of new message
+			Collection<ExMessageI> messages = _facade.getMessageList(sessionId);
+			int messageId = messages.iterator().next().getId();
+			int modSessionId = _facade.login("forum", "user", "pass");
+			//successfully edit the message as a mod
+			_facade.editMessage(modSessionId, messageId, "title2", "body2");
+			_facade.logout(modSessionId);
+			//expel the mod
+			_facade.removeModerator(sessionId, "user");
+			modSessionId = _facade.login("forum", "user", "pass");
+			//try to edit the message again
+			_facade.editMessage(modSessionId, messageId, "title", "body");
+			fail("message edited although not permitted");
+		} catch (UserAlreadyExistsException e) {
+			e.printStackTrace();
+		} catch (InvalidUserCredentialsException e) {
+			e.printStackTrace();
+		} catch (PermissionDeniedException e) {
+			//pass
+		} catch (DoesNotComplyWithPolicyException e) {
+			e.printStackTrace();		}
+
 	}
 
 	@Test
@@ -97,28 +133,34 @@ public class AcceptanceTests {
 	/**
 	 * target: Check whether a user without admin privileges can delete a sub-forum.
 	 */
-	public void test_LogInUnprivilegedAndTryToDeleteSubforum() throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException, ForumNotFoundException {
+	public void test_LogInUnprivilegedAndTryToDeleteForum() throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException, ForumNotFoundException {
 
 		try {
 			_facade.register("forum", "user", "pass", "mail@mail.com");
-			_facade.addForum("admin", "pass", "forum", "a*", 1);
 			_facade.login("forum", "user", "pass");
 			_facade.removeForum("user", "pass", "forum");
-			assertFalse(true);
+			fail("unauthorized removal of a forum");
 		} catch (UserAlreadyExistsException e) {
-			fail("User already exists!");
+			e.printStackTrace();
 		} catch (InvalidUserCredentialsException e) {
-			fail("User failed to log in!");
+			e.printStackTrace();
 		} catch (PermissionDeniedException e) {
-			assertFalse(false);
+			//pass
 		} catch (ForumNotFoundException e) {
-			fail("Policy violation!");
+			e.printStackTrace();
 		}
 	}
 
 	@Before
 	public void init() {
 		_facade = Facade.getFacade();
+		try {
+			_facade.addForum("admin", "pass", "forum", "pass", 3);
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		} catch (ForumAlreadyExistException e) {
+			e.printStackTrace();
+		}
 	}
 
 	@After

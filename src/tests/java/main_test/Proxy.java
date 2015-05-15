@@ -43,7 +43,7 @@ public class Proxy implements FacadeI {
         return null;    }
 
     @Override
-    public void addForum(String username, String password, String forumName, String regex, int numberOfModerators) {
+    public void addForum(String username, String password, String forumName, String regex, int numberOfModerators) throws PermissionDeniedException, ForumAlreadyExistException {
         if(this.real!=null)
             this.real.addForum(username, password, forumName, regex, numberOfModerators);
     }
@@ -166,6 +166,32 @@ public class Proxy implements FacadeI {
         if(this.real!=null)
             return this.real.getMessage(sessionId, messageId);
         return null;
+    }
+
+    @Override
+    public Collection<ExThreadI> getThreadsList(int sessionId) {
+        if(this.real!=null)
+            return this.real.getThreadsList(sessionId);
+        return null;
+    }
+
+    @Override
+    public Collection<ExMessageI> getMessageList(int sessionId) {
+        if(this.real!=null)
+            return this.real.getMessageList(sessionId);
+        return null;
+    }
+
+    @Override
+    public void viewSubforum(int sessionId, String subforum) {
+        if(this.real!=null)
+            this.real.viewSubforum(sessionId, subforum);
+    }
+
+    @Override
+    public void viewThread(int sessionId, String title) {
+        if(this.real!=null)
+            this.real.viewThread(sessionId, title);
     }
 
 
