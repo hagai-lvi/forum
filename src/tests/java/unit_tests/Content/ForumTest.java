@@ -1,4 +1,4 @@
-package main.Content;
+package unit_tests.Content;
 
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.UserAlreadyExistsException;
@@ -12,6 +12,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * Created by tomgond on 4/11/15.
@@ -37,9 +38,8 @@ public class ForumTest {
 
     @Test
     public void testRegisterBad() throws Exception {
-        UserI user = null;
         try {
-            user = forum.register("username", "pass", "user@somemail.com");
+           forum.register("username", "pass", "user@somemail.com");
         }
         catch(UserAlreadyExistsException e){
             assertTrue(true);  // we should raise exception caus the user exists
@@ -49,9 +49,8 @@ public class ForumTest {
 
     @Test
     public void testRegisterInvalidDetails() throws Exception {
-        UserI user = null;
         try {
-            user = forum.register("", null, "user@somemail.com");
+           forum.register("", null, "user@somemail.com");
         }
         catch(UserAlreadyExistsException e){
             assertTrue(false);  // we should raise exception caus the user exists
@@ -68,10 +67,10 @@ public class ForumTest {
             user = forum.register("tomgond_new1", "my_pass", "someinvalidemail@fufufu.com"); // TODO: change to valid email to check if sent
         }
         catch(UserAlreadyExistsException e){
-            assertTrue(false);  // we should raise exception caus the user exists
+            fail("user already exists!");  // we should raise exception caus the user exists
         }
         catch (InvalidUserCredentialsException e) {
-            assertTrue(false);   // we had an exception for bad details
+            fail("bad user credentials!");   // we had an exception for bad details
         }
         try {
             forum.sendAuthenticationEMail(user);

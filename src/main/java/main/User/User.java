@@ -19,6 +19,7 @@ public class User implements UserI {
     private String authString = null;
     private String username;
     private String password;
+    private GregorianCalendar passwordCreationDate;
     private String email;
     private GregorianCalendar signUpDate;
     private int seniorityInDays;
@@ -32,6 +33,7 @@ public class User implements UserI {
     public User(String username, String password, String email, ForumPermissionI forumPermissions) {
         this.username = username;
         this.password = password;
+        this.passwordCreationDate = new GregorianCalendar();
         this.email    = email;
         signUpDate = new GregorianCalendar();
         seniorityInDays = 0;
@@ -189,6 +191,26 @@ public class User implements UserI {
 
     public Integer getId() {
         return id;
+    }
+
+    @Override
+    public void updatePasswordCreationDate(){
+        passwordCreationDate = new GregorianCalendar();
+    }
+
+    @Override
+    public GregorianCalendar getPasswordCreationDate(){
+        return passwordCreationDate;
+    }
+
+    @Override
+    public void setSecurityQuestion(String quest) {
+        //TODO
+    }
+
+    @Override
+    public void setSecurityAnswer(String ans) {
+        //TODO
     }
 
     public void setId(Integer id) {

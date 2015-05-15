@@ -19,7 +19,7 @@ public class Facade implements FacadeI {
 
 	@Override
 	public void initilize() {
-
+		//TODO
 	}
 
 	@Override
@@ -34,97 +34,102 @@ public class Facade implements FacadeI {
 
 	@Override
 	public void addForum(String username, String password, String forumName, String regex, int numberOfModerators) {
-
+		//TODO
 	}
 
 	@Override
 	public void createSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException {
-
+		//TODO
 	}
 
 	@Override
 	public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
-
+		//TODO
 	}
 
 	@Override
 	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException {
-		return 0;
+		return 0;		//TODO
 	}
 
 	@Override
 	public void logout(int sessionId) {
-
+		//TODO
 	}
 
 	@Override
 	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
-
+		//TODO
 	}
 
 	@Override
 	public void createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-
+		//TODO
 	}
 
 	@Override
 	public void reportModerator(int sessionId, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
-
+		//TODO
 	}
 
 	@Override
 	public String getUserAuthString(String forumName, String username, String password, String authenticationString) throws InvalidUserCredentialsException {
-		return null;
+		return null;		//TODO
 	}
 
 	@Override
 	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException {
-
+		//TODO
 	}
 
 	@Override
 	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException {
-
+		//TODO
 	}
 
 	@Override
 	public int guestEntry(String forumName) {
-		return 0;
+		return 0;		//TODO
 	}
 
 	@Override
 	public void addUserType(int sessionId, String typeName, int seniority, int numOfMessages, int connectionTime) {
-
+		//TODO
 	}
 
 	@Override
-	public void removeForum(String username, String password, String forumName) {
-
+	public void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException{
+		//TODO
 	}
 
 	@Override
 	public void editMessage(int sessionId, int messageId, String title, String text) {
-
+		//TODO
 	}
 
 	@Override
 	public void removeModerator(int sessionId, String moderatorName) {
-
+		//TODO
 	}
 
 	@Override
 	public String viewModeratorStatistics(int sessionsId) {
-		return null;
+		return null;		//TODO
 	}
 
 	@Override
 	public String viewSuperManagerStatistics(int sessionId) {
-		return null;
+		return null;		//TODO
 	}
 
 	@Override
 	public String viewSessions(int sessionId) {
-		return null;
+		return null;		//TODO
+	}
+
+	@Override
+	public ExMessageI getMessage(int sessionId, int messageId) {
+		return null; 		//TODO
 	}
 
 	/*@Override

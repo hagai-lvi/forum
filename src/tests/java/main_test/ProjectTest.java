@@ -1,19 +1,13 @@
 package main_test;
 
-import main.Person;
 import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.exceptions.*;
-import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
-import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
-import main.services_layer.Facade;
 import org.apache.log4j.Logger;
-import org.hibernate.Session;
-import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -428,10 +422,10 @@ public class ProjectTest {
             user = forum.register("tomgond_new1", "my_pass", "gabi.giladov@gmail.com");
         }
         catch(UserAlreadyExistsException e){
-            assertTrue(false);
+            fail("User already exists!");
         }
         catch (InvalidUserCredentialsException e) {
-            assertTrue(false);
+            fail("Invalid user credentials!");
         }
         assertFalse(user.isEmailAuthenticated());
 
@@ -458,9 +452,9 @@ public class ProjectTest {
         try {
             user.createThread(mes, new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next()));
         } catch (PermissionDeniedException e) {
-            assertTrue(false);
+            fail("Permission denied!");
         } catch (DoesNotComplyWithPolicyException e) {
-            assertTrue(false);
+            fail("policy exception!");
         }
 
         // TODO user should be able to edit his messages

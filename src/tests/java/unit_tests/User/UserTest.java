@@ -1,5 +1,9 @@
-package main.User;
+package unit_tests.User;
 
+import main.User.Permissions;
+import main.User.User;
+import main.User.UserForumPermission;
+import main.User.UserSubforumPermission;
 import main.exceptions.PermissionDeniedException;
 import main.forum_contents.*;
 import main.interfaces.*;
@@ -87,11 +91,9 @@ public class UserTest {
     }
 
     private boolean contains(Collection<SubForumI> subForums, SubForumI subforum) {
-        Iterator it = subForums.iterator();
-        while(it.hasNext()) {
-            SubForumI subf = (SubForumI) it.next();
-            if(subf.getName().equals(subforum.getName()))
-               return true;
+        for (SubForumI subf : subForums) {
+            if (subf.getName().equals(subforum.getName()))
+                return true;
         }
         return false;
     }
@@ -104,7 +106,7 @@ public class UserTest {
 
     @Test
     public void testDeleteSubForumForAdmin() throws Exception {
-        Collection<SubForumI> subForums = forum.getSubForums();
+        Collection<SubForumI> subForums;
         SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
         user2.createSubForum("Baseball");
         subForums = forum.getSubForums();

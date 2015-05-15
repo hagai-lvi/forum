@@ -1,5 +1,9 @@
-package main.User;
+package unit_tests.User;
 
+import main.User.Permissions;
+import main.User.User;
+import main.User.UserForumPermission;
+import main.User.UserSubforumPermission;
 import main.exceptions.PermissionDeniedException;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;

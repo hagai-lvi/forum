@@ -12,7 +12,7 @@ public class TreeTest {
 
 	@Before
 	public void setUp() throws Exception {
-		tree = new Tree(0);
+		tree = new Tree<>(0);
 
 		tree.add(1, 0);
 		tree.add(10, 1);

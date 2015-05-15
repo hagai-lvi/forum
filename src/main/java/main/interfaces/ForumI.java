@@ -1,10 +1,7 @@
 package main.interfaces;
 
 import main.User.User;
-import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.SubForumDoesNotExsitsException;
-import main.exceptions.UserAlreadyExistsException;
+import main.exceptions.*;
 import main.forum_contents.UserType;
 
 import java.util.Collection;
@@ -42,7 +39,7 @@ public interface ForumI {
 	 * @return a user if the login was successful or throws an Exception
 	 * if there was a problem in the login
 	 */
-	UserI login(String username, String password) throws InvalidUserCredentialsException;
+	UserI login(String username, String password) throws InvalidUserCredentialsException, PasswordNotInEffectException, EmailNotAuthanticatedException;
 
 	/**
 	 * Return an 'empty' guest user

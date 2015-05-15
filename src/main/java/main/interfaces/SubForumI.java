@@ -5,11 +5,14 @@ import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by hagai_lvi on 4/6/15.
  */
 public interface SubForumI {
+
+	Map<String, UserI> getModerators();
 
 	/**
 	 * create a thread in the sub-forum

@@ -1,5 +1,8 @@
-package main.User;
+package unit_tests.User;
 
+import main.User.Permissions;
+import main.User.User;
+import main.User.UserForumPermission;
 import main.exceptions.PermissionDeniedException;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
@@ -53,10 +56,8 @@ public class UserForumPermissionTest {
     }
 
     private boolean contains(Collection<SubForumI> subForums, SubForumI subforum) {
-        Iterator it = subForums.iterator();
-        while(it.hasNext()) {
-            SubForumI subf = (SubForumI) it.next();
-            if(subf.getName().equals(subforum.getName()))
+        for (SubForumI subf : subForums) {
+            if (subf.getName().equals(subforum.getName()))
                 return true;
         }
         return false;
@@ -70,7 +71,7 @@ public class UserForumPermissionTest {
 
     @Test
     public void testDeleteSubForumForAdmin() throws Exception {
-        Collection<SubForumI> subForums = forum.getSubForums();
+        Collection<SubForumI> subForums;
         SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
         permission2.createSubForum("Baseball");
         subForums = forum.getSubForums();

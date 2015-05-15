@@ -1,6 +1,6 @@
 package main.interfaces;
 
-import main.User.User;
+import java.util.GregorianCalendar;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -12,6 +12,19 @@ public interface ForumPolicyI {
      * Check if the given password matches the regex that was given to {@link #setPasswordRegex(String)}
      */
 	boolean isValidPassword(String password);
+
+    /**
+     * Check whether the password date is in effect according to policy.
+     * @param passwordDate - the date the user's password was created.
+     */
+    boolean isPasswordInEffect(GregorianCalendar passwordDate);
+
+    /**
+     * Check whether the given user can be a moderator of the given subforum.
+     * @param user - The designated moderator
+     * @param subforum - The target subforum.
+     */
+    boolean canAssignModerator(UserI user, SubForumI subforum);
 
     /**
      * Returns the SubForum portion of the forum policy.
@@ -30,13 +43,19 @@ public interface ForumPolicyI {
 
     /**
      * Checks whether a given user is a valid manager according to policy.
-     * @param manager - the designated manager.
+     * @param admin - the designated manager.
      */
-    boolean isValidAdmin(User manager);
+    boolean isValidAdmin(UserI admin);
 
     /**
      * Checks whether a given user is a valid moderator according to policy.
      * @param moderator - the designated moderator.
      */
-    boolean isValidModerator(User moderator);
+    boolean isValidModerator(UserI moderator);
+
+    /**
+     * Check whether the current forum is a secured forum.
+     */
+    boolean isSecured();
+
 }

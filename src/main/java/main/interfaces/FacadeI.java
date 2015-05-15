@@ -99,13 +99,13 @@ public interface FacadeI {
 	 * remove forum
 	 */
 
-	void removeForum(String username, String password, String forumName);
+	void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException;
 
 
 	/**
 	 * edit message
-	 * @param sessionId
-	 * @param messageId
+	 * @param sessionId - Id of current session
+	 * @param messageId - Id of message
 	 */
 	void editMessage(int sessionId, int messageId, String title, String text);
 
@@ -118,4 +118,5 @@ public interface FacadeI {
 	String viewSessions(int sessionId);
 
 
+	ExMessageI getMessage(int sessionId, int messageId);
 }

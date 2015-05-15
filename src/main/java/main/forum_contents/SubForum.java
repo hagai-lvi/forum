@@ -25,6 +25,11 @@ public class SubForum implements SubForumI {
     @OneToMany(targetEntity = ForumThread.class, cascade = CascadeType.ALL)
     private List<ThreadI> _threads = new LinkedList<>();
 
+    @Override
+    public Map<String, UserI> getModerators() {
+        return _moderators;
+    }
+
     @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
     private Map<String, UserI> _moderators = new HashMap<>();
     private static Logger logger = Logger.getLogger(Forum.class.getName());
@@ -115,4 +120,6 @@ public class SubForum implements SubForumI {
         }
         return null;
     }
+
+
 }

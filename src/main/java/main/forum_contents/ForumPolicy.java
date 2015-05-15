@@ -1,12 +1,9 @@
 package main.forum_contents;
 
 import main.User.User;
-import main.interfaces.ForumPolicyI;
-import main.interfaces.MessageI;
-import main.interfaces.SubForumPolicyI;
+import main.interfaces.*;
 import org.apache.log4j.Logger;
 
-import javax.annotation.Generated;
 import javax.persistence.*;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -28,11 +25,19 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
     private int maxModerators;
     private String passwordRegex;
+    private int passwordEffectTime; //in days.
+
+    public boolean isSecured() {
+        return secured;
+    }
+
+    private boolean secured;
 
 //TODO - define parameters according to  requirements.
     public ForumPolicy(int maxModerators, String passwordRegex) {
         this.maxModerators = maxModerators;
         this.passwordRegex = passwordRegex;
+        //TODO - decide how to manage forbidden words.
         forbiddenWords = new String[2];
         forbiddenWords[0] = "stupid";
         forbiddenWords[1] = "dumb";
@@ -41,9 +46,26 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     public ForumPolicy() {
     }
 
-    @java.lang.Override
+    @Override
     public boolean isValidPassword(String password) {
         return password.matches(passwordRegex);
+    }
+
+    @Override
+    public boolean isPasswordInEffect(GregorianCalendar passwordDate){
+        long currYear = GregorianCalendar.getInstance().get(Calendar.YEAR);
+        long userYear = passwordDate.get(Calendar.YEAR);
+        long currDay = GregorianCalendar.getInstance().get(Calendar.DAY_OF_YEAR);
+        long userDay = passwordDate.getInstance().get(Calendar.DAY_OF_YEAR);
+        long age = (currYear - userYear) * 365 + currDay - userDay;
+        return age > passwordEffectTime;
+    }
+
+    @Override
+    public boolean canAssignModerator(UserI user, SubForumI subforum){
+        return
+                (subforum.getModerators().size() < maxModerators)
+                && isValidModerator(user);
     }
 
     @Override
@@ -72,7 +94,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     }
 
     @java.lang.Override
-    public boolean isValidAdmin(User admin){
+    public boolean isValidAdmin(UserI admin){
         long currYear = GregorianCalendar.getInstance().get(Calendar.YEAR);
         long userYear = admin.getSignUpDate().get(Calendar.YEAR);
         long currMonth = GregorianCalendar.getInstance().get(Calendar.MONTH);
@@ -82,7 +104,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     }
 
     @java.lang.Override
-    public boolean isValidModerator(User moderator){
+    public boolean isValidModerator(UserI moderator){
         long currYear = GregorianCalendar.getInstance().get(Calendar.YEAR);
         long userYear = moderator.getSignUpDate().get(Calendar.YEAR);
         long currMonth = GregorianCalendar.getInstance().get(Calendar.MONTH);
@@ -95,7 +117,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     public boolean isValidMessage(MessageI message) {
         boolean valid = true;
         for (String word : forbiddenWords){
-            valid = valid & (!message.getMessageText().contains(word) & !message.getMessageTitle().contains(word));
+            valid = valid && (!message.getMessageText().contains(word) && !message.getMessageTitle().contains(word));
             if (!valid) { break; }
         }
         return valid;

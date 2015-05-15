@@ -161,7 +161,12 @@ public class Proxy implements FacadeI {
         return null;
     }
 
-
+    @Override
+    public ExMessageI getMessage(int sessionId, int messageId) {
+        if(this.real!=null)
+            return this.real.getMessage(sessionId, messageId);
+        return null;
+    }
 
 
 }

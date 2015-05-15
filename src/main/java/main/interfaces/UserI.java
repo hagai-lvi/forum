@@ -100,4 +100,14 @@ public interface UserI {
 	 * Add permissions
 	 */
 	void addSubForumPermission(SubForumPermissionI permission);
+
+	void updatePasswordCreationDate();
+
+	GregorianCalendar getPasswordCreationDate();
+
+	/**
+	 *
+	 */
+	void setSecurityQuestion(String quest);
+	void setSecurityAnswer(String ans);
 }
