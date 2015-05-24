@@ -94,7 +94,7 @@ public class AcceptanceTests {
         Connection conn = null;
         try {
             conn =
-                    DriverManager.getConnection("jdbc:mysql://localhost/WORLD?" +
+                    DriverManager.getConnection("jdbc:mysql://localhost/world?" +
                             "user=root&password=Aa123456");
             // Do something with the Connection
 
