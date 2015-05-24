@@ -19,12 +19,12 @@ import static org.junit.Assert.*;
 /**
  * Created by gabigiladov on 4/25/15.
  */
-public class AcceptanceTests {
+public class AcceptanceTest {
 
     private FacadeI _facade;
     private Collection<ForumI> _forumCollection;
 
-    private static Logger logger = Logger.getLogger(AcceptanceTests.class.getName());
+    private static Logger logger = Logger.getLogger(AcceptanceTest.class.getName());
 
 /*
     @Before
