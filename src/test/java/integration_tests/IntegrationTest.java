@@ -12,7 +12,7 @@ import static org.junit.Assert.*;
 /**
  * Created by hagai_lvi on 4/21/15.
  */
-public class IntegrationTests {
+public class IntegrationTest {
 
 	FacadeI _facade;
 
