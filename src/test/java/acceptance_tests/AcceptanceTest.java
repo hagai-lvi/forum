@@ -2,16 +2,12 @@ package acceptance_tests;
 
 import data_structures.Tree;
 import junit.framework.TestCase;
+import main.User.User;
+import main.User.UserForumPermission;
 import main.exceptions.*;
-import main.forum_contents.ForumMessage;
 import main.interfaces.*;
+import main.User.Permissions;
 import main.services_layer.Facade;
-import main.user.Permissions;
-import main.user.User;
-import main.user.UserForumPermission;
-import main.user.UserSubforumPermission;
-import org.apache.log4j.Logger;
-import org.hibernate.Session;
 import org.junit.Ignore;
 import org.junit.Test;
 import java.sql.*;
@@ -136,7 +132,7 @@ public class AcceptanceTest extends TestCase {
      * target: set new policy for forum
      */
     public void setPoliciesTest() {
-        _facade.setPolicy(0, "a*", 1);
+        _facade.setPolicies(0, "a*", 1);
         // test pass regex
         try {
             _facade.register("Forum1", "user", "aaa", "mail@mail.mail");
@@ -151,7 +147,7 @@ public class AcceptanceTest extends TestCase {
         } catch (PermissionDeniedException e) {
             assertTrue(true);
         }
-        _facade.setPolicy(0, "a*", 2);
+        _facade.setPolicies(0, "a*", 2);
         try {
             _facade.setModerator(0, "hagai");
         } catch (PermissionDeniedException e) {

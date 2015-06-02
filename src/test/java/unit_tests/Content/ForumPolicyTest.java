@@ -1,6 +1,6 @@
 package unit_tests.Content;
 import junit.framework.TestCase;
-import main.user.User;
+import main.User.User;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.MessageI;

@@ -2,7 +2,6 @@ package tests_infrastructure;
 
 import data_structures.Tree;
 import main.exceptions.*;
-import main.forum_contents.Forum;
 import main.interfaces.*;
 
 import java.util.Collection;
@@ -131,7 +130,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void setPolicy(int sessionId, String regex, int numOfModerators) {
+    public void setPolicies(int sessionId, String regex, int numOfModerators) {
 
     }
 

@@ -2,7 +2,7 @@ package main.forum_contents;
 
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
-import main.user.User;
+import main.User.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;

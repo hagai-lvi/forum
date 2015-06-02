@@ -4,7 +4,7 @@ import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
 import main.interfaces.*;
-import main.user.User;
+import main.User.User;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
