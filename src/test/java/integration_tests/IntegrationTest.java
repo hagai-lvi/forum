@@ -21,7 +21,7 @@ public class IntegrationTest {
 	/**
 	 * target: Check whether a user can log in and view sub-forums.
 	 */
-	public void test_RegisterLoginAndViewSubforums() throws InvalidUserCredentialsException, UserAlreadyExistsException, EmailNotAuthanticatedException, PasswordNotInEffectException {
+	public void test_RegisterLoginAndViewSubforums() throws InvalidUserCredentialsException, UserAlreadyExistsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
 			_facade.register("forum", "user", "pass", "mail@mail.com");
 			int sessionID = _facade.login("forum", "user", "pass");
@@ -39,7 +39,7 @@ public class IntegrationTest {
 	  target: check whether a user can view a previously deleted message.
 	 */
 	public void test_LoginPostDeleteAndTryToViewByOtherUser() throws UserAlreadyExistsException, InvalidUserCredentialsException,
-			SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException, EmailNotAuthanticatedException, PasswordNotInEffectException {
+			SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
 			// create both users.*	_facade.register("forum", "user1", "pass", "mail@mail.com");
 			_facade.register("forum", "user2", "pass", "mail@mail.com");
@@ -87,7 +87,7 @@ public class IntegrationTest {
 	/**
 	 * target - Check if an expelled moderator keeps his privileges.
 	 */
-	public void test_removeModThenTryToEditMessage(){
+	public void test_removeModThenTryToEditMessage() throws NeedMoreAuthParametersException {
 		try {
 			//add new user
 			_facade.register("forum", "user", "pass", "mail@mail.com");
@@ -138,7 +138,7 @@ public class IntegrationTest {
 			_facade.login("forum", "user", "pass");
 			_facade.removeForum("user", "pass", "forum");
 			fail("unauthorized removal of a forum");
-		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | PasswordNotInEffectException | ForumNotFoundException | InvalidUserCredentialsException e) {
+		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | PasswordNotInEffectException | ForumNotFoundException | InvalidUserCredentialsException | NeedMoreAuthParametersException e) {
 			e.printStackTrace();
 		} catch (PermissionDeniedException e) {
 			//pass

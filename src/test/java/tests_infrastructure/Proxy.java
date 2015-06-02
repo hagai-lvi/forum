@@ -62,7 +62,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException {
+    public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
         if(this.real!=null)
             return this.real.login(forumName, userName, password);
         return 0;

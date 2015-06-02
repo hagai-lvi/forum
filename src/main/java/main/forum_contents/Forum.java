@@ -8,15 +8,13 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.Utils.GmailSender;
-import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.SubForumDoesNotExsitsException;
-import main.exceptions.UserAlreadyExistsException;
+import main.exceptions.*;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 
@@ -203,9 +201,25 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public UserI login(String username, String password) throws InvalidUserCredentialsException {
+    public UserI login(String username, String password) throws InvalidUserCredentialsException, NeedMoreAuthParametersException {
         if (_users.containsKey(username) &&
                 _users.get(username).getPassword().equals(password)){
+
+            if (policy.hasMoreAuthQuestions()){
+                throw new NeedMoreAuthParametersException();
+            }
+
+            return _users.get(username);
+        }
+        else {
+            throw new InvalidUserCredentialsException();
+        }
+    }
+
+    public UserI login(String username, String password, List<String> more_answers) throws InvalidUserCredentialsException{
+        if (_users.containsKey(username) &&
+                _users.get(username).getPassword().equals(password)){
+
             return _users.get(username);
         }
         else {

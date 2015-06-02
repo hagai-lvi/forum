@@ -26,6 +26,8 @@ public interface ForumPolicyI {
      */
     boolean canAssignModerator(UserI user, SubForumI subforum);
 
+
+    boolean hasMoreAuthQuestions();
     /**
      * Returns the SubForum portion of the forum policy.
      */

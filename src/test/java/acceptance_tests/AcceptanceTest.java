@@ -249,7 +249,7 @@ public class AcceptanceTest extends TestCase {
         int session = GUEST_SESSION;
         try {
             session = _facade.login("Forum0", "gil", "123456");
-        } catch (InvalidUserCredentialsException | PasswordNotInEffectException | EmailNotAuthanticatedException e) {
+        } catch (InvalidUserCredentialsException | PasswordNotInEffectException | EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
             e.printStackTrace();
         }
         assert(GUEST_SESSION != session);
@@ -274,7 +274,7 @@ public class AcceptanceTest extends TestCase {
         try {
             session = _facade.login("Forum0", "gil", "123456");
             _facade.logout(session);
-        } catch (InvalidUserCredentialsException | PasswordNotInEffectException | EmailNotAuthanticatedException e) {
+        } catch (InvalidUserCredentialsException | PasswordNotInEffectException | EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
             e.printStackTrace();
         }
         assertTrue(true);
@@ -364,7 +364,7 @@ public class AcceptanceTest extends TestCase {
         try {
             session = _facade.login("Forum0", "gil", "123456");
             _facade.createNewThread(session, "Title", "Body");
-        } catch (InvalidUserCredentialsException | PermissionDeniedException | DoesNotComplyWithPolicyException | PasswordNotInEffectException | EmailNotAuthanticatedException e) {
+        } catch (InvalidUserCredentialsException | PermissionDeniedException | DoesNotComplyWithPolicyException | PasswordNotInEffectException | EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
             e.printStackTrace();
         }
 
@@ -428,7 +428,7 @@ public class AcceptanceTest extends TestCase {
             fail("Invalid user credentials!");
         } catch (PasswordNotInEffectException e) {
             e.printStackTrace();
-        } catch (EmailNotAuthanticatedException e) {
+        } catch (EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
             //accept
         }
 
@@ -443,7 +443,7 @@ public class AcceptanceTest extends TestCase {
         the_user.setAuthenticated();
         try {
             _facade.login("Forum0", "tomgond_new1", "my_pass");
-        } catch (InvalidUserCredentialsException | PasswordNotInEffectException e) {
+        } catch (InvalidUserCredentialsException | PasswordNotInEffectException | NeedMoreAuthParametersException e) {
             e.printStackTrace();
         } catch (EmailNotAuthanticatedException e) {
             fail("email authantication failed");
@@ -461,7 +461,7 @@ public class AcceptanceTest extends TestCase {
 
         try {
             _facade.login("Forum0", "gil", "123456");
-        } catch (InvalidUserCredentialsException | EmailNotAuthanticatedException | PasswordNotInEffectException e) {
+        } catch (InvalidUserCredentialsException | EmailNotAuthanticatedException | PasswordNotInEffectException | NeedMoreAuthParametersException e) {
             e.printStackTrace();
         }
 

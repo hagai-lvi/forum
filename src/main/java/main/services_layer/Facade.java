@@ -67,7 +67,7 @@ import java.util.Iterator;
 
 
 	@Override
-	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException {
+	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		ForumI current = findForum(forumName);
 		UserI currentUser = current.login(userName, password);
 		Session currentSession = new Session(sessionCounter, currentUser);

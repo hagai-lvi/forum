@@ -38,7 +38,7 @@ public interface ForumI extends ExForumI{
 	 * @return a user if the login was successful or throws an Exception
 	 * if there was a problem in the login
 	 */
-	UserI login(String username, String password) throws InvalidUserCredentialsException, PasswordNotInEffectException, EmailNotAuthanticatedException;
+	UserI login(String username, String password) throws InvalidUserCredentialsException, PasswordNotInEffectException, EmailNotAuthanticatedException, NeedMoreAuthParametersException;
 
 	/**
 	 * Return an 'empty' guest user

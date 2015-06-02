@@ -47,7 +47,7 @@ public interface FacadeI {
 	 * Login to the specified forum
 	 * Returns session id
 	 */
-	int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException;
+	int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException;
 
 
 	/**

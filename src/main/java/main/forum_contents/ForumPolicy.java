@@ -21,7 +21,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     private String forbiddenWords[];
     private final int GOLDEN_USER_SENIORITY = 12; // The required seniority in months.
     private final int SILVER_USER_SENIORITY = 4;
-
+    private boolean more_questions = false;
     private int maxModerators;
     private String passwordRegex;
     private int passwordEffectTime; //in days.
@@ -110,6 +110,10 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         long userMonth = moderator.getSignUpDate().get(Calendar.MONTH);
         long seniority = (currYear - userYear) * 12 + currMonth - userMonth;
         return seniority > SILVER_USER_SENIORITY;
+    }
+
+    public boolean hasMoreAuthQuestions(){
+        return more_questions;
     }
 
     @Override
