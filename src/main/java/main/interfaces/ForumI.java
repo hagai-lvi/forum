@@ -67,7 +67,7 @@ public interface ForumI {
 	 */
 	Collection<UserType> getUserTypes();
 
-	void addUserType(String type);
+	void addUserType(String typeName, int seniority, int numOfMessages, int connectionTime);
 
 	boolean removeUserType(String type);
 

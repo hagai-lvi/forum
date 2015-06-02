@@ -31,6 +31,7 @@ public class Forum implements ForumI {
     public static final String ADMIN_USERNAME = "ADMIN";
     public static final String ADMIN_PASSWORD = "ADMIN";
 
+
     @Id
     private String forum_name;
     @OneToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL)
@@ -237,8 +238,9 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public void addUserType(String type) {
-        this._userTypes.put(type, new UserType(type));
+    public void addUserType(String typeName, int seniority, int numOfMessages, int connectionTime){
+        //TODO new parameters
+        this._userTypes.put(typeName, new UserType(typeName));
         Update();
     }
 

@@ -50,7 +50,6 @@ public class ForumMessage implements MessageI {
 		this.messageText = newText;
 	}
 
-
 	@Override
 	public String getUser() {
 		return writingUser.getUsername();

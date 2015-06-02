@@ -11,6 +11,7 @@ public interface MessageI {
 
     void editText(/*UserI user,*/ String newText)/* throws PermissionDeniedException */;
 
+    String getId();
     /**
 	 * @return the user that created this message
 	 */

@@ -17,7 +17,7 @@ public interface SubForumI {
 	/**
 	 * create a thread in the sub-forum
 	 */
-	void createThread(MessageI message) throws DoesNotComplyWithPolicyException;
+	ThreadI createThread(MessageI message) throws DoesNotComplyWithPolicyException;
 
 	String getName();
 
@@ -42,4 +42,6 @@ public interface SubForumI {
 	 * Return the threads in this sub-forum
 	 */
 	Collection<ThreadI> getThreads();
+
+	void removeModerator(UserI mod);
 }
