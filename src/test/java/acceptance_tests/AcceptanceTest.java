@@ -77,6 +77,7 @@ public class AcceptanceTest extends TestCase {
      * target: check initilize, should return true.
      */
     public void testInitialize() {
+        assertTrue(false);
         //TODO
     }
 

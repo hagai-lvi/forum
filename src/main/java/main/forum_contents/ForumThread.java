@@ -14,12 +14,13 @@ import javax.persistence.*;
 @Entity
 public class ForumThread implements ThreadI{
 
-    @Transient //TODO : hagai, It's a mess to persist this kind of tree, we could use default implementation which is supported by hibernate
-    private Tree<MessageI> messages;
+    @OneToOne(targetEntity = Tree.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    //@Transient
+    private Tree messages;
 
 
     public ForumThread(MessageI initialMessage){
-        messages = new Tree<>(initialMessage);
+        messages = new Tree(initialMessage);
     }
 
     public ForumThread() {
@@ -30,7 +31,7 @@ public class ForumThread implements ThreadI{
         return getRootMessage().getMessageTitle();
     }
 
-    public Tree<MessageI> getMessages(){
+    public Tree getMessages(){
         return messages;
     }
 
@@ -48,7 +49,7 @@ public class ForumThread implements ThreadI{
     @Override
     public void addReply(MessageI reply, MessageI original) throws MessageNotFoundException {
         try {
-            messages.add(reply, original);
+            messages.add((ForumMessage)reply, (ForumMessage)original);
             original.addReply(reply);
         } catch (NodeNotFoundException e) {
             //TODO fix the exception
@@ -58,12 +59,12 @@ public class ForumThread implements ThreadI{
 
     @Override
     public boolean contains(MessageI message){
-        return messages.findNode(message) != null;
+        return messages.findNode((ForumMessage)message) != null;
     }
 
     @Override
     public void remove(MessageI message) {
-        messages.remove(message);
+        messages.remove((ForumMessage)message);
     }
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)

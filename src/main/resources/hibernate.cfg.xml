@@ -11,7 +11,7 @@
         <property name="hibernate.connection.password">Aa123456</property>
         <property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
         <property name="hbm2ddl.auto">create</property>
-        <property name="show_sql">false</property>
+        <property name="show_sql">true</property>
         <mapping class="main.forum_contents.Forum"/>
         <mapping class="main.forum_contents.SubForum"/>
         <mapping class="main.forum_contents.ForumMessage"/>

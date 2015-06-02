@@ -9,6 +9,7 @@ import main.interfaces.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -59,6 +60,7 @@ import java.util.Collection;
 	@Override
 	public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
 		ForumI current = findForum(forumName);
+		if (current == null) return;
 		UserI currentUser = current.register(userName, password, email);
 		users.add(currentUser);
 	}
@@ -89,7 +91,7 @@ import java.util.Collection;
 	@Override
 	public void createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
 		Session current = findSession(sessionId);
-		current.getSubForum().createThread(new ForumMessage(null, current.getUser(),srcMessageBody, srcMessageTitle ));
+		current.getSubForum().createThread(new ForumMessage(null, current.getUser(), srcMessageBody, srcMessageTitle));
 	}
 
 	@Override
@@ -241,13 +243,18 @@ import java.util.Collection;
 
 	private ForumI findForum(String forumName) {
 		boolean flag = false;
-		ForumI current = forums.iterator().next();
-		while(forums.iterator().hasNext()) {
+		Iterator<ForumI> iter = forums.iterator();
+		ForumI current;
+		if (iter.hasNext()) {
+			current = iter.next();
+		}
+		else {current = null;}
+		while(iter.hasNext()) {
 			if(current.getName().equals(forumName)) {
 				flag = true;
 				break;
 			}
-			current = forums.iterator().next();
+			current = iter.next();
 		}
 		if(flag) {
 			return current;

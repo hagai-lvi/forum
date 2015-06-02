@@ -8,5 +8,5 @@ import data_structures.Tree;
 public interface ExThreadI {
     String getTitle();
 
-    Tree<? extends ExMessageI> getMessages();
+    Tree getMessages();
 }
