@@ -6,5 +6,5 @@ package main.interfaces;
 public interface ExMessageI {
     String getBody();
 
-    String getId();
+    int getId();
 }

@@ -9,7 +9,7 @@ public interface MessageI extends ExMessageI{
 
     void editText(/*UserI user,*/ String newText)/* throws PermissionDeniedException */;
 
-    String getId();
+    int getId();
     /**
 	 * @return the user that created this message
 	 */

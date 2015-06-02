@@ -63,7 +63,7 @@ public interface FacadeI {
 	/**
 	 * Create a new thread in the specified subforum
 	 */
-	void createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	int createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * submit a complaint about a moderator

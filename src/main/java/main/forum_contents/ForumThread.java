@@ -38,7 +38,7 @@ public class ForumThread implements ThreadI{
 
     @Override
     public MessageI getRootMessage() {
-        return messages.getRoot();
+        return messages.getRoot().data;
     }
 
     public void printThread(){

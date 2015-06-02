@@ -18,4 +18,6 @@ public interface ThreadI extends ExThreadI{
 	boolean contains(MessageI message);
 
 	void remove(MessageI message);
+
+	String getTitle();
 }

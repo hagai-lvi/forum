@@ -89,9 +89,11 @@ import java.util.Iterator;
 	}
 
 	@Override
-	public void createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+	public int createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
 		Session current = findSession(sessionId);
-		current.getSubForum().createThread(new ForumMessage(null, current.getUser(), srcMessageBody, srcMessageTitle));
+		ForumMessage msg = new ForumMessage(null, current.getUser(), srcMessageBody, srcMessageTitle);
+		current.getSubForum().createThread(msg);
+		return msg.getId();
 	}
 
 	@Override

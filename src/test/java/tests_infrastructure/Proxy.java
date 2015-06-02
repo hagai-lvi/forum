@@ -81,9 +81,12 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-        if(this.real!=null)
-            this.real.createNewThread(sessionId, srcMessageTitle, srcMessageBody);
+    public int createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+        if(this.real!=null) {
+            int id = this.real.createNewThread(sessionId, srcMessageTitle, srcMessageBody);
+            return id;
+        }
+        return 0;
     }
 
     @Override

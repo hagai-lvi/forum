@@ -2,13 +2,13 @@ package data_structures;
 
 import main.exceptions.NodeNotFoundException;
 import main.forum_contents.ForumMessage;
+import main.interfaces.ExMessageI;
 import main.interfaces.MessageI;
 
 import javax.persistence.*;
 
 /**
  * A basic tree implementation
- * @param <T>
  */
 @Entity
 public class Tree{
@@ -34,8 +34,8 @@ public class Tree{
         ancestorNode.addChild(dataToAdd);
     }
 
-    public ForumMessage getRoot() {
-        return root.getData();
+    public Node getRoot() {
+        return root;
     }
 
     public ForumMessage findNode(ForumMessage data) {
@@ -62,15 +62,32 @@ public class Tree{
         }
     }
 
+    public ExMessageI find(Node node, int id) {
+        if (root.data.getId() == id) {
+            return node.data;
+        }
+        else{
+            for (Node child : root.children){
+                ExMessageI msg = find(child, id);
+                if (msg != null) {
+                    return msg;
+                }
+            }
+            return null;
+        }
+    }
+
     @Id
-    private String id;
+    private int id;
 
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
+
+
 }
