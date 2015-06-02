@@ -123,7 +123,7 @@ public interface FacadeI {
 
 	Collection<ThreadI> getThreadsList(int sessionId);
 
-	Tree<MessageI> getMessageList(int sessionId);
+	Tree getMessageList(int sessionId);
 
 	void viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException;
 

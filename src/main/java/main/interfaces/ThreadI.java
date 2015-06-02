@@ -10,7 +10,7 @@ public interface ThreadI extends ExThreadI{
 
 	MessageI getRootMessage();
 
-	Tree<MessageI> getMessages();
+	public Tree getMessages();
 
 
 	void addReply(MessageI reply, MessageI original) throws MessageNotFoundException;

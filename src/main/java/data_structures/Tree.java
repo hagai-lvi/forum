@@ -1,42 +1,49 @@
 package data_structures;
 
 import main.exceptions.NodeNotFoundException;
+import main.forum_contents.ForumMessage;
+import main.interfaces.MessageI;
 
 import javax.persistence.*;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * A basic tree implementation
  * @param <T>
  */
-public class Tree<T> {
+@Entity
+public class Tree{
     // TODO handle the case in which the root is null (might happen after calling remove())
-    private Node<T> root;
 
-    public Tree(T rootData) {
-        root = new Node<>(rootData, null);
+    @OneToOne(targetEntity = Node.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    private Node root;
+
+
+    public Tree(MessageI rootData) {
+        root = new Node((ForumMessage)rootData, null);
     }
 
-    public void add(T dataToAdd, T ancestor) throws NodeNotFoundException {
-        Node<T> ancestorNode = root.findChild(ancestor);
+    public Tree() {
+    }
+
+    public void add(ForumMessage dataToAdd, ForumMessage ancestor) throws NodeNotFoundException {
+        Node ancestorNode = root.findChild(ancestor);
         if (ancestorNode == null){
             throw new NodeNotFoundException("Could not find ancestor " + ancestor.toString() + " in the tree");
         }
-        Node<T> nodeToAdd = new Node<>(dataToAdd, ancestorNode);
+        Node nodeToAdd = new Node(dataToAdd, ancestorNode);
         ancestorNode.addChild(dataToAdd);
     }
 
-    public T getRoot() {
+    public ForumMessage getRoot() {
         return root.getData();
     }
 
-    public T findNode(T data) {
+    public ForumMessage findNode(ForumMessage data) {
         if (root == null){
             return null;
         }
 
-        Node<T> node = root.findChild(data);
+        Node node = root.findChild(data);
         if (node == null){
             return null;
         }
@@ -45,8 +52,8 @@ public class Tree<T> {
         }
     }
 
-    public void remove(T data) {
-        Node<T> child = root.findChild(data);
+    public void remove(ForumMessage data) {
+        Node child = root.findChild(data);
         if (child == root){
             root = null;
         }
@@ -55,45 +62,15 @@ public class Tree<T> {
         }
     }
 
+    @Id
+    private String id;
 
-    private static class Node<T> {
-        private T data;
-        private Node<T> parent;
-        private List<Node<T>> children;
 
-        public Node(T data, Node<T> parent){
-            this.data = data;
-            this.parent = parent;
-            this.children = new ArrayList<>();
-        }
+    public String getId() {
+        return id;
+    }
 
-        public void addChild(T child){
-            Node<T> toAdd = new Node<>(child, this);
-            children.add(toAdd);
-        }
-
-        /**
-         * Find a node that contains the specified data. return null if non found
-         */
-        public Node<T> findChild(T data){
-
-            if (this.data.equals(data)){
-                return this;
-            }
-
-            Node<T> res;
-            for (Node<T> node: children){
-                res = node.findChild(data);
-                if (res != null){
-                    return res;
-                }
-            }
-
-            return null;
-        }
-
-        public T getData() {
-            return data;
-        }
+    public void setId(String id) {
+        this.id = id;
     }
 }

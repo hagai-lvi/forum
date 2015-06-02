@@ -182,7 +182,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public Tree<MessageI> getMessageList(int sessionId) {
+    public Tree getMessageList(int sessionId) {
         if(this.real!=null)
             return this.real.getMessageList(sessionId);
         return null;

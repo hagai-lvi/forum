@@ -24,7 +24,7 @@ public class User implements UserI {
     private GregorianCalendar signUpDate;
     private int seniorityInDays;
     private int numOfMessages;
-    @OneToMany(targetEntity = UserSubforumPermission.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = UserSubforumPermission.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Collection<SubForumPermissionI> subForumsPermissions;
     @OneToOne(targetEntity = UserForumPermission.class, cascade = CascadeType.ALL)
     private ForumPermissionI forumPermissions;

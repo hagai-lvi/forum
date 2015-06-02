@@ -186,7 +186,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public Tree<MessageI> getMessageList(int sessionId) {
+	public Tree getMessageList(int sessionId) {
 		Session current = findSession(sessionId);
 		return current.getThread().getMessages();
 		//TODO

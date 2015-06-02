@@ -334,7 +334,7 @@ public class AcceptanceTest extends TestCase {
      */
     public void postMessageTest() {
 
-        Tree<MessageI> msgs = _facade.getMessageList(0);
+        Tree msgs = _facade.getMessageList(0);
         int msgid = 1;//msgs.iterator().next().getId(); //TODO tree iterator
         try {
             _facade.addReply(0, msgid ,"a", "b");

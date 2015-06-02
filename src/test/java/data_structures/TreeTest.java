@@ -5,7 +5,7 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 /**
  * Created by hagai_lvi on 4/22/15.
- */
+
 public class TreeTest {
 
 	Tree<Integer> tree;
@@ -60,3 +60,4 @@ public class TreeTest {
 
 	}
 }
+ */

@@ -33,20 +33,20 @@ public class Forum implements ForumI {
 
     @Id
     private String forum_name;
-    @OneToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     private ForumPolicyI policy;
 
-    @OneToMany(targetEntity = SubForum.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = SubForum.class, cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     @MapKey(name="_name")
     private Map<String, SubForumI> _subForums = new HashMap<>();
 
-    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     private Map<String, UserI> _users = new HashMap<>();
 
-    @OneToMany(targetEntity =  UserType.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity =  UserType.class, cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     private Map<String, UserType> _userTypes = new HashMap<>();
 
-    @OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
+    @OneToOne(targetEntity = User.class, cascade = CascadeType.ALL, fetch= FetchType.EAGER)
 
     private UserI guest;
 
