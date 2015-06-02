@@ -112,13 +112,26 @@ public class WebController {
 	 * Allows to clear all data
 	 */
 	@RequestMapping(value = "reset",method = RequestMethod.GET)
-	public String resetSystem() throws PermissionDeniedException, ForumAlreadyExistException {
+	public String resetSystem() throws PermissionDeniedException, ForumAlreadyExistException, PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumAlreadyExistException {
 		Facade.dropAllData();
 		FacadeI f = Facade.getFacade();
-
 		f.addForum("ADMIN", "ADMIN", "A", ".*", 5);
+		int sessionID = f.login("A", "ADMIN", "ADMIN");
+		f.createSubforum(sessionID, "A sf1");
+		f.createSubforum(sessionID, "A sf2");
+		f.createSubforum(sessionID, "A sf3");
+
 		f.addForum("ADMIN", "ADMIN", "B", ".*", 5);
+		sessionID = f.login("B", "ADMIN", "ADMIN");
+		f.createSubforum(sessionID, "B sf1");
+		f.createSubforum(sessionID, "B sf2");
+		f.createSubforum(sessionID, "B sf3");
+
 		f.addForum("ADMIN", "ADMIN", "C", ".*", 5);
+		sessionID = f.login("C", "ADMIN", "ADMIN");
+		f.createSubforum(sessionID, "C sf1");
+		f.createSubforum(sessionID, "C sf2");
+		f.createSubforum(sessionID, "C sf3");
 		return "redirect:/facade";
 	}
 

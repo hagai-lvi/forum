@@ -243,22 +243,12 @@ import java.util.Iterator;
 	}
 
 	private Session findSession(int sessionId) {
-		boolean flag = false;
-		Session current = openSessions.iterator().next();
-		while(openSessions.iterator().hasNext()) {
-			if(current.getId() == sessionId){
-				flag =true;
-				break;
+		for (Session s: openSessions){
+			if (s.getId() == sessionId){
+				return s;
 			}
-			current = openSessions.iterator().next();
 		}
-		if(flag){
-			return current;
-		}
-		else {
-			return null;
-			//TODO add exception session does not exist
-		}
+		return null;//TODO throw exception
 	}
 
 	private ForumI findForum(String forumName) {
