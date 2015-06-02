@@ -43,6 +43,9 @@
 
 <form action="register" method="post">
   <h1>Sign UP</h1>
+
+  <input hidden type="text" name="forumName" value="${forumName}">
+
   <label>
     <span>Username :</span>
     <input type="text" name="username" placeholder="username" />

@@ -91,21 +91,19 @@ public class WebController {
 		preperaForumHomepageModel(model, facade, session);
 		return "forum_homepage";
 	}
-//
-//	/**
-//	 * Register a user to the current forum
-//	 */
-//	@RequestMapping(value = "register",method = RequestMethod.POST)
-//	public String register(ModelMap model, HttpSession session, String username, String password, String email)
-//			throws UserAlreadyExistsException, InvalidUserCredentialsException {
-//		FacadeI facade = Facade.getFacade();
-//		ForumI forum = (ForumI) session.getAttribute("forum");
-//		UserI user = facade.register(forum, username, password, email); //TODO handle exception from register
-//		session.setAttribute(SESSION_USER_ATTR, user);
-//		preperaForumHomepageModel(model, facade, forum, user);
-//		return "forum_homepage";
-//	}
-//
+
+	/**
+	 * Register a user to the current forum
+	 */
+	@RequestMapping(value = "register",method = RequestMethod.POST)
+	public String register(ModelMap model, HttpSession session, String username, String password, String email, String forumName)
+			throws UserAlreadyExistsException, InvalidUserCredentialsException {
+		FacadeI facade = Facade.getFacade();
+		facade.register(forumName, username, password, email);//TODO - auto login after registraion
+		model.addAttribute("forumName", forumName);
+		return "login_page";
+	}
+
 	/**
 	 * Allows to clear all data
 	 */
