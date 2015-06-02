@@ -19,7 +19,7 @@ import javax.servlet.http.HttpSession;
  * Created by hagai_lvi on 4/18/15.
  */
 @Controller
-public class MyController {
+public class WebController {
 	private Logger logger = Logger.getLogger(this.getClass());
 
 	public static final String SESSION_ID_ATTR = "session_id";
