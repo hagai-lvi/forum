@@ -26,8 +26,6 @@ public class WebController {
 	public static final String ADMIN_USER = "ADMIN";// TODO remove
 	public static final String ADMIN_PASS = "ADMIN";// TODO remove
 
-
-
 	/**
 	 * Shows a facade with all the available forums in the system
 	 */
@@ -85,18 +83,19 @@ public class WebController {
 //		preperaForumHomepageModel(model, facade, forum, user);
 		return "forum_homepage";
 	}
-//
-//	/**
-//	 * Redirects to the forum home page, assumes that a user has already logged in
-//	 */
-//	@RequestMapping(value = "forum_homepage",method = RequestMethod.GET)
-//	public String showForumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException {
-//		FacadeI facade = Facade.getFacade();
-//		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
-//		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
-//		preperaForumHomepageModel(model, facade, forum, user);
-//		return "forum_homepage";
-//	}
+
+	/**
+	 * Redirects to the forum home page, assumes that a user has already logged in
+	 */
+	@RequestMapping(value = "forum_homepage",method = RequestMethod.GET)
+	public String showForumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException {
+		FacadeI facade = Facade.getFacade();
+		facade.get
+		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
+		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
+		preperaForumHomepageModel(model, facade, forum, user);
+		return "forum_homepage";
+	}
 //
 //	/**
 //	 * Register a user to the current forum

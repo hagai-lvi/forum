@@ -2,9 +2,7 @@ package main.interfaces;
 
 import data_structures.Tree;
 import main.exceptions.*;
-import main.forum_contents.Forum;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -124,6 +122,12 @@ public interface FacadeI {
 	Collection<ThreadI> getThreadsList(int sessionId);
 
 	Tree getMessageList(int sessionId);
+
+	/**
+	 * Return the forum name of the current forum, according to the session id
+	 * Return null if the sessionID does not exist or if no session was logged in during this session
+	 */
+	String getCurrentForumName(int sessionID);
 
 	void viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException;
 
