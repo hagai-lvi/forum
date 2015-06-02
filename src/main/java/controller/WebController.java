@@ -77,10 +77,8 @@ public class WebController {
 		FacadeI facade = Facade.getFacade();
 		Integer sessionID = facade.login(forumName, username, password);
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
-//		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
-//		UserI user = facade.login(forum, username, password); //TODO handle exception thrown from login
-//		session.setAttribute(SESSION_USER_ATTR, user);
-//		preperaForumHomepageModel(model, facade, forum, user);
+		session.setAttribute(SESSION_ID_ATTR, sessionID);
+		preperaForumHomepageModel(model, facade, session);
 		return "forum_homepage";
 	}
 
