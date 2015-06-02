@@ -5,7 +5,6 @@ import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
-import main.forum_contents.SubForum;
 import main.interfaces.*;
 
 import java.util.ArrayList;
@@ -21,7 +20,9 @@ import java.util.Collection;
 	private ArrayList<ForumI> forums;
 	private int sessionCounter;
 	private static final int GUEST_SESSION_ID = -2;
-	private Facade(){}
+	private Facade(){
+		initilize();
+	}
 
 
 	@Override
@@ -208,6 +209,9 @@ import java.util.Collection;
 
 
 	public static FacadeI getFacade(){
+		if (theFacade == null) {
+			theFacade = new Facade();
+		}
 		return theFacade;
 	}
 
