@@ -192,6 +192,27 @@ public class Proxy implements FacadeI {
     }
 
     @Override
+    public String getCurrentForumName(int sessionID) {
+        if(this.real!=null)
+            return this.real.getCurrentForumName(sessionID);
+        return null;
+    }
+
+    @Override
+    public String getCurrentUserName(int sessionID) {
+        if(this.real!=null)
+            return this.real.getCurrentForumName(sessionID);
+        return null;
+    }
+
+    @Override
+    public boolean isAdmin(int sessionID) {
+        if(this.real!=null)
+            return this.real.isAdmin(sessionID);
+        return false;
+    }
+
+    @Override
     public void viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException {
         if(this.real!=null)
             this.real.viewSubforum(sessionId, subforum);

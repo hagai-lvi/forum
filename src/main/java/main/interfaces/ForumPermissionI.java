@@ -4,8 +4,6 @@ import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExsitsException;
 
-import java.util.Collection;
-
 /**
  * Created by hagai_lvi on 4/6/15.
  */
@@ -15,6 +13,8 @@ public interface ForumPermissionI {
 	 * Create a subforum in this forum
 	 */
 	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
+
+	boolean isAdmin();
 
 	/**
 	 * Delete a subForum from this forum

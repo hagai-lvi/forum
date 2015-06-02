@@ -1,5 +1,7 @@
 package main.forum_contents;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import controller.NativeGuiController;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
@@ -16,6 +18,7 @@ import java.util.*;
 @Entity
 public class SubForum implements SubForumI {
 
+    @JsonView(NativeGuiController.class)
     @Id
     private String _name;
 

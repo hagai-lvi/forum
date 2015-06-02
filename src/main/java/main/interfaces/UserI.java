@@ -4,8 +4,6 @@ import main.exceptions.*;
 
 import java.util.Collection;
 import java.util.GregorianCalendar;
-import java.util.List;
-import java.util.Vector;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -110,4 +108,6 @@ public interface UserI {
 	 */
 	void setSecurityQuestion(String quest);
 	void setSecurityAnswer(String ans);
+
+	boolean isAdmin();
 }

@@ -204,6 +204,18 @@ import java.util.Iterator;
 	}
 
 	@Override
+	public String getCurrentUserName(int sessionID) {
+		Session current = findSession(sessionID);
+		return current.getUser().getUsername();
+	}
+
+	@Override
+	public boolean isAdmin(int sessionID) {
+		Session current = findSession(sessionID);
+		return current.getUser().isAdmin();
+	}
+
+	@Override
 	public void viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException {
 		Session current = findSession(sessionId);
 		SubForumI sub = current.getForum().createSubForum(subforum);

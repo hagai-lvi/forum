@@ -7,7 +7,6 @@ import main.forum_contents.Forum;
 import main.interfaces.*;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 /**
  * Created by hagai_lvi on 4/20/15.
@@ -50,7 +49,8 @@ public class UserForumPermission implements ForumPermissionI {
 		forum.createSubForum(name);
 	}
 
-	private boolean isAdmin() {
+	@Override
+	public boolean isAdmin() {
 		return permissions.compareTo(Permissions.PERMISSIONS_ADMIN) >= 0;
 	}
 

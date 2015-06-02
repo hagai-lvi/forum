@@ -4,12 +4,9 @@ import main.Utils.SecureString;
 import main.exceptions.*;
 import main.forum_contents.ForumMessage;
 import main.interfaces.*;
-import org.hibernate.annotations.*;
-import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.ColumnTransformer;
 
 import javax.persistence.*;
-import javax.persistence.CascadeType;
-import javax.persistence.Entity;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Vector;
@@ -220,6 +217,11 @@ public class User implements UserI {
     @Override
     public void setSecurityAnswer(String ans) {
         //TODO
+    }
+
+    @Override
+    public boolean isAdmin() {
+        return forumPermissions.isAdmin();
     }
 
     public void setId(Integer id) {

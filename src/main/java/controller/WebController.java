@@ -90,10 +90,7 @@ public class WebController {
 	@RequestMapping(value = "forum_homepage",method = RequestMethod.GET)
 	public String showForumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException {
 		FacadeI facade = Facade.getFacade();
-		facade.get
-		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
-		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
-		preperaForumHomepageModel(model, facade, forum, user);
+		preperaForumHomepageModel(model, facade, session);
 		return "forum_homepage";
 	}
 //
@@ -125,13 +122,18 @@ public class WebController {
 		return "redirect:/facade";
 	}
 
-//	private void preperaForumHomepageModel(ModelMap model, FacadeI facade, ForumI forum, UserI user) {
-//		model.addAttribute("forumName", forum);
-//		model.addAttribute("user", user.getUsername());
-//		model.addAttribute("numberOfSubforums", facade.getSubForumList(user).size());
-//		model.addAttribute("isAdmin", user.isAdmin());
-//		model.addAttribute("subforumsList", forum.getSubForums());
-//	}
+	private void preperaForumHomepageModel(ModelMap model, FacadeI facade, HttpSession session) {
+		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
+		String forumName = facade.getCurrentForumName(sessionID);
+		String userName = facade.getCurrentUserName(sessionID);
+		boolean isAdmin = facade.isAdmin(sessionID);
+		facade.getSubForumList(sessionID);
+		model.addAttribute("forumName", forumName);
+		model.addAttribute("user", userName);
+//		model.addAttribute("numberOfSubforums", facade.getSubForumList(user).size());TODO
+		model.addAttribute("isAdmin", isAdmin);
+		model.addAttribute("subforumsList", facade.getSubForumList(sessionID));
+	}
 //
 //
 //	/**

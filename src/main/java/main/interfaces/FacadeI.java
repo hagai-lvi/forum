@@ -129,6 +129,17 @@ public interface FacadeI {
 	 */
 	String getCurrentForumName(int sessionID);
 
+	/**
+	 * Return the currently logged user
+	 * Return null if no user has logged in during the session
+	 */
+	String getCurrentUserName(int sessionID);
+
+	/**
+	 * Return true if the current user is an admin
+	 */
+	boolean isAdmin(int sessionID);
+
 	void viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException;
 
 	void viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException;
