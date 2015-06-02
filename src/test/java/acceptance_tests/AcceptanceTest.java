@@ -1,61 +1,59 @@
 package acceptance_tests;
 
+import data_structures.Tree;
+import junit.framework.TestCase;
+import main.exceptions.*;
+import main.forum_contents.ForumMessage;
+import main.interfaces.*;
+import main.services_layer.Facade;
 import main.user.Permissions;
 import main.user.User;
 import main.user.UserForumPermission;
 import main.user.UserSubforumPermission;
-import main.exceptions.*;
-import main.forum_contents.ForumMessage;
-import main.interfaces.*;
 import org.apache.log4j.Logger;
+import org.hibernate.Session;
 import org.junit.Ignore;
 import org.junit.Test;
-
 import java.sql.*;
 import java.util.Collection;
+import java.util.Objects;
 
-import static org.junit.Assert.*;
 
+//TODO - what should be the session id and how to edit session object from inside.
 /**
  * Created by gabigiladov on 4/25/15.
  */
-public class AcceptanceTest {
-
+public class AcceptanceTest extends TestCase {
+    private static final int GUEST_SESSION = -1;
     private FacadeI _facade;
-    private Collection<ForumI> _forumCollection;
+   // private Collection<ExForumI> _forumCollection;
 
-    private static Logger logger = Logger.getLogger(AcceptanceTest.class.getName());
-
-/*
-    @Before
+    @Override
     public void setUp() throws Exception {
-        _facade = Facade.dropAllData();
+        _facade = Facade.getFacade();
         String[] names = {"gil", "tom", "hagai", "gabi", "victor", "aria", "yoni", "moshe",
                 "tal", "chen", "bibi", "mor", "david", "dudinka", "aaa"};
-        _facade = Facade.getFacade();
 
-        ForumPolicyI policy = new ForumPolicy(3, "[a-zA-Z]*[!@#$][a-zA-Z]");
+            //add forums
+            for (int i = 0; i < 5; i++) {
+                _facade.addForum("admin", "admin", "Forum " + Integer.toString(i), "a+", 2);
 
-        for (int i = 0; i < 5; i++) {
-            ForumI newForum = new Forum("Forum " + Integer.toString(i), policy);
-            _facade.addForum(newForum);
-
-            //add users to forums
+            //add users to forums and create threads
             for (int j = 0; j < 3; j++) {
-                UserI user = newForum.register(names[i * 3 + j], "123456", "nobodyemail@nobody.com");
-
-                SubForumI sf = newForum.createSubForum("SubForum " + j + " In Forum" + i);
-                sf.createThread(new ForumMessage(null, user, "hello", "Hi"));
+                _facade.register("forum " + Integer.toString(i), names[i * 3 + j], "123456", "nobodyemail@nobody.com");
+                _facade.createSubforum(0, "SubForum " + j + " In Forum" + i);
+                _facade.createNewThread(0, "message " + j, "body " + j);
             }
         }
 
-        _forumCollection = _facade.getForumList();
+       // _forumCollection = _facade.getForumList();
+
     }
 
-*/
+
     /**
      * UseCases:
-     * 		1. Initilize
+     * 		1. Initialize
      *		2. CreateForum
      *		3. SetPolicies
      *		4. GuestEntry
@@ -82,15 +80,14 @@ public class AcceptanceTest {
     /**
      * target: check initilize, should return true.
      */
-    @Test
-    public void initializeTest() {
+    public void testInitialize() {
         //TODO
     }
 
 
     @Test
     @Ignore
-    public void connectToDB() throws SQLException {
+    public void testConnectToDB() throws SQLException {
         Connection conn = null;
         try {
             conn =
@@ -125,33 +122,41 @@ public class AcceptanceTest {
     /**
      * target: check adding forum to the system.
      */
- /*   @Test
-    public void createForumTest() {
+    @Test
+    public void createForumTest() throws PermissionDeniedException, ForumAlreadyExistException {
 
-        ForumI newForum;
-        ForumPolicyI newPolicy = new ForumPolicy(2, "[a-z]*[!@#][a-z]*");
-        newForum = new Forum("Forum CreateForumTest", newPolicy);
-        int numOfForums = _forumCollection.size();
+        int numOfForums = _facade.getForumList().size();
+        _facade.addForum("admin", "admin", "Forum CreateForumTest", "[a-z]*[!@#][a-z]*", 2);
+        assertEquals(numOfForums + 1, _facade.getForumList().size());
 
-        _facade.addForum(newForum);
-
-        Collection<ForumI> newCollection = _facade.getForumList();
-        assertEquals(numOfForums + 1, newCollection.size());
-
-
-        assertTrue(newCollection.contains(newForum));
     }
 
     @Test
     /**
      * target: set new policy for forum
      */
- /*   public void setPoliciesTest() {
-        ForumPolicyI newPolicy = new ForumPolicy(2, "[a-z]*[!@#\\d]*[\\d]*");
-        ForumI forum = _forumCollection.iterator().next();
-        forum.setPolicy(newPolicy);
-
-        //TODO make sure that the policy is actually added and that it has an effect
+    public void setPoliciesTest() {
+        _facade.setPolicy(0, "a*", 1);
+        // test pass regex
+        try {
+            _facade.register("Forum1", "user", "aaa", "mail@mail.mail");
+        } catch (UserAlreadyExistsException e) {
+            e.printStackTrace();
+        } catch (InvalidUserCredentialsException e) {
+            e.printStackTrace();
+        }
+        // test mod number
+        try {
+            _facade.setModerator(0, "hagai");
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        }
+        _facade.setPolicy(0, "a*", 2);
+        try {
+            _facade.setModerator(0, "hagai");
+        } catch (PermissionDeniedException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -159,18 +164,11 @@ public class AcceptanceTest {
      * target: the test check the permission given to a guest.
      * check negative test like getting the right exception on violate his permission
      */
-  /*  public void guestEntryTest() throws MessageNotFoundException {
-        ForumI forum = _forumCollection.iterator().next();
-        UserI guest = forum.guestLogin();
-
-        Collection<SubForumPermissionI> subForumPermissionsCollection = guest.getSubForumsPermissions();
-
-        MessageI msg = new ForumMessage(null, guest, "I TRY TO CREATE MESSAGE NANA", "");
-        SubForumPermissionI subForumPermission = subForumPermissionsCollection.iterator().next();
-
+    public void guestEntryTest() throws MessageNotFoundException {
+        int session = _facade.guestEntry("Forum1");
         //try create thread
         try {
-            subForumPermission.createThread(msg);
+           _facade.createNewThread(session, "I TRY TO CREATE MESSAGE NANA", "");
             fail("a guest cannot create a thread");
         } catch (DoesNotComplyWithPolicyException e) {
             fail("Expected PermissionDeniedException");
@@ -178,39 +176,34 @@ public class AcceptanceTest {
             //expected exception
         }
 
+        int msgid = 1;//_facade.getMessageList(session).
+
         //try reply to message
         try {
-            //this test will not be include yet
-            //subForumPermission.replyToMessage(msg,msg);
-            MessageI reply = new ForumMessage(null, guest, "I TRY TO CREATE REPLY NANA", "");
-            subForumPermission.replyToMessage(msg, reply);
+            _facade.addReply(session, msgid, "I TRY TO CREATE REPLY NANA", "");
             fail("a guest cannot reply to message");
         } catch (PermissionDeniedException e) {
-            //expected exception
-        } catch (Exception e) {
-            fail("a guest cannot reply to message");
+            assertTrue(true);
+        } catch (DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
         }
 
         //try report moderator
         try {
-            subForumPermission.reportModerator("Moshe", "He is so bad Moderator", guest);
+            _facade.reportModerator(session, "Moshe", "He is so bad Moderator");
             fail("a guest cannot create a report on moderator");
-        } catch (ModeratorDoesNotExistsException | PermissionDeniedException e) {//TODO need to define the expected result
-            //expected exception
+        } catch (ModeratorDoesNotExistsException e) {//TODO need to define the expected result
+            e.printStackTrace();
+        } catch (PermissionDeniedException e){
+            assertTrue(true);
         }
-
-        //try view threads
-        ThreadI[] threads;
-        threads = subForumPermission.getThreads();
-        MessageI rootMessage = threads[0].getRootMessage();
 
         //try delete message
         try {
-            subForumPermission.deleteMessage(rootMessage, guest.getUsername());
+            _facade.deleteMessage(session, msgid);
             fail("a guest cannot delete message");
-
         } catch (PermissionDeniedException e) {
-            // expected exception
+            assertTrue(true);
         }
     }
 
@@ -220,42 +213,51 @@ public class AcceptanceTest {
      * check that the user exist in the list after register and that user cannot register twice
      * check if you get email authentication message in your inbox
      */
- /*   public void registerTest() {
+    public void registerTest() {
 
-        ForumI forum = _forumCollection.iterator().next();
-        UserI user = new User("gilgilmor", "morgil12345", "gilmor89@gmail.com", null);
+        // tests register existing username
         try {
-            user = forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
-            forum.register("gilgilmor", "morgil12345", "gilmor89@gmail.com");
+            _facade.register("Forum0", "gil", "morgil12345", "gilmor89@gmail.com");
             fail("register the same user");
-        } catch (UserAlreadyExistsException alreadyExistE) {
+        } catch (UserAlreadyExistsException e) {
             assertTrue(true);
-        } catch (InvalidUserCredentialsException invalidE) {
-            fail("wrong exception, register the same user");
-        } finally {
-            Collection<UserI> users = forum.getUserList();
-            assertTrue(users.contains(user));
-            System.out.println("Asserted : " + users.contains(user));
+        } catch (InvalidUserCredentialsException e) {
+            e.printStackTrace();
+        }
+
+        //test register
+
+        try {
+            _facade.register("Forum0", "gilgilmor", "morgil12345", "gilmor89@gmail.com");
+            fail("register the same user");
+        } catch (UserAlreadyExistsException e) {
+            e.printStackTrace();
+        } catch (InvalidUserCredentialsException e) {
+            e.printStackTrace();
+
+            Collection<UserI> users = _facade.getForumList().iterator().next().getUserList();
+
+            for (UserI user : users) {
+                if (user.getUsername().equals("gilgilmor")) assertTrue(true);
+            }
+            fail("registered user not found");
         }
     }
 
+    @Test
     /**
-     * targer: check login usecase, try login to non exist user
+     * target: check login usecase, try login to non exist user
      */
- /*   @Test
     public void loginTest() {
-        ForumI forum = _forumCollection.iterator().next();
-        UserI user;
+        int session = GUEST_SESSION;
         try {
-            user = forum.register("gilgilmor2", "morgil12345", "gilmor89@gmail.com");
-            UserI sameUser = forum.login("gilgilmor2", "morgil12345");
-            assertSame("Not the same user when login", user, sameUser);
-        } catch (Throwable e) {
-            fail("fail to register new user");
+            session = _facade.login("Forum0", "gil", "123456");
+        } catch (InvalidUserCredentialsException | PasswordNotInEffectException | EmailNotAuthanticatedException e) {
+            e.printStackTrace();
         }
-
+        assert(GUEST_SESSION != session);
         try {
-            forum.login("notexist", "user");
+            _facade.login("Forum0", "notexist", "user");
             fail("should throw exception");
         } catch (InvalidUserCredentialsException e) {
             assertTrue(true);
@@ -269,30 +271,40 @@ public class AcceptanceTest {
     /**
      * target: check logout usecase
      */
- /*   public void logoutTest() {
-        ForumI forum = _forumCollection.iterator().next();
-        UserI user;
+    public void logoutTest() {
+        int session = 0;
+        //test login and out
         try {
-            user = forum.register("some_new_user", "morgil12345", "gilmor89@gmail.com");
-            UserI sameUser = forum.login("some_new_user", "morgil12345");
-            forum.logout(sameUser);
-        } catch (Throwable e) {
-            fail("fail to logout");
+            session = _facade.login("Forum0", "gil", "123456");
+            _facade.logout(session);
+        } catch (InvalidUserCredentialsException | PasswordNotInEffectException | EmailNotAuthanticatedException e) {
+            e.printStackTrace();
         }
         assertTrue(true);
 
+        //test post when logged out
+        try {
+            _facade.createNewThread(session, "Title", "Body");
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        } catch (DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
     /**
      * taget: check Create sub forum usecase
      */
-/*    public void createSubForumTest() {
-        ForumI forum = _forumCollection.iterator().next();
+    public void createSubForumTest() {
+
+        //test creation
         try {
-            forum.createSubForum("juggling");
+            _facade.createSubforum(0, "newSF");
         } catch (SubForumAlreadyExistException e) {
             fail("cannot create new sub forum");
+        } catch (PermissionDeniedException e) {
+            e.printStackTrace();
         }
     }
 
@@ -300,48 +312,39 @@ public class AcceptanceTest {
     /**
      * target: view sub forum
      */
- /*   public void viewSubForumTest() {
-        ForumI forum = _forumCollection.iterator().next();
-        UserI user = forum.getUserList().iterator().next();
-        Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumsPermissions();
-        for (SubForumPermissionI subForumPermission : subForumPermissionCol) {
-            ThreadI[] threads = subForumPermission.getThreads();
-        }
+    public void viewSubForumTest() {
+       fail("not implemented");
+       //TODO - how?
     }
 
     @Test
     /**
      * target: test usecase post thread
      */
- /*   public void postThreadTest() {
-        ForumI forum = _forumCollection.iterator().next();
-        UserI user = forum.getUserList().iterator().next();
-        Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumsPermissions();
-        SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
-        int n;
-        n = subForumPermission.getThreads().length;
+    public void postThreadTest() {
+
+        int n = _facade.getSubForumList(0).size();
         try {
-            subForumPermission.createThread(new ForumMessage(null, user, "I created THREADDDDDD!@!@!@!@", ""));
+            _facade.createNewThread(0, "Title", "Body");
         } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
-        assertEquals(n + 1, subForumPermission.getThreads().length);
+        assertEquals(n + 1, _facade.getSubForumList(0).size());
     }
 
     @Test
     /**
      * target: test post message usecase
      */
-/*    public void postMessageTest() throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
-        ForumI forum = _forumCollection.iterator().next();
-        UserI user = forum.getUserList().iterator().next();
-        Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumsPermissions();
-        SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
+    public void postMessageTest() {
 
-        ThreadI firstThread = subForumPermission.getThreads()[0];
-//		firstThread.addReply(firstThread.getRootMessage(), new ForumMessage(firstThread.getRootMessage(), user, "I post Message", ""));
-
-        _facade.addReply(user, subForumPermission, firstThread.getRootMessage(), "a", "b");
+        Tree<MessageI> msgs = _facade.getMessageList(0);
+        int msgid = 1;//msgs.iterator().next().getId(); //TODO tree iterator
+        try {
+            _facade.addReply(0, msgid ,"a", "b");
+        } catch (MessageNotFoundException | PermissionDeniedException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -349,43 +352,49 @@ public class AcceptanceTest {
      * target test Friend Type requirement
      */
     public void friendTypeTest() {
-        ForumI forum = _forumCollection.iterator().next();
-        int n = forum.getUserTypes().size();
-     //   forum.addUserType("GoldenX");
-        assertEquals(n + 1, forum.getUserTypes().size());
+        //TODO - user types?!
+        _facade.addUserType(0, "SuperPooper", 2, 200, 2);
     }
 
 
-    /*
+
     @Test
-     * target: test remove message usecase, check that user can remove only
+     /** target: test remove message usecase, check that user can remove only
      * 			his messages.
+      */
+     public void removeMessageTest() {
+        int session = 0;
+        try {
+            session = _facade.login("Forum0", "gil", "123456");
+            _facade.createNewThread(session, "Title", "Body");
+        } catch (InvalidUserCredentialsException | PermissionDeniedException | DoesNotComplyWithPolicyException | PasswordNotInEffectException | EmailNotAuthanticatedException e) {
+            e.printStackTrace();
+        }
 
-     public void removeMessageTest(){
-     ForumI forum = _forumCollection.iterator().next();
-     Iterator<UserI> userItr = forum.getUserList().iterator();
-     UserI userA = userItr.next();
-     UserI userB = userItr.next();
+        try {
+            _facade.deleteMessage(session, 0);//TODO - how to get message ID?
+        } catch (PermissionDeniedException | MessageNotFoundException e) {
+            e.printStackTrace();
+        }
 
-     MessageI msg = new ForumMessage(userA,"userA message");
-     userA.addMessage(msg);
-     try {
-     userB.removeMessage(msg);
-     fail("user should not bre able to remove other user's message");
-     }catch (PermissionDenied e){
-     assertTrue(true);
-     }
-     }
-     */
+
+    }
     @Test
     /**
      * target: test cancel forum usecase
      */
     public void cancelForumTest() {
-        ForumI forum = _forumCollection.iterator().next();
-        UserI userA = forum.getUserList().iterator().next();
+        try {
+            _facade.removeForum("admin", "admin", "Forum1");
+        } catch (ForumNotFoundException | PermissionDeniedException e) {
+            e.printStackTrace();
+        }
 
-
+        try {
+            _facade.createNewThread(0, "title", "body");
+        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test
@@ -393,17 +402,11 @@ public class AcceptanceTest {
      * target: check use case send report on moderator
      */
     public void complainOnModeratorTest() {
-        ForumI forum = _forumCollection.iterator().next();
-        UserI user = forum.getUserList().iterator().next();
-        Collection<SubForumPermissionI> subForumPermissionCol = user.getSubForumsPermissions();
-        SubForumPermissionI subForumPermission = subForumPermissionCol.iterator().next();
 
-        //add check to see if moshe his a moderator.
         try {
-            subForumPermission.reportModerator("Moshe", "he is not behave well!!", user);
+            _facade.reportModerator(0, "Moshe", "he is not behave well!!");
         } catch (PermissionDeniedException | ModeratorDoesNotExistsException e) {
             e.printStackTrace();
-            //TODO should the test fail?
         }
 
     }
@@ -415,28 +418,39 @@ public class AcceptanceTest {
      * target: test email authentication use case
      */
     public void emailAuthenticationTest() {
-        ForumI forum =_forumCollection.iterator().next();
-        UserI user = forum.getUserList().iterator().next();
 
+        int session = 0;
         try {
-            user = forum.register("tomgond_new1", "my_pass", "gabi.giladov@gmail.com");
+            _facade.register("Forum0", "tomgond_new1", "my_pass", "gabi.giladov@gmail.com");
+            session = _facade.login("Forum0", "tomgond_new1", "my_pass");
         }
         catch(UserAlreadyExistsException e){
             fail("User already exists!");
         }
         catch (InvalidUserCredentialsException e) {
             fail("Invalid user credentials!");
+        } catch (PasswordNotInEffectException e) {
+            e.printStackTrace();
+        } catch (EmailNotAuthanticatedException e) {
+            //accept
         }
-        assertFalse(user.isEmailAuthenticated());
 
+        Collection<UserI> users = _facade.getForumList().iterator().next().getUserList();
+        UserI the_user = null;
+        for (UserI user : users){
+            if (user.getUsername().equals("tomgond_new1")){
+                the_user = user;
+                break;
+            }
+        }
+        the_user.setAuthenticated();
         try {
-            user.setAuthenticated();
+            _facade.login("Forum0", "tomgond_new1", "my_pass");
+        } catch (InvalidUserCredentialsException | PasswordNotInEffectException e) {
+            e.printStackTrace();
+        } catch (EmailNotAuthanticatedException e) {
+            fail("email authantication failed");
         }
-        catch(Exception e){
-            assertTrue(false);
-        }
-
-        assertTrue(user.isEmailAuthenticated());
     }
 
 
@@ -446,18 +460,24 @@ public class AcceptanceTest {
     * target: test editing message by publisher use case
     */
     public void editOwnMessageTest() {
-        ForumI forum =_forumCollection.iterator().next();
-        UserI user = forum.getUserList().iterator().next();
-        MessageI mes = new ForumMessage(null, user, "Zrima", "Over Zrima");
+        int session = 0;
+
         try {
-            user.createThread(mes, new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next()));
-        } catch (PermissionDeniedException e) {
-            fail("Permission denied!");
-        } catch (DoesNotComplyWithPolicyException e) {
-            fail("policy exception!");
+            _facade.login("Forum0", "gil", "123456");
+        } catch (InvalidUserCredentialsException | EmailNotAuthanticatedException | PasswordNotInEffectException e) {
+            e.printStackTrace();
         }
 
-        // TODO user should be able to edit his messages
+        try {
+            _facade.createNewThread(session, "T", "B");
+        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
+
+        _facade.editMessage(session, 0, "Title", "Body");
+
+       assertTrue(Objects.equals("TODO - check message title updated", "a"));
+        assertTrue(Objects.equals("TODO - check message body updated", "a"));
 
     }
 
@@ -466,26 +486,15 @@ public class AcceptanceTest {
      * target: test setting moderator to sub forum use case
     */
     public void setModeratorTest() {
-        ForumI forum =_forumCollection.iterator().next();
-        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
-        UserI user = new User("Gabi", "123456", "mail@gmail.com", permission);
-        UserI user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
-        SubForumI subf = forum.getSubForums().iterator().next();
 
-        // TODO user permissions should be changeable
+
 
         try {
-            user.setModerator(subf, user2);
+            _facade.setModerator(0, "gil");
         } catch (PermissionDeniedException e) {
-            assertTrue(true); // user has not permission to set moderator
+            e.printStackTrace();
         }
-        try {
-            user2.setModerator(subf, user);
-        } catch (PermissionDeniedException e) {
-            assertTrue(false);
-        }
-            assertTrue(user.getSubForumsPermissions().iterator().next().isModerator());
+        //TODO - how to check if user is a moderator.
     }
 
     @Test
@@ -493,24 +502,14 @@ public class AcceptanceTest {
      * target: test canceling moderator use case
     */
     public void cancelModeratorTest() {
-        ForumI forum =_forumCollection.iterator().next();
-        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
-        UserI user = new User("Gabi", "123456", "mail@gmail.com", permission);
-        UserI user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
-        SubForumI subf = forum.getSubForums().iterator().next();
-
         try {
-            user.setModerator(subf, user2);
+            _facade.setModerator(0, "gabi");
         } catch (PermissionDeniedException e) {
-            assertTrue(true); // user has not permission to cancel moderator
+            e.printStackTrace();
         }
-    /*    try {
-            user2.canceltModerator(subf, user); // TODO canceling moderator!
-        } catch (PermissionDeniedException e) {
-            assertTrue(false);
-        }*/
-        assertFalse(user.getSubForumsPermissions().iterator().next().isModerator());
+        _facade.removeModerator(0, "gabi");
+
+        //TODO - how to check if user is not a moderator.
     }
 
     @Test
@@ -518,7 +517,7 @@ public class AcceptanceTest {
      * target: test getting updates and info from moderator use case
     */
     public void getUpdatesFromModeratorTest() {
-        ForumI forum =_forumCollection.iterator().next();
+        ForumI forum =_facade.getForumList().iterator().next();
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_MODERATOR,forum);
         UserI user = new User("Gabi", "123456", "mail@gmail.com", permission);
@@ -542,7 +541,7 @@ public class AcceptanceTest {
      * target: test getting updates and info from super manager use case
      */
     public void getUpdatesFromSuperManagerTest() {
-        ForumI forum =_forumCollection.iterator().next();
+        ForumI forum =_facade.getForumList().iterator().next();
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         UserI user = new User("Gabi", "123456", "mail@gmail.com", permission);

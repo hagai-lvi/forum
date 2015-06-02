@@ -131,7 +131,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void setPolicies(int sessionId, String regex, int numOfModerators) {
+    public void setPolicy(int sessionId, String regex, int numOfModerators) {
 
     }
 
