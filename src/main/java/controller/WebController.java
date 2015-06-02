@@ -2,9 +2,7 @@ package controller;
 
 //import data_structures.TreeNode;
 
-import main.exceptions.ForumAlreadyExistException;
-import main.exceptions.PermissionDeniedException;
-import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.*;
 import main.interfaces.FacadeI;
 import main.services_layer.Facade;
 import org.apache.log4j.Logger;
@@ -55,11 +53,10 @@ public class WebController {
 	 */
 	@RequestMapping(value = "/addSubforum",method = RequestMethod.POST)
 	public void addSubforum(ModelMap model, HttpSession session, String subforumName) throws SubForumAlreadyExistException, PermissionDeniedException {
-//		FacadeI f = Facade.getFacade();
-//		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
-//		Integer sessionId = (Integer) session.getAttribute(SESSION_ID_ATTR);
-//		f.createSubforum(sessionId, subforumName);
-//		model.addAttribute("subforumName", subforumName);
+		FacadeI f = Facade.getFacade();
+		Integer sessionId = (Integer) session.getAttribute(SESSION_ID_ATTR);
+		f.createSubforum(sessionId, subforumName);
+		model.addAttribute("subforumName", subforumName);
 	}
 
 
@@ -71,20 +68,23 @@ public class WebController {
 		model.addAttribute("forumName", forum);
 		FacadeI facade = Facade.getFacade();
 	}
-//
-//
-//	/**
-//	 * redirects to the current forum home page after a login
-//	 */
-//	@RequestMapping(value = "forum_homepage",method = RequestMethod.POST)
-//	public String loginToForum(ModelMap model, HttpSession session, String username, String password) throws InvalidUserCredentialsException {
-//		FacadeI facade = Facade.getFacade();
+
+
+	/**
+	 * redirects to the current forum home page after a login
+	 */
+	@RequestMapping(value = "forum_homepage",method = RequestMethod.POST)
+	public String loginToForum(ModelMap model, HttpSession session, String username, String password, String forumName)
+			throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
+		FacadeI facade = Facade.getFacade();
+		Integer sessionID = facade.login(forumName, username, password);
+		session.setAttribute(SESSION_ID_ATTR, sessionID);
 //		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
 //		UserI user = facade.login(forum, username, password); //TODO handle exception thrown from login
 //		session.setAttribute(SESSION_USER_ATTR, user);
 //		preperaForumHomepageModel(model, facade, forum, user);
-//		return "forum_homepage";
-//	}
+		return "forum_homepage";
+	}
 //
 //	/**
 //	 * Redirects to the forum home page, assumes that a user has already logged in
@@ -125,7 +125,7 @@ public class WebController {
 		f.addForum("ADMIN", "ADMIN", "C", ".*", 5);
 		return "redirect:/facade";
 	}
-//
+
 //	private void preperaForumHomepageModel(ModelMap model, FacadeI facade, ForumI forum, UserI user) {
 //		model.addAttribute("forumName", forum);
 //		model.addAttribute("user", user.getUsername());

@@ -16,10 +16,10 @@
     <tr>
 
         <c:forEach var="forum" items="${forumList}">
-            ${forum}
+            ${forum.getName()}
 
             <form action="login_page" method="POST">
-                <input type="submit" value=${forum} name="forum" />
+                <input type="submit" value=${forum.getName()} name="forum" />
             </form>
             <br/>
         </c:forEach>

@@ -246,25 +246,12 @@ import java.util.Iterator;
 	private ForumI findForum(String forumName) {
 		boolean flag = false;
 		Iterator<ForumI> iter = forums.iterator();
-		ForumI current;
-		if (iter.hasNext()) {
-			current = iter.next();
-		}
-		else {current = null;}
-		while(iter.hasNext()) {
-			if(current.getName().equals(forumName)) {
-				flag = true;
-				break;
+		for (ForumI f: forums){
+			if (f.getName().equals(forumName)){
+				return f;
 			}
-			current = iter.next();
 		}
-		if(flag) {
-			return current;
-		}
-		else {
-			//TODO forum does not exist
-			return null;
-		}
+		return null;//TODO throw exception
 	}
 
 	private UserI findUser(String name) {

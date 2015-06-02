@@ -18,6 +18,9 @@
 
 <form action="forum_homepage" method="post">
   <h1>Sign In</h1>
+
+  <input hidden type="text" name="forumName" value="${forumName}">
+
   <label>
     <span>Username :</span>
     <input type="text" name="username" placeholder="username" />
