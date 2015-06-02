@@ -10,7 +10,7 @@ import java.util.Map;
 /**
  * Created by hagai_lvi on 4/6/15.
  */
-public interface SubForumI {
+public interface SubForumI extends ExSubForumI{
 
 	Map<String, UserI> getModerators();
 

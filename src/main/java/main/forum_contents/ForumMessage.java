@@ -91,6 +91,11 @@ public class ForumMessage implements MessageI {
 	@Id
 	private String id;
 
+	@Override
+	public String getBody() {
+		return getMessageText();
+	}
+
 	public String getId() {
 		return id;
 	}

@@ -8,5 +8,5 @@ import java.util.Collection;
 public interface ExSubForumI {
     String getTitle();
 
-    Collection<ExThreadI> getThreads();
+    Collection<? extends ExThreadI> getThreads();
 }

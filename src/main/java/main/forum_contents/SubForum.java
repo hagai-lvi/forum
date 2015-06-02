@@ -106,6 +106,11 @@ public class SubForum implements SubForumI {
     }
 
     @Override
+    public String getTitle() {
+        return getName();
+    }
+
+    @Override
     public Collection<ThreadI> getThreads(){
         return _threads;
     }

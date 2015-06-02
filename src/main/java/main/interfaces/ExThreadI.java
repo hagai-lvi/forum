@@ -1,6 +1,6 @@
 package main.interfaces;
 
-import java.util.Collection;
+import data_structures.Tree;
 
 /**
  * Created by victor on 5/15/2015 for ${Class}.
@@ -8,5 +8,5 @@ import java.util.Collection;
 public interface ExThreadI {
     String getTitle();
 
-    Collection<ExMessageI> getMessages();
+    Tree<? extends ExMessageI> getMessages();
 }

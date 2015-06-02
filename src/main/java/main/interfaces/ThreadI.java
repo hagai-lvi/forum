@@ -6,11 +6,11 @@ import main.exceptions.MessageNotFoundException;
 /**
  * Created by hagai_lvi on 4/6/15.
  */
-public interface ThreadI {
+public interface ThreadI extends ExThreadI{
 
 	MessageI getRootMessage();
 
-	public Tree<MessageI> getMessages();
+	Tree<MessageI> getMessages();
 
 
 	void addReply(MessageI reply, MessageI original) throws MessageNotFoundException;

@@ -8,7 +8,7 @@ import java.util.Collection;
 /**
  * Created by hagai_lvi on 4/6/15.
  */
-public interface ForumI {
+public interface ForumI extends ExForumI{
 
 
 	/**

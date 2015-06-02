@@ -1,11 +1,9 @@
 package main.interfaces;
 
-import main.exceptions.PermissionDeniedException;
-
 /**
  * Created by hagai_lvi on 4/6/15.
  */
-public interface MessageI {
+public interface MessageI extends ExMessageI{
 
    // void editText(UserI user, String newText) throws PermissionDeniedException;
 
