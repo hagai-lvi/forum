@@ -1,6 +1,8 @@
 package tests_infrastructure;
 
+import data_structures.Tree;
 import main.exceptions.*;
+import main.forum_contents.Forum;
 import main.interfaces.*;
 
 import java.util.Collection;
@@ -29,7 +31,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public Collection<ExForumI> getForumList() {
+    public Collection<ForumI> getForumList() {
         if(this.real!=null)
             return this.real.getForumList();
         return null;
@@ -37,7 +39,7 @@ public class Proxy implements FacadeI {
 
 
     @Override
-    public Collection<ExSubForumI> getSubForumList(int sessionId) {
+    public Collection<SubForumI> getSubForumList(int sessionId) {
         if(this.real!=null)
             return this.real.getSubForumList(sessionId);
         return null;    }
@@ -61,7 +63,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException {
+    public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException {
         if(this.real!=null)
             return this.real.login(forumName, userName, password);
         return 0;
@@ -129,6 +131,11 @@ public class Proxy implements FacadeI {
     }
 
     @Override
+    public void setPolicies(int sessionId, String regex, int numOfModerators) {
+
+    }
+
+    @Override
     public void editMessage(int sessionId, int messageId, String title, String text) {
         if(this.real!=null)
             this.real.editMessage(sessionId, messageId, title, text);
@@ -169,27 +176,27 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public Collection<ExThreadI> getThreadsList(int sessionId) {
+    public Collection<ThreadI> getThreadsList(int sessionId) {
         if(this.real!=null)
             return this.real.getThreadsList(sessionId);
         return null;
     }
 
     @Override
-    public Collection<ExMessageI> getMessageList(int sessionId) {
+    public Tree<MessageI> getMessageList(int sessionId) {
         if(this.real!=null)
             return this.real.getMessageList(sessionId);
         return null;
     }
 
     @Override
-    public void viewSubforum(int sessionId, String subforum) {
+    public void viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException {
         if(this.real!=null)
             this.real.viewSubforum(sessionId, subforum);
     }
 
     @Override
-    public void viewThread(int sessionId, String title) {
+    public void viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException {
         if(this.real!=null)
             this.real.viewThread(sessionId, title);
     }

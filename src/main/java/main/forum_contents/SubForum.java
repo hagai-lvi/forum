@@ -47,12 +47,13 @@ public class SubForum implements SubForumI {
 
 
     @Override
-    public void createThread(MessageI message) throws DoesNotComplyWithPolicyException {
+    public ThreadI createThread(MessageI message) throws DoesNotComplyWithPolicyException {
         if (!subforumPolicy.isValidMessage(message)) {
             throw new DoesNotComplyWithPolicyException();
         }
         ForumThread thread = new ForumThread(message);
         _threads.add(thread);
+        return thread;
     }
 
     @Override
@@ -107,6 +108,11 @@ public class SubForum implements SubForumI {
     @Override
     public Collection<ThreadI> getThreads(){
         return _threads;
+    }
+
+    @Override
+    public void removeModerator(UserI mod) {
+            _moderators.remove(mod);
     }
 
     /**

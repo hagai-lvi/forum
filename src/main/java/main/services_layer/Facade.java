@@ -1,7 +1,11 @@
 package main.services_layer;
 
+import data_structures.Tree;
 import main.exceptions.*;
+import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
+import main.forum_contents.ForumPolicy;
+import main.forum_contents.SubForum;
 import main.interfaces.*;
 
 import java.util.ArrayList;
@@ -10,200 +14,199 @@ import java.util.Collection;
 /**
  * Created by hagai_lvi on 4/11/15.
  */
-public class Facade implements FacadeI {
-	private static Facade theFacade = new Facade();
-
+     public class Facade implements FacadeI {
+	private static FacadeI theFacade;
+	private ArrayList<UserI> users;
+	private Collection<Session> openSessions;
+	private ArrayList<ForumI> forums;
+	private int sessionCounter;
+	private static final int GUEST_SESSION_ID = -2;
 	private Facade(){}
 
-	private Collection<ForumI> forums = new ArrayList<>();
 
 	@Override
 	public void initilize() {
 		//TODO
+		openSessions =  new ArrayList<Session>();
+		forums = new ArrayList<ForumI>();
+		users = new ArrayList<UserI>();
+		sessionCounter = 0;
 	}
 
 	@Override
-	public Collection<ExForumI> getForumList() {
-		return null; //TODO
+	public ArrayList<ForumI> getForumList() {
+		return forums;
 	}
 
 	@Override
-	public Collection<ExSubForumI> getSubForumList(int sessionId) {
-		return null; //TODO
+	public Collection<SubForumI> getSubForumList(int sessionId) {
+		return findSession(sessionId).getForum().getSubForums();
 	}
 
 	@Override
 	public void addForum(String username, String password, String forumName, String regex, int numberOfModerators) throws PermissionDeniedException, ForumAlreadyExistException {
 		//TODO
+		forums.add(new Forum(forumName, new ForumPolicy(numberOfModerators, regex)));
 	}
 
 	@Override
 	public void createSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException {
-		//TODO
+		Session current = findSession(sessionId);
+		current.setSubForum(current.getForum().createSubForum(subforumName));
 	}
 
 	@Override
 	public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
-		//TODO
+		ForumI current = findForum(forumName);
+		UserI currentUser = current.register(userName, password, email);
+		users.add(currentUser);
 	}
 
+
 	@Override
-	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException {
-		return 1;		//TODO - set 0 for SU test
+	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException {
+		ForumI current = findForum(forumName);
+		UserI currentUser = current.login(userName, password);
+		Session currentSession = new Session(sessionCounter, currentUser);
+		currentSession.setForum(current);
+		openSessions.add(currentSession);
+		sessionCounter++;
+		return sessionCounter-1;
 	}
 
 	@Override
 	public void logout(int sessionId) {
-		//TODO
+		Session current = findSession(sessionId);
+		openSessions.remove(current);
 	}
 
 	@Override
 	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
-		//TODO
+		//TODO srcMessageId??
 	}
 
 	@Override
 	public void createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-		//TODO
+		Session current = findSession(sessionId);
+		current.getSubForum().createThread(new ForumMessage(null, current.getUser(),srcMessageBody, srcMessageTitle ));
 	}
 
 	@Override
 	public void reportModerator(int sessionId, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
-		//TODO
+		Session current = findSession(sessionId);
+		current.getSubForum().reportModerator(moderatorUserName, reportMessage, current.getUser());
 	}
 
 	@Override
-	public String getUserAuthString(String forumName, String username, String password, String authenticationString) throws InvalidUserCredentialsException {
-		return null;		//TODO
+	public String getUserAuthString(String forumName, String username, String password, String authenticationString) throws InvalidUserCredentialsException {	boolean flag = false;
+		UserI current = findUser(username);
+		return current.getUserAuthString();
 	}
 
 	@Override
 	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException {
-		//TODO
+		Session current = findSession(sessionId);
+			// TODO message id????
 	}
 
 	@Override
 	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException {
-		//TODO
+		Session current = findSession(sessionId);
+		current.getSubForum().setModerator(findUser(moderatorName));
 	}
 
 	@Override
 	public int guestEntry(String forumName) {
-		return 0;		//TODO
+		ForumI current = findForum(forumName);
+		Session currentSession = new Session(sessionCounter, null);
+		currentSession.setForum(current);
+		openSessions.add(currentSession);
+		return GUEST_SESSION_ID;
 	}
 
 	@Override
 	public void addUserType(int sessionId, String typeName, int seniority, int numOfMessages, int connectionTime) {
-		//TODO
+		Session current = findSession(sessionId);
+		current.getForum().addUserType(typeName, seniority, numOfMessages, connectionTime);
 	}
 
 	@Override
 	public void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException{
-		//TODO
+		// TODO update database
+		forums.remove(findForum(forumName));
+	}
+
+	@Override
+	public void setPolicies(int sessionId, String regex, int numOfModerators) {
+		Session current = findSession(sessionId);
+		current.getForum().setPolicy(new ForumPolicy(numOfModerators, regex));
 	}
 
 	@Override
 	public void editMessage(int sessionId, int messageId, String title, String text) {
-		//TODO
+		Session current = findSession(sessionId);
+		// TODO messageId????
 	}
 
 	@Override
 	public void removeModerator(int sessionId, String moderatorName) {
-		//TODO
+		Session current = findSession(sessionId);
+		current.getSubForum().removeModerator(findUser(moderatorName));
 	}
 
 	@Override
 	public String viewModeratorStatistics(int sessionsId) {
-		return null;		//TODO
+		Session current = findSession(sessionsId);
+		return current.getForum().viewStatistics();
 	}
 
 	@Override
 	public String viewSuperManagerStatistics(int sessionId) {
-		return null;		//TODO
+		Session current = findSession(sessionId);
+		return  null;
+		//TODO
 	}
 
 	@Override
 	public String viewSessions(int sessionId) {
-		return null;		//TODO
+		return null;
+		//TODO
 	}
 
 	@Override
 	public ExMessageI getMessage(int sessionId, int messageId) {
-		return null; 		//TODO
+		return null; 		//TODO messageId??
 	}
 
 	@Override
-	public Collection<ExThreadI> getThreadsList(int sessionId) {
-		return null;	//TODO
+	public Collection<ThreadI> getThreadsList(int sessionId) {
+		Session current = findSession(sessionId);
+		return current.getSubForum().getThreads();
+
 	}
 
 	@Override
-	public Collection<ExMessageI> getMessageList(int sessionId) {
-		return null;	//TODO
-	}
-
-	@Override
-	public void viewSubforum(int sessionId, String subforum) {
+	public Tree<MessageI> getMessageList(int sessionId) {
+		Session current = findSession(sessionId);
+		return current.getThread().getMessages();
 		//TODO
 	}
 
 	@Override
-	public void viewThread(int sessionId, String title) {
-		//TODO
-	}
-
-	/*@Override
-	public Collection<SubForumPermissionI> getSubForumList(UserI user) {
-		return user.getSubForumsPermissions();
+	public void viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException {
+		Session current = findSession(sessionId);
+		SubForumI sub = current.getForum().createSubForum(subforum);
+		current.setSubForum(sub);
 	}
 
 	@Override
-	public void addForum(ForumI toAdd) {
-		//TODO shouldn't be a part of the facade, super-admin only
-		forums.add(toAdd);
+	public void viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException {
+		Session current = findSession(sessionId);
+		ThreadI thread = current.getSubForum().createThread(new ForumMessage(null, current.getUser(), null, title));
+		current.setThread(thread);
 	}
 
-	@Override
-	public void createSubforum(String subforumName, UserI user) throws PermissionDeniedException, SubForumAlreadyExistException {
-		user.createSubForum(subforumName);
-	}
 
-	@Override
-	public void register(ForumI forum, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException {
-		forum.register(userName, password, email);
-	}
-
-	@Override
-	public UserI login(ForumI forum, String userName, String password) throws InvalidUserCredentialsException {
-		return forum.login(userName, password);
-	}
-
-	@Override
-	public void logout(ForumI forum, UserI user) {
-		forum.logout(user);
-	}
-
-	@Override
-	public void addReply(UserI user, SubForumPermissionI subForumPermission, MessageI src, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
-		user.replyToMessage(subForumPermission, src, title, body);
-
-	}
-
-	@Override
-	public void createNewThread(UserI user, SubForumPermissionI subForumPermission, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-		//TODO
-		user.createThread(new ForumMessage(null, user, srcMessageBody, srcMessageTitle), subForumPermission);//move the message creation to the user
-	}
-
-	@Override
-	public void reportModerator(UserI user, SubForumI subforum, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
-		user.reportModerator(subforum, moderatorUserName, reportMessage);
-	}
-
-	//TODO
-	//public void
-
-*/
 	public static FacadeI getFacade(){
 		return theFacade;
 	}
@@ -211,6 +214,63 @@ public class Facade implements FacadeI {
 	public static FacadeI dropAllData(){
 		theFacade = new Facade();
 		return theFacade;
+	}
+
+	private Session findSession(int sessionId) {
+		boolean flag = false;
+		Session current = openSessions.iterator().next();
+		while(openSessions.iterator().hasNext()) {
+			if(current.getId() == sessionId){
+				flag =true;
+				break;
+			}
+			current = openSessions.iterator().next();
+		}
+		if(flag){
+			return current;
+		}
+		else {
+			return null;
+			//TODO add exception session does not exist
+		}
+	}
+
+	private ForumI findForum(String forumName) {
+		boolean flag = false;
+		ForumI current = forums.iterator().next();
+		while(forums.iterator().hasNext()) {
+			if(current.getName().equals(forumName)) {
+				flag = true;
+				break;
+			}
+			current = forums.iterator().next();
+		}
+		if(flag) {
+			return current;
+		}
+		else {
+			//TODO forum does not exist
+			return null;
+		}
+	}
+
+	private UserI findUser(String name) {
+		boolean flag = false;
+		UserI current = users.iterator().next();
+		while(users.iterator().hasNext()) {
+			if(current.getUsername().equals(name)) {
+				flag = true;
+				break;
+			}
+			current = users.iterator().next();
+		}
+		if(flag) {
+			return current;
+		}
+		else {
+			//TODO user does not exist
+			return null;
+		}
 	}
 
 }

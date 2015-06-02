@@ -351,7 +351,7 @@ public class AcceptanceTest {
     public void friendTypeTest() {
         ForumI forum = _forumCollection.iterator().next();
         int n = forum.getUserTypes().size();
-        forum.addUserType("GoldenX");
+     //   forum.addUserType("GoldenX");
         assertEquals(n + 1, forum.getUserTypes().size());
     }
 

@@ -1,9 +1,11 @@
 package main.interfaces;
 
+import data_structures.Tree;
 import main.exceptions.*;
+import main.forum_contents.Forum;
 
+import java.util.ArrayList;
 import java.util.Collection;
-import java.util.GregorianCalendar;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -17,12 +19,12 @@ public interface FacadeI {
 	/**
 	 * Get the list of forums in the system
 	 */
-	Collection<ExForumI> getForumList();
+	Collection<ForumI> getForumList();
 
 	/**
 	 * Get the list of subforums in the specified forum
 	 */
-	Collection<ExSubForumI> getSubForumList(int sessionId);
+	Collection<SubForumI> getSubForumList(int sessionId);
 
 	/**
 	 * Add a forum to the system, requires login with permissions
@@ -45,7 +47,7 @@ public interface FacadeI {
 	 * Login to the specified forum
 	 * Returns session id
 	 */
-	int login(String forumName, String userName, String password) throws InvalidUserCredentialsException;
+	int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException;
 
 
 	/**
@@ -101,7 +103,7 @@ public interface FacadeI {
 
 	void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException;
 
-
+    void setPolicies(int sessionId, String regex, int numOfModerators);
 	/**
 	 * edit message
 	 * @param sessionId - Id of current session
@@ -119,11 +121,11 @@ public interface FacadeI {
 
 	ExMessageI getMessage(int sessionId, int messageId);
 
-	Collection<ExThreadI> getThreadsList(int sessionId);
+	Collection<ThreadI> getThreadsList(int sessionId);
 
-	Collection<ExMessageI> getMessageList(int sessionId);
+	Tree<MessageI> getMessageList(int sessionId);
 
-	void viewSubforum(int sessionId, String subforum);
+	void viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException;
 
-	void viewThread(int sessionId, String title);
+	void viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException;
 }

@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import data_structures.Tree;
 import main.exceptions.MessageNotFoundException;
 
 /**
@@ -8,6 +9,9 @@ import main.exceptions.MessageNotFoundException;
 public interface ThreadI {
 
 	MessageI getRootMessage();
+
+	public Tree<MessageI> getMessages();
+
 
 	void addReply(MessageI reply, MessageI original) throws MessageNotFoundException;
 
