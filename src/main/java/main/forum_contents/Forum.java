@@ -1,5 +1,7 @@
 package main.forum_contents;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import controller.NativeGuiController;
 import main.Persistancy.HibernatePersistancyAbstractor;
 import main.User.Permissions;
 import main.User.User;
@@ -32,6 +34,7 @@ public class Forum implements ForumI {
 
 
     @Id
+    @JsonView(NativeGuiController.class)
     private String forum_name;
     @OneToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL, fetch= FetchType.EAGER)
     private ForumPolicyI policy;

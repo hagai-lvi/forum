@@ -112,24 +112,19 @@ public class WebController {
 //		return "forum_homepage";
 //	}
 //
-//	/**
-//	 * Allows to clear all data
-//	 */
-//	@RequestMapping(value = "reset",method = RequestMethod.GET)
-//	public String resetSystem(){
-//		Facade.dropAllData();
-//		FacadeI f = Facade.getFacade();
-//
-//		ForumPolicyI p = new ForumPolicy(10,".*");
-//		f.addForum(new Forum("A", p));
-//
-//		p = new ForumPolicy(10,".*");
-//		f.addForum(new Forum("B", p));
-//
-//		p = new ForumPolicy(10,".*");
-//		f.addForum(new Forum("C", p));
-//		return "redirect:/facade";
-//	}
+	/**
+	 * Allows to clear all data
+	 */
+	@RequestMapping(value = "reset",method = RequestMethod.GET)
+	public String resetSystem() throws PermissionDeniedException, ForumAlreadyExistException {
+		Facade.dropAllData();
+		FacadeI f = Facade.getFacade();
+
+		f.addForum("ADMIN", "ADMIN", "A", ".*", 5);
+		f.addForum("ADMIN", "ADMIN", "B", ".*", 5);
+		f.addForum("ADMIN", "ADMIN", "C", ".*", 5);
+		return "redirect:/facade";
+	}
 //
 //	private void preperaForumHomepageModel(ModelMap model, FacadeI facade, ForumI forum, UserI user) {
 //		model.addAttribute("forumName", forum);

@@ -19,7 +19,7 @@
             ${forum}
 
             <form action="login_page" method="POST">
-                <input type="submit" value=${forum.getForum()} name="forum" />
+                <input type="submit" value=${forum} name="forum" />
             </form>
             <br/>
         </c:forEach>
