@@ -4,8 +4,12 @@ import main.Utils.SecureString;
 import main.exceptions.*;
 import main.forum_contents.ForumMessage;
 import main.interfaces.*;
+import org.hibernate.annotations.*;
+import org.hibernate.annotations.Parameter;
 
 import javax.persistence.*;
+import javax.persistence.CascadeType;
+import javax.persistence.Entity;
 import java.util.Collection;
 import java.util.GregorianCalendar;
 import java.util.Vector;
@@ -15,9 +19,14 @@ import java.util.Vector;
  */
 @Entity
 public class User implements UserI {
-
     private String authString = null;
     private String username;
+    //@Type(type="encryptedString")
+
+    @Column(columnDefinition= "LONGBLOB")
+    @ColumnTransformer(
+            read="AES_DECRYPT(encryptedBody, 'yourkey')",
+            write="AES_ENCRYPT(?, 'yourkey')")
     private String password;
     private GregorianCalendar passwordCreationDate;
     private String email;
