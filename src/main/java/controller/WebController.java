@@ -3,9 +3,7 @@ package controller;
 //import data_structures.TreeNode;
 
 import main.exceptions.*;
-import main.interfaces.FacadeI;
-import main.interfaces.SubForumI;
-import main.interfaces.ThreadI;
+import main.interfaces.*;
 import main.services_layer.Facade;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -158,23 +156,29 @@ public class WebController {
 		return "subforum_homepage";
 	}
 
-//	/**
-//	 * Called when the user is already logged in and the subforum is listed in the httpsession
-//	 */
-//	@RequestMapping(value = "subforum_homepage",method = RequestMethod.GET)
-//	public String refreshSubforumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException {
-//		FacadeI facade = Facade.getFacade();
+	/**
+	 * Called when the user is already logged in and the subforum is listed in the httpsession
+	 */
+	@RequestMapping(value = "subforum_homepage",method = RequestMethod.GET)
+	public String refreshSubforumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException, SubForumAlreadyExistException {
+		FacadeI facade = Facade.getFacade();
+
+		preperaSubforumHomepageModel(model, facade, session, null);
 //		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
 //		User user = (User) session.getAttribute(SESSION_USER_ATTR);
 //		SubForumPermissionI subforum = (SubForumPermissionI) session.getAttribute(SESSION_SUBFORUM_ATTR);
 //		preperaSubforumHomepageModel(model, facade, subforum, user);
-//		return "subforum_homepage";
-//	}
-//
+		return "subforum_homepage";
+	}
 	private void preperaSubforumHomepageModel(ModelMap model, FacadeI facade, HttpSession session, String subforumName) throws SubForumAlreadyExistException {
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
-		SubForumI subForum = facade.viewSubforum(sessionID, subforumName);
-		Collection<ThreadI> threads = subForum.getThreads();
+		ExSubForumI subForum = null;
+		if(subforumName != null && !subforumName.equals("")) {
+			subForum = facade.viewSubforum(sessionID, subforumName);
+		}else {
+			subForum = facade.viewSubforum(sessionID);
+		}
+		Collection<? extends ExThreadI> threads = subForum.getThreads();
 		model.addAttribute("subforumName", subforumName);
 		model.addAttribute("user", facade.getCurrentUserName(sessionID));
 //		model.addAttribute("numberOfthreads", threads.length);//TODO

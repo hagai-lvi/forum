@@ -216,15 +216,22 @@ import java.util.Iterator;
 	}
 
 	@Override
-	public SubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException {
+	public ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException {
 		Session current = findSession(sessionId);
 		Collection<SubForumI> subForums = current.getForum().getSubForums();
 		for (SubForumI s: subForums){
 			if (s.getName().equals(subforum)){
+				current.setSubForum(s);
 				return s;
 			}
 		}
 		return null;//TODO throw exception
+	}
+
+	@Override
+	public ExSubForumI viewSubforum(int sessionId) {
+		Session current = findSession(sessionId);
+		return current.getSubForum();
 	}
 
 	@Override

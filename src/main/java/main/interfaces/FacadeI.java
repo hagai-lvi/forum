@@ -140,7 +140,8 @@ public interface FacadeI {
 	 */
 	boolean isAdmin(int sessionID);
 
-	SubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException;
+	ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException;
+	ExSubForumI viewSubforum(int sessionId);
 
 	void viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException;
 }
