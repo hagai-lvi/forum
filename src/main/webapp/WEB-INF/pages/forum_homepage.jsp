@@ -45,7 +45,7 @@
             ${subforum.getName()}
 
             <form action="subforum_homepage" method="POST">
-                <input type="submit" value=${subforum.getName()} name="subforumName" />
+                <input type="submit" value="${subforum.getName()}" name="subforumName" />
             </form>
             <br/>
         </c:forEach>

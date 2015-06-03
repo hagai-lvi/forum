@@ -4,6 +4,8 @@ package controller;
 
 import main.exceptions.*;
 import main.interfaces.FacadeI;
+import main.interfaces.SubForumI;
+import main.interfaces.ThreadI;
 import main.services_layer.Facade;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.http.HttpSession;
+import java.util.Collection;
 
 /**
  * Created by hagai_lvi on 4/18/15.
@@ -143,22 +146,18 @@ public class WebController {
 		model.addAttribute("isAdmin", isAdmin);
 		model.addAttribute("subforumsList", facade.getSubForumList(sessionID));
 	}
-//
-//
-//	/**
-//	 * redirects to the current forum home page after a login
-//	 */
-//	@RequestMapping(value = "subforum_homepage",method = RequestMethod.POST)
-//	public String showSubforumHomepage(ModelMap model, HttpSession session, String subforumName) throws InvalidUserCredentialsException {
-//		FacadeI facade = Facade.getFacade();
-//		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
-//		User user = (User) session.getAttribute(SESSION_USER_ATTR);
-//		SubForumPermissionI subforum = facade.getSubforumByName(user, subforumName);
-//		session.setAttribute(SESSION_SUBFORUM_ATTR, subforum);
-//		preperaSubforumHomepageModel(model, facade, subforum, user);
-//		return "subforum_homepage";
-//	}
-//
+
+
+	/**
+	 * redirects to the current forum home page after a login
+	 */
+	@RequestMapping(value = "subforum_homepage",method = RequestMethod.POST)
+	public String showSubforumHomepage(ModelMap model, HttpSession session, String subforumName) throws InvalidUserCredentialsException, SubForumAlreadyExistException {
+		FacadeI facade = Facade.getFacade();
+		preperaSubforumHomepageModel(model, facade, session, subforumName);
+		return "subforum_homepage";
+	}
+
 //	/**
 //	 * Called when the user is already logged in and the subforum is listed in the httpsession
 //	 */
@@ -172,15 +171,17 @@ public class WebController {
 //		return "subforum_homepage";
 //	}
 //
-//	private void preperaSubforumHomepageModel(ModelMap model, FacadeI facade, SubForumPermissionI subforum, User user) {
-//		ThreadI[] threads = subforum.getThreads();
-//		model.addAttribute("subforumName", subforum.getSubForum().getName());
-//		model.addAttribute("user", user.getUsername());
-//		model.addAttribute("numberOfthreads", threads.length);
-////		model.addAttribute("isModerator", user.isAdmin()); TODO
-//		model.addAttribute("threadsList", threads);
-//
-//	}
+	private void preperaSubforumHomepageModel(ModelMap model, FacadeI facade, HttpSession session, String subforumName) throws SubForumAlreadyExistException {
+		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
+		SubForumI subForum = facade.viewSubforum(sessionID, subforumName);
+		Collection<ThreadI> threads = subForum.getThreads();
+		model.addAttribute("subforumName", subforumName);
+		model.addAttribute("user", facade.getCurrentUserName(sessionID));
+//		model.addAttribute("numberOfthreads", threads.length);//TODO
+//		model.addAttribute("isModerator", user.isAdmin()); //TODO
+		model.addAttribute("threadsList", threads);
+
+	}
 //
 //
 //	/**
