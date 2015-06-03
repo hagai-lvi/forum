@@ -66,7 +66,7 @@ public class WebController {
 	 * Shows a login/register page
 	 */
 	@RequestMapping(value = "/login_page",method = RequestMethod.POST)
-	public void loginForm(ModelMap model, HttpSession session, String forum) {
+	public void loginForm(ModelMap model, String forum) {
 		logger.info("loginForm request");
 		model.addAttribute("forumName", forum);
 	}
@@ -102,7 +102,7 @@ public class WebController {
 	 * Register a user to the current forum
 	 */
 	@RequestMapping(value = "register",method = RequestMethod.POST)
-	public String register(ModelMap model, HttpSession session, String username, String password, String email, String forumName)
+	public String register(ModelMap model, String username, String password, String email, String forumName)
 			throws UserAlreadyExistsException, InvalidUserCredentialsException {
 		logger.info("register request");
 		FacadeI facade = Facade.getFacade();
@@ -183,7 +183,7 @@ public class WebController {
 	private void preperaSubforumHomepageModel(ModelMap model, FacadeI facade, HttpSession session, String subforumName) throws SubForumAlreadyExistException {
 		logger.info("preperaSubforumHomepageModel request");
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
-		ExSubForumI subForum = null;
+		ExSubForumI subForum;
 		if(subforumName != null && !subforumName.equals("")) {
 			subForum = facade.viewSubforum(sessionID, subforumName);
 		}else {
