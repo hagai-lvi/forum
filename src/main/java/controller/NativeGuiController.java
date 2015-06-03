@@ -10,22 +10,26 @@ import main.exceptions.PasswordNotInEffectException;
 import main.interfaces.FacadeI;
 import main.interfaces.SubForumI;
 import main.services_layer.Facade;
+import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
 /**
  * Created by hagai_lvi on 6/2/15.
+ *
  */
 @RestController
 @RequestMapping("/gui")
 public class NativeGuiController {
+	private Logger logger = Logger.getLogger(this.getClass());
 
 
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/facade", method = RequestMethod.GET)
 	public @ResponseBody
 	ForumList getFacade(){
+		logger.info("got request getFacade");
 		ForumList list = new ForumList();
 		FacadeI facade = Facade.getFacade();
 		list.addAll(facade.getForumList());
@@ -36,6 +40,7 @@ public class NativeGuiController {
 	@RequestMapping(value = "/forum/{forumID}", method = RequestMethod.GET)
 	public @ResponseBody
 	SubForumList getSubForums(@PathVariable String forumID) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException {
+		logger.info("got request getSubForums");
 		SubForumList list = new SubForumList();
 		FacadeI facade = Facade.getFacade();
 		int login = facade.login(forumID, "ADMIN", "ADMIN");//TODO get credentials from the user
