@@ -44,7 +44,7 @@
             ${thread.getRootMessage().getMessageTitle()}
 
             <form action="thread_view" method="GET">
-                <input type="submit" value=${thread.getID()} name="threadID" />
+                <input type="submit" value="${thread.getTitle()}" name="threadID" />
             </form>
             <br/>
         </c:forEach>

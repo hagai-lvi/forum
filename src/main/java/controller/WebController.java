@@ -186,19 +186,18 @@ public class WebController {
 		model.addAttribute("threadsList", threads);
 
 	}
-//
-//
-//	/**
-//	 * Send a request to create a new sub forum in the currently used forum
-//	 */
-//	@RequestMapping(value = "/addThread",method = RequestMethod.POST)
-//	public void addThread(ModelMap model, HttpSession session, String srcMsgTitle, String srcMsgBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-//		FacadeI f = Facade.getFacade();
-//		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
-//		SubForumPermissionI subforum = (SubForumPermissionI)session.getAttribute(SESSION_SUBFORUM_ATTR);
-//		f.createNewThread(user, subforum, srcMsgTitle, srcMsgBody);
-//		model.addAttribute("threadTitle", srcMsgTitle);
-//	}
+
+
+	/**
+	 * Send a request to create a new sub forum in the currently used forum
+	 */
+	@RequestMapping(value = "/addThread",method = RequestMethod.POST)
+	public void addThread(ModelMap model, HttpSession session, String srcMsgTitle, String srcMsgBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+		FacadeI f = Facade.getFacade();
+		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
+		f.createNewThread(sessionID, srcMsgTitle, srcMsgBody);
+		model.addAttribute("threadTitle", srcMsgTitle);
+	}
 //
 //
 //
