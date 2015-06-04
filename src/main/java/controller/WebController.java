@@ -210,22 +210,19 @@ public class WebController {
 		f.createNewThread(sessionID, srcMsgTitle, srcMsgBody);
 		model.addAttribute("threadTitle", srcMsgTitle);
 	}
-//
-//
-//
-//	/**
-//	 * Called when the user is already logged in and the subforum is listed in the httpsession
-//	 */
-//	@RequestMapping(value = "thread_view",method = RequestMethod.GET)
-//	public String showThread(ModelMap model, HttpSession session, long threadID){
-//		SubForumPermissionI sf = (SubForumPermissionI) session.getAttribute(SESSION_SUBFORUM_ATTR);
-//		FacadeI facade = Facade.getFacade();
-//		ThreadI thread = facade.getThreadById(sf, threadID);
-//		session.setAttribute(SESSION_THREAD_ATTR,thread);
-//		model.addAttribute("thread", thread);
-//		model.addAttribute("node", thread.getMessages().getRootNode());
-//		return "thread_view";
-//	}
+
+	/**
+	 * Called when the user is already logged in and the subforum is listed in the httpsession
+	 */
+	@RequestMapping(value = "thread_view",method = RequestMethod.GET)
+	public String showThread(ModelMap model, HttpSession session, String threadID) throws DoesNotComplyWithPolicyException {
+		FacadeI facade = Facade.getFacade();
+		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
+		ExThreadI thread = facade.viewThread(sessionID, threadID);
+		model.addAttribute("thread", thread);
+		model.addAttribute("node", thread.getMessages().getRoot());
+		return "thread_view";
+	}
 //
 //	@RequestMapping(value = "thread_view",method = RequestMethod.POST)
 //	public String addMessageAndShowThread(ModelMap model, HttpSession session, String newMsgTitle, String newMsgBody, Long messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {

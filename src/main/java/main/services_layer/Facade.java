@@ -235,10 +235,16 @@ import java.util.Iterator;
 	}
 
 	@Override
-	public void viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException {
+	public ExThreadI viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException {
 		Session current = findSession(sessionId);
-		ThreadI thread = current.getSubForum().createThread(new ForumMessage(null, current.getUser(), null, title));
-		current.setThread(thread);
+		Collection<ThreadI> threads = current.getSubForum().getThreads();
+		for (ThreadI t: threads){
+			if (t.getTitle().equals(title)){
+				current.setThread(t);
+				return t;
+			}
+		}
+		return null; //TODO throw exception
 	}
 
 

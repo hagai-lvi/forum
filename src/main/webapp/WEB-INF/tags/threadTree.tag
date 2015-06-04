@@ -1,4 +1,4 @@
-<%@ attribute name="node" type="data_structures.TreeNode" required="true" %>
+<%@ attribute name="node" type="data_structures.Node" required="true" %>
 <%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <link type="text/css" rel="stylesheet" href="<c:url value='/resources/css/my-list.css' />" />

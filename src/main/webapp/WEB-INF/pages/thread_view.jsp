@@ -9,7 +9,7 @@
     <title></title>
 </head>
 <body>
-<h1>Thread ${thread.getRootMessage().getMessageTitle()}</h1>
+<h1>Thread ${node.getData().getMessageText()}</h1>
 
 
 <%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
@@ -21,7 +21,7 @@
     <input hidden name="messageID" value=${node.data.getId()}>
     <input type="submit" value="Add reply"/>
 </form>
-<myTags:threadTree node="${root}"/>
+<%--<myTags:threadTree node="${node}"/>--%>
 
 
 </body>

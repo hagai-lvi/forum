@@ -227,9 +227,10 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException {
+    public ExThreadI viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException {
         if(this.real!=null)
-            this.real.viewThread(sessionId, title);
+            return this.real.viewThread(sessionId, title);
+        return null;
     }
 
 
