@@ -65,6 +65,7 @@ public class SubForum extends PersistantObject implements SubForumI {
         }
         ForumThread thread = new ForumThread(message);
         _threads.add(thread);
+        this.Update();
         return thread;
     }
 
@@ -79,11 +80,13 @@ public class SubForum extends PersistantObject implements SubForumI {
             throw new MessageNotFoundException(original, this);
         }
         thread.addReply(reply, original);
+        this.Update();
     }
 
     @Override
     public void setModerator(UserI mod){
         _moderators.put(mod.getUsername(), mod);
+        this.Update();
     }
 
 
@@ -112,8 +115,6 @@ public class SubForum extends PersistantObject implements SubForumI {
         this.Update();
     }
 
-
-    // ============================================================ Setters ================================
 
     @Override
     public void removeModerator(UserI mod) {
