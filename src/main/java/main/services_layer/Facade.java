@@ -46,9 +46,9 @@ import java.util.Iterator;
 	}
 
 	@Override
-	public void addForum(String username, String password, String forumName, String regex, int numberOfModerators) throws PermissionDeniedException, ForumAlreadyExistException {
+	public void addForum(String username, String password, boolean isSecured, String forumName, String regex, int numberOfModerators, int passLife) throws PermissionDeniedException, ForumAlreadyExistException {
 		//TODO
-		forums.add(new Forum(forumName, new ForumPolicy(numberOfModerators, regex)));
+		forums.add(new Forum(forumName, new ForumPolicy(isSecured, numberOfModerators, regex, passLife)));
 	}
 
 	@Override
@@ -143,9 +143,9 @@ import java.util.Iterator;
 	}
 
 	@Override
-	public void setPolicies(int sessionId, String regex, int numOfModerators) {
+	public void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passLife) {
 		Session current = findSession(sessionId);
-		current.getForum().setPolicy(new ForumPolicy(numOfModerators, regex));
+		current.getForum().setPolicy(new ForumPolicy(isSecured, numOfModerators, regex, passLife));
 	}
 
 	@Override

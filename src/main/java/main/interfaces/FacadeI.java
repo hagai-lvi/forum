@@ -28,7 +28,7 @@ public interface FacadeI {
 	 * Add a forum to the system, requires login with permissions
 	 * TODO who checks the permissions
 	 */
-	void addForum(String username, String password, String forumName, String regex, int numberOfModerators) throws PermissionDeniedException, ForumAlreadyExistException;
+	void addForum(String username, String password, boolean isSecured, String forumName, String regex, int numberOfModerators, int passwordEffectTime) throws PermissionDeniedException, ForumAlreadyExistException;
 
 	/**
 	 * Create a subforum in the specified forum.
@@ -101,7 +101,7 @@ public interface FacadeI {
 
 	void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException;
 
-    void setPolicies(int sessionId, String regex, int numOfModerators);
+    void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passwordEffectTime);
 	/**
 	 * edit message
 	 * @param sessionId - Id of current session

@@ -33,7 +33,7 @@ public class UserSubforumPermissionTest {
     public void setUp() throws Exception {
         int maxModerators = 1;
         String regex = "a-b";
-        policy = new ForumPolicy(maxModerators, regex);
+        policy = new ForumPolicy(false, maxModerators, regex, 365);
         forum = new Forum("Sport", policy);
         subforum = new SubForum("Sport", policy.getSubforumPolicy());
         permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER,forum, subforum);

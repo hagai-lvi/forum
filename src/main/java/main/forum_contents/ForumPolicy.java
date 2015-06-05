@@ -33,9 +33,12 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     private boolean secured;
 
 //TODO - define parameters according to  requirements.
-    public ForumPolicy(int maxModerators, String passwordRegex) {
+    public ForumPolicy(boolean isSecured, int maxModerators, String passwordRegex, int passwordEffectTime) {
+        this.secured = isSecured;
         this.maxModerators = maxModerators;
         this.passwordRegex = passwordRegex;
+        this.passwordEffectTime = passwordEffectTime;
+
         //TODO - decide how to manage forbidden words.
         forbiddenWords = new String[2];
         forbiddenWords[0] = "stupid";

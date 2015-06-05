@@ -24,6 +24,7 @@ public class IntegrationTest {
 	public void test_RegisterLoginAndViewSubforums() throws InvalidUserCredentialsException, UserAlreadyExistsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
 			_facade.register("forum", "user", "pass", "mail@mail.com");
+
 			int sessionID = _facade.login("forum", "user", "pass");
 			_facade.getSubForumList(sessionID);
 		}catch (InvalidUserCredentialsException e){
@@ -150,7 +151,7 @@ public class IntegrationTest {
 	public void init() {
 		_facade = Facade.getFacade();
 		try {
-			_facade.addForum("admin", "pass", "forum", "pass", 3);
+			_facade.addForum("admin", "pass", false, "forum", "pass", 3, 365);
 		} catch (PermissionDeniedException e) {
 			e.printStackTrace();
 		} catch (ForumAlreadyExistException e) {
