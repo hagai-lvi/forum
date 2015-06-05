@@ -3,6 +3,7 @@ package controller;
 import com.fasterxml.jackson.annotation.JsonView;
 import gui_objects.ForumList;
 import gui_objects.SubForumList;
+import gui_objects.UserG;
 import main.exceptions.EmailNotAuthanticatedException;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.NeedMoreAuthParametersException;
@@ -13,6 +14,7 @@ import main.services_layer.Facade;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
 /**
@@ -22,9 +24,12 @@ import java.util.Collection;
 @RestController
 @RequestMapping("/gui")
 public class NativeGuiController {
+	public static final String SESSION_ID_ATTR = "session_id";
 	private Logger logger = Logger.getLogger(this.getClass());
 
-
+	/**
+	 * @return A list of json objects that represents all the forums in the system
+	 */
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/facade", method = RequestMethod.GET)
 	public @ResponseBody
@@ -37,14 +42,15 @@ public class NativeGuiController {
 	}
 
 	@JsonView(NativeGuiController.class)
-	@RequestMapping(value = "/forum/{forumID}", method = RequestMethod.GET)
+	@RequestMapping(value = "/forum/{forumID}", method = RequestMethod.POST)
 	public @ResponseBody
-	SubForumList getSubForums(@PathVariable String forumID) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException {
-		logger.info("got request getSubForums");
+	SubForumList getSubforum(HttpSession session, @PathVariable String forumID, @RequestBody UserG user) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException {
+		logger.info("got request getSubforum");
 		SubForumList list = new SubForumList();
 		FacadeI facade = Facade.getFacade();
-		int login = facade.login(forumID, "ADMIN", "ADMIN");//TODO get credentials from the user
-		Collection<SubForumI> subForumList = facade.getSubForumList(login);
+		Integer sessionID = facade.login(forumID, user.getUsername(), user.getPassword());
+		session.setAttribute(SESSION_ID_ATTR, sessionID);
+		Collection<SubForumI> subForumList = facade.getSubForumList(sessionID);
 
 		list.addAll(subForumList);
 		return list;
@@ -52,6 +58,28 @@ public class NativeGuiController {
 
 
 
+
+
+
+
+
+
+
+	@RequestMapping(value = "/postExp", method = RequestMethod.POST)
+	public @ResponseBody
+	MyPojoList postExp(@RequestBody UserG user){
+		MyPojoList l = new MyPojoList();
+		MyPojo p1 = new MyPojo();
+		p1.setName(user.getUsername());
+		p1.setId(Integer.toString(1));
+
+		MyPojo p2 = new MyPojo();
+		p2.setName(user.getPassword());
+		p2.setId(Integer.toString(1));
+		l.add(p1);
+		l.add(p2);
+		return l;
+	}
 
 	@RequestMapping(value = "/list", method = RequestMethod.GET)
 	public @ResponseBody

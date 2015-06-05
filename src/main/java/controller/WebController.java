@@ -31,21 +31,23 @@ public class WebController {
 	 * Shows a facade with all the available forums in the system
 	 */
 	@RequestMapping(value = "/facade",method = RequestMethod.GET)
-	public void showFacade(ModelMap model) {
+	public String showFacade(ModelMap model) {
 		logger.info("showFacade request");
 		FacadeI f = Facade.getFacade();
 		model.addAttribute("forumList", f.getForumList());
+		return "facade";
 	}
 
 	/**
 	 * Send a request to create a new forum in the system
 	 */
 	@RequestMapping(value = "/addForum",method = RequestMethod.POST)
-	public void addForum(ModelMap model, String forumName, int numOfModerators, String passRegex) throws PermissionDeniedException, ForumAlreadyExistException {
+	public String addForum(ModelMap model, String forumName, int numOfModerators, String passRegex) throws PermissionDeniedException, ForumAlreadyExistException {
 		logger.info("addForum request");
 		FacadeI f = Facade.getFacade();
 		f.addForum(ADMIN_PASS, ADMIN_USER, forumName, passRegex, numOfModerators); //TODO get credentials from the user
 		model.addAttribute("forumName", forumName);
+		return "addForum";
 	}
 
 
@@ -53,12 +55,13 @@ public class WebController {
 	 * Send a request to create a new sub forum in the currently used forum
 	 */
 	@RequestMapping(value = "/addSubforum",method = RequestMethod.POST)
-	public void addSubforum(ModelMap model, HttpSession session, String subforumName) throws SubForumAlreadyExistException, PermissionDeniedException {
+	public String addSubforum(ModelMap model, HttpSession session, String subforumName) throws SubForumAlreadyExistException, PermissionDeniedException {
 		logger.info("addSubforum request");
 		FacadeI f = Facade.getFacade();
 		Integer sessionId = (Integer) session.getAttribute(SESSION_ID_ATTR);
 		f.createSubforum(sessionId, subforumName);
 		model.addAttribute("subforumName", subforumName);
+		return "addSubforum";
 	}
 
 
@@ -66,9 +69,10 @@ public class WebController {
 	 * Shows a login/register page
 	 */
 	@RequestMapping(value = "/login_page",method = RequestMethod.POST)
-	public void loginForm(ModelMap model, String forum) {
+	public String loginForm(ModelMap model, String forum) {
 		logger.info("loginForm request");
 		model.addAttribute("forumName", forum);
+		return "login_page";
 	}
 
 
@@ -240,14 +244,6 @@ public class WebController {
 		return (int) session.getAttribute(SESSION_ID_ATTR);
 	}
 
-	//
-//	//TODO remove, for testing only
-//	@RequestMapping(value = "abc",method = RequestMethod.GET)
-//	public static String showThread(ModelMap model, HttpServletRequest request){
-//		model.addAttribute("node", TreeNode.getNodeTree());
-//		return "thread_view";
-//	}
-//
 	@RequestMapping(value = "/reply_to_message",method = RequestMethod.POST)
 	public String addReplyMessage(ModelMap model, HttpSession session, int messageID) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
 		model.addAttribute("messageID", messageID);
