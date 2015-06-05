@@ -1,5 +1,7 @@
 package data_structures;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import controller.NativeGuiController;
 import main.exceptions.NodeNotFoundException;
 import main.forum_contents.ForumMessage;
 import main.interfaces.MessageI;
@@ -14,6 +16,7 @@ public class Tree{
     // TODO handle the case in which the root is null (might happen after calling remove())
 
     @OneToOne(targetEntity = Node.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
+    @JsonView(NativeGuiController.class)
     private Node root;
 
 

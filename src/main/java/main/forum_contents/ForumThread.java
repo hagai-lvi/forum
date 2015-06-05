@@ -1,5 +1,7 @@
 package main.forum_contents;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import controller.NativeGuiController;
 import data_structures.Tree;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.NodeNotFoundException;
@@ -16,6 +18,7 @@ public class ForumThread implements ThreadI{
 
     @OneToOne(targetEntity = Tree.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     //@Transient
+    @JsonView(NativeGuiController.class)
     private Tree messages;
 
 
