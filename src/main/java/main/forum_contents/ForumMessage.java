@@ -92,7 +92,7 @@ public class ForumMessage implements MessageI {
 	}
 
 
-	@Id
+	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
 	@Override

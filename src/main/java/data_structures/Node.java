@@ -12,7 +12,7 @@ import java.util.List;
 /**
  * Created by xkcd on 6/2/2015.
  */
-@Entity(name = "node")
+@Entity(name = "Node")
 public class Node extends PersistantObject{
 
 

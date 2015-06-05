@@ -36,11 +36,11 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
     @Override
     public void saveOrUpdate(Object o) {
         Session session = session_Factory.openSession();
+        session.flush();
         session.beginTransaction();
         session.saveOrUpdate(o);
-        //session.flush();
         session.getTransaction().commit();
-        //session.clear();
+        session.clear();
         session.close();
 
     }
@@ -64,11 +64,11 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
     @Override
     public void Update(Object o){
         Session session = session_Factory.openSession();
+        session.flush();
         session.beginTransaction();
         session.saveOrUpdate(o);
-        //session.flush();
         session.getTransaction().commit();
-        //session.clear();
+        session.clear();
         session.close();
     }
 
