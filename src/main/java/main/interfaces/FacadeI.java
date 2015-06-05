@@ -144,4 +144,6 @@ public interface FacadeI {
 	ExSubForumI viewSubforum(int sessionId);
 
 	ExThreadI viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException;
+
+	ThreadI getCurrentThread(int sessionID);
 }

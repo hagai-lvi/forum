@@ -2,7 +2,6 @@ package data_structures;
 
 import main.exceptions.NodeNotFoundException;
 import main.forum_contents.ForumMessage;
-import main.interfaces.ExMessageI;
 import main.interfaces.MessageI;
 
 import javax.persistence.*;
@@ -62,13 +61,16 @@ public class Tree{
         }
     }
 
-    public ExMessageI find(Node node, int id) {
-        if (root.data.getId() == id) {
+    public MessageI find(int id){
+        return find(root, id);
+    }
+    private MessageI find(Node node, int id) {
+        if (node.data.getId() == id) {
             return node.data;
         }
         else{
             for (Node child : root.children){
-                ExMessageI msg = find(child, id);
+                MessageI msg = find(child, id);
                 if (msg != null) {
                     return msg;
                 }

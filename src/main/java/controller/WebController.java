@@ -223,19 +223,24 @@ public class WebController {
 		model.addAttribute("node", thread.getMessages().getRoot());
 		return "thread_view";
 	}
-//
-//	@RequestMapping(value = "thread_view",method = RequestMethod.POST)
-//	public String addMessageAndShowThread(ModelMap model, HttpSession session, String newMsgTitle, String newMsgBody, Long messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
-//		SubForumPermissionI sf = (SubForumPermissionI) session.getAttribute(SESSION_SUBFORUM_ATTR);
-//		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
-//		FacadeI facade = Facade.getFacade();
-//		facade.addReply(user, sf, facade.getMessageByID(messageID.intValue()/*TODO use long*/),newMsgTitle, newMsgBody);
-//		ThreadI thread = (ThreadI) session.getAttribute(SESSION_THREAD_ATTR);
-//		model.addAttribute("thread", thread);
-//		model.addAttribute("node", thread.getMessages().getRootNode());
-//		return "thread_view";
-//	}
-//
+
+	@RequestMapping(value = "thread_view",method = RequestMethod.POST)
+	public String addMessageAndShowThread(ModelMap model, HttpSession session, String newMsgTitle, String newMsgBody,
+										  int messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
+		int sessionID = getSessionID(session);
+		FacadeI facade = Facade.getFacade();
+		facade.addReply(sessionID, messageID, newMsgTitle, newMsgBody);
+		ThreadI thread = facade.getCurrentThread(sessionID);
+		model.addAttribute("thread", thread);
+		model.addAttribute("node", thread.getMessages().getRoot());
+		return "thread_view";
+	}
+
+	private int getSessionID(HttpSession session) {
+		return (int) session.getAttribute(SESSION_ID_ATTR);
+	}
+
+	//
 //	//TODO remove, for testing only
 //	@RequestMapping(value = "abc",method = RequestMethod.GET)
 //	public static String showThread(ModelMap model, HttpServletRequest request){
@@ -243,16 +248,11 @@ public class WebController {
 //		return "thread_view";
 //	}
 //
-//	@RequestMapping(value = "/reply_to_message",method = RequestMethod.POST)
-//	public String addReplyMessage(ModelMap model, HttpSession session, Long messageID) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-////		FacadeI f = Facade.getFacade();
-////		UserI user = (UserI) session.getAttribute(SESSION_USER_ATTR);
-////		SubForumPermissionI subforum = (SubForumPermissionI)session.getAttribute(SESSION_SUBFORUM_ATTR);
-////		f.createNewThread(user, subforum, srcMsgTitle, srcMsgBody);
-////		model.addAttribute("threadTitle", srcMsgTitle);
-//		model.addAttribute("messageID", messageID);
-//		return "reply_to_message";
-//	}
+	@RequestMapping(value = "/reply_to_message",method = RequestMethod.POST)
+	public String addReplyMessage(ModelMap model, HttpSession session, int messageID) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+		model.addAttribute("messageID", messageID);
+		return "reply_to_message";
+	}
 //
 //
 //	@ExceptionHandler(Exception.class)

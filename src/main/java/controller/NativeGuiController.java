@@ -17,7 +17,7 @@ import java.util.Collection;
 
 /**
  * Created by hagai_lvi on 6/2/15.
- *
+ * A rest controller to work with the native GUI
  */
 @RestController
 @RequestMapping("/gui")

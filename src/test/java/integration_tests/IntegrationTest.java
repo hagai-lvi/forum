@@ -53,7 +53,7 @@ public class IntegrationTest {
 			assertEquals(newSF.getName(), "subforum");
 			ThreadI newThread = newSF.getThreads().iterator().next();
 			assertEquals(newThread.getTitle(), "thread-title");
-			ExMessageI newMessage = newThread.getMessages().find(newThread.getMessages().getRoot(), id);
+			ExMessageI newMessage = newThread.getMessages().find(id);
 			assertEquals(newMessage.getBody(), "message-body");
 
 			// user deletes message.
@@ -64,7 +64,7 @@ public class IntegrationTest {
 			sf = _facade.getSubForumList(session2ID);
 			newSF = sf.iterator().next();
 			newThread = newSF.getThreads().iterator().next();
-			newMessage = newThread.getMessages().find(newThread.getMessages().getRoot(), id);
+			newMessage = newThread.getMessages().find(id);
 			_facade.getMessage(session2ID, newMessage.getId());
 
 		} catch (UserAlreadyExistsException e) {

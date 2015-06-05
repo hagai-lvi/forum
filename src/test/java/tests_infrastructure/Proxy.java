@@ -233,5 +233,12 @@ public class Proxy implements FacadeI {
         return null;
     }
 
+    @Override
+    public ThreadI getCurrentThread(int sessionID) {
+        if (this.real != null)
+            return this.real.getCurrentThread(sessionID);
+        return null;
+    }
+
 
 }

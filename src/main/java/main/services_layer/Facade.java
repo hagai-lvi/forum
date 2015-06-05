@@ -85,6 +85,7 @@ import java.util.Iterator;
 
 	@Override
 	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException {
+		MessageI message = findSession(sessionId).getThread().getMessages().find(srcMessageId);
 		//TODO srcMessageId??
 	}
 
@@ -180,7 +181,10 @@ import java.util.Iterator;
 
 	@Override
 	public ExMessageI getMessage(int sessionId, int messageId) {
-		return null; 		//TODO messageId??
+		Tree messages = findSession(sessionId).getThread().getMessages();
+		ExMessageI message = messages.find( messageId);
+		return message;
+		//TODO throw exception if null
 	}
 
 	@Override
@@ -245,6 +249,12 @@ import java.util.Iterator;
 			}
 		}
 		return null; //TODO throw exception
+	}
+
+	@Override
+	public ThreadI getCurrentThread(int sessionID){
+		return findSession(sessionID).getThread();
+		//TODO throw exception if not found
 	}
 
 
