@@ -1,13 +1,11 @@
 package controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import gui_objects.ForumG;
 import gui_objects.ForumList;
 import gui_objects.SubForumList;
 import gui_objects.UserG;
-import main.exceptions.EmailNotAuthanticatedException;
-import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.NeedMoreAuthParametersException;
-import main.exceptions.PasswordNotInEffectException;
+import main.exceptions.*;
 import main.interfaces.FacadeI;
 import main.interfaces.SubForumI;
 import main.services_layer.Facade;
@@ -25,6 +23,8 @@ import java.util.Collection;
 @RequestMapping("/gui")
 public class NativeGuiController {
 	public static final String SESSION_ID_ATTR = "session_id";
+	private static final String ADMIN_PASS = "ADMIN";
+	private static final String ADMIN_USER = "ADMIN";
 	private Logger logger = Logger.getLogger(this.getClass());
 
 	/**
@@ -33,12 +33,27 @@ public class NativeGuiController {
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/facade", method = RequestMethod.GET)
 	public @ResponseBody
-	ForumList getFacade(){
+	ForumList showFacade(){
 		logger.info("got request getFacade");
 		ForumList list = new ForumList();
 		FacadeI facade = Facade.getFacade();
 		list.addAll(facade.getForumList());
 		return list;
+	}
+
+
+	/**
+	 * example: {@code {"name":"FORUM","regex":".*","numOfModerators":10,"user":{"username":"ADMIN","password":"ADMIN"}}}
+	 * Create a new forum
+	 */
+	@JsonView(NativeGuiController.class)
+	@RequestMapping(value = "/addForum", method = RequestMethod.POST)
+	public @ResponseBody
+	void addForum(@RequestBody ForumG forum) throws PermissionDeniedException, ForumAlreadyExistException {
+		FacadeI facade = Facade.getFacade();
+		//TODO get credentials from user
+		UserG user = forum.getUser();
+		facade.addForum(user.getUsername(), user.getPassword(), forum.getName(), forum.getRegex(), forum.getNumOfModerators());
 	}
 
 	/**
