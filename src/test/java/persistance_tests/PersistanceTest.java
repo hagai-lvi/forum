@@ -33,23 +33,10 @@ public class PersistanceTest extends TestCase{
     private static User user;
     private static Integer uid;
 
-    @Override
-    public void setUp() throws Exception{
-        abs = HibernatePersistancyAbstractor.getPersistanceAbstractor();
-    }
-
     @Test
     public void test1PolicySave(){
         forum_p = new ForumPolicy(5, "abc");
-        abs.save(forum_p);
         policy_id = forum_p.getId();
-    }
-
-    @Test
-    public void test2Policy_Load(){
-        ForumPolicy p = abs.load(ForumPolicy.class, policy_id);
-        assertEquals(p.getMaxModerators(), 5);
-        assertEquals(p.getPasswordRegex(), "abc");
     }
 
     @Test  // added ignore flag because creating a forum automatically saves to db, so no need to save.
@@ -57,15 +44,13 @@ public class PersistanceTest extends TestCase{
         Forum forum = new Forum("Some forum", forum_p);
         forum_id = forum.getName();
     }
-/*
 
     @Test
     public void test4Forum_Load() throws SubForumAlreadyExistException {
-        Forum f = abs.load(Forum.class, forum_id);
-        f.createSubForum("Newwww");
+        Forum f = Forum.load("Some forum");
         assertEquals(f.getName(), "Some forum");
     }
-
+/*
     @Test
     public void test5ForumPermissions_Save(){
         session.beginTransaction();
