@@ -1,9 +1,9 @@
 package data_structures;
 
 import main.Persistancy.PersistantObject;
+import com.fasterxml.jackson.annotation.JsonView;
+import controller.NativeGuiController;
 import main.forum_contents.ForumMessage;
-import org.hibernate.annotations.Type;
-
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ public class Node extends PersistantObject{
 
     @OneToOne(targetEntity = ForumMessage.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     //@Transient
+    @JsonView(NativeGuiController.class)
     public ForumMessage data;
 
     @ManyToOne(targetEntity = Node.class,  cascade = CascadeType.ALL, fetch= FetchType.EAGER)
@@ -26,6 +27,7 @@ public class Node extends PersistantObject{
 
     @OneToMany(targetEntity = Node.class,  cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     //@Transient
+    @JsonView(NativeGuiController.class)
     public List<Node> children;
 
     public Node(ForumMessage data, Node parent) {

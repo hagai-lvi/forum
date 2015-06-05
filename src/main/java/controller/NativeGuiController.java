@@ -1,15 +1,9 @@
 package controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import gui_objects.ForumList;
-import gui_objects.SubForumList;
-import gui_objects.UserG;
-import main.exceptions.EmailNotAuthanticatedException;
-import main.exceptions.InvalidUserCredentialsException;
-import main.exceptions.NeedMoreAuthParametersException;
-import main.exceptions.PasswordNotInEffectException;
-import main.interfaces.FacadeI;
-import main.interfaces.SubForumI;
+import gui_objects.*;
+import main.exceptions.*;
+import main.interfaces.*;
 import main.services_layer.Facade;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
@@ -25,6 +19,8 @@ import java.util.Collection;
 @RequestMapping("/gui")
 public class NativeGuiController {
 	public static final String SESSION_ID_ATTR = "session_id";
+	private static final String ADMIN_PASS = "ADMIN";
+	private static final String ADMIN_USER = "ADMIN";
 	private Logger logger = Logger.getLogger(this.getClass());
 
 	/**
@@ -33,7 +29,7 @@ public class NativeGuiController {
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/facade", method = RequestMethod.GET)
 	public @ResponseBody
-	ForumList getFacade(){
+	ForumList showFacade(){
 		logger.info("got request getFacade");
 		ForumList list = new ForumList();
 		FacadeI facade = Facade.getFacade();
@@ -41,11 +37,32 @@ public class NativeGuiController {
 		return list;
 	}
 
+
+	/**
+	 * example: {@code {"name":"FORUM","regex":".*","numOfModerators":10,"user":{"username":"ADMIN","password":"ADMIN"}}}
+	 * Create a new forum
+	 */
+	@JsonView(NativeGuiController.class)
+	@RequestMapping(value = "/addForum", method = RequestMethod.POST)
+	public @ResponseBody
+	void addForum(@RequestBody ForumG forum) throws PermissionDeniedException, ForumAlreadyExistException {
+		FacadeI facade = Facade.getFacade();
+		//TODO get credentials from user
+		UserG user = forum.getUser();
+		facade.addForum(user.getUsername(), user.getPassword(),
+				true, //TODO what should be here?
+				forum.getName(),
+				forum.getRegex(), forum.getNumOfModerators(),
+				Integer.MAX_VALUE //TODO what should be here?
+		);
+	}
+
 	/**
 	 *
-	 * An example request: send post request to<br/> <code>http://localhost:8080/forum-system/gui/forum/A</code> <br/>
+	 * An example request: send post request to<br/> {@code http://localhost:8080/forum-system/gui/forum/FORUM-NAME} <br/>
 	 * with the json <code>{"username":"ADMIN","password":"ADMIN"}</code> <br/>
-	 * <b>Don't forget the <code>Content-type:application/json</code> http header</b>
+	 * <b>Don't forget the <code>Content-type:application/json</code> http header</b><br/>
+	 * <b>NOTE that the forum name is part of the URL, i.e. {@code .../forum/FORUM-NAME}</b>
 	 *
 	 * @param forumID given as a rest path property
 	 * @param user given as a json in the http request body
@@ -56,7 +73,7 @@ public class NativeGuiController {
 	@RequestMapping(value = "/forum/{forumID}", method = RequestMethod.POST)
 	public @ResponseBody
 	SubForumList getForum(HttpSession session, @PathVariable String forumID, @RequestBody UserG user) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException {
-		logger.info("got request getSubforum");
+		logger.info("got request getForum");
 		SubForumList list = new SubForumList();
 		FacadeI facade = Facade.getFacade();
 		Integer sessionID = facade.login(forumID, user.getUsername(), user.getPassword());
@@ -67,13 +84,26 @@ public class NativeGuiController {
 		return list;
 	}
 
+	/**
+	 * @return A list of json objects that represents all the forums in the system
+	 */
+	@JsonView(NativeGuiController.class)
+	@RequestMapping(value = "/subforum/{subforumID}", method = RequestMethod.GET)
+	public @ResponseBody
+	ThreadList getSubforum(HttpSession session, @PathVariable String subforumID ) throws SubForumAlreadyExistException {
+		logger.info("got request getSubforum");
+		ThreadList list = new ThreadList();
+		FacadeI facade = Facade.getFacade();
+		int sessionID = getSessionID(session);
+		ExSubForumI exSubForumI = facade.viewSubforum(sessionID, subforumID);
+		Collection<? extends ExThreadI> threadsList = exSubForumI.getThreads();
+		list.addAll(threadsList);
+		return list;
+	}
 
-
-
-
-
-
-
+	private int getSessionID(HttpSession session) {
+		return (int) session.getAttribute(SESSION_ID_ATTR);
+	}
 
 
 	@RequestMapping(value = "/postExp", method = RequestMethod.POST)
