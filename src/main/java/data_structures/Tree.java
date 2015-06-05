@@ -79,7 +79,7 @@ public class Tree{
         }
     }
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
 

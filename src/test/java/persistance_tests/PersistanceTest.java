@@ -35,7 +35,7 @@ public class PersistanceTest extends TestCase{
 
     @Test
     public void test1PolicySave(){
-        forum_p = new ForumPolicy(5, "abc");
+        forum_p = new ForumPolicy(true, 5, "abc", 20);
         policy_id = forum_p.getId();
     }
 

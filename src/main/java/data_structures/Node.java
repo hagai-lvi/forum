@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 public class Node{
 
+
     @OneToOne(targetEntity = ForumMessage.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     //@Transient
     public ForumMessage data;
@@ -64,7 +65,7 @@ public class Node{
         return data;
     }
 
-    @Id
+    @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
 
     public String getId() {
