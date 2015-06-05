@@ -58,9 +58,10 @@ public class NativeGuiController {
 
 	/**
 	 *
-	 * An example request: send post request to<br/> <code>http://localhost:8080/forum-system/gui/forum/A</code> <br/>
+	 * An example request: send post request to<br/> {@code http://localhost:8080/forum-system/gui/forum/FORUM-NAME} <br/>
 	 * with the json <code>{"username":"ADMIN","password":"ADMIN"}</code> <br/>
-	 * <b>Don't forget the <code>Content-type:application/json</code> http header</b>
+	 * <b>Don't forget the <code>Content-type:application/json</code> http header</b><br/>
+	 * <b>NOTE that the forum name is part of the URL, i.e. {@code .../forum/FORUM-NAME}</b>
 	 *
 	 * @param forumID given as a rest path property
 	 * @param user given as a json in the http request body
