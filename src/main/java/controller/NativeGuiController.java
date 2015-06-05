@@ -49,7 +49,12 @@ public class NativeGuiController {
 		FacadeI facade = Facade.getFacade();
 		//TODO get credentials from user
 		UserG user = forum.getUser();
-		facade.addForum(user.getUsername(), user.getPassword(), forum.getName(), forum.getRegex(), forum.getNumOfModerators());
+		facade.addForum(user.getUsername(), user.getPassword(),
+				true, //TODO what should be here?
+				forum.getName(),
+				forum.getRegex(), forum.getNumOfModerators(),
+				Integer.MAX_VALUE //TODO what should be here?
+		);
 	}
 
 	/**
