@@ -202,15 +202,21 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     @Override
-    public UserI login(String username, String password) throws InvalidUserCredentialsException, NeedMoreAuthParametersException {
+    public UserI login(String username, String password) throws InvalidUserCredentialsException, NeedMoreAuthParametersException, EmailNotAuthanticatedException, PasswordNotInEffectException {
         if (_users.containsKey(username) &&
-                _users.get(username).getPassword().equals(password)){
-
+                 _users.get(username).getPassword().equals(password)){
+            UserI user = _users.get(username);
             if (policy.hasMoreAuthQuestions()){
                 throw new NeedMoreAuthParametersException();
             }
-
-            return _users.get(username);
+            if (!user.isEmailAuthenticated()){
+                throw new EmailNotAuthanticatedException();
+            }
+            if (!policy.isPasswordInEffect(user.getPasswordCreationDate())){
+                System.out.println(user.getPasswordCreationDate().toString());
+                throw new PasswordNotInEffectException();
+            }
+            return user;
         }
         else {
             throw new InvalidUserCredentialsException();

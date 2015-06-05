@@ -15,7 +15,7 @@ public class ForumPolicyTest extends TestCase {
     @Override
     public void setUp() throws Exception {
         super.setUp();
-        fp = new ForumPolicy(3, "[a-z]*");
+        fp = new ForumPolicy(false, 3, "[a-z]*", 365);
     }
 
     @Override

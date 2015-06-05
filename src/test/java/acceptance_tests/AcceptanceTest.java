@@ -32,7 +32,7 @@ public class AcceptanceTest extends TestCase {
 
             //add forums
             for (int i = 0; i < 5; i++) {
-                _facade.addForum("admin", "admin", "Forum " + Integer.toString(i), "a+", 2);
+                _facade.addForum("admin", "admin", false, "Forum " + Integer.toString(i), "a+", 2, 365);
 
             //add users to forums and create threads
             for (int j = 0; j < 3; j++) {
@@ -123,7 +123,7 @@ public class AcceptanceTest extends TestCase {
     public void createForumTest() throws PermissionDeniedException, ForumAlreadyExistException {
 
         int numOfForums = _facade.getForumList().size();
-        _facade.addForum("admin", "admin", "Forum CreateForumTest", "[a-z]*[!@#][a-z]*", 2);
+        _facade.addForum("admin", "admin", false, "Forum CreateForumTest", "[a-z]*[!@#][a-z]*", 2, 365);
         assertEquals(numOfForums + 1, _facade.getForumList().size());
 
     }
@@ -133,7 +133,7 @@ public class AcceptanceTest extends TestCase {
      * target: set new policy for forum
      */
     public void setPoliciesTest() {
-        _facade.setPolicies(0, "a*", 1);
+        _facade.setPolicies(0, false, "a*", 1, 365);
         // test pass regex
         try {
             _facade.register("Forum1", "user", "aaa", "mail@mail.mail");
@@ -148,7 +148,7 @@ public class AcceptanceTest extends TestCase {
         } catch (PermissionDeniedException e) {
             assertTrue(true);
         }
-        _facade.setPolicies(0, "a*", 2);
+        _facade.setPolicies(0, false, "a*", 2, 365);
         try {
             _facade.setModerator(0, "hagai");
         } catch (PermissionDeniedException e) {
