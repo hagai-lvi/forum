@@ -2,6 +2,8 @@ package main.forum_contents;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
+import main.Persistancy.HibernatePersistancyAbstractor;
+import main.Persistancy.PersistantObject;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
@@ -16,7 +18,10 @@ import java.util.*;
  * Created by hagai on 07/04/15.
  */
 @Entity
-public class SubForum implements SubForumI {
+public class SubForum extends PersistantObject implements SubForumI {
+
+
+    //  ============================================== Properties ====================================
 
     @JsonView(NativeGuiController.class)
     @Id
@@ -40,6 +45,8 @@ public class SubForum implements SubForumI {
     private SubForumPolicyI subforumPolicy;
 
 
+    // ================================================ Constructors ====================================
+
     public SubForum(String name, SubForumPolicyI subforumPolicy){
         _name = name;
         this.subforumPolicy = subforumPolicy;
@@ -48,6 +55,8 @@ public class SubForum implements SubForumI {
     public SubForum() {   // this is needed for hibernate
     }
 
+
+    // ================================================ Methods   =========================================
 
     @Override
     public ThreadI createThread(MessageI message) throws DoesNotComplyWithPolicyException {
@@ -100,8 +109,20 @@ public class SubForum implements SubForumI {
         else {
             throw new MessageNotFoundException(message, this);
         }
-
+        this.Update();
     }
+
+
+    // ============================================================ Setters ================================
+
+    @Override
+    public void removeModerator(UserI mod) {
+        _moderators.remove(mod);
+        this.Update();
+    }
+
+
+    // ============================================ GETTERS ================================================
 
     @Override
     public String getName(){
@@ -118,11 +139,6 @@ public class SubForum implements SubForumI {
         return _threads;
     }
 
-    @Override
-    public void removeModerator(UserI mod) {
-            _moderators.remove(mod);
-    }
-
     /**
      * Find the thread that contains the specified message
      */
@@ -133,6 +149,11 @@ public class SubForum implements SubForumI {
             }
         }
         return null;
+    }
+
+
+    public static SubForum load(String sub_forum_name){
+        return (SubForum)pers.load(SubForum.class, sub_forum_name);
     }
 
 
