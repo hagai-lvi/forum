@@ -34,7 +34,7 @@ public class User implements UserI {
     private Collection<SubForumPermissionI> subForumsPermissions;
     @OneToOne(targetEntity = UserForumPermission.class, cascade = CascadeType.ALL)
     private ForumPermissionI forumPermissions;
-    private boolean isEmailAuthenticated;
+    private boolean isEmailAuthenticated = true;
 
     public User(String username, String password, String email, ForumPermissionI forumPermissions) {
         this.username = username;
@@ -44,7 +44,7 @@ public class User implements UserI {
         signUpDate = new GregorianCalendar();
         seniorityInDays = 0;
         numOfMessages = 0;
-        this.isEmailAuthenticated = false;
+        this.isEmailAuthenticated = true;
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<>();
         this.forumPermissions = forumPermissions;

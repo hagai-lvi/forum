@@ -82,40 +82,6 @@ public class AcceptanceTest extends TestCase {
     }
 
 
-    @Test
-    @Ignore
-    public void testConnectToDB() throws SQLException {
-        Connection conn = null;
-        try {
-            conn =
-                    DriverManager.getConnection("jdbc:mysql://localhost/world?" +
-                            "user=root&password=Aa123456");
-            // Do something with the Connection
-
-        } catch (SQLException ex) {
-            // handle any errors
-            System.out.println("SQLException: " + ex.getMessage());
-            System.out.println("SQLState: " + ex.getSQLState());
-            System.out.println("VendorError: " + ex.getErrorCode());
-        }
-        assert conn != null;
-        Statement stmt = conn.createStatement();
-        String query = "select * from CITY;";
-        ResultSet rs = stmt.executeQuery(query);
-        ResultSetMetaData rsmd = rs.getMetaData();
-        System.out.println("querying SELECT * FROM XXX");
-        int columnsNumber = rsmd.getColumnCount();
-        while (rs.next()) {
-            for (int i = 1; i <= columnsNumber; i++) {
-                if (i > 1) System.out.print(",  ");
-                String columnValue = rs.getString(i);
-                System.out.print(columnValue + " " + rsmd.getColumnName(i));
-            }
-            System.out.println("");
-        }
-    }
-
-
     /**
      * target: check adding forum to the system.
      */

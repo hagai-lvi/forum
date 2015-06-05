@@ -26,7 +26,9 @@ public class SubForum extends PersistantObject implements SubForumI {
     //  ============================================== Properties ====================================
 
     @JsonView(NativeGuiController.class)
-    @Id
+    @Id@GeneratedValue(strategy = GenerationType.AUTO)
+    private int id;
+
     private String _name;
 
     /**
@@ -55,6 +57,7 @@ public class SubForum extends PersistantObject implements SubForumI {
     }
 
     public SubForum() {   // this is needed for hibernate
+
     }
 
 

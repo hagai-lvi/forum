@@ -26,7 +26,7 @@ public class UserSubforumPermissionTest {
 
     private Forum forum;
     private SubForum subforum;
-
+    private static int dbCounter = 0;
     private ForumPolicyI policy;
 
     @Before
@@ -34,7 +34,8 @@ public class UserSubforumPermissionTest {
         int maxModerators = 1;
         String regex = "a-b";
         policy = new ForumPolicy(false, maxModerators, regex, 365);
-        forum = new Forum("Sport", policy);
+        forum = new Forum("Sport" + dbCounter, policy);
+        dbCounter += 1;
         subforum = new SubForum("Sport", policy.getSubforumPolicy());
         permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER,forum, subforum);
         permission2 = new UserSubforumPermission(Permissions.PERMISSIONS_ADMIN,forum, subforum);

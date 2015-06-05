@@ -60,7 +60,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         long currDay = GregorianCalendar.getInstance().get(Calendar.DAY_OF_YEAR);
         long userDay = passwordDate.getInstance().get(Calendar.DAY_OF_YEAR);
         long age = (currYear - userYear) * 365 + currDay - userDay;
-        return age > passwordEffectTime;
+        return age < passwordEffectTime;
     }
 
     @Override

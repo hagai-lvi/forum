@@ -26,6 +26,7 @@ public class UserTest {
     private UserI user3;
     private ForumI forum;
     private ForumPolicyI policy;
+    private static int dbCounter = 0;
 
     @Before
     public void setUp() throws Exception {
@@ -34,7 +35,8 @@ public class UserTest {
         boolean isSecured = false;
         int passLife = 365;
         policy = new ForumPolicy(isSecured, maxModerators, regex, passLife);
-        forum = new Forum("Sport", policy);
+        dbCounter +=1;
+        forum = new Forum("Lifestyle" + dbCounter, policy);
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         ForumPermissionI permission3 = new UserForumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum);

@@ -71,7 +71,7 @@ public class Forum extends PersistantObject implements ForumI{
         this._users.put(this.admin.getUsername(), this.admin);
         this.forum_name = name;
         //this.pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
-        this.SaveOrUpdate();
+        this.Save();
     }
 
     public Forum() {  // needed here for hibernate
