@@ -1,5 +1,7 @@
 package main.forum_contents;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import controller.NativeGuiController;
 import data_structures.Tree;
 import main.Persistancy.PersistantObject;
 import main.exceptions.MessageNotFoundException;
@@ -17,6 +19,7 @@ public class ForumThread extends PersistantObject implements ThreadI{
 
     @OneToOne(targetEntity = Tree.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     //@Transient
+    @JsonView(NativeGuiController.class)
     private Tree messages;
 
 

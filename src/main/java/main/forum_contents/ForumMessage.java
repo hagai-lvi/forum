@@ -1,5 +1,7 @@
 package main.forum_contents;
 
+import com.fasterxml.jackson.annotation.JsonView;
+import controller.NativeGuiController;
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
 import main.User.User;
@@ -20,7 +22,9 @@ public class ForumMessage implements MessageI {
 	private MessageI reply_message;
 	@OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
 	private UserI writingUser;
+	@JsonView(NativeGuiController.class)
 	private String messageText;
+	@JsonView(NativeGuiController.class)
 	private String messageTitle;
 	private Date writingTime;
 	@OneToMany(targetEntity = ForumMessage.class, cascade = CascadeType.ALL)

@@ -1,13 +1,9 @@
 package controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
-import gui_objects.ForumG;
-import gui_objects.ForumList;
-import gui_objects.SubForumList;
-import gui_objects.UserG;
+import gui_objects.*;
 import main.exceptions.*;
-import main.interfaces.FacadeI;
-import main.interfaces.SubForumI;
+import main.interfaces.*;
 import main.services_layer.Facade;
 import org.apache.log4j.Logger;
 import org.springframework.web.bind.annotation.*;
@@ -72,7 +68,7 @@ public class NativeGuiController {
 	@RequestMapping(value = "/forum/{forumID}", method = RequestMethod.POST)
 	public @ResponseBody
 	SubForumList getForum(HttpSession session, @PathVariable String forumID, @RequestBody UserG user) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException {
-		logger.info("got request getSubforum");
+		logger.info("got request getForum");
 		SubForumList list = new SubForumList();
 		FacadeI facade = Facade.getFacade();
 		Integer sessionID = facade.login(forumID, user.getUsername(), user.getPassword());
@@ -83,13 +79,26 @@ public class NativeGuiController {
 		return list;
 	}
 
+	/**
+	 * @return A list of json objects that represents all the forums in the system
+	 */
+	@JsonView(NativeGuiController.class)
+	@RequestMapping(value = "/subforum/{subforumID}", method = RequestMethod.GET)
+	public @ResponseBody
+	ThreadList getSubforum(HttpSession session, @PathVariable String subforumID ) throws SubForumAlreadyExistException {
+		logger.info("got request getSubforum");
+		ThreadList list = new ThreadList();
+		FacadeI facade = Facade.getFacade();
+		int sessionID = getSessionID(session);
+		ExSubForumI exSubForumI = facade.viewSubforum(sessionID, subforumID);
+		Collection<? extends ExThreadI> threadsList = exSubForumI.getThreads();
+		list.addAll(threadsList);
+		return list;
+	}
 
-
-
-
-
-
-
+	private int getSessionID(HttpSession session) {
+		return (int) session.getAttribute(SESSION_ID_ATTR);
+	}
 
 
 	@RequestMapping(value = "/postExp", method = RequestMethod.POST)
