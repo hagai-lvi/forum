@@ -1,5 +1,6 @@
 package data_structures;
 
+import main.Persistancy.PersistantObject;
 import main.exceptions.NodeNotFoundException;
 import main.forum_contents.ForumMessage;
 import main.interfaces.MessageI;
@@ -10,7 +11,7 @@ import javax.persistence.*;
  * A basic tree implementation
  */
 @Entity
-public class Tree{
+public class Tree extends PersistantObject{
     // TODO handle the case in which the root is null (might happen after calling remove())
 
     @OneToOne(targetEntity = Node.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
@@ -19,6 +20,7 @@ public class Tree{
 
     public Tree(MessageI rootData) {
         root = new Node((ForumMessage)rootData, null);
+//        this.Save();
     }
 
     public Tree() {
@@ -31,6 +33,7 @@ public class Tree{
         }
         Node nodeToAdd = new Node(dataToAdd, ancestorNode);
         ancestorNode.addChild(dataToAdd);
+//        this.Save();
     }
 
     public Node getRoot() {
@@ -81,7 +84,6 @@ public class Tree{
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-
 
     public int getId() {
         return id;

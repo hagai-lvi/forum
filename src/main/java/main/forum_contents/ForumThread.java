@@ -1,6 +1,7 @@
 package main.forum_contents;
 
 import data_structures.Tree;
+import main.Persistancy.PersistantObject;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.NodeNotFoundException;
 import main.interfaces.MessageI;
@@ -12,7 +13,7 @@ import javax.persistence.*;
  * Created by hagai on 07/04/15.
  */
 @Entity
-public class ForumThread implements ThreadI{
+public class ForumThread extends PersistantObject implements ThreadI{
 
     @OneToOne(targetEntity = Tree.class, cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     //@Transient
@@ -21,6 +22,7 @@ public class ForumThread implements ThreadI{
 
     public ForumThread(MessageI initialMessage){
         messages = new Tree(initialMessage);
+//        this.Save();
     }
 
     public ForumThread() {
@@ -55,6 +57,7 @@ public class ForumThread implements ThreadI{
             //TODO fix the exception
             throw new MessageNotFoundException(original, null);
         }
+//        this.Save();
     }
 
     @Override

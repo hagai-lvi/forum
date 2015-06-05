@@ -1,5 +1,6 @@
 package data_structures;
 
+import main.Persistancy.PersistantObject;
 import main.forum_contents.ForumMessage;
 import org.hibernate.annotations.Type;
 
@@ -11,8 +12,8 @@ import java.util.List;
 /**
  * Created by xkcd on 6/2/2015.
  */
-@Entity
-public class Node{
+@Entity(name = "node")
+public class Node extends PersistantObject{
 
 
     @OneToOne(targetEntity = ForumMessage.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
@@ -31,6 +32,7 @@ public class Node{
         this.data = data;
         this.parent = parent;
         this.children = new ArrayList<>();
+    //    this.Save();
     }
 
     public Node() {
@@ -39,6 +41,7 @@ public class Node{
     public void addChild(ForumMessage child) {
         Node toAdd = new Node(child, this);
         children.add(toAdd);
+    //    this.Save();
     }
 
     /**
@@ -66,13 +69,13 @@ public class Node{
     }
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private int id;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 }
