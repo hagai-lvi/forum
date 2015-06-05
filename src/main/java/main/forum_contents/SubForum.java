@@ -35,9 +35,6 @@ public class SubForum extends PersistantObject implements SubForumI {
     @OneToMany(targetEntity = ForumThread.class, cascade = CascadeType.ALL)
     private List<ThreadI> _threads = new LinkedList<>();
 
-    public SubForum() {
-    }
-
     @Override
     public Map<String, UserI> getModerators() {
         return _moderators;
