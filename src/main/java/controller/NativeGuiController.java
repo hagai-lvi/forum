@@ -41,10 +41,21 @@ public class NativeGuiController {
 		return list;
 	}
 
+	/**
+	 *
+	 * An example request: send post request to<br/> <code>http://localhost:8080/forum-system/gui/forum/A</code> <br/>
+	 * with the json <code>{"username":"ADMIN","password":"ADMIN"}</code> <br/>
+	 * <b>Don't forget the <code>Content-type:application/json</code> http header</b>
+	 *
+	 * @param forumID given as a rest path property
+	 * @param user given as a json in the http request body
+	 * @return subforums in the specified forum
+	 *
+	 */
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/forum/{forumID}", method = RequestMethod.POST)
 	public @ResponseBody
-	SubForumList getSubforum(HttpSession session, @PathVariable String forumID, @RequestBody UserG user) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException {
+	SubForumList getForum(HttpSession session, @PathVariable String forumID, @RequestBody UserG user) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException {
 		logger.info("got request getSubforum");
 		SubForumList list = new SubForumList();
 		FacadeI facade = Facade.getFacade();
