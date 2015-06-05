@@ -43,7 +43,7 @@ public class UserSubforumPermissionTest {
     @Test
     public void testCreateThread() throws Exception {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow", "Mega Flow");
+        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow1", "Mega Flow1");
         permission2.createThread(message);
         assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
     }
@@ -51,19 +51,19 @@ public class UserSubforumPermissionTest {
     @Test
     public void testReplyToMessage() throws Exception {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow", "Mega Flow");
+        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow2", "Mega Flow2");
         permission2.createThread(message);
-        permission2.replyToMessage(message, new ForumMessage(message, new User("Gabi", "123", "aa@mail.com", permission4), "Help", "aaa"));
-        assertEquals(message.printSubTree(), "Flow--> Help");
+        permission2.replyToMessage(message, new ForumMessage(message, new User("Gabi", "123", "aa@mail.com", permission4), "Help3", "aaa3"));
+        assertEquals(message.printSubTree(), "Flow2--> Help3");
     }
 
     @Test
     public void testDeleteMessageS() throws Exception {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow", "Mega Flow");
+        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Flow222", "Mega Flow2222");
         permission2.createThread(message);
         permission2.replyToMessage(message, new ForumMessage(message, new User("Gabi", "123", "aa@mail.com", permission4), "Help", "aaa"));
-        assertEquals(message.printSubTree(), "Flow--> Help");
+        assertEquals(message.printSubTree(), "Flow222--> Help");
         permission.deleteMessage(message, "Gabi");
         assertEquals(message.printSubTree(), "The message has been deleted");
     }
