@@ -19,8 +19,6 @@ public interface SubForumI extends ExSubForumI{
 	 */
 	ThreadI createThread(MessageI message) throws DoesNotComplyWithPolicyException;
 
-	String getName();
-
 	/**
 	 * reply to a specific message
 	 */

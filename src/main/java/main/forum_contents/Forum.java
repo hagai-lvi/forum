@@ -134,10 +134,10 @@ public class Forum extends PersistantObject implements ForumI{
 
     @Override
     public void deleteSubForum(SubForumI subforum) throws SubForumDoesNotExsitsException {
-        if (!_subForums.containsKey(subforum.getName())){
+        if (!_subForums.containsKey(subforum.getTitle())){
             throw new SubForumDoesNotExsitsException();
         }
-        _subForums.remove(subforum.getName());
+        _subForums.remove(subforum.getTitle());
         Update();
     }
 

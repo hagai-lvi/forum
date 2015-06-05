@@ -70,7 +70,11 @@ public class ForumPolicyTest extends TestCase {
     }
 
     public void testIsNotValidMessage() throws Exception {
-        MessageI msg = new ForumMessage(null, null, "Some stupid invalid text.", "Title");
+        MessageI msg = new ForumMessage(null, null, "", "Title");
+        assertFalse(fp.isValidMessage(msg));
+        msg = new ForumMessage(null, null, "Message", "");
+        assertFalse(fp.isValidMessage(msg));
+        msg = new ForumMessage(null, null, "", "");
         assertFalse(fp.isValidMessage(msg));
     }
 

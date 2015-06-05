@@ -121,12 +121,16 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
     @Override
     public boolean isValidMessage(MessageI message) {
-        boolean valid = true;
-        for (String word : forbiddenWords){
-            valid = valid && (!message.getMessageText().contains(word) && !message.getMessageTitle().contains(word));
-            if (!valid) { break; }
+        if (
+                message.getMessageTitle() == null ||
+                message.getMessageText() == null ||
+                message.getMessageTitle().equals("") ||
+                message.getMessageText().equals("")
+                )
+        {
+            return false;
         }
-        return valid;
+        return true;
     }
 
     @Id @GeneratedValue(strategy=GenerationType.AUTO)

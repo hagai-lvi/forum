@@ -54,7 +54,6 @@ public class ForumThread extends PersistantObject implements ThreadI{
             messages.add((ForumMessage)reply, (ForumMessage)original);
             original.addReply(reply);
         } catch (NodeNotFoundException e) {
-            //TODO fix the exception
             throw new MessageNotFoundException(original, null);
         }
 //        this.Save();

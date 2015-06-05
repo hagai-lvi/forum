@@ -4,6 +4,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
 import main.Persistancy.HibernatePersistancyAbstractor;
 import main.Persistancy.PersistantObject;
+import main.User.Permissions;
+import main.User.UserSubforumPermission;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
@@ -32,6 +34,9 @@ public class SubForum extends PersistantObject implements SubForumI {
      */
     @OneToMany(targetEntity = ForumThread.class, cascade = CascadeType.ALL)
     private List<ThreadI> _threads = new LinkedList<>();
+
+    public SubForum() {
+    }
 
     @Override
     public Map<String, UserI> getModerators() {
@@ -65,7 +70,7 @@ public class SubForum extends PersistantObject implements SubForumI {
         }
         ForumThread thread = new ForumThread(message);
         _threads.add(thread);
-        this.Update();
+//        this.Update();
         return thread;
     }
 
@@ -80,13 +85,13 @@ public class SubForum extends PersistantObject implements SubForumI {
             throw new MessageNotFoundException(original, this);
         }
         thread.addReply(reply, original);
-        this.Update();
+//        this.Update();
     }
 
     @Override
     public void setModerator(UserI mod){
         _moderators.put(mod.getUsername(), mod);
-        this.Update();
+//        this.Update();
     }
 
 
@@ -112,27 +117,22 @@ public class SubForum extends PersistantObject implements SubForumI {
         else {
             throw new MessageNotFoundException(message, this);
         }
-        this.Update();
+        //this.Update();
     }
 
 
     @Override
     public void removeModerator(UserI mod) {
-        _moderators.remove(mod);
-        this.Update();
+        _moderators.remove(mod.getUsername());
+        //this.Update();
     }
 
 
     // ============================================ GETTERS ================================================
 
     @Override
-    public String getName(){
-        return this._name;
-    }
-
-    @Override
     public String getTitle() {
-        return getName();
+        return _name;
     }
 
     @Override

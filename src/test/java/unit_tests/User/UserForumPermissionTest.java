@@ -56,7 +56,7 @@ public class UserForumPermissionTest {
 
     private boolean contains(Collection<SubForumI> subForums, SubForumI subforum) {
         for (SubForumI subf : subForums) {
-            if (subf.getName().equals(subforum.getName()))
+            if (subf.getTitle().equals(subforum.getTitle()))
                 return true;
         }
         return false;

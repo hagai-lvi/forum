@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.User.Permissions;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
@@ -9,6 +10,8 @@ import main.exceptions.PermissionDeniedException;
  * Created by hagai_lvi on 4/6/15.
  */
 public interface SubForumPermissionI {
+
+	Permissions getPermission();
 
 	/**
 	 * create a thread in the subforum
@@ -52,6 +55,8 @@ public interface SubForumPermissionI {
 	SubForumI getSubForum();
 
 	boolean findForum(String name);
+
+	void setPermission(Permissions permission);
 
 	boolean isModerator();
 }

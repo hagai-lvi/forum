@@ -224,7 +224,7 @@ import java.util.Iterator;
 		Session current = findSession(sessionId);
 		Collection<SubForumI> subForums = current.getForum().getSubForums();
 		for (SubForumI s: subForums){
-			if (s.getName().equals(subforum)){
+			if (s.getTitle().equals(subforum)){
 				current.setSubForum(s);
 				return s;
 			}

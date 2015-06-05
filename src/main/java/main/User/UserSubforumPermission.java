@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import main.forum_contents.Forum;
 
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * Created by gabigiladov on 4/11/15.
@@ -15,6 +16,11 @@ import javax.persistence.*;
     public class UserSubforumPermission implements SubForumPermissionI {
 
     public UserSubforumPermission() {
+    }
+
+    @Override
+    public Permissions getPermission() {
+        return permission;
     }
 
     private Permissions permission;
@@ -93,7 +99,8 @@ import javax.persistence.*;
     @Override
     public void setModerator(UserI moderator) throws PermissionDeniedException {
         if( permission.equals(Permissions.PERMISSIONS_ADMIN)) {
-            logger.info(permission + " has permission to set moderator");
+            SubForumPermissionI p = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forum, subforum);
+            moderator.addSubForumPermission(p);
             subforum.setModerator(moderator);
         } else {
             logger.error(permission + " has no permission to set moderator");
@@ -112,6 +119,10 @@ import javax.persistence.*;
         return false;
     }
 
+    @Override
+    public void setPermission(Permissions permission) {
+        this.permission = permission;
+    }
 
     private boolean canDeleteMessage(MessageI message, String deleter) {
         return message.getUser().equals(deleter);

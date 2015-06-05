@@ -51,7 +51,7 @@ public class IntegrationTest {
 			int id = _facade.createNewThread(session1ID, "thread-title", "message-body");
 			Collection<SubForumI> sf = _facade.getSubForumList(session1ID);
 			SubForumI newSF = sf.iterator().next();
-			assertEquals(newSF.getName(), "subforum");
+			assertEquals(newSF.getTitle(), "subforum");
 			ThreadI newThread = newSF.getThreads().iterator().next();
 			assertEquals(newThread.getTitle(), "thread-title");
 			ExMessageI newMessage = newThread.getMessages().find(id);

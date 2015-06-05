@@ -125,7 +125,7 @@ public class User implements UserI {
     @Override
     public void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
         for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).findForum(subforum.getName())){
+            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).findForum(subforum.getTitle())){
                 ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).reportModerator(moderatorUsername, reportMessage, this);
                 break;
             }
@@ -158,7 +158,7 @@ public class User implements UserI {
     public void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException {
         //TODO
         for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).findForum(subForum.getName())){
+            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).findForum(subForum.getTitle())){
                 ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).setModerator(moderator);
                 break;
             }
