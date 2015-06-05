@@ -22,7 +22,7 @@ public class User implements UserI {
 
     @Column(columnDefinition= "LONGBLOB")
     @ColumnTransformer(
-            read="AES_DECRYPT(encryptedBody, 'yourkey')",
+            read="AES_DECRYPT(password, 'yourkey')",
             write="AES_ENCRYPT(?, 'yourkey')")
     private String password;
     private GregorianCalendar passwordCreationDate;

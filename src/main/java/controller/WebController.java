@@ -45,7 +45,7 @@ public class WebController {
 	public String addForum(ModelMap model, String forumName, int numOfModerators, String passRegex) throws PermissionDeniedException, ForumAlreadyExistException {
 		logger.info("addForum request");
 		FacadeI f = Facade.getFacade();
-		f.addForum(ADMIN_PASS, ADMIN_USER, forumName, passRegex, numOfModerators); //TODO get credentials from the user
+		f.addForum(ADMIN_PASS, ADMIN_USER, false, forumName, passRegex, numOfModerators, 365); //TODO get credentials from the user
 		model.addAttribute("forumName", forumName);
 		return "addForum";
 	}
@@ -123,19 +123,19 @@ public class WebController {
 		logger.info("resetSystem request");
 		Facade.dropAllData();
 		FacadeI f = Facade.getFacade();
-		f.addForum("ADMIN", "ADMIN", "A", ".*", 5);
+		f.addForum("ADMIN", "ADMIN", false, "A", ".*", 5, 365);
 		int sessionID = f.login("A", "ADMIN", "ADMIN");
 		f.createSubforum(sessionID, "A sf1");
 		f.createSubforum(sessionID, "A sf2");
 		f.createSubforum(sessionID, "A sf3");
 
-		f.addForum("ADMIN", "ADMIN", "B", ".*", 5);
+		f.addForum("ADMIN", "ADMIN", false, "A", ".*", 5, 365);
 		sessionID = f.login("B", "ADMIN", "ADMIN");
 		f.createSubforum(sessionID, "B sf1");
 		f.createSubforum(sessionID, "B sf2");
 		f.createSubforum(sessionID, "B sf3");
 
-		f.addForum("ADMIN", "ADMIN", "C", ".*", 5);
+		f.addForum("ADMIN", "ADMIN", false, "A", ".*", 5, 365);
 		sessionID = f.login("C", "ADMIN", "ADMIN");
 		f.createSubforum(sessionID, "C sf1");
 		f.createSubforum(sessionID, "C sf2");

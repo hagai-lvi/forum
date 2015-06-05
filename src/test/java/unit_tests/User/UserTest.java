@@ -31,7 +31,9 @@ public class UserTest {
     public void setUp() throws Exception {
         int maxModerators = 1;
         String regex = "a-b";
-        policy = new ForumPolicy(maxModerators, regex);
+        boolean isSecured = false;
+        int passLife = 365;
+        policy = new ForumPolicy(isSecured, maxModerators, regex, passLife);
         forum = new Forum("Sport", policy);
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);

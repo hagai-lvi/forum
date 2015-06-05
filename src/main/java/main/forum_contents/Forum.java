@@ -3,6 +3,7 @@ package main.forum_contents;
 import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
 import main.Persistancy.HibernatePersistancyAbstractor;
+import main.Persistancy.PersistantObject;
 import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
@@ -23,7 +24,7 @@ import java.util.Map;
  */
 
 @Entity
-public class Forum implements ForumI {
+public class Forum extends PersistantObject implements ForumI{
 
     //TODO use enum permissions, fix all occurences of 'Guest' or 'Admin' in the code
     public static final String GUEST_USER_NAME = "Guest user";
@@ -55,7 +56,7 @@ public class Forum implements ForumI {
     private UserI admin;
 
     @Transient
-    private HibernatePersistancyAbstractor pers;
+    //private static HibernatePersistancyAbstractor pers;
     private static final Logger logger = Logger.getLogger(Forum.class.getName());
 
 
@@ -69,8 +70,8 @@ public class Forum implements ForumI {
         this._users.put("Guest", this.guest);
         this._users.put(this.admin.getUsername(), this.admin);
         this.forum_name = name;
-        this.pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
-        this.saveOrUpdate();
+        //this.pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
+        this.SaveOrUpdate();
     }
 
     public Forum() {  // needed here for hibernate
@@ -201,15 +202,21 @@ public class Forum implements ForumI {
     }
 
     @Override
-    public UserI login(String username, String password) throws InvalidUserCredentialsException, NeedMoreAuthParametersException {
+    public UserI login(String username, String password) throws InvalidUserCredentialsException, NeedMoreAuthParametersException, EmailNotAuthanticatedException, PasswordNotInEffectException {
         if (_users.containsKey(username) &&
-                _users.get(username).getPassword().equals(password)){
-
+                 _users.get(username).getPassword().equals(password)){
+            UserI user = _users.get(username);
             if (policy.hasMoreAuthQuestions()){
                 throw new NeedMoreAuthParametersException();
             }
-
-            return _users.get(username);
+            if (!user.isEmailAuthenticated()){
+                throw new EmailNotAuthanticatedException();
+            }
+            if (!policy.isPasswordInEffect(user.getPasswordCreationDate())){
+                System.out.println(user.getPasswordCreationDate().toString());
+                throw new PasswordNotInEffectException();
+            }
+            return user;
         }
         else {
             throw new InvalidUserCredentialsException();
@@ -266,22 +273,20 @@ public class Forum implements ForumI {
     }
 
 
+//    public void Save(){    // save the forum to the database
+//        pers.save(this);
+//    }
 
-
-    public void save(){    // save the forum to the database
-        pers.save(this);
+    public static Forum load(String forum_name){
+        return (Forum)pers.load(Forum.class, forum_name);
     }
 
-    public void load(String forum_name){
-        pers.load(Forum.class, forum_name);
-    }
+//    public void saveOrUpdate(){    // save the forum to the database
+//        pers.saveOrUpdate(this);
+//    }
 
-    public void saveOrUpdate(){    // save the forum to the database
-        pers.saveOrUpdate(this);
-    }
-
-    public void Update(){    // save the forum to the database
-        pers.Update(this);
-    }
+//    public void Update(){    // save the forum to the database
+//        pers.Update(this);
+//    }
 
 }
