@@ -19,9 +19,10 @@ public class SubForumTest extends TestCase {
     ForumI forum;
     SubForumI subforum;
     UserI user;
+    private static int dbCount =0;
     public void setUp() throws Exception {
         super.setUp();
-        forum = new Forum("forum", new ForumPolicy(false, 2, "aaa", 365));
+        forum = new Forum("forum" + dbCount++, new ForumPolicy(false, 2, "aaa", 365));
         forum.createSubForum("subforum");
         subforum = forum.getSubForums().iterator().next();
         forum.register("user", "aaa", "aaa@aaa.aaa");
