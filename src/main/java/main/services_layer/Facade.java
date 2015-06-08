@@ -1,6 +1,7 @@
 package main.services_layer;
 
 import data_structures.Tree;
+import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
@@ -15,6 +16,8 @@ import java.util.Iterator;
  * Created by hagai_lvi on 4/11/15.
  */
      public class Facade implements FacadeI {
+	private static final String ADMIN_USERNAME = "ADMIN";
+	private static final String ADMIN_PASSWORD = "ADMIN";
 	private static FacadeI theFacade;
 	private ArrayList<UserI> users;
 	private Collection<Session> openSessions;
@@ -47,8 +50,18 @@ import java.util.Iterator;
 
 	@Override
 	public void addForum(String username, String password, boolean isSecured, String forumName, String regex, int numberOfModerators, int passLife) throws PermissionDeniedException, ForumAlreadyExistException {
-		//TODO
-		forums.add(new Forum(forumName, new ForumPolicy(isSecured, numberOfModerators, regex, passLife)));
+		if (username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD)){
+			for (ForumI forum : forums){
+				if (forum.getName().equals(forumName)){
+					throw new ForumAlreadyExistException(forumName);
+				}
+			}
+			forums.add(new Forum(forumName, new ForumPolicy(isSecured, numberOfModerators, regex, passLife)));
+		}
+		else{
+			throw new PermissionDeniedException(username + "is not an admin");
+		}
+
 	}
 
 	@Override
@@ -92,7 +105,7 @@ import java.util.Iterator;
 	@Override
 	public int createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
 		Session current = findSession(sessionId);
-		ForumMessage msg = new ForumMessage(null, current.getUser(), srcMessageBody, srcMessageTitle);
+		ForumMessage msg = new ForumMessage(null, current.getUser(), srcMessageTitle, srcMessageBody);
 		current.getSubForum().createThread(msg);
 		return msg.getId();
 	}

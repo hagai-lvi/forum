@@ -28,17 +28,17 @@ public class ForumMessage implements MessageI {
 	private String messageTitle;
 	private Date writingTime;
 	@OneToMany(targetEntity = ForumMessage.class, cascade = CascadeType.ALL)
-	private List<MessageI> replays;
+	private List<MessageI> replies;
 	private boolean isDeleted = false;
 
 
-	public ForumMessage(MessageI reply_to, UserI user, String messageText, String messageTitle){
+	public ForumMessage(MessageI reply_to, UserI user, String messageTitle, String messageText){
 		this.writingUser = user;
 		this.messageText = messageText;
 		this.reply_message = reply_to;
 		this.messageTitle = messageTitle;
 		writingTime = new Date();
-		replays = new ArrayList<>();
+		replies = new ArrayList<>();
 	}
 
 	public ForumMessage() {
@@ -59,7 +59,7 @@ public class ForumMessage implements MessageI {
 	}
 	public Date getDate()  { return writingTime; }
 
-	public MessageI get_replayed_message(){
+	public MessageI get_replied_message(){
 		return reply_message;
 	}
 
@@ -69,7 +69,7 @@ public class ForumMessage implements MessageI {
 			return "The message has been deleted";
 		}
 		String ans = this.messageText;
-		for (MessageI m: replays){
+		for (MessageI m: replies){
 			ans += "--> " + m.getMessageText();
 		}
 		return ans;
@@ -109,7 +109,7 @@ public class ForumMessage implements MessageI {
 	}
 
 	public void addReply(MessageI reply){
-		this.replays.add(reply);
+		this.replies.add(reply);
 	}
 
 }

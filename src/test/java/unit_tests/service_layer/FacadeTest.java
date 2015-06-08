@@ -15,8 +15,6 @@ public class FacadeTest {
 	public void testAddForumMultipleTimes() throws PermissionDeniedException, ForumAlreadyExistException {
 		FacadeI facade = Facade.dropAllData();
 		facade.addForum("ADMIN", "ADMIN", false, "MyForum", ".*", 10, Integer.MAX_VALUE);
-
-
 		facade.addForum("ADMIN", "ADMIN", false, "MyForum", ".*", 10, Integer.MAX_VALUE);
 	}
 }

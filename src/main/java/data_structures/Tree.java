@@ -31,11 +31,12 @@ public class Tree extends PersistantObject{
     }
 
     public void add(ForumMessage dataToAdd, ForumMessage ancestor) throws NodeNotFoundException {
+
         Node ancestorNode = root.findChild(ancestor);
-        if (ancestorNode == null){
+        if (ancestorNode == null || dataToAdd == null){
             throw new NodeNotFoundException("Could not find ancestor " + ancestor.toString() + " in the tree");
         }
-        Node nodeToAdd = new Node(dataToAdd, ancestorNode);
+        new Node(dataToAdd, ancestorNode);
         ancestorNode.addChild(dataToAdd);
 //        this.Save();
     }

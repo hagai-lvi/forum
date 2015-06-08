@@ -10,6 +10,7 @@ import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 
 import javax.persistence.*;
+import javax.validation.constraints.Null;
 
 /**
  * Created by hagai on 07/04/15.
@@ -56,7 +57,7 @@ public class ForumThread extends PersistantObject implements ThreadI{
         try {
             messages.add((ForumMessage)reply, (ForumMessage)original);
             original.addReply(reply);
-        } catch (NodeNotFoundException e) {
+        } catch (NodeNotFoundException | NullPointerException e) {
             throw new MessageNotFoundException(original, null);
         }
 //        this.Save();

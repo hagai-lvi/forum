@@ -44,7 +44,7 @@ public class User implements UserI {
         signUpDate = new GregorianCalendar();
         seniorityInDays = 0;
         numOfMessages = 0;
-        this.isEmailAuthenticated = true;
+        this.isEmailAuthenticated = false;
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<>();
         this.forumPermissions = forumPermissions;
@@ -119,7 +119,7 @@ public class User implements UserI {
 
     @Override
     public void replyToMessage(SubForumPermissionI subForumPermission, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
-        subForumPermission.replyToMessage(original,new ForumMessage(original, this, msgBody, msgTitle));
+        subForumPermission.replyToMessage(original,new ForumMessage(original, this, msgTitle, msgBody));
     }
 
     @Override
