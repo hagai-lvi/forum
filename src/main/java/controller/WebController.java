@@ -129,13 +129,13 @@ public class WebController {
 		f.createSubforum(sessionID, "A sf2");
 		f.createSubforum(sessionID, "A sf3");
 
-		f.addForum("ADMIN", "ADMIN", false, "A", ".*", 5, 365);
+		f.addForum("ADMIN", "ADMIN", false, "B", ".*", 5, 365);
 		sessionID = f.login("B", "ADMIN", "ADMIN");
 		f.createSubforum(sessionID, "B sf1");
 		f.createSubforum(sessionID, "B sf2");
 		f.createSubforum(sessionID, "B sf3");
 
-		f.addForum("ADMIN", "ADMIN", false, "A", ".*", 5, 365);
+		f.addForum("ADMIN", "ADMIN", false, "C", ".*", 5, 365);
 		sessionID = f.login("C", "ADMIN", "ADMIN");
 		f.createSubforum(sessionID, "C sf1");
 		f.createSubforum(sessionID, "C sf2");
