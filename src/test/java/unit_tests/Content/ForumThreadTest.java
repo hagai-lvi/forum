@@ -23,7 +23,7 @@ public class ForumThreadTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         user = new User("user", "pass", "aaa@aaa.aaa", new UserForumPermission(Permissions.PERMISSIONS_ADMIN, null));
-        msg = new ForumMessage(null, user, "title", "body");
+        msg = new ForumMessage(user, "title", "body");
         thread = new ForumThread(msg);
     }
 
@@ -53,7 +53,7 @@ public class ForumThreadTest extends TestCase {
     }
 
     public void testAddReply() {
-        MessageI reply = new ForumMessage(msg, user, "reply-title", "reply-body");
+        MessageI reply = new ForumMessage(user, "reply-title", "reply-body");
         try {
             thread.addReply(reply, msg);
         } catch (MessageNotFoundException e) {
@@ -73,14 +73,14 @@ public class ForumThreadTest extends TestCase {
 
     public void testContains() throws Exception {
         assertTrue(thread.contains(msg));
-        MessageI newmsg = new ForumMessage(null, user, "aaa", "bbb");
+        MessageI newmsg = new ForumMessage(user, "aaa", "bbb");
         assertFalse(thread.contains(newmsg));
         thread.addReply(newmsg, msg);
         assertTrue(thread.contains(newmsg));
     }
 
     public void testRemove() throws Exception {
-        MessageI newmsg = new ForumMessage(msg, user, "aaa", "bbb");
+        MessageI newmsg = new ForumMessage(user, "aaa", "bbb");
         thread.addReply(newmsg, msg);
         thread.remove(newmsg);
         assertFalse(thread.contains(newmsg));

@@ -35,6 +35,8 @@ public class User implements UserI {
     @OneToOne(targetEntity = UserForumPermission.class, cascade = CascadeType.ALL)
     private ForumPermissionI forumPermissions;
     private boolean isEmailAuthenticated = true;
+    private String secQ;
+    private String secA;
 
     public User(String username, String password, String email, ForumPermissionI forumPermissions) {
         this.username = username;
@@ -119,13 +121,13 @@ public class User implements UserI {
 
     @Override
     public void replyToMessage(SubForumPermissionI subForumPermission, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
-        subForumPermission.replyToMessage(original,new ForumMessage(original, this, msgTitle, msgBody));
+        subForumPermission.replyToMessage(original,new ForumMessage(this, msgTitle, msgBody));
     }
 
     @Override
     public void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
         for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).findForum(subforum.getTitle())){
+            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).subForumExists(subforum.getTitle())){
                 ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).reportModerator(moderatorUsername, reportMessage, this);
                 break;
             }
@@ -150,19 +152,21 @@ public class User implements UserI {
 
     @Override
     public String viewStatistics(ForumI forum) throws PermissionDeniedException {
-        //TODO
+        //TODO - not implemented
         throw new RuntimeException("Not yet implemented");
     }
 
     @Override
-    public void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException {
-        //TODO
+    public void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException {
+
         for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).findForum(subForum.getTitle())){
+            boolean found = ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).subForumExists(subForum.getTitle());
+            if(found){
                 ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).setModerator(moderator);
-                break;
+                return;
             }
         }
+        throw new SubForumNotFoundException();
     }
 
     @Override
@@ -211,12 +215,12 @@ public class User implements UserI {
 
     @Override
     public void setSecurityQuestion(String quest) {
-        //TODO
+        this.secQ = quest;
     }
 
     @Override
     public void setSecurityAnswer(String ans) {
-        //TODO
+        this.secA = ans;
     }
 
     @Override

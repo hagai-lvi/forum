@@ -87,7 +87,7 @@ public interface UserI {
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(SubForumI subForum, UserI moderator)throws PermissionDeniedException;
+	void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException;
 
 	/**
 	 * Ban moderator

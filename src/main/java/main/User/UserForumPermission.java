@@ -79,7 +79,7 @@ public class UserForumPermission implements ForumPermissionI {
 
 	@Override
 	public String viewStatistics() {
-		//TODO
+		//TODO - not implemented
 		return null;
 	}
 

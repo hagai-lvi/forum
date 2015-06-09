@@ -114,7 +114,7 @@ import java.util.Collection;
     }
 
     @Override
-    public boolean findForum(String name) {
+    public boolean subForumExists(String name) {
         //TODO what is this method for?
         return false;
     }

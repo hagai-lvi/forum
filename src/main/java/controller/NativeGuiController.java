@@ -72,7 +72,7 @@ public class NativeGuiController {
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/forum/{forumID}", method = RequestMethod.POST)
 	public @ResponseBody
-	SubForumList getForum(HttpSession session, @PathVariable String forumID, @RequestBody UserG user) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException {
+	SubForumList getForum(HttpSession session, @PathVariable String forumID, @RequestBody UserG user) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, ForumNotFoundException, SessionNotFoundException {
 		logger.info("got request getForum");
 		SubForumList list = new SubForumList();
 		FacadeI facade = Facade.getFacade();
@@ -90,7 +90,7 @@ public class NativeGuiController {
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/subforum/{subforumID}", method = RequestMethod.GET)
 	public @ResponseBody
-	ThreadList getSubforum(HttpSession session, @PathVariable String subforumID ) throws SubForumAlreadyExistException {
+	ThreadList getSubforum(HttpSession session, @PathVariable String subforumID ) throws SubForumAlreadyExistException, SessionNotFoundException, SubForumNotFoundException {
 		logger.info("got request getSubforum");
 		ThreadList list = new ThreadList();
 		FacadeI facade = Facade.getFacade();

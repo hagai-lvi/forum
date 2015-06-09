@@ -100,12 +100,10 @@ public class SubForum extends PersistantObject implements SubForumI {
         if (!_moderators.containsKey(moderatorUsername)){
             throw new ModeratorDoesNotExistsException();
         }
-        // TODO: send to in-charge forum admin
     }
 
     @Override
     public void deleteMessage(MessageI message, String requestingUser) throws MessageNotFoundException {
-        message.removeMessage(); //TODO remove
         ThreadI thread = findThread(message);
         if (thread != null){
             if (message.equals(thread.getRootMessage())){

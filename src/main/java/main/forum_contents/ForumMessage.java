@@ -8,6 +8,7 @@ import main.User.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 import java.util.List;
 
@@ -18,8 +19,6 @@ import java.util.List;
 @Entity
 public class ForumMessage implements MessageI {
 
-	@OneToOne(targetEntity = ForumMessage.class, cascade = CascadeType.ALL)
-	private MessageI reply_message;
 	@OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
 	private UserI writingUser;
 	@JsonView(NativeGuiController.class)
@@ -29,13 +28,11 @@ public class ForumMessage implements MessageI {
 	private Date writingTime;
 	@OneToMany(targetEntity = ForumMessage.class, cascade = CascadeType.ALL)
 	private List<MessageI> replies;
-	private boolean isDeleted = false;
 
 
-	public ForumMessage(MessageI reply_to, UserI user, String messageTitle, String messageText){
+	public ForumMessage(UserI user, String messageTitle, String messageText){
 		this.writingUser = user;
 		this.messageText = messageText;
-		this.reply_message = reply_to;
 		this.messageTitle = messageTitle;
 		writingTime = new Date();
 		replies = new ArrayList<>();
@@ -54,30 +51,24 @@ public class ForumMessage implements MessageI {
 	}
 
 	@Override
-	public String getUser() {
-		return writingUser.getUsername();
-	}
-	public Date getDate()  { return writingTime; }
-
-	public MessageI get_replied_message(){
-		return reply_message;
+	public void editTitle(String title) {
+		this.messageTitle = title;
 	}
 
 	@Override
+	public String getUser() {
+		return writingUser.getUsername();
+	}
+	@Override
+	public Date getDate()  { return writingTime; }
+
+	@Override
 	public String printSubTree(){
-		if (isDeleted){
-			return "The message has been deleted";
-		}
 		String ans = this.messageText;
 		for (MessageI m: replies){
 			ans += "--> " + m.getMessageText();
 		}
 		return ans;
-	}
-
-	@Override
-	public void removeMessage(){
-		this.isDeleted = true;
 	}
 
 	@Override
@@ -95,13 +86,13 @@ public class ForumMessage implements MessageI {
 	@Id @GeneratedValue(strategy = GenerationType.AUTO)
 	private int id;
 
-	@Override
-	public String getBody() {
-		return getMessageText();
-	}
-
 	public int getId() {
 		return id;
+	}
+
+	@Override
+	public Collection<MessageI> getReplies() {
+		return replies;
 	}
 
 	public void setId(int id) {
@@ -111,5 +102,7 @@ public class ForumMessage implements MessageI {
 	public void addReply(MessageI reply){
 		this.replies.add(reply);
 	}
+
+
 
 }

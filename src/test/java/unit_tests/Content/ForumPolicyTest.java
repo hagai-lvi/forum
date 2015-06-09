@@ -65,30 +65,30 @@ public class ForumPolicyTest extends TestCase {
     }
 
     public void testIsValidMessage() throws Exception {
-        MessageI msg = new ForumMessage(null, null, "Title", "Some valid text.");
+        MessageI msg = new ForumMessage(null, "Title", "Some valid text.");
         assertTrue(fp.isValidMessage(msg));
     }
 
     public void testIsNotValidMessage() throws Exception {
-        MessageI msg = new ForumMessage(null, null, "Title", "");
+        MessageI msg = new ForumMessage(null, "Title", "");
         assertFalse(fp.isValidMessage(msg));
-        msg = new ForumMessage(null, null, "", "Message");
+        msg = new ForumMessage(null, "", "Message");
         assertFalse(fp.isValidMessage(msg));
-        msg = new ForumMessage(null, null, "", "");
+        msg = new ForumMessage(null, "", "");
         assertFalse(fp.isValidMessage(msg));
     }
 
     public void testIsValidTitle() throws Exception {
-        MessageI msg = new ForumMessage(null, null, "Title", "Some valid text.");
+        MessageI msg = new ForumMessage(null, "Title", "Some valid text.");
         assertTrue(fp.isValidMessage(msg));
     }
 
     public void testIsNotValidTitle() throws Exception {
-        MessageI msg = new ForumMessage(null, null, "", "");
+        MessageI msg = new ForumMessage(null, "", "");
         assertFalse(fp.isValidMessage(msg));
-        msg = new ForumMessage(null, null, "", "aaa");
+        msg = new ForumMessage(null, "", "aaa");
         assertFalse(fp.isValidMessage(msg));
-        msg = new ForumMessage(null, null, "aaa", "");
+        msg = new ForumMessage(null, "aaa", "");
         assertFalse(fp.isValidMessage(msg));
     }
 

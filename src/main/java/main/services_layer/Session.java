@@ -31,13 +31,21 @@ public class Session {
         this.thread = thread;
     }
 
-    public ThreadI getThread() { return thread; }
+    public ThreadI getThread() {
+        if (thread == null){
+            throw new NullPointerException("thread not found in session");
+        }
+        return thread;
+    }
 
     public void setForum(ForumI forum) {
         this.forum = forum;
     }
 
     public ForumI getForum() {
+        if (forum == null){
+            throw new NullPointerException("forum not found in session");
+        }
         return forum;
     }
 
@@ -46,6 +54,9 @@ public class Session {
     }
 
     public SubForumI getSubForum() {
+        if (subForum == null){
+            throw new NullPointerException("subforum not found in session");
+        }
         return subForum;
     }
 

@@ -5,6 +5,7 @@ package main.exceptions;
  */
 public class NodeNotFoundException extends Exception {
 	public NodeNotFoundException(String s) {
-		//TODO
+		super(s);
 	}
 }
+

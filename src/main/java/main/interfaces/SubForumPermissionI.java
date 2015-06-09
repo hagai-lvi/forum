@@ -54,7 +54,7 @@ public interface SubForumPermissionI {
 	 */
 	SubForumI getSubForum();
 
-	boolean findForum(String name);
+	boolean subForumExists(String name);
 
 	void setPermission(Permissions permission);
 

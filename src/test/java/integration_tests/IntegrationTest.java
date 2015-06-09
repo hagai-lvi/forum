@@ -32,6 +32,10 @@ public class IntegrationTest {
 		}
 		catch (UserAlreadyExistsException e){
 			fail("User Already Exists!");
+		} catch (ForumNotFoundException e) {
+			fail("forum not found!");
+		} catch (SessionNotFoundException e) {
+			e.printStackTrace();
 		}
 	}
 
@@ -42,9 +46,10 @@ public class IntegrationTest {
 	public void test_LoginPostDeleteAndTryToViewByOtherUser() throws UserAlreadyExistsException, InvalidUserCredentialsException,
 			SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
-			// create both users.*	_facade.register("forum", "user1", "pass", "mail@mail.com");
+			_facade.register("forum", "user1", "pass", "mail@mail.com");
 			_facade.register("forum", "user2", "pass", "mail@mail.com");
-
+			_facade.authanticateUser("forum", "user1", _facade.getUserAuthString("forum", "user1", "pass"));
+			_facade.authanticateUser("forum", "user2", _facade.getUserAuthString("forum", "user2", "pass"));
 			// first user creates a new message.
 			int session1ID = _facade.login("forum", "user1", "pass");
 			_facade.createSubforum(session1ID, "subforum");
@@ -55,8 +60,7 @@ public class IntegrationTest {
 			ThreadI newThread = newSF.getThreads().iterator().next();
 			assertEquals(newThread.getTitle(), "thread-title");
 			ExMessageI newMessage = newThread.getMessages().find(id);
-			assertEquals(newMessage.getBody(), "message-body");
-
+			assertEquals(newMessage.getMessageText(), "message-body");
 			// user deletes message.
 			_facade.deleteMessage(session1ID, newMessage.getId());
 
@@ -78,10 +82,15 @@ public class IntegrationTest {
 			fail("Permissions denied!");
 		} catch (DoesNotComplyWithPolicyException e) {
 			fail("Policy violation!");
+		} catch (UserNotFoundException e) {
+			fail("user not found!");
+		} catch (ForumNotFoundException e) {
+			fail("forum not found!");
 		} catch (MessageNotFoundException e) {
 			//pass
+		} catch (SessionNotFoundException e) {
+			e.printStackTrace();
 		}
-
 	}
 
 	@Test
@@ -114,8 +123,18 @@ public class IntegrationTest {
 			fail("message edited although not permitted");
 		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | SubForumAlreadyExistException | PasswordNotInEffectException | DoesNotComplyWithPolicyException | InvalidUserCredentialsException e) {
 			e.printStackTrace();
+		} catch (UserNotFoundException e) {
+				e.printStackTrace();
+		} catch (ForumNotFoundException e) {
+				e.printStackTrace();
 		} catch (PermissionDeniedException e) {
 			//pass
+		} catch (SessionNotFoundException e) {
+			e.printStackTrace();
+		} catch (SubForumNotFoundException e) {
+			e.printStackTrace();
+		} catch (ThreadNotFoundException e) {
+			e.printStackTrace();
 		}
 
 	}
@@ -151,7 +170,7 @@ public class IntegrationTest {
 	public void init() {
 		_facade = Facade.getFacade();
 		try {
-			_facade.addForum("admin", "pass", false, "forum", "pass", 3, 365);
+			_facade.addForum("ADMIN", "ADMIN", false, "forum", "pass", 3, 365);
 		} catch (PermissionDeniedException e) {
 			e.printStackTrace();
 		} catch (ForumAlreadyExistException e) {

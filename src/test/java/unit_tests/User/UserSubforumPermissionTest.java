@@ -44,7 +44,7 @@ public class UserSubforumPermissionTest {
     @Test
     public void testCreateThread() throws Exception {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow1", "Flow1");
+        MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow1", "Flow1");
         permission2.createThread(message);
         assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
     }
@@ -52,18 +52,18 @@ public class UserSubforumPermissionTest {
     @Test
     public void testReplyToMessage() throws Exception {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2", "Flow2");
+        MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2", "Flow2");
         permission2.createThread(message);
-        permission2.replyToMessage(message, new ForumMessage(message, new User("Gabi", "123", "aa@mail.com", permission4), "aaa3", "Help3"));
+        permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa3", "Help3"));
         assertEquals(message.printSubTree(), "Flow2--> Help3");
     }
 
     @Test
     public void testDeleteMessageS() throws Exception {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2222", "Flow222");
+        MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2222", "Flow222");
         permission2.createThread(message);
-        permission2.replyToMessage(message, new ForumMessage(message, new User("Gabi", "123", "aa@mail.com", permission4), "aaa", "Help"));
+        permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa", "Help"));
         assertEquals(message.printSubTree(), "Flow222--> Help");
         permission.deleteMessage(message, "Gabi");
         assertEquals(message.printSubTree(), "The message has been deleted");
@@ -72,7 +72,7 @@ public class UserSubforumPermissionTest {
     @Test(expected = PermissionDeniedException.class)
     public void testDeleteMessageWithoutPermission() throws Exception {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        MessageI message = new ForumMessage(null, new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow", "Flow");
+        MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow", "Flow");
         permission2.createThread(message);
         permission.deleteMessage(message, "Victor"); // PermissionDeniedException expected
     }

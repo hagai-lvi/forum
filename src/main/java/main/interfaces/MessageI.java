@@ -1,5 +1,7 @@
 package main.interfaces;
 
+import java.util.Date;
+
 /**
  * Created by hagai_lvi on 4/6/15.
  */
@@ -26,6 +28,8 @@ public interface MessageI extends ExMessageI{
      */
     String getMessageTitle();
 
+    Date getDate();
+
     /**
      * @return the message details along with the details of all replies
      */
@@ -34,7 +38,8 @@ public interface MessageI extends ExMessageI{
     /**
      * Deletes the message from the forum along with all replies to it
      */
-    void removeMessage();
 
     void addReply(MessageI reply);
+
+    void editTitle(String title);
 }

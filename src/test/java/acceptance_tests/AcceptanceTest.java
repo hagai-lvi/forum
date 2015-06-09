@@ -98,7 +98,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: set new policy for forum
      */
-    public void setPoliciesTest() {
+    public void setPoliciesTest() throws SessionNotFoundException {
         _facade.setPolicies(0, false, "a*", 1, 365);
         // test pass regex
         try {
@@ -107,17 +107,23 @@ public class AcceptanceTest extends TestCase {
             e.printStackTrace();
         } catch (InvalidUserCredentialsException e) {
             e.printStackTrace();
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
         }
         // test mod number
         try {
             _facade.setModerator(0, "hagai");
         } catch (PermissionDeniedException e) {
             assertTrue(true);
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
         }
         _facade.setPolicies(0, false, "a*", 2, 365);
         try {
             _facade.setModerator(0, "hagai");
         } catch (PermissionDeniedException e) {
+            e.printStackTrace();
+        } catch (UserNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -127,7 +133,7 @@ public class AcceptanceTest extends TestCase {
      * target: the test check the permission given to a guest.
      * check negative test like getting the right exception on violate his permission
      */
-    public void guestEntryTest() throws MessageNotFoundException {
+    public void guestEntryTest() throws MessageNotFoundException, ForumNotFoundException {
         int session = _facade.guestEntry("Forum1");
         //try create thread
         try {
@@ -137,6 +143,8 @@ public class AcceptanceTest extends TestCase {
             fail("Expected PermissionDeniedException");
         } catch (PermissionDeniedException e) {
             //expected exception
+        } catch (SessionNotFoundException e) {
+            e.printStackTrace();
         }
 
         int msgid = 1;//_facade.getMessageList(session).
@@ -149,6 +157,8 @@ public class AcceptanceTest extends TestCase {
             assertTrue(true);
         } catch (DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
+        } catch (SessionNotFoundException e) {
+            e.printStackTrace();
         }
 
         //try report moderator
@@ -159,6 +169,8 @@ public class AcceptanceTest extends TestCase {
             e.printStackTrace();
         } catch (PermissionDeniedException e){
             assertTrue(true);
+        } catch (SessionNotFoundException e) {
+            e.printStackTrace();
         }
 
         //try delete message
@@ -167,6 +179,8 @@ public class AcceptanceTest extends TestCase {
             fail("a guest cannot delete message");
         } catch (PermissionDeniedException e) {
             assertTrue(true);
+        } catch (SessionNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -186,6 +200,8 @@ public class AcceptanceTest extends TestCase {
             assertTrue(true);
         } catch (InvalidUserCredentialsException e) {
             e.printStackTrace();
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
         }
 
         //test register
@@ -204,6 +220,8 @@ public class AcceptanceTest extends TestCase {
                 if (user.getUsername().equals("gilgilmor")) assertTrue(true);
             }
             fail("registered user not found");
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -216,6 +234,8 @@ public class AcceptanceTest extends TestCase {
         try {
             session = _facade.login("Forum0", "gil", "123456");
         } catch (InvalidUserCredentialsException | PasswordNotInEffectException | EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
+            e.printStackTrace();
+        } catch (ForumNotFoundException e) {
             e.printStackTrace();
         }
         assert(GUEST_SESSION != session);
@@ -242,6 +262,10 @@ public class AcceptanceTest extends TestCase {
             _facade.logout(session);
         } catch (InvalidUserCredentialsException | PasswordNotInEffectException | EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
             e.printStackTrace();
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
+        } catch (SessionNotFoundException e) {
+            e.printStackTrace();
         }
         assertTrue(true);
 
@@ -251,6 +275,8 @@ public class AcceptanceTest extends TestCase {
         } catch (PermissionDeniedException e) {
             assertTrue(true);
         } catch (DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        } catch (SessionNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -268,6 +294,8 @@ public class AcceptanceTest extends TestCase {
             fail("cannot create new sub forum");
         } catch (PermissionDeniedException e) {
             e.printStackTrace();
+        } catch (SessionNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -284,7 +312,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test usecase post thread
      */
-    public void postThreadTest() {
+    public void postThreadTest() throws SessionNotFoundException {
 
         int n = _facade.getSubForumList(0).size();
         try {
@@ -299,7 +327,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test post message usecase
      */
-    public void postMessageTest() {
+    public void postMessageTest() throws SessionNotFoundException {
 
         Tree msgs = _facade.getMessageList(0);
         int msgid = 1;//msgs.iterator().next().getId(); //TODO tree iterator
@@ -314,7 +342,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target test Friend Type requirement
      */
-    public void friendTypeTest() {
+    public void friendTypeTest() throws SessionNotFoundException {
         //TODO - user types?!
         _facade.addUserType(0, "SuperPooper", 2, 200, 2);
     }
@@ -332,11 +360,17 @@ public class AcceptanceTest extends TestCase {
             _facade.createNewThread(session, "Title", "Body");
         } catch (InvalidUserCredentialsException | PermissionDeniedException | DoesNotComplyWithPolicyException | PasswordNotInEffectException | EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
             e.printStackTrace();
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
+        } catch (SessionNotFoundException e) {
+            e.printStackTrace();
         }
 
         try {
             _facade.deleteMessage(session, 0);//TODO - how to get message ID?
         } catch (PermissionDeniedException | MessageNotFoundException e) {
+            e.printStackTrace();
+        } catch (SessionNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -357,6 +391,8 @@ public class AcceptanceTest extends TestCase {
             _facade.createNewThread(0, "title", "body");
         } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
+        } catch (SessionNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -369,6 +405,8 @@ public class AcceptanceTest extends TestCase {
         try {
             _facade.reportModerator(0, "Moshe", "he is not behave well!!");
         } catch (PermissionDeniedException | ModeratorDoesNotExistsException e) {
+            e.printStackTrace();
+        } catch (SessionNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -396,6 +434,8 @@ public class AcceptanceTest extends TestCase {
             e.printStackTrace();
         } catch (EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
             //accept
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
         }
 
         Collection<UserI> users = _facade.getForumList().iterator().next().getUserList();
@@ -413,6 +453,8 @@ public class AcceptanceTest extends TestCase {
             e.printStackTrace();
         } catch (EmailNotAuthanticatedException e) {
             fail("email authantication failed");
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
@@ -422,18 +464,22 @@ public class AcceptanceTest extends TestCase {
     /**
     * target: test editing message by publisher use case
     */
-    public void editOwnMessageTest() {
+    public void editOwnMessageTest() throws SessionNotFoundException {
         int session = 0;
 
         try {
             _facade.login("Forum0", "gil", "123456");
         } catch (InvalidUserCredentialsException | EmailNotAuthanticatedException | PasswordNotInEffectException | NeedMoreAuthParametersException e) {
             e.printStackTrace();
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
         }
 
         try {
             _facade.createNewThread(session, "T", "B");
         } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        } catch (SessionNotFoundException e) {
             e.printStackTrace();
         }
 
@@ -456,6 +502,10 @@ public class AcceptanceTest extends TestCase {
             _facade.setModerator(0, "gil");
         } catch (PermissionDeniedException e) {
             e.printStackTrace();
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        } catch (SessionNotFoundException e) {
+            e.printStackTrace();
         }
         //TODO - how to check if user is a moderator.
     }
@@ -464,10 +514,14 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test canceling moderator use case
     */
-    public void cancelModeratorTest() {
+    public void cancelModeratorTest() throws UserNotFoundException, SessionNotFoundException {
         try {
             _facade.setModerator(0, "gabi");
         } catch (PermissionDeniedException e) {
+            e.printStackTrace();
+        } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        } catch (SessionNotFoundException e) {
             e.printStackTrace();
         }
         _facade.removeModerator(0, "gabi");

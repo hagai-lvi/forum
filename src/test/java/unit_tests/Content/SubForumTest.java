@@ -41,14 +41,14 @@ public class SubForumTest extends TestCase {
     }
 
     public void testCreateThread() throws Exception {
-        ThreadI thread = subforum.createThread(new ForumMessage(null, user, "msg", "msg"));
+        ThreadI thread = subforum.createThread(new ForumMessage(user, "msg", "msg"));
         assertTrue(subforum.getThreads().contains(thread));
         assertEquals(thread.getRootMessage().getMessageText(), "msg");
         assertEquals(thread.getRootMessage().getMessageTitle(), "msg");
         assertEquals(subforum.getThreads().size(), 1);
         assertEquals(thread.getMessages().getRoot().children.size(), 0);
         try{
-            subforum.createThread(new ForumMessage(null, user, "", ""));
+            subforum.createThread(new ForumMessage(user, "", ""));
         } catch (DoesNotComplyWithPolicyException e){
             assertTrue(true);
             return;
@@ -57,8 +57,8 @@ public class SubForumTest extends TestCase {
     }
 
     public void testReplyToMessage() throws Exception {
-        ThreadI thread = subforum.createThread(new ForumMessage(null, user, "msg", "msg"));
-        MessageI newmsg = new ForumMessage(thread.getRootMessage(), user, "gsm", "gsm");
+        ThreadI thread = subforum.createThread(new ForumMessage(user, "msg", "msg"));
+        MessageI newmsg = new ForumMessage(user, "gsm", "gsm");
         subforum.replyToMessage(thread.getRootMessage(), newmsg);
         assertEquals(thread.getRootMessage().getMessageText(), "msg");
         assertEquals(thread.getRootMessage().getMessageTitle(), "msg");
@@ -70,8 +70,8 @@ public class SubForumTest extends TestCase {
 
     public void testReplyToInvalidMessage() throws Exception {
         try {
-            ThreadI thread = subforum.createThread(new ForumMessage(null, user, "msg", "msg"));
-            MessageI newmsg = new ForumMessage(thread.getRootMessage(), user, "", "");
+            ThreadI thread = subforum.createThread(new ForumMessage(user, "msg", "msg"));
+            MessageI newmsg = new ForumMessage(user, "", "");
             subforum.replyToMessage(thread.getRootMessage(), newmsg);
         } catch (DoesNotComplyWithPolicyException e) {
             assertTrue(true);
@@ -83,8 +83,8 @@ public class SubForumTest extends TestCase {
     public void testReplyToNonExistentMessage() throws Exception {
         try {
             setUp();
-            ThreadI thread = subforum.createThread(new ForumMessage(null, user, "msg", "msg"));
-            MessageI newmsg = new ForumMessage(thread.getRootMessage(), user, "def", "abc");
+            ThreadI thread = subforum.createThread(new ForumMessage(user, "msg", "msg"));
+            MessageI newmsg = new ForumMessage(user, "def", "abc");
             subforum.replyToMessage(newmsg, newmsg);
         } catch (MessageNotFoundException e) {
             assertTrue(true);
@@ -104,8 +104,8 @@ public class SubForumTest extends TestCase {
     }
 
     public void testDeleteMessage() throws Exception {
-        ThreadI thread = subforum.createThread(new ForumMessage(null, user, "msg", "msg"));
-        MessageI newmsg = new ForumMessage(thread.getRootMessage(), user, "gsm", "gsm");
+        ThreadI thread = subforum.createThread(new ForumMessage(user, "msg", "msg"));
+        MessageI newmsg = new ForumMessage(user, "gsm", "gsm");
         subforum.replyToMessage(thread.getRootMessage(), newmsg);
         subforum.deleteMessage(newmsg, user.getUsername());
         assertEquals(thread.getMessages().getRoot().children.size(), 0);
@@ -133,7 +133,7 @@ public class SubForumTest extends TestCase {
     }
 
     public void testGetThreads() throws Exception {
-        ThreadI thread = subforum.createThread(new ForumMessage(null, user, "msg", "thread"));
+        ThreadI thread = subforum.createThread(new ForumMessage(user, "msg", "thread"));
         assertEquals(subforum.getThreads().size(), 1);
         assertEquals(subforum.getThreads().iterator().next().getTitle(), thread.getTitle());
     }
@@ -145,11 +145,11 @@ public class SubForumTest extends TestCase {
     public void testSeveralThreads() throws Exception {
         List<ThreadI> threads = new LinkedList<>();
         for (int i=0; i < 10; i++) {
-            ThreadI thread = subforum.createThread(new ForumMessage(null, user, "msg", "msg" + i));
+            ThreadI thread = subforum.createThread(new ForumMessage(user, "msg", "msg" + i));
             threads.add(thread);
         }
         for (int i=0; i < 10; i++) {
-            ThreadI thread = new ForumThread(new ForumMessage(null, user, "msg", "msg" + i));
+            ThreadI thread = new ForumThread(new ForumMessage(user, "msg", "msg" + i));
             assertTrue(subforum.getThreads().contains(threads.get(i)));
         }
         assertEquals(subforum.getThreads().size(), 10);

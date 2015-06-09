@@ -124,7 +124,7 @@ public class UserTest {
     public void testCreateThread() throws Exception {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
-        MessageI message = new ForumMessage(null, user, "Mega Flow", "Flow");
+        MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
         user2.createThread(message, permission);
         assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
     }
@@ -133,7 +133,7 @@ public class UserTest {
     public void testReplyToMessage() throws Exception {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
-        MessageI message = new ForumMessage(null, user, "Mega Flow", "Flow");
+        MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
         user2.createThread(message, permission);
         user2.replyToMessage(permission, message, "WTF", "Help");
         user.replyToMessage(permission, message, "WTF", "Yeah!");
@@ -144,7 +144,7 @@ public class UserTest {
     public void testDeleteMessageS() throws Exception {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
-        MessageI message = new ForumMessage(null, user, "Mega Flow", "Flow");
+        MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
         user2.createThread(message, permission);
         user2.replyToMessage(permission, message, "WTF", "Help");
         user.replyToMessage(permission, message, "WTF", "Yeah!");
@@ -157,7 +157,7 @@ public class UserTest {
     public void testDeleteMessageWithoutPermission() throws Exception {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
-        MessageI message = new ForumMessage(null, user, "Mega Flow", "Flow");
+        MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
         user2.createThread(message, permission);
         user2.deleteMessage(message, permission); // PermissionDeniedException expected
     }

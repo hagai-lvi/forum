@@ -18,6 +18,7 @@ public class Exp {
 		ForumPolicy policy = new ForumPolicy(false, 10,".*", 365);
 		Forum f = new Forum("a", policy);
 		UserI user = f.register("a", "a", "a");
+		user.setAuthenticated();
 		UserI user2 = f.login("a","a");
 		assertEquals(user.getUsername(), user2.getUsername());
 		assertEquals(user.getPassword(), user2.getPassword());
