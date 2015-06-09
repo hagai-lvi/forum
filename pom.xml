@@ -190,7 +190,7 @@
     </dependencies>
 
     <build>
-        <finalName>Forum-System</finalName>
+        <finalName>forum-system</finalName>
 
         <plugins>
             <plugin>
