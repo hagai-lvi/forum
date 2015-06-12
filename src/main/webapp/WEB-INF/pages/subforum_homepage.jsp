@@ -15,7 +15,7 @@
 </head>
 <body>
 
-
+<h1>Welcome to subforum ${subforumName}</h1>
 <%--TODO--%>
 <form:form action="addThread" method="post">
     <h1>Create New Thread</h1>
