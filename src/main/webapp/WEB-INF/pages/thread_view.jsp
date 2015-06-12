@@ -12,6 +12,11 @@
 <h1>Thread ${node.getData().getMessageText()}</h1>
 
 
+<form method="get" action="subforum_homepage">
+    <input type="submit" value="Back to subforum homepage" >
+</form>
+
+
 <%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
