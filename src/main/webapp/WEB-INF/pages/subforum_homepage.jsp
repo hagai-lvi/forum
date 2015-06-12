@@ -35,6 +35,10 @@
     </label>
 </form:form>
 
+<form method="get" action="forum_homepage">
+    <input type="submit" value="Back to forum homepage" >
+</form>
+
 
 <%--TODO--%>
 <table >

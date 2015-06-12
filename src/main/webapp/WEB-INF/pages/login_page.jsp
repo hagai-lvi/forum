@@ -67,6 +67,9 @@
   </label>
 </form>
 
+<form method="get" action="facade">
+  <input type="submit" value="Back to Facade" >
+</form>
 
 </body>
 </html>
