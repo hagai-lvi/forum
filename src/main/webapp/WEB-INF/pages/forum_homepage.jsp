@@ -42,10 +42,10 @@
     <tr>
 
         <c:forEach var="subforum" items="${subforumsList}">
-            ${subforum.getName()}
+            ${subforum.getTitle()}
 
             <form action="subforum_homepage" method="POST">
-                <input type="submit" value="${subforum.getName()}" name="subforumName" />
+                <input type="submit" value="${subforum.getTitle()}" name="subforumName" />
             </form>
             <br/>
         </c:forEach>
