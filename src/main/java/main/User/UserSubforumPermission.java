@@ -7,7 +7,6 @@ import org.apache.log4j.Logger;
 import main.forum_contents.Forum;
 
 import javax.persistence.*;
-import java.util.Collection;
 
 /**
  * Created by gabigiladov on 4/11/15.
@@ -87,8 +86,11 @@ import java.util.Collection;
     }
 
     @Override
-    public void editMessage(MessageI originalMessage, MessageI newMessage) {
-        originalMessage.editText(newMessage.getMessageText());
+    public void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException {
+        if (originalMessage == null || newMessage == null){
+            throw new MessageNotFoundException(newMessage);
+        }
+        subforum.editMessage(originalMessage, newMessage);
     }
 
     @Override

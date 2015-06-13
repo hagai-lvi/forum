@@ -20,4 +20,6 @@ public interface ThreadI extends ExThreadI{
 	void remove(MessageI message);
 
 	String getTitle();
+
+	void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException;
 }

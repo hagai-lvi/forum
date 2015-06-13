@@ -4,7 +4,10 @@ import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
+import main.exceptions.DoesNotComplyWithPolicyException;
+import main.exceptions.MessageNotFoundException;
 import main.exceptions.PermissionDeniedException;
+import main.exceptions.SubForumAlreadyExistException;
 import main.forum_contents.*;
 import main.interfaces.*;
 import org.junit.Before;
@@ -141,16 +144,42 @@ public class UserTest {
     }
 
     @Test
-    public void testDeleteMessageS() throws Exception {
-        user2.createSubForum("Football");
+    public void testDeleteMessageS() {
+        try {
+            user2.createSubForum("Football");
+        } catch (PermissionDeniedException | SubForumAlreadyExistException e) {
+            e.printStackTrace();
+        }
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
-        user2.createThread(message, permission);
-        user2.replyToMessage(permission, message, "WTF", "Help");
-        user.replyToMessage(permission, message, "WTF", "Yeah!");
+        try {
+            user2.createThread(message, permission);
+        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
+        try {
+            user2.replyToMessage(permission, message, "WTF", "Help");
+        } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
+        try {
+            user.replyToMessage(permission, message, "WTF", "Yeah!");
+        } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
         assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
-        user.deleteMessage(message, permission);
-        assertEquals(message.printSubTree(), "The message has been deleted");
+        try {
+            user.deleteMessage(message, permission);
+        } catch (PermissionDeniedException | MessageNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            user.replyToMessage(permission,message, "aaa", "bbb");
+        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        } catch (MessageNotFoundException e) {
+            assertTrue(true);
+        }
     }
 
     @Test(expected = PermissionDeniedException.class)

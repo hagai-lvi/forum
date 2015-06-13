@@ -5,6 +5,7 @@ import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
+import main.forum_contents.ForumThread;
 import main.interfaces.*;
 
 import java.util.ArrayList;
@@ -113,7 +114,8 @@ import java.util.Iterator;
 		Session current = findSession(sessionId);
 		assert current != null;
 		ForumMessage msg = new ForumMessage(current.getUser(), srcMessageTitle, srcMessageBody);
-		current.getSubForum().createThread(msg);
+		ThreadI thread = current.getSubForum().createThread(msg);
+		current.setThread(thread);
 		return msg.getId();
 	}
 
@@ -165,8 +167,11 @@ import java.util.Iterator;
 
 	@Override
 	public void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException{
-		// TODO update database
-		forums.remove(findForum(forumName));
+		if (username == ADMIN_USERNAME && password == ADMIN_PASSWORD) {
+			forums.remove(findForum(forumName));
+		}else{
+			throw new PermissionDeniedException("Unauthorized removal of a forum");
+		}
 	}
 
 	@Override

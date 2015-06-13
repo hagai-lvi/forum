@@ -8,6 +8,8 @@ import main.services_layer.Facade;
  */
 public abstract class Driver {
 
+    public static int dbCount =0;
+
     public static FacadeI getBridge() {
         Proxy bridge = new Proxy();
 

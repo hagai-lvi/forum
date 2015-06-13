@@ -36,7 +36,7 @@ public interface SubForumPermissionI {
 	/**
 	 * Edit an existing message.
 	 */
-	 void editMessage(MessageI originalMessage, MessageI newMessage);
+	 void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException;
 
 	 /**
 	 * view threads

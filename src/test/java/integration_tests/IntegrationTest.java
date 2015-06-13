@@ -7,6 +7,8 @@ import main.services_layer.Facade;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import tests_infrastructure.Driver;
+
 import java.util.Collection;
 import static org.junit.Assert.*;
 
@@ -23,9 +25,14 @@ public class IntegrationTest {
 	 */
 	public void test_RegisterLoginAndViewSubforums() throws InvalidUserCredentialsException, UserAlreadyExistsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
-			_facade.register("forum", "user", "pass", "mail@mail.com");
-
-			int sessionID = _facade.login("forum", "user", "pass");
+			_facade.addForum("ADMIN", "ADMIN", false, "forum" + Driver.dbCount++, "pass", 3, 365);
+		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
+			e.printStackTrace();
+		}
+		try {
+			_facade.register("forum" + Driver.dbCount, "user", "pass", "mail@mail.com");
+			_facade.authanticateUser("forum" + Driver.dbCount, "user", _facade.getUserAuthString("forum" + Driver.dbCount, "user", "pass"));
+			int sessionID = _facade.login("forum" + Driver.dbCount, "user", "pass");
 			_facade.getSubForumList(sessionID);
 		}catch (InvalidUserCredentialsException e){
 			fail("User failed to log in!");
@@ -34,7 +41,7 @@ public class IntegrationTest {
 			fail("User Already Exists!");
 		} catch (ForumNotFoundException e) {
 			fail("forum not found!");
-		} catch (SessionNotFoundException e) {
+		} catch (SessionNotFoundException | UserNotFoundException e) {
 			e.printStackTrace();
 		}
 	}
@@ -46,12 +53,17 @@ public class IntegrationTest {
 	public void test_LoginPostDeleteAndTryToViewByOtherUser() throws UserAlreadyExistsException, InvalidUserCredentialsException,
 			SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
-			_facade.register("forum", "user1", "pass", "mail@mail.com");
-			_facade.register("forum", "user2", "pass", "mail@mail.com");
-			_facade.authanticateUser("forum", "user1", _facade.getUserAuthString("forum", "user1", "pass"));
-			_facade.authanticateUser("forum", "user2", _facade.getUserAuthString("forum", "user2", "pass"));
+			_facade.addForum("ADMIN", "ADMIN", false, "forum" + Driver.dbCount++, "pass", 3, 365);
+		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
+			e.printStackTrace();
+		}
+		try {
+			_facade.register("forum" + Driver.dbCount, "user1", "pass", "mail@mail.com");
+			_facade.register("forum" + Driver.dbCount, "user2", "pass", "mail@mail.com");
+			_facade.authanticateUser("forum" + Driver.dbCount, "user1", _facade.getUserAuthString("forum" + Driver.dbCount, "user1", "pass"));
+			_facade.authanticateUser("forum" + Driver.dbCount, "user2", _facade.getUserAuthString("forum" + Driver.dbCount, "user2", "pass"));
 			// first user creates a new message.
-			int session1ID = _facade.login("forum", "user1", "pass");
+			int session1ID = _facade.login("forum" + Driver.dbCount, "user1", "pass");
 			_facade.createSubforum(session1ID, "subforum");
 			int id = _facade.createNewThread(session1ID, "thread-title", "message-body");
 			Collection<SubForumI> sf = _facade.getSubForumList(session1ID);
@@ -65,7 +77,7 @@ public class IntegrationTest {
 			_facade.deleteMessage(session1ID, newMessage.getId());
 
 			// login as second user.
-			int session2ID = _facade.login("forum", "user2", "pass");
+			int session2ID = _facade.login("forum" + Driver.dbCount, "user2", "pass");
 			sf = _facade.getSubForumList(session2ID);
 			newSF = sf.iterator().next();
 			newThread = newSF.getThreads().iterator().next();
@@ -99,10 +111,15 @@ public class IntegrationTest {
 	 */
 	public void test_removeModThenTryToEditMessage() throws NeedMoreAuthParametersException {
 		try {
+			_facade.addForum("ADMIN", "ADMIN", false, "forum" + Driver.dbCount++, "pass", 3, 365);
+		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
+			e.printStackTrace();
+		}
+		try {
 			//add new user
-			_facade.register("forum", "user", "pass", "mail@mail.com");
+			_facade.register("forum" + Driver.dbCount, "user", "pass", "mail@mail.com");
 			//login as SU
-			int sessionId = _facade.login("forum", "admin", "pass");
+			int sessionId = _facade.login("forum" + Driver.dbCount, "admin", "pass");
 			_facade.viewSubforum(sessionId, "subforum");
 			//set user as subforum mod
 			_facade.setModerator(sessionId, "user");
@@ -111,33 +128,24 @@ public class IntegrationTest {
 			//get id of new message
 			Tree messages = _facade.getMessageList(sessionId);
 			int messageId = messages.getId();
-			int modSessionId = _facade.login("forum", "user", "pass");
+			int modSessionId = _facade.login("forum" + Driver.dbCount, "user", "pass");
 			//successfully edit the message as a mod
-			_facade.editMessage(modSessionId, messageId, "title2", "body2");
+			_facade.editMessage(modSessionId, messageId, "title" + Driver.dbCount, "body2");
 			_facade.logout(modSessionId);
 			//expel the mod
 			_facade.removeModerator(sessionId, "user");
-			modSessionId = _facade.login("forum", "user", "pass");
+			modSessionId = _facade.login("forum" + Driver.dbCount, "user", "pass");
 			//try to edit the message again
 			_facade.editMessage(modSessionId, messageId, "title", "body");
 			fail("message edited although not permitted");
-		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | SubForumAlreadyExistException | PasswordNotInEffectException | DoesNotComplyWithPolicyException | InvalidUserCredentialsException e) {
+		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | SubForumAlreadyExistException | PasswordNotInEffectException | DoesNotComplyWithPolicyException | InvalidUserCredentialsException | SessionNotFoundException | ThreadNotFoundException | ForumNotFoundException | UserNotFoundException | SubForumNotFoundException e) {
 			e.printStackTrace();
-		} catch (UserNotFoundException e) {
-				e.printStackTrace();
-		} catch (ForumNotFoundException e) {
-				e.printStackTrace();
 		} catch (PermissionDeniedException e) {
 			//pass
-		} catch (SessionNotFoundException e) {
-			e.printStackTrace();
-		} catch (SubForumNotFoundException e) {
-			e.printStackTrace();
-		} catch (ThreadNotFoundException e) {
-			e.printStackTrace();
 		}
 
 	}
+
 
 	@Test
 	/**
@@ -152,11 +160,21 @@ public class IntegrationTest {
 	 * target: Check whether a user without admin privileges can delete a sub-forum.
 	 */
 	public void test_LogInUnprivilegedAndTryToDeleteForum() throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException, ForumNotFoundException {
-
 		try {
-			_facade.register("forum", "user", "pass", "mail@mail.com");
-			_facade.login("forum", "user", "pass");
-			_facade.removeForum("user", "pass", "forum");
+			_facade.addForum("ADMIN", "ADMIN", false, "forum" + Driver.dbCount++, "pass", 3, 365);
+		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
+			e.printStackTrace();
+		}
+		try {
+			_facade.register("forum" + Driver.dbCount, "user", "pass", "mail@mail.com");
+
+			try {
+				_facade.authanticateUser("forum" + Driver.dbCount, "user", _facade.getUserAuthString("forum" + Driver.dbCount, "user", "pass"));
+			} catch (UserNotFoundException e) {
+				e.printStackTrace();
+			}
+			_facade.login("forum" + Driver.dbCount, "user", "pass");
+			_facade.removeForum("user", "pass", "forum" + Driver.dbCount);
 			fail("unauthorized removal of a forum");
 		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | PasswordNotInEffectException | ForumNotFoundException | InvalidUserCredentialsException | NeedMoreAuthParametersException e) {
 			e.printStackTrace();
@@ -167,15 +185,8 @@ public class IntegrationTest {
 	}
 
 	@Before
-	public void init() {
+	public void setUp() {
 		_facade = Facade.getFacade();
-		try {
-			_facade.addForum("ADMIN", "ADMIN", false, "forum", "pass", 3, 365);
-		} catch (PermissionDeniedException e) {
-			e.printStackTrace();
-		} catch (ForumAlreadyExistException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@After

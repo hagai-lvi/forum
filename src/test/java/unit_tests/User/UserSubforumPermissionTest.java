@@ -4,6 +4,8 @@ import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
+import main.exceptions.DoesNotComplyWithPolicyException;
+import main.exceptions.MessageNotFoundException;
 import main.exceptions.PermissionDeniedException;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
@@ -59,14 +61,44 @@ public class UserSubforumPermissionTest {
     }
 
     @Test
-    public void testDeleteMessageS() throws Exception {
+    public void testDeleteMessageS()  {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2222", "Flow222");
-        permission2.createThread(message);
-        permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa", "Help"));
+        try {
+            permission2.createThread(message);
+        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
+        try {
+            permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa", "Help"));
+        } catch (MessageNotFoundException | PermissionDeniedException | DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
         assertEquals(message.printSubTree(), "Flow222--> Help");
-        permission.deleteMessage(message, "Gabi");
-        assertEquals(message.printSubTree(), "The message has been deleted");
+        try {
+            permission.deleteMessage(message, "Gabi");
+        } catch (PermissionDeniedException | MessageNotFoundException e) {
+            e.printStackTrace();
+        }
+        try {
+            permission2.replyToMessage(message, message);
+        } catch (DoesNotComplyWithPolicyException | PermissionDeniedException e) {
+            e.printStackTrace();
+        } catch (MessageNotFoundException e) {
+            assertTrue(true);
+        }
+        try {
+            permission2.deleteMessage(message, "Gabi");
+        } catch (PermissionDeniedException e) {
+            e.printStackTrace();
+        } catch (MessageNotFoundException e) {
+            assertTrue(true);
+        }
+        try {
+            permission2.editMessage(message, message);
+        } catch (MessageNotFoundException e) {
+            assertTrue(true);
+        }
     }
 
     @Test(expected = PermissionDeniedException.class)

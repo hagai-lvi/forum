@@ -8,6 +8,8 @@ import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.ForumThread;
 import main.interfaces.*;
+import tests_infrastructure.Driver;
+
 import java.util.LinkedList;
 import java.util.List;
 
@@ -19,10 +21,10 @@ public class SubForumTest extends TestCase {
     ForumI forum;
     SubForumI subforum;
     UserI user;
-    private static int dbCount =0;
+
     public void setUp() throws Exception {
         super.setUp();
-        forum = new Forum("forum" + dbCount++, new ForumPolicy(false, 2, "aaa", 365));
+        forum = new Forum("forum" + Driver.dbCount++, new ForumPolicy(false, 2, "aaa", 365));
         forum.createSubForum("subforum");
         subforum = forum.getSubForums().iterator().next();
         forum.register("user", "aaa", "aaa@aaa.aaa");

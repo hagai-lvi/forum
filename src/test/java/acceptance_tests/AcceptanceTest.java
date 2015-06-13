@@ -32,7 +32,7 @@ public class AcceptanceTest extends TestCase {
 
             //add forums
             for (int i = 0; i < 5; i++) {
-                _facade.addForum("admin", "admin", false, "Forum " + Integer.toString(i), "a+", 2, 365);
+                _facade.addForum("ADMIN", "ADMIN", false, "Forum " + Integer.toString(i), "a+", 2, 365);
 
             //add users to forums and create threads
             for (int j = 0; j < 3; j++) {

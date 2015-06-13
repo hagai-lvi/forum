@@ -10,8 +10,8 @@ import main.interfaces.SubForumI;
  */
 public class MessageNotFoundException extends Exception {
 
-    public MessageNotFoundException(MessageI message, SubForumI subForum) {
-        super("Could not find message " + message + "In sub-forum " + subForum);
+    public MessageNotFoundException(MessageI message) {
+        super("Could not find message " + message);
 
     }
 }

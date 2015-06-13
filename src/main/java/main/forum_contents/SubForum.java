@@ -2,10 +2,7 @@ package main.forum_contents;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
-import main.Persistancy.HibernatePersistancyAbstractor;
 import main.Persistancy.PersistantObject;
-import main.User.Permissions;
-import main.User.UserSubforumPermission;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
@@ -82,7 +79,7 @@ public class SubForum extends PersistantObject implements SubForumI {
         ThreadI thread = findThread(original);
         if (thread == null){
             logger.warn("User tried to reply to already deleted thread");
-            throw new MessageNotFoundException(original, this);
+            throw new MessageNotFoundException(original);
         }
         thread.addReply(reply, original);
 //        this.Update();
@@ -113,7 +110,7 @@ public class SubForum extends PersistantObject implements SubForumI {
             thread.remove(message);
         }
         else {
-            throw new MessageNotFoundException(message, this);
+            throw new MessageNotFoundException(message);
         }
         //this.Update();
     }
@@ -123,6 +120,15 @@ public class SubForum extends PersistantObject implements SubForumI {
     public void removeModerator(UserI mod) {
         _moderators.remove(mod.getUsername());
         //this.Update();
+    }
+
+    @Override
+    public void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException {
+        for (ThreadI thread : _threads){
+            if (thread.contains(originalMessage)) {
+                thread.editMessage(originalMessage, newMessage);
+            }
+        }
     }
 
 
