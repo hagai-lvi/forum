@@ -10,6 +10,10 @@ public class PersistantObject {
 
 
     public void Save(){    // save the forum to the database
+
+        if (pers == null ){
+            pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
+        }
         pers.save(this);
     }
 
