@@ -245,6 +245,7 @@ public class WebController {
 										  int messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, ThreadNotFoundException {
 		int sessionID = getSessionID(session);
 		FacadeI facade = Facade.getFacade();
+		//TODO not implemented by the domain yet
 		facade.addReply(sessionID, messageID, newMsgTitle, newMsgBody);
 		ThreadI thread = facade.getCurrentThread(sessionID);
 		model.addAttribute("thread", thread);

@@ -28,7 +28,7 @@
     <input hidden name="messageID" value=${node.data.getId()}>
     <input type="submit" value="Add reply"/>
 </form>
-<%--<myTags:threadTree node="${node}"/>--%>
+<myTags:threadTree node="${node}"/>
 
 
 </body>

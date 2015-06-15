@@ -25,6 +25,10 @@ public class Node extends PersistantObject{
     //@Transient
     public Node parent;
 
+    public List<Node> getChildren() {
+        return children;
+    }
+
     @OneToMany(targetEntity = Node.class,  cascade = CascadeType.ALL, fetch=FetchType.EAGER)
     //@Transient
     @JsonView(NativeGuiController.class)
