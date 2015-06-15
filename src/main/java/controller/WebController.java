@@ -3,14 +3,20 @@ package controller;
 //import data_structures.TreeNode;
 
 import main.exceptions.*;
-import main.interfaces.*;
+import main.interfaces.ExSubForumI;
+import main.interfaces.ExThreadI;
+import main.interfaces.FacadeI;
+import main.interfaces.ThreadI;
 import main.services_layer.Facade;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
@@ -255,17 +261,17 @@ public class WebController {
 		model.addAttribute("messageID", messageID);
 		return "reply_to_message";
 	}
-//
-//
-//	@ExceptionHandler(Exception.class)
-//	public ModelAndView handleError(HttpServletRequest req, Exception exception) {
-//		logger.error("Request: " + req.getRequestURL() + " raised an exception", exception);
-//
-//		ModelAndView mav = new ModelAndView();
-//		mav.addObject("error_message", exception.getMessage());
-//		mav.addObject("exception", exception);
-//		mav.addObject("url", req.getRequestURL());
-//		mav.setViewName("error");
-//		return mav;
-//	}
+
+
+	@ExceptionHandler(Exception.class)
+	public ModelAndView handleError(HttpServletRequest req, Exception exception) {
+		logger.error("Request: " + req.getRequestURL() + " raised an exception", exception);
+
+		ModelAndView mav = new ModelAndView();
+		mav.addObject("error_message", exception.getMessage());
+		mav.addObject("exception", exception);
+		mav.addObject("url", req.getRequestURL());
+		mav.setViewName("error");
+		return mav;
+	}
 }
