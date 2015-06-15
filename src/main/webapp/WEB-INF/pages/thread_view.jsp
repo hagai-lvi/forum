@@ -11,6 +11,8 @@
 <body>
 <h1>Thread ${node.getData().getMessageText()}</h1>
 
+<%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
+<myTags:logout></myTags:logout>
 
 <form method="get" action="subforum_homepage">
     <input type="submit" value="Back to subforum homepage" >

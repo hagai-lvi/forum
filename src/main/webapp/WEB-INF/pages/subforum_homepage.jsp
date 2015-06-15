@@ -16,6 +16,8 @@
 <body>
 
 <h1>Welcome to subforum ${subforumName}</h1>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
+<myTags:logout></myTags:logout>
 <%--TODO--%>
 <form:form action="addThread" method="post">
     <h1>Create New Thread</h1>
