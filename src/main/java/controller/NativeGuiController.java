@@ -94,15 +94,24 @@ public class NativeGuiController {
 		logger.info("got request getSubforum");
 		ThreadList list = new ThreadList();
 		FacadeI facade = Facade.getFacade();
-		int sessionID = getSessionID(session);
+		Integer sessionID = getSessionID(session);
+		if (sessionID == null){
+			logger.warn("Got request with sessionID=null");
+		}
 		ExSubForumI exSubForumI = facade.viewSubforum(sessionID, subforumID);
 		Collection<? extends ExThreadI> threadsList = exSubForumI.getThreads();
 		list.addAll(threadsList);
 		return list;
 	}
 
-	private int getSessionID(HttpSession session) {
-		return (int) session.getAttribute(SESSION_ID_ATTR);
+	private Integer getSessionID(HttpSession session) {
+		Object attribute = session.getAttribute(SESSION_ID_ATTR);
+		if (attribute == null){
+			return null;
+		}
+		else{
+			return (int) attribute;
+		}
 	}
 
 
