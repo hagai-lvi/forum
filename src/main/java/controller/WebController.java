@@ -37,6 +37,12 @@ public class WebController {
 		model.addAttribute("forumList", f.getForumList());
 		return "facade";
 	}
+	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	public String logout(HttpSession session) throws SessionNotFoundException {
+		Facade.getFacade().logout(getSessionID(session));
+		session.removeAttribute(SESSION_ID_ATTR);
+		return "redirect:/facade";
+	}
 
 	/**
 	 * Send a request to create a new forum in the system

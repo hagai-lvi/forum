@@ -15,11 +15,10 @@
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <h1>Hello ${user}, welcome to ${forumName}</h1>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
+<myTags:logout></myTags:logout>
 
 <a href="<c:url value="facade"/>">Click here to go back to Facade page</a>
-
-<h2>${possibleMsg}</h2> <%-- if there is a message such as login or register welcome message - display it here --%>
-<h2>There are ${numberOfSubforums} subforums</h2>
 
 <c:if test="${isAdmin}">
     <form:form action="addSubforum" method="post">
