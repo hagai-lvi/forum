@@ -75,15 +75,15 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException {
+    public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException {
         if(this.real!=null)
             this.real.addReply(sessionId, srcMessageId, title, body);
     }
 
     @Override
-    public int createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException {
+    public int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException {
         if(this.real!=null) {
-            int id = this.real.createNewThread(sessionId, srcMessageTitle, srcMessageBody);
+            int id = this.real.addThread(sessionId, srcMessageTitle, srcMessageBody);
             return id;
         }
         return 0;
@@ -102,7 +102,7 @@ public class Proxy implements FacadeI {
         return null;    }
 
     @Override
-    public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException {
+    public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExsitsException {
         if(this.real!=null)
             this.real.deleteMessage(sessionId, messageId);
     }

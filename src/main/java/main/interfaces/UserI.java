@@ -110,4 +110,10 @@ public interface UserI {
 	void setSecurityAnswer(String ans);
 
 	boolean isAdmin();
+
+	boolean canReply(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException;
+
+	boolean canAddThread(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException;
+
+	boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExsitsException, PermissionDeniedException;
 }

@@ -17,7 +17,7 @@ public interface SubForumI extends ExSubForumI{
 	/**
 	 * create a thread in the sub-forum
 	 */
-	ThreadI createThread(MessageI message) throws DoesNotComplyWithPolicyException;
+	ThreadI addThread(MessageI message) throws DoesNotComplyWithPolicyException;
 
 	/**
 	 * reply to a specific message

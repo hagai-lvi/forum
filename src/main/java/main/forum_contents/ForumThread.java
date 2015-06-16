@@ -41,7 +41,7 @@ public class ForumThread extends PersistantObject implements ThreadI{
         if (newMessage == null){
             throw new MessageNotFoundException(newMessage);
         }
-        ForumMessage msg = messages.findNode((ForumMessage) originalMessage);
+        MessageI msg = messages.findNode(originalMessage);
 
         if (msg == null){
             throw new MessageNotFoundException(originalMessage);
@@ -63,7 +63,7 @@ public class ForumThread extends PersistantObject implements ThreadI{
     @Override
     public void addReply(MessageI reply, MessageI original) throws MessageNotFoundException {
         try {
-            messages.add((ForumMessage)reply, (ForumMessage)original);
+            messages.add(reply, original); //TODO - what to do with tree and array of replies?
             original.addReply(reply);
         } catch (NodeNotFoundException | NullPointerException e) {
             throw new MessageNotFoundException(original);
@@ -73,12 +73,12 @@ public class ForumThread extends PersistantObject implements ThreadI{
 
     @Override
     public boolean contains(MessageI message){
-        return messages.findNode((ForumMessage)message) != null;
+        return messages.findNode(message) != null;
     }
 
     @Override
     public void remove(MessageI message) {
-        messages.remove((ForumMessage)message);
+        messages.remove(message);
     }
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
