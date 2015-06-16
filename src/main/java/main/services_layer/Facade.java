@@ -1,16 +1,12 @@
 package main.services_layer;
 
 import data_structures.Tree;
-import main.User.Permissions;
-import main.User.User;
-import main.User.UserForumPermission;
 import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
 
-import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -18,9 +14,10 @@ import java.util.Collection;
  * Created by hagai_lvi on 4/11/15.
  */
      public class Facade implements FacadeI {
-	private static final String SUPER_ADMIN_USERNAME = "ADMIN";
-	private static final String SUPER_ADMIN_PASSWORD = "ADMIN";
+	private static final String ADMIN_USERNAME = "ADMIN";
+	private static final String ADMIN_PASSWORD = "ADMIN";
 	private static FacadeI theFacade;
+	private ArrayList<UserI> users;
 	private Collection<Session> openSessions;
 	private ArrayList<ForumI> forums;
 	private int sessionCounter;
@@ -32,14 +29,16 @@ import java.util.Collection;
 
 	@Override
 	public void initialize() {
-		//TODO - how to initialize?
+		//TODO
 		openSessions =  new ArrayList<Session>();
 		forums = new ArrayList<ForumI>();
+		users = new ArrayList<UserI>();
 		sessionCounter = 0;
 	}
 
 	@Override
 	public ArrayList<ForumI> getForumList() {
+		// TODO get all forums from database
 		return forums;
 	}
 
@@ -50,46 +49,46 @@ import java.util.Collection;
 
 	@Override
 	public void addForum(String username, String password, String forumName, boolean isSecured, String regex, int numberOfModerators, int passLife) throws PermissionDeniedException, ForumAlreadyExistException {
-		if (username.equals(SUPER_ADMIN_USERNAME) && password.equals(SUPER_ADMIN_PASSWORD)){
+		// TODO add to database
+		if (username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD)){
 			for (ForumI forum : forums){
 				if (forum.getName().equals(forumName)){
 					throw new ForumAlreadyExistException(forumName);
 				}
 			}
-			ForumPolicyI policy = new ForumPolicy(isSecured, numberOfModerators, regex, passLife);
-			ForumI forum = new Forum(forumName, policy); //also adds the new forum to the database.
-			UserI su = new User(SUPER_ADMIN_USERNAME, SUPER_ADMIN_PASSWORD, "ADMIN@ADMIN.SU", new UserForumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum)); //add su as admin.
-			forum.setAdmin(su);
-			forums.add(forum);
+			forums.add(new Forum(forumName, new ForumPolicy(isSecured, numberOfModerators, regex, passLife)));
 		}
+
 		else{
-			throw new PermissionDeniedException(MessageFormat.format("user {0} is not authorized to add a forum.", username));
+			throw new PermissionDeniedException(username + "is not an admin");
 		}
 
 	}
 
 	@Override
-	public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException {
-		Session currentSession = findSession(sessionId);
-		currentSession.setSubForum(currentSession.getForum().createSubForum(subforumName));
+	public void createSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException {
+		Session current = findSession(sessionId);
+		current.setSubForum(current.getForum().createSubForum(subforumName));
 	}
 
 	@Override
-	public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException {
-		ForumI currentForum = findForum(forumName);
-		currentForum.register(userName, password, email);
+	public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException {
+		ForumI current = findForum(forumName);
+		if (current == null) return;
+		UserI currentUser = current.register(userName, password, email);
+		users.add(currentUser);
 	}
 
 
 	@Override
 	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException {
-		ForumI currentForum = findForum(forumName);
-		UserI currentUser = currentForum.login(userName, password);
-		Session currentSession = new Session(sessionCounter, currentUser); //create a new session
-		currentSession.setForum(currentForum);
+		ForumI current = findForum(forumName);
+		UserI currentUser = current.login(userName, password);
+		Session currentSession = new Session(sessionCounter, currentUser);
+		currentSession.setForum(current);
 		openSessions.add(currentSession);
 		sessionCounter++;
-		return sessionCounter - 1;
+		return sessionCounter-1;
 	}
 
 	@Override
@@ -169,7 +168,8 @@ import java.util.Collection;
 
 	@Override
 	public void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException{
-		if (username == SUPER_ADMIN_USERNAME && password == SUPER_ADMIN_PASSWORD) {
+		// TODO remove from database
+		if (username == ADMIN_USERNAME && password == ADMIN_PASSWORD) {
 			forums.remove(findForum(forumName));
 		}else{
 			throw new PermissionDeniedException("Unauthorized removal of a forum");
@@ -319,7 +319,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void authenticateUser(String forum, String username, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException {
+	public void authanticateUser(String forum, String username, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException {
 		UserI user = findUser(username);
 		if (!user.getUserAuthString().equals(userAuthString)){
 			throw new EmailNotAuthanticatedException();
@@ -351,6 +351,7 @@ import java.util.Collection;
 
 	private ForumI findForum(String forumName) throws ForumNotFoundException {
 		for (ForumI f: forums){
+			System.out.println(f.getName());
 			if (f.getName().equals(forumName)){
 				return f;
 			}
@@ -359,13 +360,12 @@ import java.util.Collection;
 	}
 
 	private UserI findUser(String name) throws UserNotFoundException {
-		for (ForumI forum : forums){
-			for (UserI user: forum.getUserList()){
-				if (user.getUsername().equals(name)){
-					return user;
-				}
+		for (UserI user: users){
+			if (user.getUsername().equals(name)){
+				return user;
 			}
 		}
 		throw new UserNotFoundException(name);
 	}
+
 }
