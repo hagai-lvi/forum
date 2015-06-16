@@ -5,12 +5,10 @@ import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
-import main.forum_contents.ForumThread;
 import main.interfaces.*;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -49,15 +47,17 @@ import java.util.Iterator;
 	}
 
 	@Override
-	public void addForum(String username, String password, boolean isSecured, String forumName, String regex, int numberOfModerators, int passLife) throws PermissionDeniedException, ForumAlreadyExistException {
+	public void addForum(String username, String password, String forumName, boolean isSecured, String regex, int numberOfModerators, int passLife) throws PermissionDeniedException, ForumAlreadyExistException {
 		if (username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD)){
 			for (ForumI forum : forums){
+				System.out.println(forum.getName());
 				if (forum.getName().equals(forumName)){
 					throw new ForumAlreadyExistException(forumName);
 				}
 			}
 			forums.add(new Forum(forumName, new ForumPolicy(isSecured, numberOfModerators, regex, passLife)));
 		}
+
 		else{
 			throw new PermissionDeniedException(username + "is not an admin");
 		}
@@ -215,8 +215,11 @@ import java.util.Iterator;
 
 	@Override
 	public String viewSessions(int sessionId) {
-		return null;
-		//TODO - not implemented.
+		StringBuilder res = new StringBuilder();
+		for (Session s : openSessions){
+			res.append("Session " + s.getId() + " [USER: " + s.getUser() + "] [FORUM: " + s.getForum() + "] [SUB-FORUM: " + s.getSubForum() + "] [THREAD: " +s.getThread() + "]\n");
+		}
+		return res.toString();
 	}
 
 	@Override
@@ -346,11 +349,12 @@ import java.util.Iterator;
 
 	private ForumI findForum(String forumName) throws ForumNotFoundException {
 		for (ForumI f: forums){
+			System.out.println(f.getName());
 			if (f.getName().equals(forumName)){
 				return f;
 			}
 		}
-		throw new ForumNotFoundException();
+		throw new ForumNotFoundException(forumName);
 	}
 
 	private UserI findUser(String name) throws UserNotFoundException {

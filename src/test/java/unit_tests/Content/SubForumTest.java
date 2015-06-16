@@ -24,11 +24,13 @@ public class SubForumTest extends TestCase {
 
     public void setUp() throws Exception {
         super.setUp();
-        forum = new Forum("forum" + Driver.dbCount++, new ForumPolicy(false, 2, "aaa", 365));
+        Driver.dbCount++;
+        forum = new Forum("forum" + Driver.dbCount, new ForumPolicy(false, 2, "aaa", 365));
         forum.createSubForum("subforum");
         subforum = forum.getSubForums().iterator().next();
         forum.register("user", "aaa", "aaa@aaa.aaa");
         user = forum.getUserList().iterator().next();
+
     }
 
     public void tearDown() throws Exception {

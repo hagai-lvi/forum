@@ -48,10 +48,6 @@ public class ForumThreadTest extends TestCase {
         assertEquals(thread.getRootMessage().getMessageText(), "body");
     }
 
-    public void testPrintThread() throws Exception {
-        fail("Not yet implemented");
-    }
-
     public void testAddReply() {
         MessageI reply = new ForumMessage(user, "reply-title", "reply-body");
         try {

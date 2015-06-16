@@ -5,4 +5,7 @@ package main.exceptions;
  * Created by hagai on 07/04/15.
  */
 public class ForumNotFoundException extends Exception {
+    public ForumNotFoundException(String forumName) {
+        super(forumName);
+    }
 }

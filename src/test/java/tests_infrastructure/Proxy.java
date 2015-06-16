@@ -44,9 +44,9 @@ public class Proxy implements FacadeI {
         return null;    }
 
     @Override
-    public void addForum(String username, String password, boolean isSEcured, String forumName, String regex, int numberOfModerators, int passLife) throws PermissionDeniedException, ForumAlreadyExistException {
+    public void addForum(String username, String password, String forumName, boolean isSEcured, String regex, int numberOfModerators, int passLife) throws PermissionDeniedException, ForumAlreadyExistException {
         if(this.real!=null)
-            this.real.addForum(username, password, isSEcured, forumName, regex, numberOfModerators, passLife);
+            this.real.addForum(username, password, forumName, isSEcured, regex, numberOfModerators, passLife);
     }
 
     @Override

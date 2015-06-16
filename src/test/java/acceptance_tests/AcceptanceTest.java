@@ -8,9 +8,8 @@ import main.exceptions.*;
 import main.interfaces.*;
 import main.User.Permissions;
 import main.services_layer.Facade;
-import org.junit.Ignore;
 import org.junit.Test;
-import java.sql.*;
+
 import java.util.Collection;
 import java.util.Objects;
 
@@ -32,13 +31,13 @@ public class AcceptanceTest extends TestCase {
 
             //add forums
             for (int i = 0; i < 5; i++) {
-                _facade.addForum("ADMIN", "ADMIN", false, "Forum " + Integer.toString(i), "a+", 2, 365);
+                _facade.addForum("ADMIN", "ADMIN", "Forum " + Integer.toString(i), false, "a+", 2, 365);
 
             //add users to forums and create threads
             for (int j = 0; j < 3; j++) {
-                _facade.register("forum " + Integer.toString(i), names[i * 3 + j], "123456", "nobodyemail@nobody.com");
-                _facade.createSubforum(0, "SubForum " + j + " In Forum" + i);
-                _facade.createNewThread(0, "message " + j, "body " + j);
+                _facade.register("Forum " + Integer.toString(i), names[i * 3 + j], "123456", "nobodyemail@nobody.com");
+    //            _facade.createSubforum(_facade., "SubForum " + j + " In Forum" + i);
+    //            _facade.createNewThread(0, "message " + j, "body " + j);
             }
         }
 
@@ -86,10 +85,16 @@ public class AcceptanceTest extends TestCase {
      * target: check adding forum to the system.
      */
     @Test
-    public void createForumTest() throws PermissionDeniedException, ForumAlreadyExistException {
+    public void testCreateForum() {
 
         int numOfForums = _facade.getForumList().size();
-        _facade.addForum("admin", "admin", false, "Forum CreateForumTest", "[a-z]*[!@#][a-z]*", 2, 365);
+        try {
+            _facade.addForum("ADMIN", "ADMIN", "testCreateForum", false, "[a-z]*[!@#][a-z]*", 2, 365);
+        } catch (PermissionDeniedException e) {
+            e.printStackTrace();
+        } catch (ForumAlreadyExistException e) {
+            e.printStackTrace();
+        }
         assertEquals(numOfForums + 1, _facade.getForumList().size());
 
     }
@@ -98,7 +103,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: set new policy for forum
      */
-    public void setPoliciesTest() throws SessionNotFoundException {
+    public void testSetPolicies() throws SessionNotFoundException {
         _facade.setPolicies(0, false, "a*", 1, 365);
         // test pass regex
         try {
@@ -133,7 +138,7 @@ public class AcceptanceTest extends TestCase {
      * target: the test check the permission given to a guest.
      * check negative test like getting the right exception on violate his permission
      */
-    public void guestEntryTest() throws MessageNotFoundException, ForumNotFoundException {
+    public void testGuestEntry() throws MessageNotFoundException, ForumNotFoundException {
         int session = _facade.guestEntry("Forum1");
         //try create thread
         try {
@@ -190,7 +195,7 @@ public class AcceptanceTest extends TestCase {
      * check that the user exist in the list after register and that user cannot register twice
      * check if you get email authentication message in your inbox
      */
-    public void registerTest() {
+    public void testRegister() {
 
         // tests register existing username
         try {
@@ -229,7 +234,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: check login usecase, try login to non exist user
      */
-    public void loginTest() {
+    public void testLogin() {
         int session = GUEST_SESSION;
         try {
             session = _facade.login("Forum0", "gil", "123456");
@@ -254,7 +259,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: check logout usecase
      */
-    public void logoutTest() {
+    public void testLogout() {
         int session = 0;
         //test login and out
         try {
@@ -285,7 +290,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * taget: check Create sub forum usecase
      */
-    public void createSubForumTest() {
+    public void testCreateSubForum() {
 
         //test creation
         try {
@@ -303,7 +308,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: view sub forum
      */
-    public void viewSubForumTest() {
+    public void testViewSubForum() {
        fail("not implemented");
        //TODO - how?
     }
@@ -312,7 +317,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test usecase post thread
      */
-    public void postThreadTest() throws SessionNotFoundException {
+    public void testPostThread() throws SessionNotFoundException {
 
         int n = _facade.getSubForumList(0).size();
         try {
@@ -327,7 +332,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test post message usecase
      */
-    public void postMessageTest() throws SessionNotFoundException {
+    public void testPostMessage() throws SessionNotFoundException {
 
         Tree msgs = _facade.getMessageList(0);
         int msgid = 1;//msgs.iterator().next().getId(); //TODO tree iterator
@@ -342,7 +347,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target test Friend Type requirement
      */
-    public void friendTypeTest() throws SessionNotFoundException {
+    public void testFriendType() throws SessionNotFoundException {
         //TODO - user types?!
         _facade.addUserType(0, "SuperPooper", 2, 200, 2);
     }
@@ -353,7 +358,7 @@ public class AcceptanceTest extends TestCase {
      /** target: test remove message usecase, check that user can remove only
      * 			his messages.
       */
-     public void removeMessageTest() {
+     public void testRemoveMessage() {
         int session = 0;
         try {
             session = _facade.login("Forum0", "gil", "123456");
@@ -380,7 +385,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test cancel forum usecase
      */
-    public void cancelForumTest() {
+    public void testCancelForum() {
         try {
             _facade.removeForum("admin", "admin", "Forum1");
         } catch (ForumNotFoundException | PermissionDeniedException e) {
@@ -400,7 +405,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: check use case send report on moderator
      */
-    public void complainOnModeratorTest() {
+    public void testComplainOnModerator() {
 
         try {
             _facade.reportModerator(0, "Moshe", "he is not behave well!!");
@@ -418,7 +423,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test email authentication use case
      */
-    public void emailAuthenticationTest() {
+    public void testEmailAuthentication() {
 
         int session = 0;
         try {
@@ -464,7 +469,7 @@ public class AcceptanceTest extends TestCase {
     /**
     * target: test editing message by publisher use case
     */
-    public void editOwnMessageTest() throws SessionNotFoundException {
+    public void testEditOwnMessage() throws SessionNotFoundException {
         int session = 0;
 
         try {
@@ -494,7 +499,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test setting moderator to sub forum use case
     */
-    public void setModeratorTest() {
+    public void testSetModerator() {
 
 
 
@@ -514,7 +519,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test canceling moderator use case
     */
-    public void cancelModeratorTest() throws UserNotFoundException, SessionNotFoundException {
+    public void testCancelModerator() throws UserNotFoundException, SessionNotFoundException {
         try {
             _facade.setModerator(0, "gabi");
         } catch (PermissionDeniedException e) {
@@ -533,7 +538,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test getting updates and info from moderator use case
     */
-    public void getUpdatesFromModeratorTest() {
+    public void testGetUpdatesFromModerator() {
         ForumI forum =_facade.getForumList().iterator().next();
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_MODERATOR,forum);
@@ -557,7 +562,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test getting updates and info from super manager use case
      */
-    public void getUpdatesFromSuperManagerTest() {
+    public void testGetUpdatesFromSuperManager() {
         ForumI forum =_facade.getForumList().iterator().next();
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);

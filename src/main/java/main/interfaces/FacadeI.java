@@ -27,7 +27,7 @@ public interface FacadeI {
 	/**
 	 * Add a forum to the system, requires login with permissions
 	 */
-	void addForum(String username, String password, boolean isSecured, String forumName, String regex, int numberOfModerators, int passwordEffectTime) throws PermissionDeniedException, ForumAlreadyExistException;
+	void addForum(String username, String password, String forumName, boolean isSecured, String regex, int numberOfModerators, int passwordEffectTime) throws PermissionDeniedException, ForumAlreadyExistException;
 
 	/**
 	 * Create a subforum in the specified forum.

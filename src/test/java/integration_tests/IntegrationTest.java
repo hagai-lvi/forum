@@ -25,7 +25,7 @@ public class IntegrationTest {
 	 */
 	public void test_RegisterLoginAndViewSubforums() throws InvalidUserCredentialsException, UserAlreadyExistsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
-			_facade.addForum("ADMIN", "ADMIN", false, "forum" + Driver.dbCount++, "pass", 3, 365);
+			_facade.addForum("ADMIN", "ADMIN", "forum" + Driver.dbCount, false, "pass", 3, 365);
 		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
 			e.printStackTrace();
 		}
@@ -53,7 +53,7 @@ public class IntegrationTest {
 	public void test_LoginPostDeleteAndTryToViewByOtherUser() throws UserAlreadyExistsException, InvalidUserCredentialsException,
 			SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
-			_facade.addForum("ADMIN", "ADMIN", false, "forum" + Driver.dbCount++, "pass", 3, 365);
+			_facade.addForum("ADMIN", "ADMIN", "forum" + Driver.dbCount, false, "pass", 3, 365);
 		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
 			e.printStackTrace();
 		}
@@ -111,7 +111,7 @@ public class IntegrationTest {
 	 */
 	public void test_removeModThenTryToEditMessage() throws NeedMoreAuthParametersException {
 		try {
-			_facade.addForum("ADMIN", "ADMIN", false, "forum" + Driver.dbCount++, "pass", 3, 365);
+			_facade.addForum("ADMIN", "ADMIN", "forum" + Driver.dbCount, false, "pass", 3, 365);
 		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
 			e.printStackTrace();
 		}
@@ -161,7 +161,7 @@ public class IntegrationTest {
 	 */
 	public void test_LogInUnprivilegedAndTryToDeleteForum() throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException, ForumNotFoundException {
 		try {
-			_facade.addForum("ADMIN", "ADMIN", false, "forum" + Driver.dbCount++, "pass", 3, 365);
+			_facade.addForum("ADMIN", "ADMIN", "forum" + Driver.dbCount, false, "pass", 3, 365);
 		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
 			e.printStackTrace();
 		}
@@ -187,6 +187,7 @@ public class IntegrationTest {
 	@Before
 	public void setUp() {
 		_facade = Facade.getFacade();
+		Driver.dbCount++;
 	}
 
 	@After
