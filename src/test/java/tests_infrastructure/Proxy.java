@@ -24,9 +24,9 @@ public class Proxy implements FacadeI {
 
 
     @Override
-    public void initilize() {
+    public void initialize() {
         if(this.real!=null)
-            this.real.initilize();
+            this.real.initialize();
     }
 
     @Override
@@ -50,13 +50,13 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void createSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException {
+    public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException {
         if(this.real!=null)
-            this.real.createSubforum(sessionId, subforumName);
+            this.real.addSubforum(sessionId, subforumName);
     }
 
     @Override
-    public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException {
+    public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException {
         if(this.real!=null)
             this.real.register(forumName, userName, password, email);
     }
@@ -242,9 +242,9 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void authanticateUser(String forum, String username, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException {
+    public void authenticateUser(String forum, String username, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException {
         if (this.real != null)
-            this.real.authanticateUser(forum, username, userAuthString);
+            this.real.authenticateUser(forum, username, userAuthString);
     }
 
 

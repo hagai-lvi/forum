@@ -11,6 +11,6 @@ import java.text.MessageFormat;
  */
 public class ForumAlreadyExistException extends Exception {
     public ForumAlreadyExistException(String forumName) {
-        super(MessageFormat.format("A forum with the name {0} already exist.",forumName));
+        super(MessageFormat.format("a forum with the name {0} already exists.",forumName));
     }
 }

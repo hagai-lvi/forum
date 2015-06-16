@@ -2,7 +2,6 @@ package main.forum_contents;
 
 import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
-import main.Persistancy.HibernatePersistancyAbstractor;
 import main.Persistancy.PersistantObject;
 import main.User.Permissions;
 import main.User.User;
@@ -111,19 +110,17 @@ public class Forum extends PersistantObject implements ForumI{
 
 
     @Override
-    public SubForumI createSubForum(String name) throws SubForumAlreadyExistException {
-        if (_subForums.containsKey(name)){
-            throw new SubForumAlreadyExistException(name,this);
+    public SubForumI createSubForum(String subForumName) throws SubForumAlreadyExistException {
+        if (_subForums.containsKey(subForumName)){
+            throw new SubForumAlreadyExistException(subForumName,this);
         }
-
-        SubForumI subForum = new SubForum(name,  this.policy.getSubforumPolicy());
-        _subForums.put(name, subForum);
+        SubForumI subForum = new SubForum(subForumName, this.policy.getSubforumPolicy());
+        _subForums.put(subForumName, subForum);
         for (UserI user: _users.values()){
             UserSubforumPermission permission;
-            if (user.getUsername().equals(GUEST_USER_NAME)){
-                permission = new UserSubforumPermission(Permissions.PERMISSIONS_GUEST, this, subForum);
-            }
-            else{
+            if (user.isAdmin()) {
+                permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, this, subForum);
+            } else{
                 permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, this, subForum);
             }
             user.addSubForumPermission(permission);
@@ -148,26 +145,27 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     @Override
-    public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException {
+    public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException, DoesNotComplyWithPolicyException {
         // Protective Programing
-        if (userName.equals("") || userName == null || password.equals("") || password == null || eMail.equals("") || eMail == null)
+        if (userName == null || userName.equals("") || password == null || password.equals("") || eMail == null || eMail.equals(""))
             throw new InvalidUserCredentialsException();
         if (_users.containsKey(userName)){
             throw new UserAlreadyExistsException(userName);
         }
         if (!policy.isValidPassword(password)){
-
-            //throw new InvalidUserCredentialsException(); TODO    ---> uncomment if victor does the checking.
+            throw new DoesNotComplyWithPolicyException("password does not comply with forum policy.");
         }
-        // we are done with protective programing, time to do work.
-        ForumPermissionI userPermissions = UserForumPermission.
-                createUserForumPermissions(Permissions.PERMISSIONS_USER,this);
-        User new_user = new User(userName, password, eMail, userPermissions);
-        addAllSubforumsToUser(new_user, Permissions.PERMISSIONS_USER);
-        //sendAuthenticationEMail(new_user);    --> uncomment to actually send mails
-        _users.put(userName, new_user);
+        if (!policy.isValidEmailAddress(eMail)){
+            throw new DoesNotComplyWithPolicyException("e-mail does not comply with forum policy.");
+        }
+
+        ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_USER, this);
+        User newUser = new User(userName, password, eMail, userPermissions);
+        addAllSubforumsToUser(newUser, Permissions.PERMISSIONS_USER);
+        //sendAuthenticationEMail(new_user);    //TODO --> uncomment to actually send authentication mails!
+        _users.put(userName, newUser);
         Update();
-        return new_user;
+        return newUser;
     }
 
     @Override
@@ -213,7 +211,6 @@ public class Forum extends PersistantObject implements ForumI{
                 throw new EmailNotAuthanticatedException();
             }
             if (!policy.isPasswordInEffect(user.getPasswordCreationDate())){
-                System.out.println(user.getPasswordCreationDate().toString());
                 throw new PasswordNotInEffectException();
             }
             return user;

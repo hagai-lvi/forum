@@ -57,7 +57,7 @@ public class WebController {
 	public String addForum(ModelMap model, String forumName, int numOfModerators, String passRegex) throws PermissionDeniedException, ForumAlreadyExistException {
 		logger.info("addForum request");
 		FacadeI f = Facade.getFacade();
-		f.addForum(ADMIN_PASS, ADMIN_USER, forumName, false, passRegex, numOfModerators, 365); //TODO get credentials from the user
+		f.addForum(ADMIN_PASS, ADMIN_USER, forumName, false, passRegex, numOfModerators, 365); //TODO get parameters from the user
 		model.addAttribute("forumName", forumName);
 		return "addForum";
 	}
@@ -71,7 +71,7 @@ public class WebController {
 		logger.info("addSubforum request");
 		FacadeI f = Facade.getFacade();
 		Integer sessionId = (Integer) session.getAttribute(SESSION_ID_ATTR);
-		f.createSubforum(sessionId, subforumName);
+		f.addSubforum(sessionId, subforumName);
 		model.addAttribute("subforumName", subforumName);
 		return "addSubforum";
 	}
@@ -98,7 +98,7 @@ public class WebController {
 		FacadeI facade = Facade.getFacade();
 		Integer sessionID = facade.login(forumName, username, password);
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
-		session.setAttribute(SESSION_ID_ATTR, sessionID);
+		session.setAttribute(SESSION_ID_ATTR, sessionID); //TODO - why does this appear twice?
 		preperaForumHomepageModel(model, facade, session);
 		return "forum_homepage";
 	}
@@ -119,10 +119,10 @@ public class WebController {
 	 */
 	@RequestMapping(value = "register",method = RequestMethod.POST)
 	public String register(ModelMap model, String username, String password, String email, String forumName)
-			throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException {
+			throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException {
 		logger.info("register request");
 		FacadeI facade = Facade.getFacade();
-		facade.register(forumName, username, password, email);//TODO - auto login after registraion
+		facade.register(forumName, username, password, email);//TODO - auto login after registration - *Victor thinks its not necessary.*
 		model.addAttribute("forumName", forumName);
 		return "login_page";
 	}
@@ -137,21 +137,21 @@ public class WebController {
 		FacadeI f = Facade.getFacade();
 		f.addForum("ADMIN", "ADMIN", "A", false, ".*", 5, 365);
 		int sessionID = f.login("A", "ADMIN", "ADMIN");
-		f.createSubforum(sessionID, "A sf1");
-		f.createSubforum(sessionID, "A sf2");
-		f.createSubforum(sessionID, "A sf3");
+		f.addSubforum(sessionID, "A sf1");
+		f.addSubforum(sessionID, "A sf2");
+		f.addSubforum(sessionID, "A sf3");
 
 		f.addForum("ADMIN", "ADMIN", "B", false, ".*", 5, 365);
 		sessionID = f.login("B", "ADMIN", "ADMIN");
-		f.createSubforum(sessionID, "B sf1");
-		f.createSubforum(sessionID, "B sf2");
-		f.createSubforum(sessionID, "B sf3");
+		f.addSubforum(sessionID, "B sf1");
+		f.addSubforum(sessionID, "B sf2");
+		f.addSubforum(sessionID, "B sf3");
 
 		f.addForum("ADMIN", "ADMIN", "C", false, ".*", 5, 365);
 		sessionID = f.login("C", "ADMIN", "ADMIN");
-		f.createSubforum(sessionID, "C sf1");
-		f.createSubforum(sessionID, "C sf2");
-		f.createSubforum(sessionID, "C sf3");
+		f.addSubforum(sessionID, "C sf1");
+		f.addSubforum(sessionID, "C sf2");
+		f.addSubforum(sessionID, "C sf3");
 		return "redirect:/facade";
 	}
 

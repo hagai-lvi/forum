@@ -44,7 +44,7 @@ public class Session {
 
     public ForumI getForum() {
         if (forum == null){
-            throw new NullPointerException("forum not found in session");
+            throw new NullPointerException("forum " + forum.getName() + " not found in session.");
         }
         return forum;
     }

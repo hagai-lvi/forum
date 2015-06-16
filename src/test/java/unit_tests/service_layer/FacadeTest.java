@@ -162,7 +162,7 @@ public class FacadeTest {
 
 	}
 	@Test
-	public void testAuthanticateUser() throws Exception {
+	public void testAuthenticateUser() throws Exception {
 
 	}
 	@Test

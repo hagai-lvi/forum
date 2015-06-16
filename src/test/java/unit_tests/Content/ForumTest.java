@@ -1,5 +1,6 @@
 package unit_tests.Content;
 
+import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.InvalidUserCredentialsException;
 import main.exceptions.UserAlreadyExistsException;
 import main.forum_contents.Forum;
@@ -24,7 +25,7 @@ public class ForumTest {
 
     @Before
     public void setUp() throws Exception {
-        ForumPolicyI policy = new ForumPolicy(false, 5,"a", 365);
+        ForumPolicyI policy = new ForumPolicy(false, 5,".*", 365);
         forum = new Forum("ForumName" + dbCounter, policy);
         dbCounter +=1;
     }
@@ -38,14 +39,15 @@ public class ForumTest {
     }
 
 
-    @Test
-    public void testRegisterBad() throws Exception {
+    @Test(expected = UserAlreadyExistsException.class)
+    public void testRegisterBad() throws UserAlreadyExistsException{
         try {
-           forum.register("username", "pass", "user@somemail.com");
-        }
-        catch(UserAlreadyExistsException e){
-            assertTrue(true);  // we should raise exception caus the user exists
-            //TODO should the test fail?
+            forum.register("username", "pass", "user@somemail.com");
+            forum.register("username", "pass", "user@somemail.com");
+        } catch (InvalidUserCredentialsException e) {
+            fail(e.getMessage());
+        } catch (DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
         }
     }
 

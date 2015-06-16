@@ -12,7 +12,7 @@ public interface FacadeI {
 	/**
 	 * Initialize
 	 */
-	void initilize();
+	void initialize();
 
 	/**
 	 * Get the list of forums in the system
@@ -33,12 +33,12 @@ public interface FacadeI {
 	 * Create a subforum in the specified forum.
 	 * The Policy will be derived from the forum
 	 */
-	void createSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException;
+	void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException;
 
 	/**
 	 * register a user to the specified forum
 	 */
-	void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException;
+	void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Login to the specified forum
@@ -146,5 +146,5 @@ public interface FacadeI {
 
 	ThreadI getCurrentThread(int sessionID) throws ThreadNotFoundException, SessionNotFoundException;
 
-	void authanticateUser(String forum, String user1, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException;
+	void authenticateUser(String forum, String user1, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException;
 }

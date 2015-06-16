@@ -31,7 +31,7 @@ public class IntegrationTest {
 		}
 		try {
 			_facade.register("forum" + Driver.dbCount, "user", "pass", "mail@mail.com");
-			_facade.authanticateUser("forum" + Driver.dbCount, "user", _facade.getUserAuthString("forum" + Driver.dbCount, "user", "pass"));
+			_facade.authenticateUser("forum" + Driver.dbCount, "user", _facade.getUserAuthString("forum" + Driver.dbCount, "user", "pass"));
 			int sessionID = _facade.login("forum" + Driver.dbCount, "user", "pass");
 			_facade.getSubForumList(sessionID);
 		}catch (InvalidUserCredentialsException e){
@@ -42,6 +42,8 @@ public class IntegrationTest {
 		} catch (ForumNotFoundException e) {
 			fail("forum not found!");
 		} catch (SessionNotFoundException | UserNotFoundException e) {
+			e.printStackTrace();
+		} catch (DoesNotComplyWithPolicyException e) {
 			e.printStackTrace();
 		}
 	}
@@ -60,11 +62,11 @@ public class IntegrationTest {
 		try {
 			_facade.register("forum" + Driver.dbCount, "user1", "pass", "mail@mail.com");
 			_facade.register("forum" + Driver.dbCount, "user2", "pass", "mail@mail.com");
-			_facade.authanticateUser("forum" + Driver.dbCount, "user1", _facade.getUserAuthString("forum" + Driver.dbCount, "user1", "pass"));
-			_facade.authanticateUser("forum" + Driver.dbCount, "user2", _facade.getUserAuthString("forum" + Driver.dbCount, "user2", "pass"));
+			_facade.authenticateUser("forum" + Driver.dbCount, "user1", _facade.getUserAuthString("forum" + Driver.dbCount, "user1", "pass"));
+			_facade.authenticateUser("forum" + Driver.dbCount, "user2", _facade.getUserAuthString("forum" + Driver.dbCount, "user2", "pass"));
 			// first user creates a new message.
 			int session1ID = _facade.login("forum" + Driver.dbCount, "user1", "pass");
-			_facade.createSubforum(session1ID, "subforum");
+			_facade.addSubforum(session1ID, "subforum");
 			int id = _facade.createNewThread(session1ID, "thread-title", "message-body");
 			Collection<SubForumI> sf = _facade.getSubForumList(session1ID);
 			SubForumI newSF = sf.iterator().next();
@@ -169,7 +171,7 @@ public class IntegrationTest {
 			_facade.register("forum" + Driver.dbCount, "user", "pass", "mail@mail.com");
 
 			try {
-				_facade.authanticateUser("forum" + Driver.dbCount, "user", _facade.getUserAuthString("forum" + Driver.dbCount, "user", "pass"));
+				_facade.authenticateUser("forum" + Driver.dbCount, "user", _facade.getUserAuthString("forum" + Driver.dbCount, "user", "pass"));
 			} catch (UserNotFoundException e) {
 				e.printStackTrace();
 			}
@@ -180,6 +182,8 @@ public class IntegrationTest {
 			e.printStackTrace();
 		} catch (PermissionDeniedException e) {
 			//pass
+		} catch (DoesNotComplyWithPolicyException e) {
+			e.printStackTrace();
 		}
 
 	}

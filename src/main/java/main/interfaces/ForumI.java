@@ -27,7 +27,7 @@ public interface ForumI extends ExForumI{
 	/**
 	 * Register a user to this forum
 	 */
-	UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException;
+	UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * send an authentication email to the given email

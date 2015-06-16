@@ -13,6 +13,8 @@ public interface ForumPolicyI {
      */
 	boolean isValidPassword(String password);
 
+    boolean isValidEmailAddress(String email);
+
     /**
      * Check whether the password date is in effect according to policy.
      * @param passwordDate - the date the user's password was created.

@@ -10,6 +10,9 @@ import main.forum_contents.ForumThread;
 import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 import main.interfaces.UserI;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
 
 /**
  * Created by victor on 6/5/2015 for ${Class}.
@@ -19,35 +22,33 @@ public class ForumThreadTest extends TestCase {
     ThreadI thread;
     MessageI msg;
     UserI user;
-
+    @Before
     public void setUp() throws Exception {
         super.setUp();
         user = new User("user", "pass", "aaa@aaa.aaa", new UserForumPermission(Permissions.PERMISSIONS_ADMIN, null));
         msg = new ForumMessage(user, "title", "body");
         thread = new ForumThread(msg);
     }
-
+    @After
     public void tearDown() throws Exception {
 
     }
-
+    @Test
     public void testGetTitle() throws Exception {
         assertEquals(thread.getTitle(), "title");
     }
-
+    @Test
     public void testGetMessages() throws Exception {
         assertEquals(thread.getMessages().getRoot().getData().getMessageTitle(), "title");
         assertEquals(thread.getMessages().getRoot().getData().getMessageText(), "body");
 
     }
-
+    @Test
     public void testGetRootMessage() throws Exception {
-        System.out.println(thread.getRootMessage().getMessageTitle());
-        System.out.println(thread.getRootMessage().getMessageText());
         assertEquals(thread.getRootMessage().getMessageTitle(), "title");
         assertEquals(thread.getRootMessage().getMessageText(), "body");
     }
-
+    @Test
     public void testAddReply() {
         MessageI reply = new ForumMessage(user, "reply-title", "reply-body");
         try {
@@ -66,7 +67,7 @@ public class ForumThreadTest extends TestCase {
         }
         fail("reply to non-existant message");
     }
-
+    @Test
     public void testContains() throws Exception {
         assertTrue(thread.contains(msg));
         MessageI newmsg = new ForumMessage(user, "aaa", "bbb");
@@ -74,7 +75,7 @@ public class ForumThreadTest extends TestCase {
         thread.addReply(newmsg, msg);
         assertTrue(thread.contains(newmsg));
     }
-
+    @Test
     public void testRemove() throws Exception {
         MessageI newmsg = new ForumMessage(user, "aaa", "bbb");
         thread.addReply(newmsg, msg);
@@ -84,5 +85,30 @@ public class ForumThreadTest extends TestCase {
         thread.remove(msg);
         assertFalse(thread.contains(newmsg));
         assertFalse(thread.contains(msg));
+    }
+    @Test
+    public void testEditMessage(){
+        MessageI msg = new ForumMessage(user, "newTitle", "newBody");
+        try {
+            thread.editMessage(thread.getRootMessage(), msg);
+        } catch (MessageNotFoundException e) {
+            e.printStackTrace();
+        }
+        assertEquals(msg.getMessageTitle(), thread.getRootMessage().getMessageTitle());
+        assertEquals(msg.getMessageText(), thread.getRootMessage().getMessageText());
+
+        try {
+            thread.editMessage(thread.getRootMessage(), null);
+        } catch (MessageNotFoundException e) {
+            assertTrue(true);
+        }
+        try {
+            thread.editMessage(null, msg);
+        } catch (MessageNotFoundException e) {
+            assertTrue(true);
+            return;
+        }
+        fail("edited message to null");
+
     }
 }

@@ -5,4 +5,7 @@ package main.exceptions;
  * Created by hagai on 07/04/15.
  */
 public class DoesNotComplyWithPolicyException extends Exception {
+    public DoesNotComplyWithPolicyException(String message) {
+        super(message);
+    }
 }

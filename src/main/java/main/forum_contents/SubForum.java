@@ -63,7 +63,7 @@ public class SubForum extends PersistantObject implements SubForumI {
     @Override
     public ThreadI createThread(MessageI message) throws DoesNotComplyWithPolicyException {
         if (!subforumPolicy.isValidMessage(message)) {
-            throw new DoesNotComplyWithPolicyException();
+            throw new DoesNotComplyWithPolicyException("message does not comply with forum policy.");
         }
         ForumThread thread = new ForumThread(message);
         _threads.add(thread);
@@ -74,7 +74,7 @@ public class SubForum extends PersistantObject implements SubForumI {
     @Override
     public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException {
         if (!subforumPolicy.isValidMessage(reply)){
-            throw new DoesNotComplyWithPolicyException();
+            throw new DoesNotComplyWithPolicyException("message does not comply with forum policy.");
         }
         ThreadI thread = findThread(original);
         if (thread == null){
@@ -127,8 +127,10 @@ public class SubForum extends PersistantObject implements SubForumI {
         for (ThreadI thread : _threads){
             if (thread.contains(originalMessage)) {
                 thread.editMessage(originalMessage, newMessage);
+                break;
             }
         }
+        throw new MessageNotFoundException(originalMessage);
     }
 
 

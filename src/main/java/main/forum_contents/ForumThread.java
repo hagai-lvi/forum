@@ -38,7 +38,11 @@ public class ForumThread extends PersistantObject implements ThreadI{
 
     @Override
     public void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException {
+        if (newMessage == null){
+            throw new MessageNotFoundException(newMessage);
+        }
         ForumMessage msg = messages.findNode((ForumMessage) originalMessage);
+
         if (msg == null){
             throw new MessageNotFoundException(originalMessage);
         }
@@ -54,11 +58,6 @@ public class ForumThread extends PersistantObject implements ThreadI{
     @Override
     public MessageI getRootMessage() {
         return messages.getRoot().data;
-    }
-
-    public void printThread(){
-        throw new RuntimeException("Not yet implemented");
-//        System.out.println(threadTree.printSubTree(0));
     }
 
     @Override

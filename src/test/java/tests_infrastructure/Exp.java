@@ -14,10 +14,10 @@ import static org.junit.Assert.assertEquals;
 public class Exp {
 
 	@Test
-	public void createUserTest() throws UserAlreadyExistsException, InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
+	public void createUserTest() throws UserAlreadyExistsException, InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, DoesNotComplyWithPolicyException {
 		ForumPolicy policy = new ForumPolicy(false, 10,".*", 365);
 		Forum f = new Forum("a", policy);
-		UserI user = f.register("a", "a", "a");
+		UserI user = f.register("a", "a", "a@a.a");
 		user.setAuthenticated();
 		UserI user2 = f.login("a","a");
 		assertEquals(user.getUsername(), user2.getUsername());

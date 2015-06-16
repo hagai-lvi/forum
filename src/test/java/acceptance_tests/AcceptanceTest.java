@@ -36,7 +36,7 @@ public class AcceptanceTest extends TestCase {
             //add users to forums and create threads
             for (int j = 0; j < 3; j++) {
                 _facade.register("Forum " + Integer.toString(i), names[i * 3 + j], "123456", "nobodyemail@nobody.com");
-    //            _facade.createSubforum(_facade., "SubForum " + j + " In Forum" + i);
+    //            _facade.addSubforum(_facade., "SubForum " + j + " In Forum" + i);
     //            _facade.createNewThread(0, "message " + j, "body " + j);
             }
         }
@@ -73,7 +73,7 @@ public class AcceptanceTest extends TestCase {
      */
 
     /**
-     * target: check initilize, should return true.
+     * target: check initialize, should return true.
      */
     public void testInitialize() {
         assertTrue(false);
@@ -113,6 +113,8 @@ public class AcceptanceTest extends TestCase {
         } catch (InvalidUserCredentialsException e) {
             e.printStackTrace();
         } catch (ForumNotFoundException e) {
+            e.printStackTrace();
+        } catch (DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
         // test mod number
@@ -207,6 +209,8 @@ public class AcceptanceTest extends TestCase {
             e.printStackTrace();
         } catch (ForumNotFoundException e) {
             e.printStackTrace();
+        } catch (DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
         }
 
         //test register
@@ -226,6 +230,8 @@ public class AcceptanceTest extends TestCase {
             }
             fail("registered user not found");
         } catch (ForumNotFoundException e) {
+            e.printStackTrace();
+        } catch (DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
     }
@@ -294,7 +300,7 @@ public class AcceptanceTest extends TestCase {
 
         //test creation
         try {
-            _facade.createSubforum(0, "newSF");
+            _facade.addSubforum(0, "newSF");
         } catch (SubForumAlreadyExistException e) {
             fail("cannot create new sub forum");
         } catch (PermissionDeniedException e) {
@@ -440,6 +446,8 @@ public class AcceptanceTest extends TestCase {
         } catch (EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
             //accept
         } catch (ForumNotFoundException e) {
+            e.printStackTrace();
+        } catch (DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
 

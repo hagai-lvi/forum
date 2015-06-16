@@ -7,6 +7,7 @@ import main.forum_contents.Forum;
 import main.interfaces.*;
 
 import javax.persistence.*;
+import java.util.logging.Logger;
 
 /**
  * Created by hagai_lvi on 4/20/15.
@@ -17,6 +18,8 @@ public class UserForumPermission implements ForumPermissionI {
 
 	public UserForumPermission() {
 	}
+	@Transient
+	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UserForumPermission.class.getName());
 
 	//TODO add logger
 
@@ -32,12 +35,13 @@ public class UserForumPermission implements ForumPermissionI {
 
 	public static ForumPermissionI createUserForumPermissions(Permissions permissions, ForumI forum){
 		if (forum == null){
-			throw new IllegalArgumentException("forum can not be nul");
+			throw new IllegalArgumentException("forum can not be null");
 		}
 		if ((!(permissions.compareTo(Permissions.PERMISSIONS_GUEST) >=  0)
 				&& (permissions.compareTo(Permissions.PERMISSIONS_ADMIN) <= 0))){
 			throw new IllegalArgumentException("There is no such forum permissions: " + permissions);
 		}
+		logger.trace("Created permissions for forum " + forum.getName() + " - " + permissions);
 		return new UserForumPermission(permissions, forum);
 	}
 
@@ -46,6 +50,7 @@ public class UserForumPermission implements ForumPermissionI {
 		if (!isAdmin()){
 			throw new PermissionDeniedException("User has no permission to create a subforum");
 		}
+		logger.trace("Created sub-forum " + name);
 		forum.createSubForum(name);
 	}
 
@@ -59,14 +64,19 @@ public class UserForumPermission implements ForumPermissionI {
 		if (!isAdmin()){
 			throw new PermissionDeniedException("User has no permission to delete a subforum");
 		}
+		logger.trace("Deleted sub-forum " + toDelete.getTitle());
 		forum.deleteSubForum(toDelete);
 	}
 
 	@Override
 	public void setAdmin(UserI admin) throws PermissionDeniedException {
-		if(permissions.equals(Permissions.PERMISSIONS_SUPERADMIN))
+		if(permissions.equals(Permissions.PERMISSIONS_SUPERADMIN)) {
+			logger.trace("User " + admin.getUsername() + " set as admin of forum " + forum.getName());
 			forum.setAdmin(admin);
-		else throw new PermissionDeniedException("User has no permission to set administrator");
+		}
+		else {
+			throw new PermissionDeniedException("User has no permission to set administrator");
+		}
 	}
 
 	@Override
@@ -74,6 +84,7 @@ public class UserForumPermission implements ForumPermissionI {
 		if (! isAdmin()){
 			throw new PermissionDeniedException("User has no permission to set forum policy");
 		}
+		logger.trace("Policy of forum " + forum.getName() + " changed");
 		forum.setPolicy(policy);
 	}
 

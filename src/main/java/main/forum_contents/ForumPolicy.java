@@ -25,6 +25,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     private int maxModerators;
     private String passwordRegex;
     private int passwordEffectTime; //in days.
+    private String validEmailRegex = "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]+)$";
 
     public boolean isSecured() {
         return secured;
@@ -38,6 +39,9 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         this.maxModerators = maxModerators;
         this.passwordRegex = passwordRegex;
         this.passwordEffectTime = passwordEffectTime;
+        if (isSecured){
+            more_questions = true;
+        }
 
         //TODO - decide how to manage forbidden words.
         forbiddenWords = new String[2];
@@ -51,6 +55,11 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     @Override
     public boolean isValidPassword(String password) {
         return password.matches(passwordRegex);
+    }
+
+    @Override
+    public boolean isValidEmailAddress(String email) {
+        return email.matches(validEmailRegex);
     }
 
     @Override

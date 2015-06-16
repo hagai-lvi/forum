@@ -146,6 +146,24 @@ public class SubForumTest extends TestCase {
         fail("Not yet implemented");
     }
 
+    public void testEditMessage() {
+        MessageI msg = new ForumMessage(user, "title", "body");
+        MessageI newmsg = new ForumMessage(user, "newTitle", "newBody");
+        ThreadI thread = null;
+        try {
+            thread = subforum.createThread(msg);
+        } catch (DoesNotComplyWithPolicyException e) {
+            e.printStackTrace();
+        }
+        try {
+            subforum.editMessage(thread.getRootMessage(), newmsg);
+        } catch (MessageNotFoundException e) {
+            e.printStackTrace();
+        }
+        assertEquals(newmsg.getMessageTitle(), thread.getRootMessage().getMessageTitle());
+        assertEquals(newmsg.getMessageText(), thread.getRootMessage().getMessageText());
+    }
+
     public void testSeveralThreads() throws Exception {
         List<ThreadI> threads = new LinkedList<>();
         for (int i=0; i < 10; i++) {
