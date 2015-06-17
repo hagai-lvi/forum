@@ -150,7 +150,7 @@ public class AcceptanceTest extends TestCase {
             fail("Expected PermissionDeniedException");
         } catch (PermissionDeniedException e) {
             //expected exception
-        } catch (SessionNotFoundException | SubForumDoesNotExsitsException e) {
+        } catch (SessionNotFoundException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
 
@@ -162,7 +162,7 @@ public class AcceptanceTest extends TestCase {
             fail("a guest cannot reply to message");
         } catch (PermissionDeniedException e) {
             assertTrue(true);
-        } catch (DoesNotComplyWithPolicyException | SessionNotFoundException | SubForumDoesNotExsitsException e) {
+        } catch (DoesNotComplyWithPolicyException | SessionNotFoundException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
 
@@ -184,7 +184,7 @@ public class AcceptanceTest extends TestCase {
             fail("a guest cannot delete message");
         } catch (PermissionDeniedException e) {
             assertTrue(true);
-        } catch (SessionNotFoundException | SubForumDoesNotExsitsException e) {
+        } catch (SessionNotFoundException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
     }
@@ -283,7 +283,7 @@ public class AcceptanceTest extends TestCase {
             _facade.addThread(session, "Title", "Body");
         } catch (PermissionDeniedException e) {
             assertTrue(true);
-        } catch (DoesNotComplyWithPolicyException | SubForumDoesNotExsitsException | SessionNotFoundException e) {
+        } catch (DoesNotComplyWithPolicyException | SubForumDoesNotExistException | SessionNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -324,7 +324,7 @@ public class AcceptanceTest extends TestCase {
         int n = _facade.getSubForumList(0).size();
         try {
             _facade.addThread(0, "Title", "Body");
-        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException | SubForumDoesNotExsitsException e) {
+        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
         assertEquals(n + 1, _facade.getSubForumList(0).size());
@@ -340,7 +340,7 @@ public class AcceptanceTest extends TestCase {
         int msgid = 1;//msgs.iterator().next().getId(); //TODO tree iterator
         try {
             _facade.addReply(0, msgid ,"a", "b");
-        } catch (MessageNotFoundException | PermissionDeniedException | DoesNotComplyWithPolicyException | SubForumDoesNotExsitsException e) {
+        } catch (MessageNotFoundException | PermissionDeniedException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
     }
@@ -365,13 +365,13 @@ public class AcceptanceTest extends TestCase {
         try {
             session = _facade.login("Forum0", "gil", "123456");
             _facade.addThread(session, "Title", "Body");
-        } catch (InvalidUserCredentialsException | PermissionDeniedException | DoesNotComplyWithPolicyException | PasswordNotInEffectException | EmailNotAuthanticatedException | NeedMoreAuthParametersException | SubForumDoesNotExsitsException | SessionNotFoundException | ForumNotFoundException e) {
+        } catch (InvalidUserCredentialsException | PermissionDeniedException | DoesNotComplyWithPolicyException | PasswordNotInEffectException | EmailNotAuthanticatedException | NeedMoreAuthParametersException | SubForumDoesNotExistException | SessionNotFoundException | ForumNotFoundException e) {
             e.printStackTrace();
         }
 
         try {
             _facade.deleteMessage(session, 0);//TODO - how to get message ID?
-        } catch (PermissionDeniedException | MessageNotFoundException | SessionNotFoundException | SubForumDoesNotExsitsException e) {
+        } catch (PermissionDeniedException | MessageNotFoundException | SessionNotFoundException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
 
@@ -390,7 +390,7 @@ public class AcceptanceTest extends TestCase {
 
         try {
             _facade.addThread(0, "title", "body");
-        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException | SubForumDoesNotExsitsException | SessionNotFoundException e) {
+        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException | SessionNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -476,7 +476,7 @@ public class AcceptanceTest extends TestCase {
 
         try {
             _facade.addThread(session, "T", "B");
-        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException | SessionNotFoundException | SubForumDoesNotExsitsException e) {
+        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException | SessionNotFoundException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
 

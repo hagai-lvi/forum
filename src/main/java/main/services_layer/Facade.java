@@ -68,7 +68,7 @@ import java.util.Collection;
 		Session currentSession = findSession(sessionId);
 		UserI user = currentSession.getUser();
 		if (user.isAdmin()) {
-			SubForumI subforum = currentSession.getForum().createSubForum(subforumName);
+			SubForumI subforum = currentSession.getForum().addSubForum(subforumName);
 			currentSession.setSubForum(subforum);
 		} else {
 			throw new PermissionDeniedException("user " + user.getUsername() + " is not an admin.");
@@ -100,7 +100,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException {
+	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
 		MessageI sourceMsg = currentSession.getThread().getMessages().find(srcMessageId);
 		UserI user = currentSession.getUser();
@@ -113,7 +113,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException {
+	public int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
 		MessageI msg = new ForumMessage(currentSession.getUser(), srcMessageTitle, srcMessageBody);
 		UserI user = currentSession.getUser();
@@ -139,7 +139,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExsitsException {
+	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
 		Session current = findSession(sessionId);
 		MessageI msg = current.getThread().getMessages().find(messageId);
 		UserI user = current.getUser();

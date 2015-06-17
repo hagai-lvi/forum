@@ -43,7 +43,6 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
         session.getTransaction().commit();
         session.clear();
         session.close();
-
     }
 
     @Override

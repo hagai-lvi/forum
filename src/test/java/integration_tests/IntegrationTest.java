@@ -103,7 +103,7 @@ public class IntegrationTest {
 			fail("forum not found!");
 		} catch (MessageNotFoundException e) {
 			//pass
-		} catch (SessionNotFoundException | SubForumDoesNotExsitsException e) {
+		} catch (SessionNotFoundException | SubForumDoesNotExistException e) {
 			e.printStackTrace();
 		}
 	}
@@ -141,7 +141,7 @@ public class IntegrationTest {
 			//try to edit the message again
 			_facade.editMessage(modSessionId, messageId, "title", "body");
 			fail("message edited although not permitted");
-		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | SubForumAlreadyExistException | PasswordNotInEffectException | DoesNotComplyWithPolicyException | InvalidUserCredentialsException | SessionNotFoundException | ThreadNotFoundException | ForumNotFoundException | UserNotFoundException | SubForumNotFoundException | SubForumDoesNotExsitsException e) {
+		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | SubForumAlreadyExistException | PasswordNotInEffectException | DoesNotComplyWithPolicyException | InvalidUserCredentialsException | SessionNotFoundException | ThreadNotFoundException | ForumNotFoundException | UserNotFoundException | SubForumNotFoundException | SubForumDoesNotExistException e) {
 			e.printStackTrace();
 		} catch (PermissionDeniedException e) {
 			//pass
