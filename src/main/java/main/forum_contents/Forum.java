@@ -14,7 +14,6 @@ import org.apache.log4j.Logger;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 
@@ -25,7 +24,7 @@ import java.util.Map;
 @Entity
 public class Forum extends PersistantObject implements ForumI{
 
-    //TODO use enum permissions, fix all occurences of 'Guest' or 'Admin' in the code
+    //TODO use enum permissions, fix all occurrences of 'Guest' or 'Admin' in the code
     public static final String GUEST_USER_NAME = "Guest user";
     public static final String ADMIN_USERNAME = "ADMIN";
     public static final String ADMIN_PASSWORD = "ADMIN";
@@ -62,13 +61,13 @@ public class Forum extends PersistantObject implements ForumI{
 
     public Forum(String name, ForumPolicyI policy){
         this.policy = policy;
+        this.forum_name = name;
         initGuest();
         initAdmin();//TODO should be initialized?
         addAllSubforumsToUser(guest, Permissions.PERMISSIONS_GUEST);
         addAllSubforumsToUser(admin, Permissions.PERMISSIONS_ADMIN);
         this._users.put("Guest", this.guest);
         this._users.put(this.admin.getUsername(), this.admin);
-        this.forum_name = name;
         //this.pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
         this.Save();
     }
@@ -111,7 +110,7 @@ public class Forum extends PersistantObject implements ForumI{
 
 
     @Override
-    public SubForumI createSubForum(String subForumName) throws SubForumAlreadyExistException {
+    public SubForumI addSubForum(String subForumName) throws SubForumAlreadyExistException {
         if (_subForums.containsKey(subForumName)){
             throw new SubForumAlreadyExistException(subForumName,this);
         }
@@ -131,11 +130,11 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     @Override
-    public void deleteSubForum(SubForumI subforum) throws SubForumDoesNotExsitsException {
-        if (!_subForums.containsKey(subforum.getTitle())){
-            throw new SubForumDoesNotExsitsException();
+    public void deleteSubForum(String subforum) throws SubForumDoesNotExistException {
+        if (!_subForums.containsKey(subforum)){
+            throw new SubForumDoesNotExistException();
         }
-        _subForums.remove(subforum.getTitle());
+        _subForums.remove(subforum);
         Update();
     }
 
@@ -149,7 +148,7 @@ public class Forum extends PersistantObject implements ForumI{
     public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException, DoesNotComplyWithPolicyException {
         // Protective Programing
         if (userName == null || userName.equals("") || password == null || password.equals("") || eMail == null || eMail.equals(""))
-            throw new InvalidUserCredentialsException();
+            throw new InvalidUserCredentialsException("invalid user credentials.");
         if (_users.containsKey(userName)){
             throw new UserAlreadyExistsException(userName);
         }
@@ -157,7 +156,7 @@ public class Forum extends PersistantObject implements ForumI{
             throw new DoesNotComplyWithPolicyException("password does not comply with forum policy.");
         }
         if (!policy.isValidEmailAddress(eMail)){
-            throw new DoesNotComplyWithPolicyException("e-mail does not comply with forum policy.");
+            throw new InvalidUserCredentialsException("e-mail does not comply with forum policy.");
         }
 
         ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_USER, this);
@@ -174,30 +173,16 @@ public class Forum extends PersistantObject implements ForumI{
         String topic = "Authentication Email For: " + user.getUsername();
         String body = "Hello, " + user.getUsername() + " \n This is your authentication token : \n";
         body += user.getUserAuthString();
-        try {
-            GmailSender.sendFromGMail(new String[]{user.getEmail()}, topic, body);
-        }
-        catch(Exception e){
-            logger.error("Problem sending auth mail");
-        }
+        GmailSender.sendFromGMail(new String[]{user.getEmail()}, topic, body);
     }
 
-    public boolean enterUserAuthenticationString(UserI user, String auth_string){
-        try{
+    public boolean enterUserAuthenticationString(UserI user, String auth_string) throws InvalidUserCredentialsException {
             if (user.getUserAuthString().equals(auth_string)){
                 user.setAuthenticated();
                 return true;
+            } else {
+                throw new InvalidUserCredentialsException("Invalid authentication string");
             }
-        }
-        catch (Throwable e){
-            logger.error("Problem authenticating user - gave null string for example");
-            return false;
-        }
-        return false;
-    }
-
-    public UserI get_admin_user(){
-        return this.admin;
     }
 
     @Override
@@ -217,29 +202,13 @@ public class Forum extends PersistantObject implements ForumI{
             return user;
         }
         else {
-            throw new InvalidUserCredentialsException();
-        }
-    }
-
-    public UserI login(String username, String password, List<String> more_answers) throws InvalidUserCredentialsException{
-        if (_users.containsKey(username) &&
-                _users.get(username).getPassword().equals(password)){
-
-            return _users.get(username);
-        }
-        else {
-            throw new InvalidUserCredentialsException();
+            throw new InvalidUserCredentialsException("invalid username or password");
         }
     }
 
     @Override
     public UserI guestLogin() {
-        return guest; // guest was intialized on start
-    }
-
-    @Override
-    public void logout(UserI user) {
-        //what should happen?  --> nothing.
+        return guest; // guest was initialized on start
     }
 
     @Override

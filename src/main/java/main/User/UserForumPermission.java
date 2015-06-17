@@ -2,12 +2,11 @@ package main.User;
 
 import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.SubForumDoesNotExsitsException;
+import main.exceptions.SubForumDoesNotExistException;
 import main.forum_contents.Forum;
 import main.interfaces.*;
 
 import javax.persistence.*;
-import java.util.logging.Logger;
 
 /**
  * Created by hagai_lvi on 4/20/15.
@@ -51,7 +50,7 @@ public class UserForumPermission implements ForumPermissionI {
 			throw new PermissionDeniedException("User has no permission to create a subforum");
 		}
 		logger.trace("Created sub-forum " + name);
-		forum.createSubForum(name);
+		forum.addSubForum(name);
 	}
 
 	@Override
@@ -60,12 +59,12 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException {
+	public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException {
 		if (!isAdmin()){
 			throw new PermissionDeniedException("User has no permission to delete a subforum");
 		}
 		logger.trace("Deleted sub-forum " + toDelete.getTitle());
-		forum.deleteSubForum(toDelete);
+		forum.deleteSubForum(toDelete.getTitle());
 	}
 
 	@Override
@@ -104,6 +103,11 @@ public class UserForumPermission implements ForumPermissionI {
 
 	public Integer getId() {
 		return id;
+	}
+
+	@Override
+	public String getForumName() {
+		return forum.getName();
 	}
 
 	public void setId(Integer id) {

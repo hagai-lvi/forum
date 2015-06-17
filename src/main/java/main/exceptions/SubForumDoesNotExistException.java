@@ -3,5 +3,5 @@ package main.exceptions;
 /**
  * Mark that the specified subforum doesn not exist
  */
-public class SubForumDoesNotExsitsException extends Exception {
+public class SubForumDoesNotExistException extends Exception {
 }

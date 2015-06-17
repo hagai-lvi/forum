@@ -19,11 +19,11 @@ public interface ForumI extends ExForumI{
 	/**
 	 * Create a subforum in this forum
 	 */
-	SubForumI createSubForum(String name) throws SubForumAlreadyExistException;
+	SubForumI addSubForum(String name) throws SubForumAlreadyExistException;
 
 	String getName();
 
-	void deleteSubForum(SubForumI todelete) throws SubForumDoesNotExsitsException;
+	void deleteSubForum(String todelete) throws SubForumDoesNotExistException;
 	/**
 	 * Register a user to this forum
 	 */
@@ -44,12 +44,6 @@ public interface ForumI extends ExForumI{
 	 * Return an 'empty' guest user
 	 */
 	UserI guestLogin();
-
-
-	/**
-	 * Log out the user
-	 */
-	void logout(UserI user);
 
 	/**
 	 * Set the policy of this forum
@@ -74,5 +68,5 @@ public interface ForumI extends ExForumI{
 
 	String viewStatistics();
 
-	boolean enterUserAuthenticationString(UserI user, String auth_string);
+	boolean enterUserAuthenticationString(UserI user, String auth_string) throws InvalidUserCredentialsException;
 }

@@ -4,6 +4,7 @@ import junit.framework.TestCase;
 import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
+import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.interfaces.MessageI;
 import main.interfaces.UserI;

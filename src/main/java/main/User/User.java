@@ -1,5 +1,6 @@
 package main.User;
 
+import main.Persistancy.PersistantObject;
 import main.Utils.SecureString;
 import main.exceptions.*;
 import main.forum_contents.ForumMessage;
@@ -15,7 +16,7 @@ import java.util.Vector;
  * Created by gabigiladov on 4/11/15.
  */
 @Entity
-public class User implements UserI {
+public class User extends PersistantObject implements UserI {
     private String authString = null;
     private String username;
     //@Type(type="encryptedString")
@@ -49,6 +50,7 @@ public class User implements UserI {
         this.isEmailAuthenticated = false;
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<>();
+        this.id = new UserForumID(username, forumPermissions.getForumName());
         this.forumPermissions = forumPermissions;
     }
 
@@ -110,7 +112,7 @@ public class User implements UserI {
     }
 
     @Override
-    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException {
+    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException {
         forumPermissions.deleteSubForum(toDelete);
     }
 
@@ -196,10 +198,10 @@ public class User implements UserI {
         this.signUpDate = signUpDate;
     }
 
-    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
-    private Integer id;
+    @EmbeddedId
+    private UserForumID id;
 
-    public Integer getId() {
+    public UserForumID getId() {
         return id;
     }
 
@@ -229,34 +231,39 @@ public class User implements UserI {
     }
 
     @Override
-    public boolean canReply(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException {
+    public boolean canReply(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException {
         SubForumPermissionI permission = findPermission(subForum);
         return permission.canReply();
     }
 
     @Override
-    public boolean canAddThread(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException {
+    public boolean canAddThread(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException {
         SubForumPermissionI permission = findPermission(subForum);
         return permission.canAddThread();
     }
 
     @Override
-    public boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExsitsException, PermissionDeniedException {
+    public boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExistException, PermissionDeniedException {
         SubForumPermissionI permission = findPermission(subForum);
             return (msg.getUser().equals(this.username)) || (permission.canDeleteMessage());
     }
 
-    private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExsitsException {
+    private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
         for (SubForumPermissionI sfp : subForumsPermissions){
             if (sfp.getSubForum().getTitle().equals(subForum)){
                 return sfp;
             }
         }
-        throw new SubForumDoesNotExsitsException();
+        throw new SubForumDoesNotExistException();
     }
 
-    public void setId(Integer id) {
+    public void setId(UserForumID id) {
         this.id = id;
+    }
+
+    public static User getUserFromDB(String username, String forumname){
+            return (User)pers.load(User.class, new UserForumID(username, forumname));
+
     }
 
 }

@@ -2,7 +2,7 @@ package main.interfaces;
 
 import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.SubForumDoesNotExsitsException;
+import main.exceptions.SubForumDoesNotExistException;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -19,7 +19,7 @@ public interface ForumPermissionI {
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException;
+	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException;
 
 	/**
 	 * Set this user to be forum administrator
@@ -42,5 +42,7 @@ public interface ForumPermissionI {
 	boolean findSubforum(String name);
 
 	Integer getId();
+
+	String getForumName();   // returns forum name for which the permissions relate
 
 }
