@@ -133,7 +133,7 @@ public class UserTest {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
-        user2.createThread(message, "Football");
+        user2.createThread(message, permission);
         assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
     }
 
@@ -142,9 +142,9 @@ public class UserTest {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
-        user2.createThread(message, "Football");
-        user2.replyToMessage("Football", message.getId(), "WTF", "Help");
-        user.replyToMessage("Football", message.getId(), "WTF", "Yeah!");
+        user2.createThread(message, permission);
+        user2.replyToMessage(permission, message, "WTF", "Help");
+        user.replyToMessage(permission, message, "WTF", "Yeah!");
         assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
     }
 
@@ -158,28 +158,28 @@ public class UserTest {
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
         try {
-            user2.createThread(message, "Football");
+            user2.createThread(message, permission);
         } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
         try {
-            user2.replyToMessage("Football", message.getId(), "WTF", "Help");
+            user2.replyToMessage(permission, message, "WTF", "Help");
         } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
         try {
-            user.replyToMessage("Football", message.getId(), "WTF", "Yeah!");
+            user.replyToMessage(permission, message, "WTF", "Yeah!");
         } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
         assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
         try {
-            user.deleteMessage(message.getId(), "Football");
+            user.deleteMessage(message, permission);
         } catch (PermissionDeniedException | MessageNotFoundException e) {
             e.printStackTrace();
         }
         try {
-            user.replyToMessage("Football",message.getId(), "aaa", "bbb");
+            user.replyToMessage(permission,message, "aaa", "bbb");
         } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         } catch (MessageNotFoundException e) {
@@ -192,8 +192,8 @@ public class UserTest {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
-        user2.createThread(message, "Football");
-        user2.deleteMessage(message.getId(), "Football"); // PermissionDeniedException expected
+        user2.createThread(message, permission);
+        user2.deleteMessage(message, permission); // PermissionDeniedException expected
     }
 
     @Test(expected = PermissionDeniedException.class)

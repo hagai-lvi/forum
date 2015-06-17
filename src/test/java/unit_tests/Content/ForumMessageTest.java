@@ -6,6 +6,7 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
+import main.forum_contents.ForumPolicy;
 import main.interfaces.MessageI;
 import main.interfaces.UserI;
 
@@ -21,7 +22,7 @@ public class ForumMessageTest extends TestCase {
     UserI user;
     public void setUp() throws Exception {
         super.setUp();
-        user = new User("user", "pass", "mail@mail.mail", new UserForumPermission(Permissions.PERMISSIONS_ADMIN, null));
+        user = new User("user", "pass", "mail@mail.mail", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, new Forum("forum", new ForumPolicy(false, 2, ".*", 365))));
         message = new ForumMessage(user, "title", "body");
 
     }

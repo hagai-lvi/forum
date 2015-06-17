@@ -45,12 +45,12 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public SubForumI createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
+	public void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
 		if (!isAdmin()){
 			throw new PermissionDeniedException("User has no permission to create a subforum");
 		}
 		logger.trace("Created sub-forum " + name);
-		return forum.addSubForum(name);
+		forum.addSubForum(name);
 	}
 
 	@Override
@@ -63,7 +63,7 @@ public class UserForumPermission implements ForumPermissionI {
 		if (!isAdmin()){
 			throw new PermissionDeniedException("User has no permission to delete a subforum");
 		}
-		logger.trace("Deleted sub-forum " + toDelete);
+		logger.trace("Deleted sub-forum " + toDelete.getTitle());
 		forum.deleteSubForum(toDelete.getTitle());
 	}
 

@@ -128,7 +128,7 @@ public class SubForumTest extends TestCase {
 
     public void testRemoveModerator() throws Exception {
         subforum.setModerator(user);
-        subforum.removeModerator(user.getUsername());
+        subforum.removeModerator(user);
         assertEquals(subforum.getModerators().size(), 0);
     }
 

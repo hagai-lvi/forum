@@ -65,7 +65,7 @@ public interface FacadeI {
 	/**
 	 * submit a complaint about a moderator
 	 */
-	void reportModerator(int sessionId, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException, SessionNotFoundException, SubForumDoesNotExistException;
+	void reportModerator(int sessionId, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException, SessionNotFoundException;
 
 
 	/**
@@ -82,7 +82,7 @@ public interface FacadeI {
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException;
+	void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException;
 
 	/**
 	 * guest entry usecase, return session id
@@ -100,13 +100,17 @@ public interface FacadeI {
 
 	void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException;
 
-    void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passwordEffectTime) throws SessionNotFoundException, PermissionDeniedException;
+    void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passwordEffectTime) throws SessionNotFoundException;
+	/**
+	 * edit message
+	 * @param sessionId - Id of current session
+	 * @param messageId - Id of message
+	 */
+	void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException;
 
-	void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, PermissionDeniedException, SubForumDoesNotExistException;
+	void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException;
 
-	void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, PermissionDeniedException, SubForumDoesNotExistException;
-
-	String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException;
+	String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException;
 
 	String viewSuperManagerStatistics(int sessionId) throws SessionNotFoundException;
 
@@ -130,6 +134,11 @@ public interface FacadeI {
 	 */
 	String getCurrentUserName(int sessionID) throws SessionNotFoundException;
 
+	/**
+	 * Return true if the current user is an admin
+	 */
+	boolean isAdmin(int sessionID) throws SessionNotFoundException;
+
 	ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException;
 	ExSubForumI viewSubforum(int sessionId) throws SessionNotFoundException;
 
@@ -138,6 +147,4 @@ public interface FacadeI {
 	ThreadI getCurrentThread(int sessionID) throws ThreadNotFoundException, SessionNotFoundException;
 
 	void authenticateUser(String forum, String user1, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException;
-
-	boolean isAdmin(int sessionID) throws SessionNotFoundException;
 }
