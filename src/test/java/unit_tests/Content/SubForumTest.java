@@ -8,6 +8,7 @@ import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.ForumThread;
 import main.interfaces.*;
+import org.junit.After;
 import tests_infrastructure.Driver;
 
 import java.util.LinkedList;
@@ -31,8 +32,9 @@ public class SubForumTest extends TestCase {
         user = forum.getUserList().iterator().next();
 
     }
-
+    @After
     public void tearDown() throws Exception {
+        Forum.delete("forum");
     }
 
     public void testGetModerators() throws Exception {
@@ -85,7 +87,6 @@ public class SubForumTest extends TestCase {
 
     public void testReplyToNonExistentMessage() throws Exception {
         try {
-            setUp();
             ThreadI thread = subforum.addThread(new ForumMessage(user, "msg", "msg"));
             MessageI newmsg = new ForumMessage(user, "def", "abc");
             subforum.replyToMessage(newmsg, newmsg);

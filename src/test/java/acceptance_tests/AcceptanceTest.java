@@ -5,9 +5,11 @@ import junit.framework.TestCase;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.exceptions.*;
+import main.forum_contents.Forum;
 import main.interfaces.*;
 import main.User.Permissions;
 import main.services_layer.Facade;
+import org.junit.After;
 import org.junit.Test;
 
 import java.util.Collection;
@@ -44,6 +46,7 @@ public class AcceptanceTest extends TestCase {
        // _forumCollection = _facade.getForumList();
 
     }
+
 
 
     /**

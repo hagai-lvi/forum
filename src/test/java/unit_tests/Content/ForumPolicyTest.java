@@ -9,6 +9,7 @@ import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.ForumI;
 import main.interfaces.MessageI;
+import org.junit.After;
 
 import java.util.GregorianCalendar;
 
@@ -25,7 +26,7 @@ public class ForumPolicyTest extends TestCase {
         forum = new Forum("forum", fp);
     }
 
-    @Override
+    @After
     public void tearDown() throws Exception {
         Forum.delete("forum");
     }
