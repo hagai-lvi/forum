@@ -8,6 +8,7 @@ import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.SubForum;
 import main.interfaces.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,19 +27,21 @@ public class UserForumPermissionTest {
     private ForumI forum;
     private ForumPolicyI policy;
 
-    private static int dbCount = 0;
-
     @Before
     public void setUp() throws Exception {
         int maxModerators = 1;
         String regex = "a-b";
         policy = new ForumPolicy(false, maxModerators, regex, 365);
-        dbCount +=1;
-        forum = new Forum("Gardening" + dbCount, policy);
+        forum = new Forum("Gardening", policy);
         permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         permission3 = new UserForumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum);
 
+    }
+
+    @After
+    public void tearDown(){
+        Forum.delete("Gardening");
     }
 
 

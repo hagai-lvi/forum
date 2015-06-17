@@ -7,6 +7,7 @@ import main.User.UserSubforumPermission;
 import main.exceptions.*;
 import main.forum_contents.*;
 import main.interfaces.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -26,7 +27,6 @@ public class UserTest {
     private UserI user3;
     private ForumI forum;
     private ForumPolicyI policy;
-    private static int dbCounter = 0;
 
     @Before
     public void setUp() throws Exception {
@@ -35,8 +35,7 @@ public class UserTest {
         boolean isSecured = false;
         int passLife = 365;
         policy = new ForumPolicy(isSecured, maxModerators, regex, passLife);
-        dbCounter +=1;
-        forum = new Forum("Lifestyle" + dbCounter, policy);
+        forum = new Forum("Lifestyle", policy);
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
         ForumPermissionI permission3 = new UserForumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum);
@@ -44,6 +43,11 @@ public class UserTest {
         user2 = new User("Victor", "abcde", "mail2@gmail.com", permission2);
         user3 = new User("Tom", "abcde", "mail2@gmail.com", permission3);
 
+    }
+
+    @After
+    public void tearDown(){
+        Forum.delete("Lifestyle");
     }
 
 

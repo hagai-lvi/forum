@@ -12,6 +12,7 @@ import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.SubForum;
 import main.interfaces.*;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,7 +29,6 @@ public class UserSubforumPermissionTest {
 
     private Forum forum;
     private SubForum subforum;
-    private static int dbCounter = 0;
     private ForumPolicyI policy;
 
     @Before
@@ -36,13 +36,18 @@ public class UserSubforumPermissionTest {
         int maxModerators = 1;
         String regex = "a-b";
         policy = new ForumPolicy(false, maxModerators, regex, 365);
-        forum = new Forum("Sport" + dbCounter, policy);
-        dbCounter += 1;
+        forum = new Forum("Sport", policy);
         subforum = new SubForum("Sport", policy.getSubforumPolicy());
         permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER,forum, subforum);
         permission2 = new UserSubforumPermission(Permissions.PERMISSIONS_ADMIN,forum, subforum);
         permission3 = new UserSubforumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum, subforum);
     }
+
+    @After
+    public void tearDown(){
+        Forum.delete("Sport");
+    }
+
     @Test
     public void testCreateThread() throws Exception {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);

@@ -6,6 +6,7 @@ import main.forum_contents.ForumPolicy;
 import main.interfaces.ForumI;
 import main.interfaces.ForumPolicyI;
 import main.interfaces.UserI;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -18,14 +19,17 @@ import static org.junit.Assert.fail;
  */
 public class ForumTest {
 
-        private static int dbCounter = 0;
-        private ForumI forum = null;
+        private ForumI forum;
 
         @Before
         public void setUp() throws Exception {
             ForumPolicyI policy = new ForumPolicy(false, 5,".*", 365);
-            forum = new Forum("ForumName" + dbCounter, policy);
-            dbCounter +=1;
+            forum = new Forum("ForumName", policy);
+        }
+
+        @After
+        public void tearDown(){
+            Forum.delete("ForumName");
         }
 
         @Test
