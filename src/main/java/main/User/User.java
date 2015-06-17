@@ -228,6 +228,33 @@ public class User implements UserI {
         return forumPermissions.isAdmin();
     }
 
+    @Override
+    public boolean canReply(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException {
+        SubForumPermissionI permission = findPermission(subForum);
+        return permission.canReply();
+    }
+
+    @Override
+    public boolean canAddThread(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException {
+        SubForumPermissionI permission = findPermission(subForum);
+        return permission.canAddThread();
+    }
+
+    @Override
+    public boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExsitsException, PermissionDeniedException {
+        SubForumPermissionI permission = findPermission(subForum);
+            return (msg.getUser().equals(this.username)) || (permission.canDeleteMessage());
+    }
+
+    private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExsitsException {
+        for (SubForumPermissionI sfp : subForumsPermissions){
+            if (sfp.getSubForum().getTitle().equals(subForum)){
+                return sfp;
+            }
+        }
+        throw new SubForumDoesNotExsitsException();
+    }
+
     public void setId(Integer id) {
         this.id = id;
     }

@@ -6,7 +6,7 @@ import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
-
+import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -14,10 +14,9 @@ import java.util.Collection;
  * Created by hagai_lvi on 4/11/15.
  */
      public class Facade implements FacadeI {
-	private static final String ADMIN_USERNAME = "ADMIN";
-	private static final String ADMIN_PASSWORD = "ADMIN";
+	private static final String SUPER_ADMIN_USERNAME = "ADMIN";
+	private static final String SUPER_ADMIN_PASSWORD = "ADMIN";
 	private static FacadeI theFacade;
-	private ArrayList<UserI> users;
 	private Collection<Session> openSessions;
 	private ArrayList<ForumI> forums;
 	private int sessionCounter;
@@ -29,16 +28,14 @@ import java.util.Collection;
 
 	@Override
 	public void initialize() {
-		//TODO
-		openSessions =  new ArrayList<Session>();
-		forums = new ArrayList<ForumI>();
-		users = new ArrayList<UserI>();
+		//TODO - how to initialize?
+		openSessions = new ArrayList<>();
+		forums = new ArrayList<>();
 		sessionCounter = 0;
 	}
 
 	@Override
 	public ArrayList<ForumI> getForumList() {
-		// TODO get all forums from database
 		return forums;
 	}
 
@@ -49,46 +46,51 @@ import java.util.Collection;
 
 	@Override
 	public void addForum(String username, String password, String forumName, boolean isSecured, String regex, int numberOfModerators, int passLife) throws PermissionDeniedException, ForumAlreadyExistException {
-		// TODO add to database
-		if (username.equals(ADMIN_USERNAME) && password.equals(ADMIN_PASSWORD)){
+		if (username.equals(SUPER_ADMIN_USERNAME) && password.equals(SUPER_ADMIN_PASSWORD)){
 			for (ForumI forum : forums){
 				if (forum.getName().equals(forumName)){
 					throw new ForumAlreadyExistException(forumName);
 				}
 			}
-			forums.add(new Forum(forumName, new ForumPolicy(isSecured, numberOfModerators, regex, passLife)));
-		}
+			ForumPolicyI policy = new ForumPolicy(isSecured, numberOfModerators, regex, passLife);
+			ForumI forum = new Forum(forumName, policy); //also adds the new forum to the database.
+			forums.add(forum);
 
-		else{
-			throw new PermissionDeniedException(username + "is not an admin");
+		}
+		else {
+			throw new PermissionDeniedException(MessageFormat.format("user {0} is not authorized to add a forum.", username));
 		}
 
 	}
 
 	@Override
-	public void createSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException {
-		Session current = findSession(sessionId);
-		current.setSubForum(current.getForum().createSubForum(subforumName));
+	public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException {
+		Session currentSession = findSession(sessionId);
+		UserI user = currentSession.getUser();
+		if (user.isAdmin()) {
+			SubForumI subforum = currentSession.getForum().createSubForum(subforumName);
+			currentSession.setSubForum(subforum);
+		} else {
+			throw new PermissionDeniedException("user " + user.getUsername() + " is not an admin.");
+		}
 	}
 
 	@Override
-	public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException {
-		ForumI current = findForum(forumName);
-		if (current == null) return;
-		UserI currentUser = current.register(userName, password, email);
-		users.add(currentUser);
+	public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException {
+		ForumI currentForum = findForum(forumName);
+		currentForum.register(userName, password, email);
 	}
 
 
 	@Override
 	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException {
-		ForumI current = findForum(forumName);
-		UserI currentUser = current.login(userName, password);
-		Session currentSession = new Session(sessionCounter, currentUser);
-		currentSession.setForum(current);
+		ForumI currentForum = findForum(forumName);
+		UserI currentUser = currentForum.login(userName, password);
+		Session currentSession = new Session(sessionCounter, currentUser); //create a new session
+		currentSession.setForum(currentForum);
 		openSessions.add(currentSession);
 		sessionCounter++;
-		return sessionCounter-1;
+		return sessionCounter - 1;
 	}
 
 	@Override
@@ -98,32 +100,35 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException {
-		Session session = findSession(sessionId);
-		assert session != null;
-		MessageI msg = session.getThread().getMessages().find(srcMessageId);
-		UserI user = session.getUser();
+	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException {
+		Session currentSession = findSession(sessionId);
+		MessageI sourceMsg = currentSession.getThread().getMessages().find(srcMessageId);
+		UserI user = currentSession.getUser();
 		MessageI newMsg = new ForumMessage(user, title, body);
-		//*TODO - There are 3 different ways to reply to a message, which to use?
-		//A. session.getSubForum().replyToMessage(msg, newMsg);	 	- bypasses permissions
-		//B. session.getThread().addReply(newMsg, msg);				- bypasses permissions and policy
-		//C. session.getUser().replyToMessage(null, msg, newMsg); 	- how to get permissions?
+		if (user.canReply(currentSession.getSubForum().getTitle())) {
+			currentSession.getThread().addReply(newMsg, sourceMsg);
+		} else {
+			throw new PermissionDeniedException("user " + user.getUsername() + " cannot reply.");
+		}
 	}
 
 	@Override
-	public int createNewThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException {
-		Session current = findSession(sessionId);
-		assert current != null;
-		ForumMessage msg = new ForumMessage(current.getUser(), srcMessageTitle, srcMessageBody);
-		ThreadI thread = current.getSubForum().createThread(msg);
-		current.setThread(thread);
-		return msg.getId();
+	public int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException {
+		Session currentSession = findSession(sessionId);
+		MessageI msg = new ForumMessage(currentSession.getUser(), srcMessageTitle, srcMessageBody);
+		UserI user = currentSession.getUser();
+		if (user.canAddThread(currentSession.getSubForum().getTitle())) {
+			ThreadI thread = currentSession.getSubForum().addThread(msg);
+			currentSession.setThread(thread);
+			return msg.getId();
+		} else {
+			throw new PermissionDeniedException("user " + user.getUsername() + " cannot start a new thread.");
+		}
 	}
 
 	@Override
 	public void reportModerator(int sessionId, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException, SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		current.getSubForum().reportModerator(moderatorUserName, reportMessage, current.getUser());
 	}
 
@@ -134,19 +139,19 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException {
+	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExsitsException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		MessageI msg = current.getThread().getMessages().find(messageId);
 		UserI user = current.getUser();
-		current.getThread().remove(msg);
-		current.getSubForum().deleteMessage(msg, user.getUsername());
+		if (user.canDeleteMessage(current.getSubForum().getTitle(), msg)) {
+			current.getThread().remove(msg);
+			current.getSubForum().deleteMessage(msg, user.getUsername());
+		}
 	}
 
 	@Override
 	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		current.getSubForum().setModerator(findUser(moderatorName));
 	}
 
@@ -162,14 +167,12 @@ import java.util.Collection;
 	@Override
 	public void addUserType(int sessionId, String typeName, int seniority, int numOfMessages, int connectionTime) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		current.getForum().addUserType(typeName, seniority, numOfMessages, connectionTime);
 	}
 
 	@Override
 	public void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException{
-		// TODO remove from database
-		if (username == ADMIN_USERNAME && password == ADMIN_PASSWORD) {
+		if (username.equals(SUPER_ADMIN_USERNAME) && password.equals(SUPER_ADMIN_PASSWORD)) {
 			forums.remove(findForum(forumName));
 		}else{
 			throw new PermissionDeniedException("Unauthorized removal of a forum");
@@ -179,38 +182,31 @@ import java.util.Collection;
 	@Override
 	public void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passLife) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		current.getForum().setPolicy(new ForumPolicy(isSecured, numOfModerators, regex, passLife));
 	}
 
 	@Override
 	public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		MessageI msg = current.getThread().getMessages().find(messageId);
-		UserI user = current.getUser();
 		msg.editText(text);
 		msg.editTitle(title);
-		//*TODO - Where should permissions be checked?
 	}
 
 	@Override
 	public void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		current.getSubForum().removeModerator(findUser(moderatorName));
 	}
 
 	@Override
 	public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException {
 		Session current = findSession(sessionsId);
-		assert current != null;
 		return current.getForum().viewStatistics();
 	}
 
 	@Override
 	public String viewSuperManagerStatistics(int sessionId) throws SessionNotFoundException {
-		Session current = findSession(sessionId);
 		return  null;
 		//TODO - not implemented.
 	}
@@ -219,7 +215,17 @@ import java.util.Collection;
 	public String viewSessions(int sessionId) {
 		StringBuilder res = new StringBuilder();
 		for (Session s : openSessions){
-			res.append("Session " + s.getId() + " [USER: " + s.getUser() + "] [FORUM: " + s.getForum() + "] [SUB-FORUM: " + s.getSubForum() + "] [THREAD: " +s.getThread() + "]\n");
+			res.append("Session ");
+			res.append(s.getId());
+			res.append(" [USER: ");
+			res.append(s.getUser());
+			res.append("] [FORUM: ");
+			res.append(s.getForum());
+			res.append("] [SUB-FORUM: ");
+			res.append(s.getSubForum());
+			res.append("] [THREAD: ");
+			res.append(s.getThread());
+			res.append("]\n");
 		}
 		return res.toString();
 	}
@@ -227,19 +233,14 @@ import java.util.Collection;
 	@Override
 	public ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		ThreadI thread = current.getThread();
-		assert thread != null;
 		Tree messages = thread.getMessages();
-		assert messages != null;
-		ExMessageI message = messages.find( messageId);
-		return message;
+		return messages.find( messageId);
 	}
 
 	@Override
 	public Collection<ThreadI> getThreadsList(int sessionId) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		return current.getSubForum().getThreads();
 
 	}
@@ -247,35 +248,30 @@ import java.util.Collection;
 	@Override
 	public Tree getMessageList(int sessionId) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		return current.getThread().getMessages();
 	}
 
 	@Override
 	public String getCurrentForumName(int sessionID) throws SessionNotFoundException {
 		Session current = findSession(sessionID);
-		assert current != null;
 		return current.getForum().getName();
 	}
 
 	@Override
 	public String getCurrentUserName(int sessionID) throws SessionNotFoundException {
 		Session current = findSession(sessionID);
-		assert current != null;
 		return current.getUser().getUsername();
 	}
 
 	@Override
 	public boolean isAdmin(int sessionID) throws SessionNotFoundException {
 		Session current = findSession(sessionID);
-		assert current != null;
 		return current.getUser().isAdmin();
 	}
 
 	@Override
 	public ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		Collection<SubForumI> subForums = current.getForum().getSubForums();
 		for (SubForumI s: subForums){
 			if (s.getTitle().equals(subforum)){
@@ -289,14 +285,12 @@ import java.util.Collection;
 	@Override
 	public ExSubForumI viewSubforum(int sessionId) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		return current.getSubForum();
 	}
 
 	@Override
 	public ExThreadI viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionId);
-		assert current != null;
 		Collection<ThreadI> threads = current.getSubForum().getThreads();
 		for (ThreadI t: threads){
 			if (t.getTitle().equals(title)){
@@ -310,7 +304,6 @@ import java.util.Collection;
 	@Override
 	public ThreadI getCurrentThread(int sessionID) throws ThreadNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionID);
-		assert current != null;
 		ThreadI thread = current.getThread();
 		if (thread == null){
 			throw new ThreadNotFoundException();
@@ -319,7 +312,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void authanticateUser(String forum, String username, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException {
+	public void authenticateUser(String forum, String username, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException {
 		UserI user = findUser(username);
 		if (!user.getUserAuthString().equals(userAuthString)){
 			throw new EmailNotAuthanticatedException();
@@ -351,7 +344,6 @@ import java.util.Collection;
 
 	private ForumI findForum(String forumName) throws ForumNotFoundException {
 		for (ForumI f: forums){
-			System.out.println(f.getName());
 			if (f.getName().equals(forumName)){
 				return f;
 			}
@@ -360,12 +352,13 @@ import java.util.Collection;
 	}
 
 	private UserI findUser(String name) throws UserNotFoundException {
-		for (UserI user: users){
-			if (user.getUsername().equals(name)){
-				return user;
+		for (ForumI forum : forums){
+			for (UserI user: forum.getUserList()){
+				if (user.getUsername().equals(name)){
+					return user;
+				}
 			}
 		}
 		throw new UserNotFoundException(name);
 	}
-
 }

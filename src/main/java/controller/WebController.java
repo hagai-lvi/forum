@@ -219,11 +219,11 @@ public class WebController {
 	 * Send a request to create a new sub forum in the currently used forum
 	 */
 	@RequestMapping(value = "/addThread",method = RequestMethod.POST)
-	public void addThread(ModelMap model, HttpSession session, String srcMsgTitle, String srcMsgBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException {
+	public void addThread(ModelMap model, HttpSession session, String srcMsgTitle, String srcMsgBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException {
 		logger.info("addThread request");
 		FacadeI f = Facade.getFacade();
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
-		f.createNewThread(sessionID, srcMsgTitle, srcMsgBody);
+		f.addThread(sessionID, srcMsgTitle, srcMsgBody);
 		model.addAttribute("threadTitle", srcMsgTitle);
 	}
 
@@ -242,10 +242,9 @@ public class WebController {
 
 	@RequestMapping(value = "thread_view",method = RequestMethod.POST)
 	public String addMessageAndShowThread(ModelMap model, HttpSession session, String newMsgTitle, String newMsgBody,
-										  int messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, ThreadNotFoundException {
+										  int messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, ThreadNotFoundException, SubForumDoesNotExsitsException {
 		int sessionID = getSessionID(session);
 		FacadeI facade = Facade.getFacade();
-		//TODO not implemented by the domain yet
 		facade.addReply(sessionID, messageID, newMsgTitle, newMsgBody);
 		ThreadI thread = facade.getCurrentThread(sessionID);
 		model.addAttribute("thread", thread);

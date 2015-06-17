@@ -80,6 +80,7 @@ public class Forum extends PersistantObject implements ForumI{
         ForumPermissionI adminPermission =
                 UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, this);
         this.admin = new User(ADMIN_USERNAME, ADMIN_PASSWORD, "forumadmin@nomail.com", adminPermission);
+        this.admin.setAuthenticated();
     }
 
     private void initGuest() {

@@ -23,14 +23,14 @@ public class Tree extends PersistantObject{
 
 
     public Tree(MessageI rootData) {
-        root = new Node((ForumMessage)rootData, null);
+        root = new Node(rootData, null);
 //        this.Save();
     }
 
     public Tree() {
     }
 
-    public void add(ForumMessage dataToAdd, ForumMessage ancestor) throws NodeNotFoundException {
+    public void add(MessageI dataToAdd, MessageI ancestor) throws NodeNotFoundException {
 
         Node ancestorNode = root.findChild(ancestor);
         if (ancestorNode == null || dataToAdd == null){
@@ -45,7 +45,7 @@ public class Tree extends PersistantObject{
         return root;
     }
 
-    public ForumMessage findNode(ForumMessage data) {
+    public MessageI findNode(MessageI data) {
         if (root == null){
             return null;
         }
@@ -59,7 +59,7 @@ public class Tree extends PersistantObject{
         }
     }
 
-    public void remove(ForumMessage data) {
+    public void remove(MessageI data) {
         Node child = root.findChild(data);
         if (child == root){
             root = null;

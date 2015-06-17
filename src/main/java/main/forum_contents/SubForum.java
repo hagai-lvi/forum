@@ -61,13 +61,13 @@ public class SubForum extends PersistantObject implements SubForumI {
     // ================================================ Methods   =========================================
 
     @Override
-    public ThreadI createThread(MessageI message) throws DoesNotComplyWithPolicyException {
+    public ThreadI addThread(MessageI message) throws DoesNotComplyWithPolicyException {
         if (!subforumPolicy.isValidMessage(message)) {
             throw new DoesNotComplyWithPolicyException("message does not comply with forum policy.");
         }
-        ForumThread thread = new ForumThread(message);
+        ThreadI thread = new ForumThread(message);
         _threads.add(thread);
-//        this.Update();
+//        this.Update(); //TODO - need to handle those update methods.
         return thread;
     }
 

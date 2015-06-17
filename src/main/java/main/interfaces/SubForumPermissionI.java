@@ -59,4 +59,10 @@ public interface SubForumPermissionI {
 	void setPermission(Permissions permission);
 
 	boolean isModerator();
+
+	boolean canReply() throws PermissionDeniedException;
+
+	boolean canAddThread() throws PermissionDeniedException;
+
+	boolean canDeleteMessage() throws PermissionDeniedException;
 }

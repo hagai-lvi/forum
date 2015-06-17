@@ -42,7 +42,7 @@ import javax.persistence.*;
     public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
         if( ! permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to create thread");
-            subforum.createThread(message);
+            subforum.addThread(message);
         } else {
             logger.error(permission + " has no permission to create thread");
             throw new PermissionDeniedException("User has no permission to create thread");
@@ -143,6 +143,35 @@ import javax.persistence.*;
 
     public boolean isModerator() {
         return permission.equals(Permissions.PERMISSIONS_MODERATOR);
+    }
+
+    @Override
+    public boolean canReply() throws PermissionDeniedException {
+        if (!permission.equals(Permissions.PERMISSIONS_GUEST)){
+            return true;
+        }
+        else {
+            throw new PermissionDeniedException("user cannot reply to a message.");
+        }
+    }
+
+    @Override
+    public boolean canAddThread() throws PermissionDeniedException {
+        if(!permission.equals(Permissions.PERMISSIONS_GUEST)){
+            return true;
+        }
+        else {
+            throw new PermissionDeniedException("user cannot start a thread.");
+        }
+    }
+
+    @Override
+    public boolean canDeleteMessage() throws PermissionDeniedException {
+        if (!permission.equals(Permissions.PERMISSIONS_GUEST) && !permission.equals(Permissions.PERMISSIONS_USER)){
+            return true;
+        } else {
+            throw new PermissionDeniedException("user cannot delete this message.");
+        }
     }
 
 }
