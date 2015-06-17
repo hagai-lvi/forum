@@ -4,10 +4,7 @@ import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.MessageNotFoundException;
-import main.exceptions.PermissionDeniedException;
-import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.*;
 import main.forum_contents.*;
 import main.interfaces.*;
 import org.junit.Before;
@@ -51,11 +48,19 @@ public class UserTest {
 
 
     @Test
-    public void testIsEmailAuthenticated() throws Exception {
+    public void testIsEmailAuthenticated() {
         assertFalse(user.isEmailAuthenticated());
         forum.sendAuthenticationEMail(user);
-        assertFalse(forum.enterUserAuthenticationString(user, "bullshit"));
-        assertTrue(forum.enterUserAuthenticationString(user, user.getUserAuthString()));
+        try {
+            assertFalse(forum.enterUserAuthenticationString(user, "some string"));
+        } catch (InvalidUserCredentialsException e) {
+            e.printStackTrace();
+        }
+        try {
+            assertTrue(forum.enterUserAuthenticationString(user, user.getUserAuthString()));
+        } catch (InvalidUserCredentialsException e) {
+            fail("correct authentication string not accepted.");
+        }
         assertTrue(user.isEmailAuthenticated());
     }
 
