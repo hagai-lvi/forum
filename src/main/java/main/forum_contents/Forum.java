@@ -61,13 +61,13 @@ public class Forum extends PersistantObject implements ForumI{
 
     public Forum(String name, ForumPolicyI policy){
         this.policy = policy;
+        this.forum_name = name;
         initGuest();
         initAdmin();//TODO should be initialized?
         addAllSubforumsToUser(guest, Permissions.PERMISSIONS_GUEST);
         addAllSubforumsToUser(admin, Permissions.PERMISSIONS_ADMIN);
         this._users.put("Guest", this.guest);
         this._users.put(this.admin.getUsername(), this.admin);
-        this.forum_name = name;
         //this.pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
         this.Save();
     }
@@ -246,6 +246,13 @@ public class Forum extends PersistantObject implements ForumI{
 
     public static Forum load(String forum_name){
         return (Forum)pers.load(Forum.class, forum_name);
+    }
+
+    public static void delete(String forum_name){
+
+        Forum forum = load(forum_name);
+        pers.Delete(forum);
+
     }
 
 //    public void saveOrUpdate(){    // save the forum to the database

@@ -43,4 +43,6 @@ public interface ForumPermissionI {
 
 	Integer getId();
 
+	String getForumName();   // returns forum name for which the permissions relate
+
 }

@@ -1,6 +1,8 @@
 package main.interfaces;
 
 
+import main.User.UserForumID;
+
 /**
  * Created by hagai_lvi on 4/6/15.
  */
@@ -14,6 +16,9 @@ public interface PersistancyAbstractionI {
 
 	public <T> T load(Class<T> c, int id);
 
+	public <T> T load(Class<T> c, UserForumID idclass);
+
 	public void Update(Object o);
 
+	void Delete(Object o);
 }
