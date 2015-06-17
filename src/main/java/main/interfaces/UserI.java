@@ -42,7 +42,7 @@ public interface UserI {
 	 */
 	String getUserAuthString();
 
-	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
+	SubForumI createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
 
 	/**
 	 * Delete a subForum from this forum
@@ -52,22 +52,22 @@ public interface UserI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	ThreadI createThread(MessageI message, String subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException;
 
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(SubForumPermissionI subforumPermissions, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
+	void replyToMessage(String subforum, int original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException;
 
 	/**
 	 * Allows a user to report a moderator
 	 */
-	void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException;
+	void reportModerator(String subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException, SubForumDoesNotExistException;
 
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, MessageNotFoundException;
+	void deleteMessage(int message, String subforum) throws PermissionDeniedException, MessageNotFoundException, SubForumDoesNotExistException;
 
 	/**
 	 * Set new forum administrator
@@ -82,7 +82,7 @@ public interface UserI {
 	/**
 	 * Get statistics
 	 */
-	String viewStatistics(ForumI forum) throws PermissionDeniedException;
+	String viewStatistics(String forum) throws PermissionDeniedException;
 
 	/**
 	 * Set moderator for subforum
@@ -111,9 +111,8 @@ public interface UserI {
 
 	boolean isAdmin();
 
-	boolean canReply(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException;
 
-	boolean canAddThread(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException;
+	void editMessage(String title, int messageId, String title1, String text) throws SubForumDoesNotExistException, MessageNotFoundException;
 
-	boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExistException, PermissionDeniedException;
+	void removeModerator(String subforum, String user) throws SubForumDoesNotExistException, PermissionDeniedException;
 }

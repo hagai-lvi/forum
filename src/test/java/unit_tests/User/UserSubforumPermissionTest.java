@@ -56,7 +56,7 @@ public class UserSubforumPermissionTest {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2", "Flow2");
         permission2.createThread(message);
-        permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa3", "Help3"));
+        permission2.replyToMessage(message.getId(), new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa3", "Help3"));
         assertEquals(message.printSubTree(), "Flow2--> Help3");
     }
 
@@ -70,32 +70,32 @@ public class UserSubforumPermissionTest {
             e.printStackTrace();
         }
         try {
-            permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa", "Help"));
+            permission2.replyToMessage(message.getId(), new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa", "Help"));
         } catch (MessageNotFoundException | PermissionDeniedException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
         assertEquals(message.printSubTree(), "Flow222--> Help");
         try {
-            permission.deleteMessage(message, "Gabi");
+            permission.deleteMessage(message.getId(), "Gabi");
         } catch (PermissionDeniedException | MessageNotFoundException e) {
             e.printStackTrace();
         }
         try {
-            permission2.replyToMessage(message, message);
+            permission2.replyToMessage(message.getId(), message);
         } catch (DoesNotComplyWithPolicyException | PermissionDeniedException e) {
             e.printStackTrace();
         } catch (MessageNotFoundException e) {
             assertTrue(true);
         }
         try {
-            permission2.deleteMessage(message, "Gabi");
+            permission2.deleteMessage(message.getId(), "Gabi");
         } catch (PermissionDeniedException e) {
             e.printStackTrace();
         } catch (MessageNotFoundException e) {
             assertTrue(true);
         }
         try {
-            permission2.editMessage(message, message);
+            permission2.editMessage(message.getId(), message);
         } catch (MessageNotFoundException e) {
             assertTrue(true);
         }
@@ -106,7 +106,7 @@ public class UserSubforumPermissionTest {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow", "Flow");
         permission2.createThread(message);
-        permission.deleteMessage(message, "Victor"); // PermissionDeniedException expected
+        permission.deleteMessage(message.getId(), "Victor"); // PermissionDeniedException expected
     }
 
     @Test

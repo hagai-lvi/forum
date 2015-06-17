@@ -39,10 +39,10 @@ import javax.persistence.*;
 
 
     @Override
-    public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+    public ThreadI createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
         if( ! permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to create thread");
-            subforum.addThread(message);
+            return subforum.addThread(message);
         } else {
             logger.error(permission + " has no permission to create thread");
             throw new PermissionDeniedException("User has no permission to create thread");
@@ -50,10 +50,10 @@ import javax.persistence.*;
     }
 
    @Override
-    public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
+    public void replyToMessage(int original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
         if(!permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to reply");
-            subforum.replyToMessage(original, reply);
+            subforum.replyToMessage(findMessage(original), reply);
         } else {
             logger.error(permission + " has no permission to reply");
             throw new PermissionDeniedException("User has no permission to reply");
@@ -75,10 +75,10 @@ import javax.persistence.*;
      * Delete a specific message if the message was create by the user that sent this request
      */
     @Override
-    public void deleteMessage(MessageI message, String deleter) throws PermissionDeniedException, MessageNotFoundException {
-        if(canDeleteMessage(message, deleter)) {
+    public void deleteMessage(int messageId, String deleter) throws PermissionDeniedException, MessageNotFoundException {
+        if(canDeleteMessage(messageId, deleter)) {
             logger.info(permission + " has permission to delete message");
-            subforum.deleteMessage(message, deleter);
+            subforum.deleteMessage(findMessage(messageId), deleter);
         } else {
             logger.error(permission + " has no permission to delete message");
             throw new PermissionDeniedException("User has no permission delete message");
@@ -86,9 +86,10 @@ import javax.persistence.*;
     }
 
     @Override
-    public void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException {
+    public void editMessage(int mesid, MessageI newMessage) throws MessageNotFoundException {
+        MessageI originalMessage = findMessage(mesid);
         if (originalMessage == null || newMessage == null){
-            throw new MessageNotFoundException(newMessage);
+            throw new MessageNotFoundException(mesid);
         }
         subforum.editMessage(originalMessage, newMessage);
     }
@@ -124,10 +125,6 @@ import javax.persistence.*;
     @Override
     public void setPermission(Permissions permission) {
         this.permission = permission;
-    }
-
-    private boolean canDeleteMessage(MessageI message, String deleter) {
-        return message.getUser().equals(deleter);
     }
 
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
@@ -166,12 +163,30 @@ import javax.persistence.*;
     }
 
     @Override
-    public boolean canDeleteMessage() throws PermissionDeniedException {
-        if (!permission.equals(Permissions.PERMISSIONS_GUEST) && !permission.equals(Permissions.PERMISSIONS_USER)){
+    public boolean canDeleteMessage(int messageId, String deleter) throws PermissionDeniedException, MessageNotFoundException {
+        MessageI message = findMessage(messageId);
+        if (message.getUser().equals(deleter) || (!permission.equals(Permissions.PERMISSIONS_GUEST) && !permission.equals(Permissions.PERMISSIONS_USER))){
             return true;
         } else {
             throw new PermissionDeniedException("user cannot delete this message.");
         }
+    }
+
+    @Override
+    public void removeModerator(String user) throws PermissionDeniedException {
+        if(permission.equals(Permissions.PERMISSIONS_ADMIN))
+            subforum.removeModerator(user);
+        else {
+            throw new PermissionDeniedException("user cannot remove moderator.");
+        }
+    }
+
+    private MessageI findMessage(int messageId) throws MessageNotFoundException {
+        for (ThreadI thread : subforum.getThreads()) {
+            MessageI message = thread.getMessages().find(messageId);
+            if(message != null) return message;
+        }
+        throw new MessageNotFoundException(messageId);
     }
 
 }

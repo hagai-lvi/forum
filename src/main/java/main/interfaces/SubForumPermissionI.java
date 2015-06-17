@@ -16,12 +16,12 @@ public interface SubForumPermissionI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	ThreadI createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(MessageI original, MessageI reply) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
+	void replyToMessage(int original, MessageI reply) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator
@@ -31,12 +31,12 @@ public interface SubForumPermissionI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, String deleter) throws PermissionDeniedException, MessageNotFoundException;
+	void deleteMessage(int id, String deleter) throws PermissionDeniedException, MessageNotFoundException;
 
 	/**
 	 * Edit an existing message.
 	 */
-	 void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException;
+	 void editMessage(int mesid, MessageI newMessage) throws MessageNotFoundException;
 
 	 /**
 	 * view threads
@@ -64,5 +64,7 @@ public interface SubForumPermissionI {
 
 	boolean canAddThread() throws PermissionDeniedException;
 
-	boolean canDeleteMessage() throws PermissionDeniedException;
+	boolean canDeleteMessage(int messageId, String deleter) throws PermissionDeniedException, MessageNotFoundException;
+
+	void removeModerator(String user) throws PermissionDeniedException;
 }
