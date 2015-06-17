@@ -56,6 +56,13 @@ public class PersistanceTest extends TestCase{
         User u = User.getUserFromDB(Forum.GUEST_USER_NAME, "Some forum");
         assertEquals(u.getUsername(), Forum.GUEST_USER_NAME);
     }
+
+    @Test
+    public void test6DeleteForum(){
+        Forum.delete("Some forum");
+        Forum f = Forum.load("Some forum");
+        assertEquals(f, null);
+    }
 /*
     @Test
     public void test5ForumPermissions_Save(){
