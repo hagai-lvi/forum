@@ -9,7 +9,6 @@ import main.forum_contents.ForumPolicy;
 import main.forum_contents.ForumThread;
 import main.interfaces.*;
 import org.junit.After;
-import tests_infrastructure.Driver;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -128,7 +127,7 @@ public class SubForumTest extends TestCase {
 
     public void testRemoveModerator() throws Exception {
         subforum.setModerator(user);
-        subforum.removeModerator(user);
+        subforum.removeModerator(user.getUsername());
         assertEquals(subforum.getModerators().size(), 0);
     }
 
@@ -152,7 +151,7 @@ public class SubForumTest extends TestCase {
             e.printStackTrace();
         }
         try {
-            subforum.editMessage(thread.getRootMessage(), newmsg);
+            subforum.editMessage(thread, thread.getRootMessage().getId(), "newTitle", "newBody");
         } catch (MessageNotFoundException e) {
             e.printStackTrace();
         }
