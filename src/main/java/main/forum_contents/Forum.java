@@ -248,6 +248,13 @@ public class Forum extends PersistantObject implements ForumI{
         return (Forum)pers.load(Forum.class, forum_name);
     }
 
+    public static void delete(String forum_name){
+
+        Forum forum = load(forum_name);
+        pers.Delete(forum);
+
+    }
+
 //    public void saveOrUpdate(){    // save the forum to the database
 //        pers.saveOrUpdate(this);
 //    }

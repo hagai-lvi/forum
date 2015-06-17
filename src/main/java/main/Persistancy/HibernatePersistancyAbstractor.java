@@ -80,5 +80,16 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
         session.close();
     }
 
+    @Override
+    public void Delete(Object o){
+        Session session = session_Factory.openSession();
+        session.flush();
+        session.beginTransaction();
+        session.delete(o);
+        session.getTransaction().commit();
+        session.clear();
+        session.close();
+    }
+
 
 }

@@ -20,4 +20,5 @@ public interface PersistancyAbstractionI {
 
 	public void Update(Object o);
 
+	void Delete(Object o);
 }
