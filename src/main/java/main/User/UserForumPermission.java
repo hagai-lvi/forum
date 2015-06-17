@@ -106,6 +106,11 @@ public class UserForumPermission implements ForumPermissionI {
 		return id;
 	}
 
+	@Override
+	public String getForumName() {
+		return forum.getName();
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}

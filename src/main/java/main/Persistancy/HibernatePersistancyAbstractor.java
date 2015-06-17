@@ -1,5 +1,6 @@
 package main.Persistancy;
 
+import main.User.UserForumID;
 import main.interfaces.PersistancyAbstractionI;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -57,6 +58,14 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
     public <T> T load(Class<T> c, String id) {
         Session sess = session_Factory.openSession();
         T result = c.cast(sess.get(c, id));
+        sess.close();
+        return result;
+    }
+
+    @Override
+    public <T> T load(Class<T> c, UserForumID idclass) {
+        Session sess = session_Factory.openSession();
+        T result = c.cast(sess.get(c, idclass));
         sess.close();
         return result;
     }
