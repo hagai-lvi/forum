@@ -26,7 +26,7 @@ public class SubForumTest extends TestCase {
         super.setUp();
         Driver.dbCount++;
         forum = new Forum("forum" + Driver.dbCount, new ForumPolicy(false, 2, "aaa", 365));
-        forum.createSubForum("subforum");
+        forum.addSubForum("subforum");
         subforum = forum.getSubForums().iterator().next();
         forum.register("user", "aaa", "aaa@aaa.aaa");
         user = forum.getUserList().iterator().next();
@@ -140,10 +140,6 @@ public class SubForumTest extends TestCase {
         ThreadI thread = subforum.addThread(new ForumMessage(user, "msg", "thread"));
         assertEquals(subforum.getThreads().size(), 1);
         assertEquals(subforum.getThreads().iterator().next().getTitle(), thread.getTitle());
-    }
-
-    public void testLoad() throws Exception {
-        fail("Not yet implemented");
     }
 
     public void testEditMessage() {

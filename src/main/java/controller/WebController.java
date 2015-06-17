@@ -219,7 +219,7 @@ public class WebController {
 	 * Send a request to create a new sub forum in the currently used forum
 	 */
 	@RequestMapping(value = "/addThread",method = RequestMethod.POST)
-	public void addThread(ModelMap model, HttpSession session, String srcMsgTitle, String srcMsgBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException {
+	public void addThread(ModelMap model, HttpSession session, String srcMsgTitle, String srcMsgBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("addThread request");
 		FacadeI f = Facade.getFacade();
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
@@ -242,7 +242,7 @@ public class WebController {
 
 	@RequestMapping(value = "thread_view",method = RequestMethod.POST)
 	public String addMessageAndShowThread(ModelMap model, HttpSession session, String newMsgTitle, String newMsgBody,
-										  int messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, ThreadNotFoundException, SubForumDoesNotExsitsException {
+										  int messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, ThreadNotFoundException, SubForumDoesNotExistException {
 		int sessionID = getSessionID(session);
 		FacadeI facade = Facade.getFacade();
 		facade.addReply(sessionID, messageID, newMsgTitle, newMsgBody);

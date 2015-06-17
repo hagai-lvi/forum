@@ -55,12 +55,12 @@ public interface FacadeI {
 	/**
 	 * Reply to a specific message
 	 */
-	void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException;
+	void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException;
 
 	/**
 	 * Create a new thread in the specified subforum
 	 */
-	int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExsitsException;
+	int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException;
 
 	/**
 	 * submit a complaint about a moderator
@@ -77,7 +77,7 @@ public interface FacadeI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExsitsException;
+	void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException;
 
 	/**
 	 * Set moderator for subforum

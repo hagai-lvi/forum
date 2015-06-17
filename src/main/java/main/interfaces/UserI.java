@@ -47,7 +47,7 @@ public interface UserI {
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException;
+	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException;
 
 	/**
 	 * create a thread in the subforum
@@ -111,9 +111,9 @@ public interface UserI {
 
 	boolean isAdmin();
 
-	boolean canReply(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException;
+	boolean canReply(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException;
 
-	boolean canAddThread(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException;
+	boolean canAddThread(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException;
 
-	boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExsitsException, PermissionDeniedException;
+	boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExistException, PermissionDeniedException;
 }

@@ -110,7 +110,7 @@ public class User implements UserI {
     }
 
     @Override
-    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExsitsException {
+    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException {
         forumPermissions.deleteSubForum(toDelete);
     }
 
@@ -229,30 +229,30 @@ public class User implements UserI {
     }
 
     @Override
-    public boolean canReply(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException {
+    public boolean canReply(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException {
         SubForumPermissionI permission = findPermission(subForum);
         return permission.canReply();
     }
 
     @Override
-    public boolean canAddThread(String subForum) throws SubForumDoesNotExsitsException, PermissionDeniedException {
+    public boolean canAddThread(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException {
         SubForumPermissionI permission = findPermission(subForum);
         return permission.canAddThread();
     }
 
     @Override
-    public boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExsitsException, PermissionDeniedException {
+    public boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExistException, PermissionDeniedException {
         SubForumPermissionI permission = findPermission(subForum);
             return (msg.getUser().equals(this.username)) || (permission.canDeleteMessage());
     }
 
-    private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExsitsException {
+    private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
         for (SubForumPermissionI sfp : subForumsPermissions){
             if (sfp.getSubForum().getTitle().equals(subForum)){
                 return sfp;
             }
         }
-        throw new SubForumDoesNotExsitsException();
+        throw new SubForumDoesNotExistException();
     }
 
     public void setId(Integer id) {
