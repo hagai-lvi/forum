@@ -39,12 +39,12 @@ public class ForumThread extends PersistantObject implements ThreadI{
     @Override
     public void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException {
         if (newMessage == null){
-            throw new MessageNotFoundException(newMessage);
+            throw new MessageNotFoundException(newMessage.getId());
         }
         MessageI msg = messages.findNode(originalMessage);
 
         if (msg == null){
-            throw new MessageNotFoundException(originalMessage);
+            throw new MessageNotFoundException(originalMessage.getId());
         }
         msg.editTitle(newMessage.getMessageTitle());
         msg.editText(newMessage.getMessageText());
@@ -66,7 +66,7 @@ public class ForumThread extends PersistantObject implements ThreadI{
             messages.add(reply, original); //TODO - what to do with tree and array of replies?
             original.addReply(reply);
         } catch (NodeNotFoundException | NullPointerException e) {
-            throw new MessageNotFoundException(original);
+            throw new MessageNotFoundException(original.getId());
         }
 //        this.Save();
     }

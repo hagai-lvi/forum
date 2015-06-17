@@ -1,8 +1,5 @@
 package main.exceptions;
 
-import main.interfaces.MessageI;
-import main.interfaces.SubForumI;
-
 /**
  * Point that the required message could not be found in the specified subforum
  *
@@ -10,7 +7,7 @@ import main.interfaces.SubForumI;
  */
 public class MessageNotFoundException extends Exception {
 
-    public MessageNotFoundException(MessageI message) {
+    public MessageNotFoundException(int message) {
         super("Could not find message " + message);
 
     }

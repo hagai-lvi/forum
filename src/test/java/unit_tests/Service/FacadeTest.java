@@ -48,8 +48,8 @@ public class FacadeTest {
         theFacade.register("Zrima", "Gabi", "0000", "a@a.com");
         int session = theFacade.login("Zrima", "Gabi", "0000");
         ForumI forum = theFacade.getForumList().iterator().next();
-        forum.createSubForum("Baseball");
-        forum.createSubForum("Tennis");
+        forum.addSubForum("Baseball");
+        forum.addSubForum("Tennis");
         Collection<SubForumI> list = theFacade.getSubForumList(session);
         assertTrue(findSubforum(session, "Baseball"));
         assertTrue(findSubforum(session, "Tennis"));

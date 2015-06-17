@@ -12,7 +12,7 @@ public interface ForumPermissionI {
 	/**
 	 * Create a subforum in this forum
 	 */
-	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
+	SubForumI createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
 
 	boolean isAdmin();
 

@@ -79,7 +79,7 @@ public class SubForum extends PersistantObject implements SubForumI {
         ThreadI thread = findThread(original);
         if (thread == null){
             logger.warn("User tried to reply to already deleted thread");
-            throw new MessageNotFoundException(original);
+            throw new MessageNotFoundException(original.getId());
         }
         thread.addReply(reply, original);
 //        this.Update();
@@ -110,15 +110,16 @@ public class SubForum extends PersistantObject implements SubForumI {
             thread.remove(message);
         }
         else {
-            throw new MessageNotFoundException(message);
+            throw new MessageNotFoundException(message.getId());
         }
         //this.Update();
     }
 
 
     @Override
-    public void removeModerator(UserI mod) {
-        _moderators.remove(mod.getUsername());
+    public void removeModerator(String mod) {
+        // TODO - Tom update database
+        _moderators.remove(mod);
         //this.Update();
     }
 
@@ -130,7 +131,7 @@ public class SubForum extends PersistantObject implements SubForumI {
                 break;
             }
         }
-        throw new MessageNotFoundException(originalMessage);
+        throw new MessageNotFoundException(originalMessage.getId());
     }
 
 

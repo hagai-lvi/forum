@@ -1,6 +1,5 @@
 package main.User;
 
-import main.Persistancy.PersistantObject;
 import main.Utils.SecureString;
 import main.exceptions.*;
 import main.forum_contents.ForumMessage;
@@ -16,7 +15,7 @@ import java.util.Vector;
  * Created by gabigiladov on 4/11/15.
  */
 @Entity
-public class User extends PersistantObject implements UserI {
+public class User implements UserI {
     private String authString = null;
     private String username;
     //@Type(type="encryptedString")
@@ -50,7 +49,6 @@ public class User extends PersistantObject implements UserI {
         this.isEmailAuthenticated = false;
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<>();
-        this.id = new UserForumID(username, forumPermissions.getForumName());
         this.forumPermissions = forumPermissions;
     }
 
@@ -107,8 +105,8 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
-        forumPermissions.createSubForum(name);
+    public SubForumI createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
+        return forumPermissions.createSubForum(name);
     }
 
     @Override
@@ -117,29 +115,25 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-        subForumPermission.createThread(message);
+    public ThreadI createThread(MessageI message, String subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
+        return findPermission(subforum).createThread(message);
     }
 
     @Override
-    public void replyToMessage(SubForumPermissionI subForumPermission, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
-        subForumPermission.replyToMessage(original,new ForumMessage(this, msgTitle, msgBody));
+    public void replyToMessage(String subforum, int original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
+        findPermission(subforum).replyToMessage(original, new ForumMessage(this, msgTitle, msgBody));
+    }
+
+
+    @Override
+    public void reportModerator(String subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException, SubForumDoesNotExistException {
+        findPermission(subforum).reportModerator(moderatorUsername, reportMessage, this);
     }
 
     @Override
-    public void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).subForumExists(subforum.getTitle())){
-                ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).reportModerator(moderatorUsername, reportMessage, this);
-                break;
-            }
-        }
-    }
-
-    @Override
-    public void deleteMessage(MessageI message, SubForumPermissionI subForumPermission)
-            throws PermissionDeniedException, MessageNotFoundException {
-        subForumPermission.deleteMessage(message, this.username);
+    public void deleteMessage(int message, String subforum)
+            throws PermissionDeniedException, MessageNotFoundException, SubForumDoesNotExistException {
+        findPermission(subforum).deleteMessage(message, this.username);
     }
 
     @Override
@@ -153,9 +147,10 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public String viewStatistics(ForumI forum) throws PermissionDeniedException {
+    public String viewStatistics(String forum) throws PermissionDeniedException {
         //TODO - not implemented
-        throw new RuntimeException("Not yet implemented");
+        return "";
+      //  throw new RuntimeException("Not yet implemented");
     }
 
     @Override
@@ -198,10 +193,10 @@ public class User extends PersistantObject implements UserI {
         this.signUpDate = signUpDate;
     }
 
-    @EmbeddedId
-    private UserForumID id;
+    @Id @GeneratedValue(strategy=GenerationType.IDENTITY)
+    private Integer id;
 
-    public UserForumID getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -231,21 +226,13 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public boolean canReply(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException {
-        SubForumPermissionI permission = findPermission(subForum);
-        return permission.canReply();
+    public void editMessage(String title, int messageId, String title1, String text) throws SubForumDoesNotExistException, MessageNotFoundException {
+        findPermission(title).editMessage(messageId, new ForumMessage(this, title, text));
     }
 
     @Override
-    public boolean canAddThread(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException {
-        SubForumPermissionI permission = findPermission(subForum);
-        return permission.canAddThread();
-    }
-
-    @Override
-    public boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExistException, PermissionDeniedException {
-        SubForumPermissionI permission = findPermission(subForum);
-            return (msg.getUser().equals(this.username)) || (permission.canDeleteMessage());
+    public void removeModerator(String subforum, String user) throws SubForumDoesNotExistException, PermissionDeniedException {
+        findPermission(subforum).removeModerator(user);
     }
 
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
@@ -257,13 +244,8 @@ public class User extends PersistantObject implements UserI {
         throw new SubForumDoesNotExistException();
     }
 
-    public void setId(UserForumID id) {
+    public void setId(Integer id) {
         this.id = id;
-    }
-
-    public static User getUserFromDB(String username, String forumname){
-            return (User)pers.load(User.class, new UserForumID(username, forumname));
-
     }
 
 }

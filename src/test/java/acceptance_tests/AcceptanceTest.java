@@ -103,7 +103,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: set new policy for forum
      */
-    public void testSetPolicies() throws SessionNotFoundException {
+    public void testSetPolicies() throws SessionNotFoundException, PermissionDeniedException {
         _facade.setPolicies(0, false, "a*", 1, 365);
         // test pass regex
         try {
@@ -122,15 +122,13 @@ public class AcceptanceTest extends TestCase {
             _facade.setModerator(0, "hagai");
         } catch (PermissionDeniedException e) {
             assertTrue(true);
-        } catch (UserNotFoundException e) {
+        } catch (UserNotFoundException | SubForumNotFoundException e) {
             e.printStackTrace();
         }
         _facade.setPolicies(0, false, "a*", 2, 365);
         try {
             _facade.setModerator(0, "hagai");
-        } catch (PermissionDeniedException e) {
-            e.printStackTrace();
-        } catch (UserNotFoundException e) {
+        } catch (PermissionDeniedException | SubForumNotFoundException | UserNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -170,12 +168,10 @@ public class AcceptanceTest extends TestCase {
         try {
             _facade.reportModerator(session, "Moshe", "He is so bad Moderator");
             fail("a guest cannot create a report on moderator");
-        } catch (ModeratorDoesNotExistsException e) {//TODO need to define the expected result
+        } catch (ModeratorDoesNotExistsException | SubForumDoesNotExistException | SessionNotFoundException e) {//TODO need to define the expected result
             e.printStackTrace();
         } catch (PermissionDeniedException e){
             assertTrue(true);
-        } catch (SessionNotFoundException e) {
-            e.printStackTrace();
         }
 
         //try delete message
@@ -403,7 +399,7 @@ public class AcceptanceTest extends TestCase {
 
         try {
             _facade.reportModerator(0, "Moshe", "he is not behave well!!");
-        } catch (PermissionDeniedException | ModeratorDoesNotExistsException | SessionNotFoundException e) {
+        } catch (PermissionDeniedException | ModeratorDoesNotExistsException | SessionNotFoundException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
 
@@ -463,7 +459,7 @@ public class AcceptanceTest extends TestCase {
     /**
     * target: test editing message by publisher use case
     */
-    public void testEditOwnMessage() throws SessionNotFoundException {
+    public void testEditOwnMessage() throws SessionNotFoundException, MessageNotFoundException, PermissionDeniedException, SubForumDoesNotExistException {
         int session = 0;
 
         try {
@@ -497,11 +493,7 @@ public class AcceptanceTest extends TestCase {
 
         try {
             _facade.setModerator(0, "gil");
-        } catch (PermissionDeniedException e) {
-            e.printStackTrace();
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
-        } catch (SessionNotFoundException e) {
+        } catch (PermissionDeniedException | SubForumNotFoundException | SessionNotFoundException | UserNotFoundException e) {
             e.printStackTrace();
         }
         //TODO - how to check if user is a moderator.
@@ -511,14 +503,10 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test canceling moderator use case
     */
-    public void testCancelModerator() throws UserNotFoundException, SessionNotFoundException {
+    public void testCancelModerator() throws UserNotFoundException, SessionNotFoundException, PermissionDeniedException, SubForumDoesNotExistException {
         try {
             _facade.setModerator(0, "gabi");
-        } catch (PermissionDeniedException e) {
-            e.printStackTrace();
-        } catch (UserNotFoundException e) {
-            e.printStackTrace();
-        } catch (SessionNotFoundException e) {
+        } catch (PermissionDeniedException | UserNotFoundException | SubForumNotFoundException | SessionNotFoundException e) {
             e.printStackTrace();
         }
         _facade.removeModerator(0, "gabi");
@@ -539,12 +527,12 @@ public class AcceptanceTest extends TestCase {
         SubForumI subf = forum.getSubForums().iterator().next();
 
         try {
-            user.viewStatistics(forum);
+            user.viewStatistics(forum.getName());
         } catch (PermissionDeniedException e) {
             assertTrue(true); // user has not permission to set moderator
         }
         try {
-            user2.viewStatistics(forum);
+            user2.viewStatistics(forum.getName());
         } catch (PermissionDeniedException e) {
             assertTrue(false);
         }
@@ -563,12 +551,12 @@ public class AcceptanceTest extends TestCase {
         SubForumI subf = forum.getSubForums().iterator().next();
 
         try {
-            user.viewStatistics(forum);
+            user.viewStatistics(forum.getName());
         } catch (PermissionDeniedException e) {
             assertTrue(true); // user has not permission to set moderator
         }
         try {
-            user2.viewStatistics(forum);
+            user2.viewStatistics(forum.getName());
         } catch (PermissionDeniedException e) {
             assertTrue(false);
         }
