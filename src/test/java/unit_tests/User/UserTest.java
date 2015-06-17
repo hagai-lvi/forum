@@ -137,7 +137,7 @@ public class UserTest {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
-        user2.createThread(message, permission);
+        user2.createThread(message, "Football");
         assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
     }
 
@@ -146,14 +146,14 @@ public class UserTest {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
-        user2.createThread(message, permission);
-        user2.replyToMessage(permission, message, "WTF", "Help");
-        user.replyToMessage(permission, message, "WTF", "Yeah!");
+        user2.createThread(message, "Football");
+        user2.replyToMessage("Football", message, "WTF", "Help");
+        user.replyToMessage("Football", message, "WTF", "Yeah!");
         assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
     }
 
     @Test
-    public void testDeleteMessageS() {
+    public void testDeleteMessageS() throws MessageNotFoundException {
         try {
             user2.createSubForum("Football");
         } catch (PermissionDeniedException | SubForumAlreadyExistException e) {
@@ -162,32 +162,32 @@ public class UserTest {
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
         try {
-            user2.createThread(message, permission);
-        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
+            user2.createThread(message, "Football");
+        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
         try {
-            user2.replyToMessage(permission, message, "WTF", "Help");
-        } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException e) {
+            user2.replyToMessage("Football", message, "WTF", "Help");
+        } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
         try {
-            user.replyToMessage(permission, message, "WTF", "Yeah!");
-        } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException e) {
+            user.replyToMessage("Football", message, "WTF", "Yeah!");
+        } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
         assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
         try {
-            user.deleteMessage(message, permission);
-        } catch (PermissionDeniedException | MessageNotFoundException e) {
+            user.deleteMessage(message, "Football");
+        } catch (PermissionDeniedException | MessageNotFoundException | SubForumDoesNotExistException e) {
             e.printStackTrace();
         }
         try {
-            user.replyToMessage(permission,message, "aaa", "bbb");
+            user.replyToMessage("Football",message, "aaa", "bbb");
         } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
-        } catch (MessageNotFoundException e) {
-            assertTrue(true);
+        } catch (SubForumDoesNotExistException e) {
+            e.printStackTrace();
         }
     }
 
@@ -196,8 +196,8 @@ public class UserTest {
         user2.createSubForum("Football");
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
         MessageI message = new ForumMessage(user, "Mega Flow", "Flow");
-        user2.createThread(message, permission);
-        user2.deleteMessage(message, permission); // PermissionDeniedException expected
+        user2.createThread(message, "Football");
+        user2.deleteMessage(message, "Football"); // PermissionDeniedException expected
     }
 
     @Test(expected = PermissionDeniedException.class)

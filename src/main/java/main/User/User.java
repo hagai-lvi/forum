@@ -117,29 +117,26 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
-        subForumPermission.createThread(message);
+    public void createThread(MessageI message, String subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
+        findPermission(subforum).createThread(message);
     }
 
     @Override
-    public void replyToMessage(SubForumPermissionI subForumPermission, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException {
-        subForumPermission.replyToMessage(original,new ForumMessage(this, msgTitle, msgBody));
+    public void replyToMessage(String subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
+        findPermission(subforum).replyToMessage(original, new ForumMessage(this, msgTitle, msgBody));
     }
 
     @Override
     public void reportModerator(SubForumI subforum, String moderatorUsername, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException {
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            if(((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).subForumExists(subforum.getTitle())){
-                ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).reportModerator(moderatorUsername, reportMessage, this);
-                break;
-            }
-        }
+        subforum.reportModerator(moderatorUsername, reportMessage, this);
     }
 
     @Override
-    public void deleteMessage(MessageI message, SubForumPermissionI subForumPermission)
-            throws PermissionDeniedException, MessageNotFoundException {
-        subForumPermission.deleteMessage(message, this.username);
+    public void deleteMessage(MessageI message, String subforum)
+            throws PermissionDeniedException, MessageNotFoundException, SubForumDoesNotExistException {
+        if(canDeleteMessage(subforum, message ))
+        findPermission(subforum).deleteMessage(message, this.username);
+        else throw new PermissionDeniedException("Can not delete message");
     }
 
     @Override
@@ -246,6 +243,16 @@ public class User extends PersistantObject implements UserI {
     public boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExistException, PermissionDeniedException {
         SubForumPermissionI permission = findPermission(subForum);
             return (msg.getUser().equals(this.username)) || (permission.canDeleteMessage());
+    }
+
+    @Override
+    public void editMessage(String subforum, ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException {
+        findPermission(subforum).editMessage(thread, messageId, title, text);
+    }
+
+    @Override
+    public void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException {
+        findPermission(subforum).removeModerator(moderatorName);
     }
 
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {

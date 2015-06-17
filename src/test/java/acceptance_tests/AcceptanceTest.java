@@ -106,18 +106,12 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: set new policy for forum
      */
-    public void testSetPolicies() throws SessionNotFoundException {
+    public void testSetPolicies() throws SessionNotFoundException, PermissionDeniedException {
         _facade.setPolicies(0, false, "a*", 1, 365);
         // test pass regex
         try {
             _facade.register("Forum1", "user", "aaa", "mail@mail.mail");
-        } catch (UserAlreadyExistsException e) {
-            e.printStackTrace();
-        } catch (InvalidUserCredentialsException e) {
-            e.printStackTrace();
-        } catch (ForumNotFoundException e) {
-            e.printStackTrace();
-        } catch (DoesNotComplyWithPolicyException e) {
+        } catch (UserAlreadyExistsException | DoesNotComplyWithPolicyException | ForumNotFoundException | InvalidUserCredentialsException e) {
             e.printStackTrace();
         }
         // test mod number
@@ -127,6 +121,8 @@ public class AcceptanceTest extends TestCase {
             assertTrue(true);
         } catch (UserNotFoundException e) {
             e.printStackTrace();
+        } catch (SubForumNotFoundException e) {
+            e.printStackTrace();
         }
         _facade.setPolicies(0, false, "a*", 2, 365);
         try {
@@ -134,6 +130,8 @@ public class AcceptanceTest extends TestCase {
         } catch (PermissionDeniedException e) {
             e.printStackTrace();
         } catch (UserNotFoundException e) {
+            e.printStackTrace();
+        } catch (SubForumNotFoundException e) {
             e.printStackTrace();
         }
     }
@@ -466,7 +464,7 @@ public class AcceptanceTest extends TestCase {
     /**
     * target: test editing message by publisher use case
     */
-    public void testEditOwnMessage() throws SessionNotFoundException {
+    public void testEditOwnMessage() throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException {
         int session = 0;
 
         try {
@@ -506,6 +504,8 @@ public class AcceptanceTest extends TestCase {
             e.printStackTrace();
         } catch (SessionNotFoundException e) {
             e.printStackTrace();
+        } catch (SubForumNotFoundException e) {
+            e.printStackTrace();
         }
         //TODO - how to check if user is a moderator.
     }
@@ -514,7 +514,7 @@ public class AcceptanceTest extends TestCase {
     /**
      * target: test canceling moderator use case
     */
-    public void testCancelModerator() throws UserNotFoundException, SessionNotFoundException {
+    public void testCancelModerator() throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
         try {
             _facade.setModerator(0, "gabi");
         } catch (PermissionDeniedException e) {
@@ -522,6 +522,8 @@ public class AcceptanceTest extends TestCase {
         } catch (UserNotFoundException e) {
             e.printStackTrace();
         } catch (SessionNotFoundException e) {
+            e.printStackTrace();
+        } catch (SubForumNotFoundException e) {
             e.printStackTrace();
         }
         _facade.removeModerator(0, "gabi");

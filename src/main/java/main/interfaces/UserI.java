@@ -52,12 +52,12 @@ public interface UserI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void createThread(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
+	void createThread(MessageI message, String subForum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException;
 
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(SubForumPermissionI subforumPermissions, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
+	void replyToMessage(String subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException;
 
 	/**
 	 * Allows a user to report a moderator
@@ -67,7 +67,7 @@ public interface UserI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, SubForumPermissionI subForumPermission) throws PermissionDeniedException, MessageNotFoundException;
+	void deleteMessage(MessageI message, String subForum) throws PermissionDeniedException, MessageNotFoundException, SubForumDoesNotExistException;
 
 	/**
 	 * Set new forum administrator
@@ -116,4 +116,8 @@ public interface UserI {
 	boolean canAddThread(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException;
 
 	boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExistException, PermissionDeniedException;
+
+	void editMessage(String subforum,ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException;
+
+	void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException;
 }

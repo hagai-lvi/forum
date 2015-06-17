@@ -60,7 +60,7 @@ public interface FacadeI {
 	/**
 	 * Create a new thread in the specified subforum
 	 */
-	int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException;
+	void addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException;
 
 	/**
 	 * submit a complaint about a moderator
@@ -82,7 +82,7 @@ public interface FacadeI {
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException;
+	void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException;
 
 	/**
 	 * guest entry usecase, return session id
@@ -100,15 +100,15 @@ public interface FacadeI {
 
 	void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException;
 
-    void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passwordEffectTime) throws SessionNotFoundException;
+    void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passwordEffectTime) throws SessionNotFoundException, PermissionDeniedException;
 	/**
 	 * edit message
 	 * @param sessionId - Id of current session
 	 * @param messageId - Id of message
 	 */
-	void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException;
+	void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException;
 
-	void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException;
+	void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException;
 
 	String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException;
 

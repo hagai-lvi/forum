@@ -86,11 +86,8 @@ import javax.persistence.*;
     }
 
     @Override
-    public void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException {
-        if (originalMessage == null || newMessage == null){
-            throw new MessageNotFoundException(newMessage);
-        }
-        subforum.editMessage(originalMessage, newMessage);
+    public void editMessage(ThreadI thread, int originalMessage, String title, String text) throws MessageNotFoundException {
+        subforum.editMessage(thread, originalMessage, title, text);
     }
 
     @Override
@@ -172,6 +169,11 @@ import javax.persistence.*;
         } else {
             throw new PermissionDeniedException("user cannot delete this message.");
         }
+    }
+
+    @Override
+    public void removeModerator(String moderatorName) {
+        subforum.removeModerator(moderatorName);
     }
 
 }

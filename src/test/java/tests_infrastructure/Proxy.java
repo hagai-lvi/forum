@@ -81,12 +81,10 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
+    public void addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
         if(this.real!=null) {
-            int id = this.real.addThread(sessionId, srcMessageTitle, srcMessageBody);
-            return id;
+            this.real.addThread(sessionId, srcMessageTitle, srcMessageBody);
         }
-        return 0;
     }
 
     @Override
@@ -108,7 +106,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException {
+    public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException {
         if(this.real!=null)
             this.real.setModerator(sessionId, moderatorName);
     }
@@ -133,19 +131,19 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void setPolicies(int sessionId, boolean isSecure, String regex, int numOfModerators, int passLife) throws SessionNotFoundException {
+    public void setPolicies(int sessionId, boolean isSecure, String regex, int numOfModerators, int passLife) throws SessionNotFoundException, PermissionDeniedException {
         if(this.real!=null)
             this.real.setPolicies(sessionId, isSecure, regex, numOfModerators, passLife);
     }
 
     @Override
-    public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException {
+    public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException {
         if(this.real!=null)
             this.real.editMessage(sessionId, messageId, title, text);
     }
 
     @Override
-    public void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException {
+    public void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
         if(this.real!=null)
             this.real.removeModerator(sessionId, moderatorName);
     }

@@ -117,20 +117,16 @@ public class SubForum extends PersistantObject implements SubForumI {
 
 
     @Override
-    public void removeModerator(UserI mod) {
-        _moderators.remove(mod.getUsername());
+    public void removeModerator(String mod) {
+        _moderators.remove(mod);
         //this.Update();
     }
 
     @Override
-    public void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException {
-        for (ThreadI thread : _threads){
-            if (thread.contains(originalMessage)) {
-                thread.editMessage(originalMessage, newMessage);
-                break;
-            }
-        }
-        throw new MessageNotFoundException(originalMessage);
+    public void editMessage(ThreadI thread, int originalMessage, String title, String text) throws MessageNotFoundException {
+        MessageI ms =  thread.getMessages().find(originalMessage);
+        ms.editTitle(title);
+        ms.editText(text);
     }
 
 

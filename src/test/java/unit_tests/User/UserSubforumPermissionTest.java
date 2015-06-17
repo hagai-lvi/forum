@@ -99,11 +99,7 @@ public class UserSubforumPermissionTest {
         } catch (MessageNotFoundException e) {
             assertTrue(true);
         }
-        try {
-            permission2.editMessage(message, message);
-        } catch (MessageNotFoundException e) {
-            assertTrue(true);
-        }
+        // permission2.editMessage(, message.getId(), message);
     }
 
     @Test(expected = PermissionDeniedException.class)

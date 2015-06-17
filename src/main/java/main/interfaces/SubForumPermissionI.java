@@ -36,7 +36,7 @@ public interface SubForumPermissionI {
 	/**
 	 * Edit an existing message.
 	 */
-	 void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException;
+	 void editMessage(ThreadI thread,int originalMessage, String title, String text) throws MessageNotFoundException;
 
 	 /**
 	 * view threads
@@ -65,4 +65,6 @@ public interface SubForumPermissionI {
 	boolean canAddThread() throws PermissionDeniedException;
 
 	boolean canDeleteMessage() throws PermissionDeniedException;
+
+	void removeModerator(String moderatorName);
 }
