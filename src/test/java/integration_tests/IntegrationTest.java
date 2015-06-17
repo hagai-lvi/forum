@@ -195,7 +195,7 @@ public class IntegrationTest {
 
 	@After
 	public void cleanUp(){
-		Forum.delete("forum");
+
 	}
 
 }

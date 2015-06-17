@@ -42,7 +42,7 @@ public class SubForum extends PersistantObject implements SubForumI {
     @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
     private Map<String, UserI> _moderators = new HashMap<>();
     private static Logger logger = Logger.getLogger(Forum.class.getName());
-    @OneToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL)
+    @ManyToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL)
     private SubForumPolicyI subforumPolicy;
 
 

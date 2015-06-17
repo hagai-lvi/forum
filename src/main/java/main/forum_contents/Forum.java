@@ -11,6 +11,8 @@ import main.Utils.GmailSender;
 import main.exceptions.*;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
+import org.hibernate.annotations.Cascade;
+
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.HashMap;
@@ -33,7 +35,8 @@ public class Forum extends PersistantObject implements ForumI{
     @Id
     @JsonView(NativeGuiController.class)
     private String forum_name;
-    @OneToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL, fetch= FetchType.EAGER)
+
+    @ManyToOne(targetEntity = ForumPolicy.class, cascade = {CascadeType.ALL},  fetch= FetchType.EAGER)
     private ForumPolicyI policy;
 
     @OneToMany(targetEntity = SubForum.class, cascade = CascadeType.ALL, fetch= FetchType.EAGER)
@@ -251,6 +254,10 @@ public class Forum extends PersistantObject implements ForumI{
     public static void delete(String forum_name){
 
         Forum forum = load(forum_name);
+        if (forum.policy != null) {
+            forum.policy = null;
+            forum.Update();
+        }
         pers.Delete(forum);
 
     }
