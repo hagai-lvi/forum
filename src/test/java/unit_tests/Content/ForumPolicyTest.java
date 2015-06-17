@@ -1,8 +1,13 @@
 package unit_tests.Content;
 import junit.framework.TestCase;
+import main.User.Permissions;
 import main.User.User;
+import main.User.UserForumPermission;
+import main.User.UserSubforumPermission;
+import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
+import main.interfaces.ForumI;
 import main.interfaces.MessageI;
 
 import java.util.GregorianCalendar;
@@ -12,14 +17,17 @@ import java.util.GregorianCalendar;
  */
 public class ForumPolicyTest extends TestCase {
     private ForumPolicy fp;
+    private ForumI forum;
     @Override
     public void setUp() throws Exception {
         super.setUp();
         fp = new ForumPolicy(false, 3, "[a-z]*", 365);
+        forum = new Forum("forum", fp);
     }
 
     @Override
     public void tearDown() throws Exception {
+        Forum.delete("forum");
     }
 
     public void testIsValidPassword() throws Exception {
@@ -95,7 +103,7 @@ public class ForumPolicyTest extends TestCase {
 
 
     private User createUser() {
-        User user = new User("man", "man", "man", null);
+        User user = new User("man", "man", "man", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forum));
         user.setSignUpDate(new GregorianCalendar(1948,1,1));
         return user;
     }

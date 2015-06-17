@@ -46,6 +46,7 @@ public class FacadeTest {
     public void testGetSubForumList() throws Exception {
         theFacade.addForum("ADMIN", "ADMIN", "Zrima", false, ".*", 2, 20);
         theFacade.register("Zrima", "Gabi", "0000", "a@a.com");
+        theFacade.authenticateUser("Zrima", "Gabi", theFacade.getUserAuthString("Zrima", "Gabi", "0000"));
         int session = theFacade.login("Zrima", "Gabi", "0000");
         ForumI forum = theFacade.getForumList().iterator().next();
         forum.addSubForum("Baseball");

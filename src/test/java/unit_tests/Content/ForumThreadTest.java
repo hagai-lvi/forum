@@ -5,8 +5,11 @@ import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.exceptions.MessageNotFoundException;
+import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
+import main.forum_contents.ForumPolicy;
 import main.forum_contents.ForumThread;
+import main.interfaces.ForumI;
 import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 import main.interfaces.UserI;
@@ -19,19 +22,21 @@ import org.junit.Test;
  */
 public class ForumThreadTest extends TestCase {
 
+    ForumI forum;
     ThreadI thread;
     MessageI msg;
     UserI user;
     @Before
     public void setUp() throws Exception {
         super.setUp();
-        user = new User("user", "pass", "aaa@aaa.aaa", new UserForumPermission(Permissions.PERMISSIONS_ADMIN, null));
+        forum = new Forum("forum", new ForumPolicy(false, 2, ".*", 365));
+        user = new User("user", "pass", "aaa@aaa.aaa", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forum));
         msg = new ForumMessage(user, "title", "body");
         thread = new ForumThread(msg);
     }
     @After
     public void tearDown() throws Exception {
-
+        Forum.delete("forum");
     }
     @Test
     public void testGetTitle() throws Exception {
@@ -59,7 +64,7 @@ public class ForumThreadTest extends TestCase {
         assertEquals(1, thread.getMessages().getRoot().children.size());
         assertEquals(reply.getMessageTitle(), thread.getMessages().getRoot().children.iterator().next().getData().getMessageTitle());
         assertEquals(reply.getMessageText(), thread.getMessages().getRoot().children.iterator().next().getData().getMessageText());
-        assertEquals(thread.getMessages().findNode((ForumMessage) reply).getMessageTitle(), reply.getMessageTitle());
+        assertEquals(thread.getMessages().findNode(reply).getMessageTitle(), reply.getMessageTitle());
         try {
             thread.addReply(reply, null);
         } catch (MessageNotFoundException e) {

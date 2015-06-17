@@ -28,7 +28,7 @@ public class ForumMessageTest extends TestCase {
     }
 
     public void tearDown() throws Exception {
-
+        Forum.delete("forum");
     }
 
     public void testEditText() throws Exception {
