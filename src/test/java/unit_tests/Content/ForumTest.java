@@ -29,7 +29,11 @@ public class ForumTest {
 
         @After
         public void tearDown(){
-            Forum.delete("ForumName");
+            try {
+                Forum.delete("ForumName");
+            } catch (ForumNotFoundException e) {
+                e.printStackTrace();
+            }
         }
 
         @Test

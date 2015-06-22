@@ -47,7 +47,11 @@ public class UserTest {
 
     @After
     public void tearDown(){
-        Forum.delete("Lifestyle");
+        try {
+            Forum.delete("Lifestyle");
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 

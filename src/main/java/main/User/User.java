@@ -35,7 +35,7 @@ public class User extends PersistantObject implements UserI {
     private Collection<SubForumPermissionI> subForumsPermissions;
     @OneToOne(targetEntity = UserForumPermission.class, cascade = CascadeType.ALL)
     private ForumPermissionI forumPermissions;
-    private boolean isEmailAuthenticated = true;
+    private boolean isEmailAuthenticated;
     private String secQ;
     private String secA;
 
@@ -47,7 +47,7 @@ public class User extends PersistantObject implements UserI {
         signUpDate = new GregorianCalendar();
         seniorityInDays = 0;
         numOfMessages = 0;
-        this.isEmailAuthenticated = false;
+        this.isEmailAuthenticated = true;
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<>();
         this.id = new UserForumID(username, forumPermissions.getForumName());
@@ -69,7 +69,7 @@ public class User extends PersistantObject implements UserI {
 
     public void setAuthenticated(){
         isEmailAuthenticated = true;
-        Update();
+        //Update();
     }
     /**
          Get the list of all of the subforums of this user

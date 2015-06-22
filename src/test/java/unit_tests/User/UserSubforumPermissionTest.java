@@ -5,6 +5,7 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.exceptions.DoesNotComplyWithPolicyException;
+import main.exceptions.ForumNotFoundException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.PermissionDeniedException;
 import main.forum_contents.Forum;
@@ -45,7 +46,11 @@ public class UserSubforumPermissionTest {
 
     @After
     public void tearDown(){
-        Forum.delete("Sport");
+        try {
+            Forum.delete("Sport");
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
     @Test

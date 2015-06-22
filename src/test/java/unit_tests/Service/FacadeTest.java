@@ -28,7 +28,9 @@ public class FacadeTest {
     public void setUp() {
         theFacade = Facade.getFacade();
         try {
-            theFacade.addForum("ADMIN", "ADMIN", "Temp", false, ".*", 1, 10);
+            theFacade.addForum("ADMIN", "ADMIN", "Temp", false, "[1-9]*", 1, 10);
+           // theFacade.addForum("ADMIN", "ADMIN", "Temp2", true, "[1-9]*", 1, 10);
+
         } catch (PermissionDeniedException e) {
             fail("No permission to add forum");
         } catch (ForumAlreadyExistException e) {
@@ -41,11 +43,18 @@ public class FacadeTest {
     public void tearDown() {
         try {
             theFacade.removeForum("ADMIN", "ADMIN", "Temp");
+           // theFacade.removeForum("ADMIN", "ADMIN", "Temp2");
+
         } catch (ForumNotFoundException e) {
             fail("Forum not found when trying to remive");
         } catch (PermissionDeniedException e) {
             fail("No permission to remove forum");
         }
+    }
+
+    @Test
+    public void testChangeUserAuthenticationStringToFalse(){
+        fail("Change User Authentication String To False");
     }
 
     @Test
@@ -204,8 +213,23 @@ public class FacadeTest {
 
     @Test
     public void testLogin() {
+
         try {
-            theFacade.register("Temp", "Victor", "123456","aa@gmail.com");
+            theFacade.login("Temp", "Victor", "123456");
+        } catch (InvalidUserCredentialsException e) {
+            assertTrue(true);
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (PasswordNotInEffectException e) {
+            fail("Password Not In Effect");
+        } catch (NeedMoreAuthParametersException e) {
+            fail("Need More Authentication Parameters");
+        } catch (EmailNotAuthanticatedException e) {
+            fail("Email is not authenticated");
+        }
+
+        try {
+            theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         } catch (UserAlreadyExistsException e) {
             fail("User already exist");
         } catch (InvalidUserCredentialsException e) {
@@ -216,6 +240,47 @@ public class FacadeTest {
             fail("Password does not comply with policy");
         }
 
+        try {
+            theFacade.login("Temp2", "Victor", "123456");
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            assertTrue(true);
+        } catch (PasswordNotInEffectException e) {
+            fail("Password Not In Effect");
+        } catch (NeedMoreAuthParametersException e) {
+            fail("Need More Authentication Parameters");
+        } catch (EmailNotAuthanticatedException e) {
+            fail("Email is not authenticated");
+        }
+
+        try {
+            theFacade.login("Temp", "Victor2", "123456");
+        } catch (InvalidUserCredentialsException e) {
+            assertTrue(true);
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (PasswordNotInEffectException e) {
+            fail("Password Not In Effect");
+        } catch (NeedMoreAuthParametersException e) {
+            fail("Need More Authentication Parameters");
+        } catch (EmailNotAuthanticatedException e) {
+            fail("Email is not authenticated");
+        }
+
+        try {
+            theFacade.login("Temp", "Victor", "123456a");
+        } catch (InvalidUserCredentialsException e) {
+            assertTrue(true);
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (PasswordNotInEffectException e) {
+            fail("Password Not In Effect");
+        } catch (NeedMoreAuthParametersException e) {
+            fail("Need More Authentication Parameters");
+        } catch (EmailNotAuthanticatedException e) {
+            fail("Email is not authenticated");
+        }
 
         try {
             theFacade.login("Temp", "Victor", "123456");
@@ -233,6 +298,7 @@ public class FacadeTest {
 
         try {
             theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+            //TODO - should update database
         } catch (UserNotFoundException e) {
             fail("User not found");
         } catch (EmailNotAuthanticatedException e) {
@@ -257,6 +323,45 @@ public class FacadeTest {
 
     @Test
     public void testLogout()  {
+        try {
+            theFacade.logout(1);
+        } catch (SessionNotFoundException e) {
+            assertTrue(true);
+        }
+
+        try {
+            theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
+        } catch (UserAlreadyExistsException e) {
+            fail("User already exist");
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (DoesNotComplyWithPolicyException e) {
+            fail("Password does not comply with policy");
+        }
+
+        try {
+            theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+        } catch (UserNotFoundException e) {
+            fail("User not found");
+        } catch (EmailNotAuthanticatedException e) {
+            fail("Wrong auth string");
+        }
+
+        try {
+            theFacade.login("Temp", "Victor", "123456");
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not exist");
+        } catch (PasswordNotInEffectException e) {
+            fail("Password Not In Effect");
+        } catch (NeedMoreAuthParametersException e) {
+            fail("Need More Authentication Parameters");
+        } catch (EmailNotAuthanticatedException e) {
+            fail("Email is not authenticated");
+        }
 
     }
 

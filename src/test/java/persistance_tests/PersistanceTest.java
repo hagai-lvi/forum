@@ -2,14 +2,12 @@ package persistance_tests;
 
 import junit.framework.TestCase;
 import main.Persistancy.HibernatePersistancyAbstractor;
-import main.User.Permissions;
 import main.User.User;
-import main.User.UserForumPermission;
+import main.exceptions.ForumNotFoundException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.ForumPermissionI;
-import tests_infrastructure.HibernateSessionFactory;
 import org.hibernate.Session;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
@@ -59,7 +57,11 @@ public class PersistanceTest extends TestCase{
 
     @Test
     public void test6DeleteForum(){
-        Forum.delete("Some forum");
+        try {
+            Forum.delete("Some forum");
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
+        }
         Forum f = Forum.load("Some forum");
         assertEquals(f, null);
     }

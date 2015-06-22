@@ -251,9 +251,10 @@ public class Forum extends PersistantObject implements ForumI{
         return (Forum)pers.load(Forum.class, forum_name);
     }
 
-    public static void delete(String forum_name){
+    public static void delete(String forum_name) throws ForumNotFoundException {
 
         Forum forum = load(forum_name);
+        if(forum == null) throw new ForumNotFoundException("Forum not found");
         if (forum.policy != null) {
             forum.policy = null;
             forum.Update();

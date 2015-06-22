@@ -3,6 +3,7 @@ package unit_tests.User;
 import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
+import main.exceptions.ForumNotFoundException;
 import main.exceptions.PermissionDeniedException;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
@@ -41,7 +42,11 @@ public class UserForumPermissionTest {
 
     @After
     public void tearDown(){
-        Forum.delete("Gardening");
+        try {
+            Forum.delete("Gardening");
+        } catch (ForumNotFoundException e) {
+            e.printStackTrace();
+        }
     }
 
 
