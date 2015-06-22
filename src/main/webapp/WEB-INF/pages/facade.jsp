@@ -29,14 +29,6 @@
 <br/>
 <br/>
 
-<%-- TODO should be available to super-admin only --%>
-<form:form action="addForum" method="POST" >
-    <h1>Create new Forum:</h1><br/>
-    <input type="text" placeholder="Forum Name"  id="forumName" name="forumName" /><br/>
-    <input type="number" placeholder="Maximal Number Of Moderators" name="numOfModerators"/><br/>
-    <input type="text" placeholder="Password Regex"  name="passRegex"/><br/>
-    <input type="submit" value="Create forum" /><br/>
-</form:form>
 
 </body>
 </html>

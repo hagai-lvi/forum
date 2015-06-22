@@ -33,6 +33,11 @@ public class WebController {
 	public static final String ADMIN_USER = "ADMIN";// TODO remove
 	public static final String ADMIN_PASS = "ADMIN";// TODO remove
 
+	@RequestMapping(value = "/superAdminDashboard", method = RequestMethod.GET)
+	public String showSuperAdminDashboard(){
+		return "superAdminDashboard";
+	}
+
 	/**
 	 * Shows a facade with all the available forums in the system
 	 */
