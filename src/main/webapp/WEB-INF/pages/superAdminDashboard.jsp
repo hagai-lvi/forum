@@ -14,6 +14,7 @@
   <link href="<c:url value="/resources/css/align-text.css" />" rel="stylesheet">
 </head>
 <body class="basic-grey">
+<%--TODO Require credentials--%>
 <form:form action="addForum" method="POST" >
   <h1>Create new Forum:</h1><br/>
   <input type="text" placeholder="Forum Name"  id="forumName" name="forumName" /><br/>
@@ -21,5 +22,6 @@
   <input type="text" placeholder="Password Regex"  name="passRegex"/><br/>
   <input type="submit" value="Create forum" /><br/>
 </form:form>
+
 </body>
 </html>
