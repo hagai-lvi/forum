@@ -45,7 +45,7 @@ public class NativeGuiController {
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/addForum", method = RequestMethod.POST)
 	public @ResponseBody
-	void addForum(@RequestBody ForumG forum) throws PermissionDeniedException, ForumAlreadyExistException {
+	void addForum(@RequestBody ForumG forum) throws PermissionDeniedException, ForumAlreadyExistException, ForumNotFoundException {
 		FacadeI facade = Facade.getFacade();
 		//TODO get credentials from user
 		UserG user = forum.getUser();

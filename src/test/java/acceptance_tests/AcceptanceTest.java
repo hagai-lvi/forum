@@ -2,14 +2,12 @@ package acceptance_tests;
 
 import data_structures.Tree;
 import junit.framework.TestCase;
+import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
 import main.exceptions.*;
-import main.forum_contents.Forum;
 import main.interfaces.*;
-import main.User.Permissions;
 import main.services_layer.Facade;
-import org.junit.After;
 import org.junit.Test;
 
 import java.util.Collection;

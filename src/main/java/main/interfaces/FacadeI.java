@@ -2,6 +2,7 @@ package main.interfaces;
 
 import data_structures.Tree;
 import main.exceptions.*;
+import main.services_layer.Session;
 
 import java.util.Collection;
 
@@ -46,6 +47,7 @@ public interface FacadeI {
 	 */
 	int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException;
 
+	Collection<Session> getSessions();
 
 	/**
 	 * Logout from the current session

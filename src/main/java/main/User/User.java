@@ -69,6 +69,7 @@ public class User extends PersistantObject implements UserI {
 
     public void setAuthenticated(){
         isEmailAuthenticated = true;
+        Update();
     }
     /**
          Get the list of all of the subforums of this user

@@ -19,7 +19,6 @@ import java.util.Collection;
 	private static final String SUPER_ADMIN_PASSWORD = "ADMIN";
 	private static FacadeI theFacade;
 	private Collection<Session> openSessions;
-	private ArrayList<ForumI> forums;
 	private int sessionCounter;
 	private static final int GUEST_SESSION_ID = -2;
 	private Facade(){
@@ -31,13 +30,13 @@ import java.util.Collection;
 	public void initialize() {
 		//TODO - how to initialize?
 		openSessions = new ArrayList<>();
-		forums = new ArrayList<>();
 		sessionCounter = 0;
 	}
 
 	@Override
 	public ArrayList<ForumI> getForumList() {
-		return forums;
+		// TODO - get forums from database
+		return null;
 	}
 
 	@Override
@@ -45,17 +44,16 @@ import java.util.Collection;
 		return findSession(sessionId).getForum().getSubForums();
 	}
 
+	public Collection<Session> getSessions() {
+		return this.openSessions;
+	}
 	@Override
 	public void addForum(String username, String password, String forumName, boolean isSecured, String regex, int numberOfModerators, int passLife) throws PermissionDeniedException, ForumAlreadyExistException {
 		if (username.equals(SUPER_ADMIN_USERNAME) && password.equals(SUPER_ADMIN_PASSWORD)){
-			for (ForumI forum : forums){
-				if (forum.getName().equals(forumName)){
-					throw new ForumAlreadyExistException(forumName);
-				}
-			}
+			ForumI forum = findForum(forumName);
+			if(forum != null) throw new ForumAlreadyExistException("Forum already exist");
 			ForumPolicyI policy = new ForumPolicy(isSecured, numberOfModerators, regex, passLife);
-			ForumI forum = new Forum(forumName, policy); //also adds the new forum to the database.
-			forums.add(forum);
+			forum = new Forum(forumName, policy); //also adds the new forum to the database.
 		}
 		else {
 			throw new PermissionDeniedException(MessageFormat.format("user {0} is not authorized to add a forum.", username));
@@ -72,6 +70,7 @@ import java.util.Collection;
 	@Override
 	public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException {
 		ForumI currentForum = findForum(forumName);
+		if(currentForum == null) throw new ForumNotFoundException("Forum not found");
 		currentForum.register(userName, password, email);
 	}
 
@@ -79,6 +78,7 @@ import java.util.Collection;
 	@Override
 	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException {
 		ForumI currentForum = findForum(forumName);
+		if(currentForum == null) throw new ForumNotFoundException("Forum not found");
 		UserI currentUser = currentForum.login(userName, password);
 		Session currentSession = new Session(sessionCounter, currentUser); //create a new session
 		currentSession.setForum(currentForum);
@@ -153,7 +153,6 @@ import java.util.Collection;
 	@Override
 	public void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException{
 		if (username.equals(SUPER_ADMIN_USERNAME) && password.equals(SUPER_ADMIN_PASSWORD)) {
-			forums.remove(findForum(forumName));
 			Forum.delete(forumName);
 		}else{
 			throw new PermissionDeniedException("Unauthorized removal of a forum");
@@ -293,6 +292,7 @@ import java.util.Collection;
 	@Override
 	public void authenticateUser(String forum, String username, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException {
 		UserI user = findUser(username, forum);
+		if(user == null) throw new UserNotFoundException("User not found");
 		if (!user.getUserAuthString().equals(userAuthString)){
 			throw new EmailNotAuthanticatedException();
 		}
@@ -321,7 +321,7 @@ import java.util.Collection;
 		throw new SessionNotFoundException();
 	}
 
-	private ForumI findForum(String forumName) throws ForumNotFoundException {
+	private ForumI findForum(String forumName) {
 		return Forum.load(forumName);
 	}
 }

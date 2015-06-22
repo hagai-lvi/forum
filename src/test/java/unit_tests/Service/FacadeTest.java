@@ -1,19 +1,21 @@
 package unit_tests.Service;
 
 
-import main.exceptions.ForumNotFoundException;
-import main.exceptions.SessionNotFoundException;
+import main.User.User;
+import main.exceptions.*;
+import main.forum_contents.Forum;
 import main.interfaces.FacadeI;
 import main.interfaces.ForumI;
 import main.interfaces.SubForumI;
+import main.interfaces.UserI;
 import main.services_layer.Facade;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 
 /**
@@ -23,215 +25,389 @@ public class FacadeTest {
     private FacadeI theFacade;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         theFacade = Facade.getFacade();
-    }
-
-    @Test
-    public void testInitialize() throws Exception {
-        theFacade.initialize();
-        assertTrue(theFacade.getForumList().isEmpty());
-    }
-
-    @Test
-    public void testGetForumList() throws Exception {
-        theFacade.addForum("ADMIN", "ADMIN", "Sport", false, ".*", 1, 10);
-        Collection<ForumI> list = theFacade.getForumList();
-        assertTrue(findForum("Sport"));
-        theFacade.removeForum("ADMIN", "ADMIN", "Sport");
-        assertFalse(findForum("Sport"));
-    }
-
-    @Test
-    public void testGetSubForumList() throws Exception {
-        theFacade.addForum("ADMIN", "ADMIN", "Zrima", false, ".*", 2, 20);
-        theFacade.register("Zrima", "Gabi", "0000", "a@a.com");
-        theFacade.authenticateUser("Zrima", "Gabi", theFacade.getUserAuthString("Zrima", "Gabi", "0000"));
-        int session = theFacade.login("Zrima", "Gabi", "0000");
-        ForumI forum = theFacade.getForumList().iterator().next();
-        forum.addSubForum("Baseball");
-        forum.addSubForum("Tennis");
-        Collection<SubForumI> list = theFacade.getSubForumList(session);
-        assertTrue(findSubforum(session, "Baseball"));
-        assertTrue(findSubforum(session, "Tennis"));
-    }
-
-    @Test
-    public void testAddForum() throws Exception {
-
-    }
-
-    @Test
-    public void testCreateSubforum() throws Exception {
-
-    }
-
-    @Test
-    public void testRegister() throws Exception {
-
-    }
-
-    @Test
-    public void testLogin() throws Exception {
-
-    }
-
-    @Test
-    public void testLogout() throws Exception {
-
-    }
-
-    @Test
-    public void testAddReply() throws Exception {
-
-    }
-
-    @Test
-    public void testCreateNewThread() throws Exception {
-
-    }
-
-    @Test
-    public void testReportModerator() throws Exception {
-
-    }
-
-    @Test
-    public void testGetUserAuthString() throws Exception {
-
-    }
-
-    @Test
-    public void testDeleteMessage() throws Exception {
-
-    }
-
-    @Test
-    public void testSetModerator() throws Exception {
-
-    }
-
-    @Test
-    public void testGuestEntry() throws Exception {
-
-    }
-
-    @Test
-    public void testAddUserType() throws Exception {
-
-    }
-
-    @Test
-    public void testRemoveForum() throws Exception {
-
-    }
-
-    @Test
-    public void testSetPolicies() throws Exception {
-
-    }
-
-    @Test
-    public void testEditMessage() throws Exception {
-
-    }
-
-    @Test
-    public void testRemoveModerator() throws Exception {
-
-    }
-
-    @Test
-    public void testViewModeratorStatistics() throws Exception {
-
-    }
-
-    @Test
-    public void testViewSuperManagerStatistics() throws Exception {
-
-    }
-
-    @Test
-    public void testViewSessions() throws Exception {
-
-    }
-
-    @Test
-    public void testGetMessage() throws Exception {
-
-    }
-
-    @Test
-    public void testGetThreadsList() throws Exception {
-
-    }
-
-    @Test
-    public void testGetMessageList() throws Exception {
-
-    }
-
-    @Test
-    public void testGetCurrentForumName() throws Exception {
-
-    }
-
-    @Test
-    public void testGetCurrentUserName() throws Exception {
-
-    }
-
-    @Test
-    public void testIsAdmin() throws Exception {
-
-    }
-
-    @Test
-    public void testViewSubforum() throws Exception {
-
-    }
-
-    @Test
-    public void testViewSubforum1() throws Exception {
-
-    }
-
-    @Test
-    public void testViewThread() throws Exception {
-
-    }
-
-    @Test
-    public void testGetCurrentThread() throws Exception {
-
-    }
-
-    @Test
-    public void testAuthanticateUser() throws Exception {
-
-    }
-
-    @Test
-    public void testGetFacade() throws Exception {
-
-    }
-
-    @Test
-    public void testDropAllData() throws Exception {
-
-    }
-
-    private boolean findForum(String forumName) throws ForumNotFoundException {
-        for (ForumI f: theFacade.getForumList()){
-            if (f.getName().equals(forumName)){
-                return true;
-            }
+        try {
+            theFacade.addForum("ADMIN", "ADMIN", "Temp", false, ".*", 1, 10);
+        } catch (PermissionDeniedException e) {
+            fail("No permission to add forum");
+        } catch (ForumAlreadyExistException e) {
+            fail("Forum already exist");
         }
-        return false;
+
+    }
+
+    @After
+    public void tearDown() {
+        try {
+            theFacade.removeForum("ADMIN", "ADMIN", "Temp");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found when trying to remive");
+        } catch (PermissionDeniedException e) {
+            fail("No permission to remove forum");
+        }
+    }
+
+    @Test
+    public void testInitialize() {
+        theFacade.initialize();
+        assertTrue(theFacade.getSessions().isEmpty());
+    }
+
+    @Test
+    public void testGetForumList() {
+        //TODO - getLIst of forums from database
+        assertTrue(false);
+    }
+
+    @Test
+    public void testGetSubForumList() {
+        try {
+            theFacade.addForum("ADMIN", "ADMIN", "Sport", false, ".*", 2, 20);
+        } catch (PermissionDeniedException e) {
+            fail("No permission to add forum");
+        } catch (ForumAlreadyExistException e) {
+           fail("Forum already exist");
+        }
+
+        int session = 0;
+        try {
+            session = theFacade.login("Sport", "ADMIN", "ADMIN");
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (PasswordNotInEffectException e) {
+            fail("Password Not In Effect");
+        } catch (NeedMoreAuthParametersException e) {
+            fail("Need More Authentication Parameters");
+        } catch (EmailNotAuthanticatedException e) {
+            fail("Email Not Authanticated");
+        }
+
+        //TODO - getLIst of forums from database
+        ForumI forum = theFacade.getForumList().iterator().next();
+        try {
+            forum.addSubForum("Baseball");
+            forum.addSubForum("Tennis");
+        } catch (SubForumAlreadyExistException e) {
+            fail("Sub forum already exist");
+        }
+
+        try {
+            Collection<SubForumI> list = theFacade.getSubForumList(session);
+        } catch (SessionNotFoundException e) {
+            fail("Session not found");
+        }
+        try {
+            assertTrue(findSubforum(session, "Baseball"));
+            assertTrue(findSubforum(session, "Tennis"));
+        } catch (SessionNotFoundException e) {
+            fail("Session not found");
+        }
+        try {
+            theFacade.removeForum("ADMIN", "ADMIN", "Sport");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (PermissionDeniedException e) {
+            fail("No permission to remove forum");
+        }
+    }
+
+    @Test
+    public void testAddForum() {
+        try {
+            theFacade.addForum("ADMIN", "ADMIN", "Sport", false, ".*", 1, 10);
+        } catch (PermissionDeniedException e) {
+            fail("No permission to add forum");
+        } catch (ForumAlreadyExistException e) {
+            fail("Forum already exist");
+        }
+
+        assertTrue(isForumExist("Sport"));
+
+
+        try {
+            theFacade.removeForum("ADMIN", "ADMIN", "Sport");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found when trying to remive");
+        } catch (PermissionDeniedException e) {
+            fail("No permission to remove forum");
+        }
+        assertFalse(isForumExist("Sport"));
+
+        try {
+            theFacade.addForum("Gabi", "as00", "Sport", false, ".*", 1, 10);
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        } catch (ForumAlreadyExistException e) {
+            fail("Forum already exist");
+        }
+        assertFalse(isForumExist("Sport"));
+    }
+
+    @Test
+    public void testRegister(){
+        try {
+            theFacade.register("Temp", "Victor", "123456","aa@gmail.com");
+        } catch (UserAlreadyExistsException e) {
+            fail("User already exist");
+        } catch (InvalidUserCredentialsException e) {
+           fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (DoesNotComplyWithPolicyException e) {
+            fail("Password does not comply with policy");
+        }
+        UserI user = User.getUserFromDB("Victor", "Temp");
+        assertTrue(user != null);
+
+
+        try {
+            theFacade.register("Temp", "Victor", "123456","aa@gmail.com");
+        } catch (UserAlreadyExistsException e) {
+            assertTrue(true);
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (DoesNotComplyWithPolicyException e) {
+            fail("Password does not comply with policy");
+        }
+
+
+        try {
+            theFacade.register("Temp", "Yosi", "a123456","aa@gmail.com");
+        } catch (UserAlreadyExistsException e) {
+            fail("User already exist");
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (DoesNotComplyWithPolicyException e) {
+            assertTrue(true);
+        }
+
+
+        try {
+            theFacade.register("Temp2", "Shmuel", "123456","aa@gmail.com");
+        } catch (UserAlreadyExistsException e) {
+            fail("User already exist");
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            assertTrue(true);
+        } catch (DoesNotComplyWithPolicyException e) {
+            fail("Password does not comply with policy");
+        }
+    }
+
+    @Test
+    public void testLogin() {
+        try {
+            theFacade.register("Temp", "Victor", "123456","aa@gmail.com");
+        } catch (UserAlreadyExistsException e) {
+            fail("User already exist");
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (DoesNotComplyWithPolicyException e) {
+            fail("Password does not comply with policy");
+        }
+
+
+        try {
+            theFacade.login("Temp", "Victor", "123456");
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (PasswordNotInEffectException e) {
+            fail("Password Not In Effect");
+        } catch (NeedMoreAuthParametersException e) {
+            fail("Need More Authentication Parameters");
+        } catch (EmailNotAuthanticatedException e) {
+            assertTrue(true);
+        }
+
+        try {
+            theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+        } catch (UserNotFoundException e) {
+            fail("User not found");
+        } catch (EmailNotAuthanticatedException e) {
+            fail("Wrong auth string");
+        }
+
+        try {
+            theFacade.login("Temp", "Victor", "123456");
+        } catch (InvalidUserCredentialsException e) {
+            fail("Invalid credentials");
+        } catch (ForumNotFoundException e) {
+            fail("Forum not found");
+        } catch (PasswordNotInEffectException e) {
+            fail("Password Not In Effect");
+        } catch (NeedMoreAuthParametersException e) {
+            fail("Need More Authentication Parameters");
+        } catch (EmailNotAuthanticatedException e) {
+            fail("Email is not authenticated");
+        }
+
+    }
+
+    @Test
+    public void testLogout()  {
+
+    }
+
+    @Test
+    public void testAddReply()  {
+
+    }
+
+    @Test
+    public void testCreateNewThread() {
+
+    }
+
+    @Test
+    public void testReportModerator() {
+
+    }
+
+    @Test
+    public void testGetUserAuthString()  {
+
+    }
+
+    @Test
+    public void testDeleteMessage()  {
+
+    }
+
+    @Test
+    public void testSetModerator()  {
+
+    }
+
+    @Test
+    public void testGuestEntry()  {
+
+    }
+
+    @Test
+    public void testAddUserType() {
+
+    }
+
+    @Test
+    public void testRemoveForum() {
+
+    }
+
+    @Test
+    public void testSetPolicies()  {
+
+    }
+
+    @Test
+    public void testEditMessage() {
+
+    }
+
+    @Test
+    public void testRemoveModerator()  {
+
+    }
+
+    @Test
+    public void testViewModeratorStatistics() {
+
+    }
+
+    @Test
+    public void testViewSuperManagerStatistics()  {
+
+    }
+
+    @Test
+    public void testViewSessions()  {
+
+    }
+
+    @Test
+    public void testGetMessage()  {
+
+    }
+
+    @Test
+    public void testGetThreadsList()  {
+
+    }
+
+    @Test
+    public void testGetMessageList()  {
+
+    }
+
+    @Test
+    public void testGetCurrentForumName()  {
+
+    }
+
+    @Test
+    public void testGetCurrentUserName() {
+
+    }
+
+    @Test
+    public void testIsAdmin() {
+
+    }
+
+    @Test
+    public void testViewSubforum()  {
+
+    }
+
+    @Test
+    public void testViewSubforum1()  {
+
+    }
+
+    @Test
+    public void testViewThread()  {
+
+    }
+
+    @Test
+    public void testGetCurrentThread()  {
+
+    }
+
+    @Test
+    public void testAuthanticateUser()  {
+
+    }
+
+    @Test
+    public void testGetFacade() {
+
+    }
+
+    @Test
+    public void testDropAllData()  {
+
+    }
+
+    private boolean isForumExist(String forumName) {
+        ForumI forum = Forum.load(forumName);
+        return (forum != null);
     }
 
     private boolean findSubforum(int id, String subforum) throws SessionNotFoundException {
-        for (SubForumI f: theFacade.getSubForumList(id)){
+        ForumI forum = Forum.load(theFacade.getCurrentForumName(id));
+        for (SubForumI f: forum.getSubForums()){
             if (f.getTitle().equals(subforum)){
                 return true;
             }

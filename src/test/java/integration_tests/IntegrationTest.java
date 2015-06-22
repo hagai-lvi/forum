@@ -2,7 +2,6 @@ package integration_tests;
 
 import data_structures.Tree;
 import main.exceptions.*;
-import main.forum_contents.Forum;
 import main.interfaces.FacadeI;
 import main.interfaces.SubForumI;
 import main.interfaces.ThreadI;
@@ -30,7 +29,9 @@ public class IntegrationTest {
 	public void test_RegisterLoginAndViewSubforums() throws InvalidUserCredentialsException, UserAlreadyExistsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
 			_facade.addForum("ADMIN", "ADMIN", "forum", false, "pass", 3, 365);
-		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		} catch (ForumAlreadyExistException e) {
 			e.printStackTrace();
 		}
 		try {
@@ -58,7 +59,9 @@ public class IntegrationTest {
 			SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
 		try {
 			_facade.addForum("ADMIN", "ADMIN", "forum", false, ".*", 3, 365);
-		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		} catch (ForumAlreadyExistException e) {
 			e.printStackTrace();
 		}
 		try {
@@ -115,7 +118,9 @@ public class IntegrationTest {
 	public void test_removeModThenTryToEditMessage() throws NeedMoreAuthParametersException {
 		try {
 			_facade.addForum("ADMIN", "ADMIN", "forum", false, "pass", 3, 365);
-		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		} catch (ForumAlreadyExistException e) {
 			e.printStackTrace();
 		}
 		try {
@@ -165,7 +170,9 @@ public class IntegrationTest {
 	public void test_LogInUnprivilegedAndTryToDeleteForum() throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException, ForumNotFoundException {
 		try {
 			_facade.addForum("ADMIN", "ADMIN", "forum", false, "pass", 3, 365);
-		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
+		} catch (PermissionDeniedException e) {
+			e.printStackTrace();
+		} catch (ForumAlreadyExistException e) {
 			e.printStackTrace();
 		}
 		try {

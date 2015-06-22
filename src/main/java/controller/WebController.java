@@ -54,7 +54,7 @@ public class WebController {
 	 * Send a request to create a new forum in the system
 	 */
 	@RequestMapping(value = "/addForum",method = RequestMethod.POST)
-	public String addForum(ModelMap model, String forumName, int numOfModerators, String passRegex) throws PermissionDeniedException, ForumAlreadyExistException {
+	public String addForum(ModelMap model, String forumName, int numOfModerators, String passRegex) throws PermissionDeniedException, ForumAlreadyExistException, ForumNotFoundException {
 		logger.info("addForum request");
 		FacadeI f = Facade.getFacade();
 		f.addForum(ADMIN_PASS, ADMIN_USER, forumName, false, passRegex, numOfModerators, 365); //TODO get parameters from the user

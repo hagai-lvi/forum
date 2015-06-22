@@ -3,6 +3,7 @@ package tests_infrastructure;
 import data_structures.Tree;
 import main.exceptions.*;
 import main.interfaces.*;
+import main.services_layer.Session;
 
 import java.util.Collection;
 
@@ -66,6 +67,11 @@ public class Proxy implements FacadeI {
         if(this.real!=null)
             return this.real.login(forumName, userName, password);
         return 0;
+    }
+
+    @Override
+    public Collection<Session> getSessions()  {
+        return null;
     }
 
     @Override

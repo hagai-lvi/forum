@@ -11,7 +11,6 @@ import main.Utils.GmailSender;
 import main.exceptions.*;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
-import org.hibernate.annotations.Cascade;
 
 import javax.persistence.*;
 import java.util.Collection;
@@ -152,7 +151,7 @@ public class Forum extends PersistantObject implements ForumI{
         // Protective Programing
         if (userName == null || userName.equals("") || password == null || password.equals("") || eMail == null || eMail.equals(""))
             throw new InvalidUserCredentialsException("invalid user credentials.");
-        if (_users.containsKey(userName)){
+        if (User.getUserFromDB(userName, forum_name) != null){
             throw new UserAlreadyExistsException(userName);
         }
         if (!policy.isValidPassword(password)){
@@ -190,9 +189,10 @@ public class Forum extends PersistantObject implements ForumI{
 
     @Override
     public UserI login(String username, String password) throws InvalidUserCredentialsException, NeedMoreAuthParametersException, EmailNotAuthanticatedException, PasswordNotInEffectException {
-        if (_users.containsKey(username) &&
-                 _users.get(username).getPassword().equals(password)){
-            UserI user = _users.get(username);
+        UserI user = User.getUserFromDB(username, forum_name);
+        if(user == null) throw new InvalidUserCredentialsException("User is not registered");
+        if (user.getPassword().equals(password)){
+            //UserI user = _users.get(username);
             if (policy.hasMoreAuthQuestions()){
                 throw new NeedMoreAuthParametersException();
             }
@@ -261,13 +261,12 @@ public class Forum extends PersistantObject implements ForumI{
         pers.Delete(forum);
 
     }
+  //  public void saveOrUpdate(){    // save the forum to the database
+  //      pers.saveOrUpdate(this);
+   // }
 
-//    public void saveOrUpdate(){    // save the forum to the database
-//        pers.saveOrUpdate(this);
-//    }
-
-//    public void Update(){    // save the forum to the database
-//        pers.Update(this);
-//    }
+    //public void Update(){    // save the forum to the database
+    //    pers.Update(this);
+   // }
 
 }
