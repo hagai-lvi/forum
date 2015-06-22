@@ -29,14 +29,25 @@
 <br/>
 <br/>
 
-<%-- TODO should be available to super-admin only --%>
-<form:form action="addForum" method="POST" >
-    <h1>Create new Forum:</h1><br/>
-    <input type="text" placeholder="Forum Name"  id="forumName" name="forumName" /><br/>
-    <input type="number" placeholder="Maximal Number Of Moderators" name="numOfModerators"/><br/>
-    <input type="text" placeholder="Password Regex"  name="passRegex"/><br/>
-    <input type="submit" value="Create forum" /><br/>
-</form:form>
+<form:form action="superAdminDashboard" method="post">
+    Super admin login:
 
+    <label>
+        <span>Username :</span>
+        <input type="text" name="username" placeholder="username" />
+    </label>
+
+    <label>
+        <span>Password :</span>
+        <input type="password" name="password" placeholder="Password" />
+    </label>
+
+
+    <label>
+        <span>&nbsp;</span>
+        <input type="submit" class="button" value="Login" />
+    </label>
+
+</form:form>
 </body>
 </html>
