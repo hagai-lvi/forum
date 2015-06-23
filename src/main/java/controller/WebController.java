@@ -98,7 +98,7 @@ public class WebController {
 		FacadeI facade = Facade.getFacade();
 		Integer sessionID = facade.guestEntry(forumName);
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
-		preperaForumHomepageModel(model, facade, session);
+		preperaForumHomepageModel(model, facade, session, "Guest");
 		return "forum_homepage";
 	}
 
@@ -107,12 +107,13 @@ public class WebController {
 	 */
 	@RequestMapping(value = "forum_homepage",method = RequestMethod.POST)
 	public String loginToForum(ModelMap model, HttpSession session, String username, String password, String forumName)
-			throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException, SessionNotFoundException {
+			throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("loginToForum request");
 		FacadeI facade = Facade.getFacade();
 		Integer sessionID = facade.login(forumName, username, password);
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
-		preperaForumHomepageModel(model, facade, session);
+		String status = facade.getCurrentUserStatus(sessionID);
+		preperaForumHomepageModel(model, facade, session, status);
 		return "forum_homepage";
 	}
 
@@ -120,10 +121,12 @@ public class WebController {
 	 * Redirects to the forum home page, assumes that a user has already logged in
 	 */
 	@RequestMapping(value = "forum_homepage",method = RequestMethod.GET)
-	public String showForumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException, SessionNotFoundException {
+	public String showForumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("showForumHomepage request");
 		FacadeI facade = Facade.getFacade();
-		preperaForumHomepageModel(model, facade, session);
+		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
+		String status = facade.getCurrentUserStatus(sessionID);
+		preperaForumHomepageModel(model, facade, session, status);
 		return "forum_homepage";
 	}
 
@@ -168,7 +171,7 @@ public class WebController {
 		return "redirect:/facade";
 	}
 
-	private void preperaForumHomepageModel(ModelMap model, FacadeI facade, HttpSession session) throws SessionNotFoundException {
+	private void preperaForumHomepageModel(ModelMap model, FacadeI facade, HttpSession session, String userStatus) throws SessionNotFoundException {
 		logger.info("preperaForumHomepageModel request");
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
 		String forumName = facade.getCurrentForumName(sessionID);
@@ -177,9 +180,9 @@ public class WebController {
 		facade.getSubForumList(sessionID);
 		model.addAttribute("forumName", forumName);
 		model.addAttribute("user", userName);
-//		model.addAttribute("numberOfSubforums", facade.getSubForumList(user).size());TODO
 		model.addAttribute("isAdmin", isAdmin);
 		model.addAttribute("subforumsList", facade.getSubForumList(sessionID));
+		model.addAttribute("userStatus", userStatus);
 	}
 
 
