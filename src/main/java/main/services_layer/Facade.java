@@ -306,13 +306,13 @@ import java.util.Iterator;
 		Session currentSession = findSession(sessionId);
 		UserI user = currentSession.getUser();
 		MessageI message = currentSession.getThread().getMessages().find(messageId);
-		return (message.getUser().equals(user.getUsername()));
+		return user.isOwnerOfMessage(message);
 	}
 
 	@Override
-	public String getCurrentUserStatus(int sessionId) throws SessionNotFoundException {
+	public String getCurrentUserStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
 		Session current = findSession(sessionId);
-		return null;
+		return current.getUser().getStatus(current.getSubForum().getTitle());
 	}
 
 

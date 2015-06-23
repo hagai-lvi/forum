@@ -120,4 +120,8 @@ public interface UserI {
 	void editMessage(String subforum,ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException;
 
 	void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException;
+
+	String getStatus(String subForum) throws SubForumDoesNotExistException;
+
+	boolean isOwnerOfMessage(MessageI message);
 }

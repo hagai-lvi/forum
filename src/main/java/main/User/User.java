@@ -258,6 +258,30 @@ public class User extends PersistantObject implements UserI {
         findPermission(subforum).removeModerator(moderatorName);
     }
 
+    @Override
+    public String getStatus(String subForum) throws SubForumDoesNotExistException {
+        SubForumPermissionI perms = findPermission(subForum);
+        Permissions permission = perms.getPermission();
+        switch (permission){
+            case PERMISSIONS_SUPERADMIN:
+                return "SuperAdmin";
+            case PERMISSIONS_ADMIN:
+                return "Administrator";
+            case PERMISSIONS_MODERATOR:
+                return "Moderator";
+            case PERMISSIONS_USER:
+                return "User";
+            case PERMISSIONS_GUEST:
+                return "Guest";
+        }
+        return null;
+    }
+
+    @Override
+    public boolean isOwnerOfMessage(MessageI message) {
+        return message.getUser().equals(this.username);
+    }
+
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
         System.out.println("SUBFORUMPERMISSIONS: " + subForumsPermissions.size());
         for (SubForumPermissionI sfp : subForumsPermissions){
