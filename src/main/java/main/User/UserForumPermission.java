@@ -146,6 +146,11 @@ public class UserForumPermission implements ForumPermissionI {
 		throw new SubForumDoesNotExistException();
 	}
 
+	@Override
+	public boolean isGuest() {
+		return permissions.equals(Permissions.PERMISSIONS_GUEST);
+	}
+
 	public void setId(Integer id) {
 		this.id = id;
 	}

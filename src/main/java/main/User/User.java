@@ -260,14 +260,20 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public String getStatus(String subForum) throws SubForumDoesNotExistException {
-        SubForumPermissionI perms = findPermission(subForum);
-        Permissions permission = perms.getPermission();
-        switch (permission){
-            case PERMISSIONS_SUPERADMIN:
-                return "SuperAdmin";
-            case PERMISSIONS_ADMIN:
-                return "Administrator";
+    public String getForumStatus(String forum) {
+        if (forumPermissions.isAdmin()){
+            return "Admin";
+        }
+        if (forumPermissions.isGuest()){
+            return "Guest";
+        }
+        return "User";
+    }
+
+    @Override
+    public String getSubForumStatus(String subForum) throws SubForumDoesNotExistException {
+        Permissions perms = findPermission(subForum).getPermission();
+        switch (perms){
             case PERMISSIONS_MODERATOR:
                 return "Moderator";
             case PERMISSIONS_USER:
@@ -288,8 +294,12 @@ public class User extends PersistantObject implements UserI {
         isEmailAuthenticated = true;
     }
 
+    @Override
+    public void setForumPermissions(Permissions permissionsAdmin) throws ForumNotFoundException {
+        forumPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forumPermissions.getForum().getName());
+    }
+
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
-        System.out.println("SUBFORUMPERMISSIONS: " + subForumsPermissions.size());
         for (SubForumPermissionI sfp : subForumsPermissions){
             if (sfp.getSubForum().getTitle().equals(subForum)){
                 return sfp;

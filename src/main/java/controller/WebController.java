@@ -112,7 +112,7 @@ public class WebController {
 		FacadeI facade = Facade.getFacade();
 		Integer sessionID = facade.login(forumName, username, password);
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
-		String status = facade.getCurrentUserStatus(sessionID);
+		String status = facade.getCurrentUserForumStatus(sessionID);
 		preperaForumHomepageModel(model, facade, session, status);
 		return "forum_homepage";
 	}
@@ -125,7 +125,7 @@ public class WebController {
 		logger.info("showForumHomepage request");
 		FacadeI facade = Facade.getFacade();
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
-		String status = facade.getCurrentUserStatus(sessionID);
+		String status = facade.getCurrentUserForumStatus(sessionID);
 		preperaForumHomepageModel(model, facade, session, status);
 		return "forum_homepage";
 	}
@@ -142,7 +142,7 @@ public class WebController {
 		model.addAttribute("forumName", forumName);
 		return "login_page";
 	}
-
+//TODO - junk forum "a" created here and should be deleted.
 	/**
 	 * Allows to clear all data
 	 */

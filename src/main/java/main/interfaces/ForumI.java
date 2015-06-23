@@ -64,7 +64,7 @@ public interface ForumI extends ExForumI{
 
 	boolean removeUserType(String type);
 
-	void setAdmin(UserI admin);
+	void setAdmin(UserI admin) throws PermissionDeniedException;
 
 	String viewStatistics();
 

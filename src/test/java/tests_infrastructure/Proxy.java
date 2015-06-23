@@ -258,7 +258,12 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public String getCurrentUserStatus(int sessionId) throws SessionNotFoundException {
+    public String getCurrentUserForumStatus(int sessionId) throws SessionNotFoundException {
+        return null;
+    }
+
+    @Override
+    public String getCurrentUserSubForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
         return null;
     }
 

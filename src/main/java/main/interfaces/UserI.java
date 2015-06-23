@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.User.Permissions;
 import main.exceptions.*;
 
 import java.util.Collection;
@@ -121,9 +122,13 @@ public interface UserI {
 
 	void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException;
 
-	String getStatus(String subForum) throws SubForumDoesNotExistException;
+	String getForumStatus(String subForum) throws SubForumDoesNotExistException;
+
+	String getSubForumStatus(String subForum) throws SubForumDoesNotExistException;
 
 	boolean isOwnerOfMessage(MessageI message);
 
 	void setAuthenticatedAdmin();
+
+	void setForumPermissions(Permissions permissionsAdmin) throws ForumNotFoundException;
 }

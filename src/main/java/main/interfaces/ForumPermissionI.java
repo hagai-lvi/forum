@@ -49,4 +49,6 @@ public interface ForumPermissionI {
 	ForumI getForum() throws ForumNotFoundException;
 
 	SubForumI getSubForum(String name) throws ForumNotFoundException, SubForumDoesNotExistException;
+
+	boolean isGuest();
 }

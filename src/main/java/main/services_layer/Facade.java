@@ -310,11 +310,16 @@ import java.util.Collection;
 		return user.isOwnerOfMessage(message);
 	}
 
-	//TODO current.getSubForum might be null, for example, before the user entered to a specific subforum
 	@Override
-	public String getCurrentUserStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
+	public String getCurrentUserForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
 		Session current = findSession(sessionId);
-		return current.getUser().getStatus(current.getSubForum().getTitle());
+		return current.getUser().getForumStatus(current.getForum().getName());
+	}
+
+	@Override
+	public String getCurrentUserSubForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
+		Session current = findSession(sessionId);
+		return current.getUser().getForumStatus(current.getSubForum().getTitle());
 	}
 
 	@Override
