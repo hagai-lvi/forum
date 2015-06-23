@@ -14,6 +14,7 @@ import org.junit.Test;
 /**
  * Created by hagai_lvi on 6/23/15.
  */
+//TODO GABI AND VICTOR - please make the scenario work
 public class GuestEntryTest {
 
 	private static final String ADMIN_PASS = "ADMIN";
