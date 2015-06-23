@@ -21,12 +21,13 @@ import java.util.GregorianCalendar;
 public class ForumPolicyTest extends TestCase {
     private ForumPolicy fp;
     private ForumI forum;
-    User man = createUser();
+    private User man;
 
     @Before
     public void setUp() {
         fp = new ForumPolicy(false, 3, "[a-z]*", 365);
         forum = new Forum("forum", fp);
+        man = createUser();
     }
 
     @After

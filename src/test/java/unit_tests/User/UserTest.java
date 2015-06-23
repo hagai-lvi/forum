@@ -36,12 +36,12 @@ public class UserTest {
         int passLife = 365;
         policy = new ForumPolicy(isSecured, maxModerators, regex, passLife);
         forum = new Forum("Lifestyle", policy);
-        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,"Lifestyle");
-        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,"Lifestyle");
-        ForumPermissionI permission3 = new UserForumPermission(Permissions.PERMISSIONS_SUPERADMIN,"Lifestyle");
+
         user1 = forum.register("Gabi", "123456", "mail1@gmail.com");
         user2 = forum.register("Tom", "abcde", "mail2@gmail.com");
         user3 = forum.register("Victor", "78910", "mail3@gmail.com");
+
+        forum.setAdmin(user2);
     }
 
     @After
