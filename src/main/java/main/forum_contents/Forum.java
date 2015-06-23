@@ -263,6 +263,11 @@ public class Forum extends PersistantObject implements ForumI{
         pers.Delete(forum);
 
     }
+
+    public static ArrayList<String> getForumList(){
+        String sql = "SELECT forum_name from forum";
+        return (ArrayList<String>)pers.executeQuery(sql);
+    }
   //  public void saveOrUpdate(){    // save the forum to the database
   //      pers.saveOrUpdate(this);
    // }

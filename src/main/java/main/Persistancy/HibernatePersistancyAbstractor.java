@@ -2,8 +2,12 @@ package main.Persistancy;
 
 import main.User.UserForumID;
 import main.interfaces.PersistancyAbstractionI;
+import org.hibernate.Criteria;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+
+import java.util.List;
 
 /**
  * Created by xkcd on 5/13/2015.
@@ -89,6 +93,14 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
         session.getTransaction().commit();
         session.clear();
         session.close();
+    }
+
+    @Override
+    public List executeQuery(String query){
+        Session session = session_Factory.openSession();
+        SQLQuery sqlquery = session.createSQLQuery(query);
+        sqlquery.setResultTransformer(Criteria.ROOT_ENTITY);
+        return sqlquery.list();
     }
 
 

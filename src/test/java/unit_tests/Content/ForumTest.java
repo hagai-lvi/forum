@@ -10,9 +10,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
+import java.util.List;
+
+import static org.junit.Assert.*;
 
 /**
  * Created by tomgond on 4/11/15.
@@ -34,6 +34,14 @@ public class ForumTest {
             } catch (ForumNotFoundException e) {
 
             }
+        }
+
+
+        @Test
+        public void testGetForumList(){
+            Forum f = new Forum("fuck", new ForumPolicy(true, 5, "fuck", 3));
+            List<String> lst = Forum.getForumList();
+            assertNotEquals(lst, null);
         }
 
         @Test

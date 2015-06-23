@@ -18,10 +18,16 @@ public class PersistantObject {
     }
 
     public void SaveOrUpdate(){    // save the forum to the database
+        if (pers == null ){
+            pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
+        }
         pers.saveOrUpdate(this);
     }
 
     public void Update(){    // save the forum to the database
+        if (pers == null ){
+            pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
+        }
         pers.Update(this);
     }
 
