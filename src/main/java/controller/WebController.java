@@ -72,7 +72,7 @@ public class WebController {
 	 * Send a request to create a new sub forum in the currently used forum
 	 */
 	@RequestMapping(value = "/addSubforum",method = RequestMethod.POST)
-	public String addSubforum(ModelMap model, HttpSession session, String subforumName) throws SubForumAlreadyExistException, PermissionDeniedException, SessionNotFoundException {
+	public String addSubforum(ModelMap model, HttpSession session, String subforumName) throws SubForumAlreadyExistException, PermissionDeniedException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
 		logger.info("addSubforum request");
 		FacadeI f = Facade.getFacade();
 		Integer sessionId = (Integer) session.getAttribute(SESSION_ID_ATTR);
@@ -147,7 +147,7 @@ public class WebController {
 	 * Allows to clear all data
 	 */
 	@RequestMapping(value = "reset",method = RequestMethod.GET)
-	public String resetSystem() throws PermissionDeniedException, ForumAlreadyExistException, PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumAlreadyExistException, ForumNotFoundException, SessionNotFoundException {
+	public String resetSystem() throws PermissionDeniedException, ForumAlreadyExistException, PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumAlreadyExistException, ForumNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("resetSystem request");
 		Facade.dropAllData();
 		FacadeI f = Facade.getFacade();

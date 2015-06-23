@@ -35,7 +35,7 @@ public interface FacadeI {
 	 * Create a subforum in the specified forum.
 	 * The Policy will be derived from the forum
 	 */
-	void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException;
+	void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException;
 
 	/**
 	 * register a user to the specified forum
@@ -103,7 +103,7 @@ public interface FacadeI {
 
 	void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException;
 
-    void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passwordEffectTime) throws SessionNotFoundException, PermissionDeniedException;
+    void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passwordEffectTime) throws SessionNotFoundException, PermissionDeniedException, ForumNotFoundException;
 	/**
 	 * edit message
 	 * @param sessionId - Id of current session
@@ -155,5 +155,5 @@ public interface FacadeI {
 
 	String getCurrentUserStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException;
 
-	void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException;
+	void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException, ForumNotFoundException;
 }

@@ -115,7 +115,7 @@ public class ForumPolicyTest extends TestCase {
 
 
     private User createUser() {
-        User user = new User("man", "man", "man", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forum));
+        User user = new User("man", "man", "man", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forum.getName()));
         user.setSignUpDate(new GregorianCalendar(1948,1,1));
         return user;
     }

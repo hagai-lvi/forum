@@ -86,6 +86,8 @@ public class FacadeTest {
             assertTrue(true);
         } catch (PermissionDeniedException e) {
             fail();
+        } catch (ForumNotFoundException e) {
+            fail();
         }
 
         try {
@@ -94,6 +96,8 @@ public class FacadeTest {
         } catch (UserNotFoundException e) {
             assertTrue(true);
         } catch (PermissionDeniedException e) {
+            fail();
+        } catch (ForumNotFoundException e) {
             fail();
         }
 
@@ -104,6 +108,8 @@ public class FacadeTest {
             fail();
         } catch (PermissionDeniedException e) {
             assertTrue(true);
+        } catch (ForumNotFoundException e) {
+            fail();
         }
 
         try {

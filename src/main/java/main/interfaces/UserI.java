@@ -42,12 +42,12 @@ public interface UserI {
 	 */
 	String getUserAuthString();
 
-	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
+	SubForumI createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException, ForumNotFoundException, SubForumDoesNotExistException;
 
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException;
+	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException, ForumNotFoundException;
 
 	/**
 	 * create a thread in the subforum
@@ -72,12 +72,12 @@ public interface UserI {
 	/**
 	 * Set new forum administrator
 	 */
-	void setAdmin(UserI admin)throws PermissionDeniedException;
+	void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException;
 
 	/**
 	 * Set policy for forum
 	 */
-	void setPolicy(ForumPolicyI policy)throws PermissionDeniedException;
+	void setPolicy(ForumPolicyI policy) throws PermissionDeniedException, ForumNotFoundException;
 
 	/**
 	 * Get statistics

@@ -77,7 +77,7 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     private void initAdmin() {
-        ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_SUPERADMIN, this);
+        ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_SUPERADMIN, forum_name);
         User newUser = new User(ADMIN_USERNAME, ADMIN_PASSWORD, "admin@gmail.com", userPermissions);
         newUser.setAuthenticatedAdmin();
         addAllSubforumsToUser(newUser, Permissions.PERMISSIONS_SUPERADMIN);
@@ -87,7 +87,7 @@ public class Forum extends PersistantObject implements ForumI{
 
     private void initGuest() {
         ForumPermissionI guestPermission =
-                UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_GUEST, this);
+                UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_GUEST, forum_name);
         this.guest = new User(GUEST_USER_NAME, "no_pass", "nomail@nomail.com", guestPermission);
     }
 
@@ -161,7 +161,7 @@ public class Forum extends PersistantObject implements ForumI{
             throw new InvalidUserCredentialsException("e-mail does not comply with forum policy.");
         }
 
-        ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_USER, this);
+        ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_USER, forum_name);
         User newUser = new User(userName, password, eMail, userPermissions);
         addAllSubforumsToUser(newUser, Permissions.PERMISSIONS_USER);
         //sendAuthenticationEMail(new_user);    //TODO --> uncomment to actually send authentication mails!

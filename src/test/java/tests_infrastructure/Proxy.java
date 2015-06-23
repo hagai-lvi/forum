@@ -5,6 +5,7 @@ import main.exceptions.*;
 import main.interfaces.*;
 import main.services_layer.Session;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -31,7 +32,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public Collection<ForumI> getForumList() {
+    public ArrayList<String> getForumList() {
         if(this.real!=null)
             return this.real.getForumList();
         return null;
@@ -51,7 +52,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException {
+    public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
         if(this.real!=null)
             this.real.addSubforum(sessionId, subforumName);
     }
@@ -137,7 +138,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void setPolicies(int sessionId, boolean isSecure, String regex, int numOfModerators, int passLife) throws SessionNotFoundException, PermissionDeniedException {
+    public void setPolicies(int sessionId, boolean isSecure, String regex, int numOfModerators, int passLife) throws SessionNotFoundException, PermissionDeniedException, ForumNotFoundException {
         if(this.real!=null)
             this.real.setPolicies(sessionId, isSecure, regex, numOfModerators, passLife);
     }

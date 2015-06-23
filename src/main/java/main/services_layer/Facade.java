@@ -62,9 +62,10 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException {
+	public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
-		currentSession.getUser().createSubForum(subforumName);
+		SubForumI subforum = currentSession.getUser().createSubForum(subforumName);
+		currentSession.setSubForum(subforum);
 	}
 
 	@Override
@@ -161,7 +162,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passLife) throws SessionNotFoundException, PermissionDeniedException {
+	public void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passLife) throws SessionNotFoundException, PermissionDeniedException, ForumNotFoundException {
 		Session current = findSession(sessionId);
 		current.getUser().setPolicy(new ForumPolicy(isSecured, numOfModerators, regex, passLife));
 	}
@@ -316,7 +317,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException {
+	public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException, ForumNotFoundException {
 		User admin = User.getUserFromDB(username, forumname);
 		if(admin == null) throw new UserNotFoundException("User not found");
 		User user = User.getUserFromDB(newAdmin, forumname);

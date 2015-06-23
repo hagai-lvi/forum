@@ -61,7 +61,7 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testCreateThread()   {
-        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum.getName());
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow1", "Flow1");
         try {
             permission2.createThread(message);
@@ -75,7 +75,7 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testReplyToMessage()   {
-        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum.getName());
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2", "Flow2");
         try {
             permission2.createThread(message);
@@ -98,7 +98,7 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testDeleteMessageS()  {
-        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum.getName());
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2222", "Flow222");
         try {
             permission2.createThread(message);
@@ -144,7 +144,7 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testDeleteMessageWithoutPermission()   {
-        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
+        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum.getName());
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow", "Flow");
         try {
             permission2.createThread(message);

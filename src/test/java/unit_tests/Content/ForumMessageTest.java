@@ -25,7 +25,7 @@ public class ForumMessageTest extends TestCase {
     UserI user;
     public void setUp() {
         ForumI forum = new Forum("forum", new ForumPolicy(false, 2, ".*", 365));
-        user = new User("user", "pass", "mail@mail.mail", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forum));
+        user = new User("user", "pass", "mail@mail.mail", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, "forum"));
         message = new ForumMessage(user, "title", "body");
     }
 

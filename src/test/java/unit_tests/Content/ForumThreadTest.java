@@ -30,7 +30,7 @@ public class ForumThreadTest extends TestCase {
     public void setUp() throws Exception {
         super.setUp();
         forum = new Forum("forum", new ForumPolicy(false, 2, ".*", 365));
-        user = new User("user", "pass", "aaa@aaa.aaa", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forum));
+        user = new User("user", "pass", "aaa@aaa.aaa", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forum.getName()));
         msg = new ForumMessage(user, "title", "body");
         thread = new ForumThread(msg);
     }

@@ -36,7 +36,7 @@ public class NativeGuiController {
 		logger.info("got request getFacade");
 		ForumList list = new ForumList();
 		FacadeI facade = Facade.getFacade();
-		list.addAll(facade.getForumList());
+		//list.addAll(facade.getForumList());
 		return list;
 	}
 

@@ -36,9 +36,9 @@ public class UserTest {
         int passLife = 365;
         policy = new ForumPolicy(isSecured, maxModerators, regex, passLife);
         forum = new Forum("Lifestyle", policy);
-        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
-        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
-        ForumPermissionI permission3 = new UserForumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_USER,"Lifestyle");
+        ForumPermissionI permission2 = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,"Lifestyle");
+        ForumPermissionI permission3 = new UserForumPermission(Permissions.PERMISSIONS_SUPERADMIN,"Lifestyle");
         user1 = forum.register("Gabi", "123456", "mail1@gmail.com");
         user2 = forum.register("Tom", "abcde", "mail2@gmail.com");
         user3 = forum.register("Victor", "78910", "mail3@gmail.com");
@@ -143,7 +143,7 @@ public class UserTest {
     }
 
     @Test
-    public void testReplyToMessage() throws SubForumAlreadyExistException, PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
+    public void testReplyToMessage() throws SubForumAlreadyExistException, PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException, ForumNotFoundException {
         user2.createSubForum("Football");
         MessageI message1 = new ForumMessage(user1, "Mega Flow", "Flow");
         MessageI message2 = new ForumMessage(user2, "Mega Flow", "Help");
@@ -157,7 +157,7 @@ public class UserTest {
     }
 
     @Test
-    public void testDeleteMessageS() throws MessageNotFoundException {
+    public void testDeleteMessageS() throws MessageNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
         try {
             user2.createSubForum("Football");
         } catch (PermissionDeniedException | SubForumAlreadyExistException e) {
@@ -206,13 +206,13 @@ public class UserTest {
 
     @Test(expected = PermissionDeniedException.class)
     public void testSetAdminWithoutPermission() throws Exception {
-        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
         user2.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
     }
 
     @Test
     public void testSetAdmin() throws Exception {
-        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum);
+        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
         user3.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
     }
 

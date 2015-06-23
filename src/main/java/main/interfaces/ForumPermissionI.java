@@ -1,5 +1,6 @@
 package main.interfaces;
 
+import main.exceptions.ForumNotFoundException;
 import main.exceptions.PermissionDeniedException;
 import main.exceptions.SubForumAlreadyExistException;
 import main.exceptions.SubForumDoesNotExistException;
@@ -12,24 +13,24 @@ public interface ForumPermissionI {
 	/**
 	 * Create a subforum in this forum
 	 */
-	void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException;
+	SubForumI createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException, ForumNotFoundException;
 
 	boolean isAdmin();
 
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException;
+	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException, ForumNotFoundException;
 
 	/**
 	 * Set this user to be forum administrator
 	 */
-	void setAdmin(UserI admin) throws PermissionDeniedException;
+	void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException;
 
 	/**
 	 * Set policy for forum
 	 */
-	void setPolicy(ForumPolicyI policy)  throws PermissionDeniedException;
+	void setPolicy(ForumPolicyI policy) throws PermissionDeniedException, ForumNotFoundException;
 
 	/**
 	 * Get statistics
@@ -39,13 +40,13 @@ public interface ForumPermissionI {
 	/**
 	 * Find a subforum in this forum according to it's name
 	 */
-	boolean findSubforum(String name);
+	boolean findSubforum(String name) throws ForumNotFoundException;
 
 	Integer getId();
 
 	String getForumName();   // returns forum name for which the permissions relate
 
-	ForumI getForum();
+	ForumI getForum() throws ForumNotFoundException;
 
-	SubForumI getSubForum(String name);
+	SubForumI getSubForum(String name) throws ForumNotFoundException, SubForumDoesNotExistException;
 }

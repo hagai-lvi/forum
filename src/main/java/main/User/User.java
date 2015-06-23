@@ -108,14 +108,15 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
-        forumPermissions.createSubForum(name);
+    public SubForumI createSubForum(String name) throws PermissionDeniedException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException {
+        SubForumI subforum = forumPermissions.createSubForum(name);
         UserSubforumPermission newPerms = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forumPermissions.getForum(), forumPermissions.getSubForum(name));
         subForumsPermissions.add(newPerms);
+        return subforum;
     }
 
     @Override
-    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException {
+    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException, ForumNotFoundException {
         forumPermissions.deleteSubForum(toDelete);
     }
 
@@ -143,12 +144,12 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public void setAdmin(UserI admin) throws PermissionDeniedException {
+    public void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException {
         forumPermissions.setAdmin(admin);
     }
 
     @Override
-    public void setPolicy(ForumPolicyI policy) throws PermissionDeniedException {
+    public void setPolicy(ForumPolicyI policy) throws PermissionDeniedException, ForumNotFoundException {
         forumPermissions.setPolicy(policy);
     }
 
