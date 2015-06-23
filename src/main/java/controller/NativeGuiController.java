@@ -37,6 +37,16 @@ public class NativeGuiController {
 		return list;
 	}
 
+	/**
+	 * Register a user to the specified forum
+	 */
+	@JsonView(NativeGuiController.class)
+	@RequestMapping(value = "/register/{forumID}", method = RequestMethod.POST)
+	public @ResponseBody
+	void register(@PathVariable String forumID, @RequestBody LoginDetailesG loginDetailes) throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException {
+		FacadeI facade = Facade.getFacade();
+		facade.register(forumID, loginDetailes.getUsername(), loginDetailes.getPassword(), loginDetailes.getEmail());
+	}
 
 	/**
 	 * example: {@code {"name":"FORUM","regex":".*","numOfModerators":10,"user":{"username":"ADMIN","password":"ADMIN"}}}
