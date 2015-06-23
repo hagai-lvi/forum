@@ -26,48 +26,37 @@ public class IntegrationTest {
 	/**
 	 * target: Check whether a user can log in and view sub-forums.
 	 */
-	public void test_RegisterLoginAndViewSubforums() throws InvalidUserCredentialsException, UserAlreadyExistsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
+	public void test_RegisterLoginAndViewSubforums() {
 		try {
 			_facade.addForum("ADMIN", "ADMIN", "forum", false, "pass", 3, 365);
 		} catch (PermissionDeniedException e) {
-			e.printStackTrace();
+			fail();
 		} catch (ForumAlreadyExistException e) {
-			e.printStackTrace();
+			fail();
 		}
 		try {
 			_facade.register("forum", "user", "pass", "mail@mail.com");
 			_facade.authenticateUser("forum", "user", _facade.getUserAuthString("forum", "user", "pass"));
 			int sessionID = _facade.login("forum", "user", "pass");
 			_facade.getSubForumList(sessionID);
-		}catch (InvalidUserCredentialsException e){
-			fail("User failed to log in!");
-		}
-		catch (UserAlreadyExistsException e){
-			fail("User Already Exists!");
-		} catch (ForumNotFoundException e) {
-			fail("forum not found!");
-		} catch (SessionNotFoundException | UserNotFoundException | DoesNotComplyWithPolicyException e) {
-			e.printStackTrace();
+
+			_facade.removeForum("user", "pass", "forum");
+		} catch (PasswordNotInEffectException | InvalidUserCredentialsException | NeedMoreAuthParametersException | DoesNotComplyWithPolicyException | SessionNotFoundException | EmailNotAuthanticatedException | UserNotFoundException | PermissionDeniedException | UserAlreadyExistsException | ForumNotFoundException e) {
+			fail();
 		}
 	}
-
-	@Test
+		@Test
 	/**
 	  target: check whether a user can view a previously deleted message.
 	 */
-	public void test_LoginPostDeleteAndTryToViewByOtherUser() throws UserAlreadyExistsException, InvalidUserCredentialsException,
-			SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException {
+	public void test_LoginPostDeleteAndTryToViewByOtherUser() {
 		try {
 			_facade.addForum("ADMIN", "ADMIN", "forum", false, ".*", 3, 365);
-		} catch (PermissionDeniedException e) {
-			e.printStackTrace();
-		} catch (ForumAlreadyExistException e) {
-			e.printStackTrace();
+		} catch (PermissionDeniedException | ForumAlreadyExistException e) {
+				fail();
 		}
-		try {
-			//_facade.register("forum", "user1", "pass", "mail@mail.com");
+			try {
 			_facade.register("forum", "user2", "pass", "mail@mail.com");
-			//_facade.authenticateUser("forum", "user1", _facade.getUserAuthString("forum", "user1", "pass"));
 			_facade.authenticateUser("forum", "user2", _facade.getUserAuthString("forum", "user2", "pass"));
 
 			// first user creates a new message.
@@ -91,6 +80,7 @@ public class IntegrationTest {
 			newThread = newSF.getThreads().iterator().next();
 			//newMessage = newThread.getMessages().find(id);
 			//_facade.getMessage(session2ID, newMessage.getId());
+				_facade.removeForum("user2", "pass", "forum");
 
 		} catch (UserAlreadyExistsException e) {
 			fail("User already exists!");
@@ -106,16 +96,16 @@ public class IntegrationTest {
 			fail("user not found!");
 		} catch (ForumNotFoundException e) {
 			fail("forum not found!");
-		} catch (SessionNotFoundException | SubForumDoesNotExistException e) {
-			e.printStackTrace();
+		} catch (SessionNotFoundException | SubForumDoesNotExistException | PasswordNotInEffectException | EmailNotAuthanticatedException | NeedMoreAuthParametersException e) {
+			fail();
+			}
 		}
-	}
 
 	@Test
 	/**
 	 * target - Check if an expelled moderator keeps his privileges.
 	 */
-	public void test_removeModThenTryToEditMessage() throws NeedMoreAuthParametersException {
+	public void test_removeModThenTryToEditMessage() {
 		try {
 			_facade.addForum("ADMIN", "ADMIN", "forum", false, "pass", 3, 365);
 		} catch (PermissionDeniedException e) {
@@ -150,6 +140,8 @@ public class IntegrationTest {
 			e.printStackTrace();
 		} catch (PermissionDeniedException e) {
 			//pass
+		} catch (NeedMoreAuthParametersException e) {
+			fail();
 		}
 
 	}
@@ -167,7 +159,7 @@ public class IntegrationTest {
 	/**
 	 * target: Check whether a user without admin privileges can delete a sub-forum.
 	 */
-	public void test_LogInUnprivilegedAndTryToDeleteForum() throws UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException, ForumNotFoundException {
+	public void test_LogInUnprivilegedAndTryToDeleteForum()  {
 		try {
 			_facade.addForum("ADMIN", "ADMIN", "forum", false, "pass", 3, 365);
 		} catch (PermissionDeniedException e) {
