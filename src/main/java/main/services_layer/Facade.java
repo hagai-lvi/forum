@@ -1,6 +1,7 @@
 package main.services_layer;
 
 import data_structures.Tree;
+import main.Persistancy.HibernateSessionFactory;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
@@ -29,7 +30,7 @@ import java.util.Collection;
 
 	@Override
 	public void initialize() {
-		//TODO - how to initialize?
+		HibernateSessionFactory.shutdown();
 		openSessions = new ArrayList<>();
 		sessionCounter = 0;
 	}
