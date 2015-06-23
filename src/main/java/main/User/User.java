@@ -282,6 +282,11 @@ public class User extends PersistantObject implements UserI {
         return message.getUser().equals(this.username);
     }
 
+    @Override
+    public void setAuthenticatedAdmin() {
+        isEmailAuthenticated = true;
+    }
+
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
         System.out.println("SUBFORUMPERMISSIONS: " + subForumsPermissions.size());
         for (SubForumPermissionI sfp : subForumsPermissions){

@@ -1,17 +1,16 @@
 package main.services_layer;
 
 import data_structures.Tree;
-import main.User.Permissions;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
+
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Iterator;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -55,7 +54,7 @@ import java.util.Iterator;
 			ForumI forum = findForum(forumName);
 			if(forum != null) throw new ForumAlreadyExistException("Forum already exist");
 			ForumPolicyI policy = new ForumPolicy(isSecured, numberOfModerators, regex, passLife);
-			forum = new Forum(forumName, policy); //also adds the new forum to the database.
+			forum = new Forum(forumName, policy);
 		}
 		else {
 			throw new PermissionDeniedException(MessageFormat.format("user {0} is not authorized to add a forum.", username));
@@ -140,6 +139,7 @@ import java.util.Iterator;
 	@Override
 	public int guestEntry(String forumName) throws ForumNotFoundException {
 		ForumI current = findForum(forumName);
+		if(current == null) throw new ForumNotFoundException("Forum not found");
 		Session currentSession = new Session(sessionCounter, null);
 		currentSession.setForum(current);
 		openSessions.add(currentSession);

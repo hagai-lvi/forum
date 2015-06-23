@@ -124,4 +124,6 @@ public interface UserI {
 	String getStatus(String subForum) throws SubForumDoesNotExistException;
 
 	boolean isOwnerOfMessage(MessageI message);
+
+	void setAuthenticatedAdmin();
 }

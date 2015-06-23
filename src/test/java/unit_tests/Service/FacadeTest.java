@@ -27,6 +27,7 @@ public class FacadeTest {
     @Before
     public void setUp() {
         theFacade = Facade.getFacade();
+
         try {
             theFacade.addForum("ADMIN", "ADMIN", "Temp", false, "[1-9]*", 1, 10);
            // theFacade.addForum("ADMIN", "ADMIN", "Temp2", true, "[1-9]*", 1, 10);
@@ -46,7 +47,7 @@ public class FacadeTest {
            // theFacade.removeForum("ADMIN", "ADMIN", "Temp2");
 
         } catch (ForumNotFoundException e) {
-            fail("Forum not found when trying to remive");
+            fail("Forum not found when trying to remove");
         } catch (PermissionDeniedException e) {
             fail("No permission to remove forum");
         }
@@ -417,7 +418,6 @@ public class FacadeTest {
 
     @Test
     public void testEditMessage() {
-
     }
 
     @Test

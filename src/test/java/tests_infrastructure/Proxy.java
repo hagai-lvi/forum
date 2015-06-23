@@ -251,5 +251,15 @@ public class Proxy implements FacadeI {
             this.real.authenticateUser(forum, username, userAuthString);
     }
 
+    @Override
+    public boolean isMessageFromCurrentUser(int sessionId, int messageId) throws SessionNotFoundException {
+        return false;
+    }
+
+    @Override
+    public String getCurrentUserStatus(int sessionId) throws SessionNotFoundException {
+        return null;
+    }
+
 
 }
