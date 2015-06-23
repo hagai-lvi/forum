@@ -30,7 +30,8 @@ import java.util.Collection;
 
 	@Override
 	public void initialize() {
-		HibernateSessionFactory.shutdown();
+		HibernateSessionFactory.shutdown();   // clear all connections, close stuff.
+		HibernateSessionFactory.getSessionFactory();  // drops all tables. create new ones by scheme.
 		openSessions = new ArrayList<>();
 		sessionCounter = 0;
 	}
