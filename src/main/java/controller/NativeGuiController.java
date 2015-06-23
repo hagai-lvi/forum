@@ -35,8 +35,8 @@ public class NativeGuiController {
 	ForumList showFacade(){
 		logger.info("got request getFacade");
 		ForumList list = new ForumList();
-		FacadeI facade = Facade.getFacade();
-		//list.addAll(facade.getForumList());
+		FacadeI facade = getFacade();
+		list.addAll(facade.getForumList());
 		return list;
 	}
 
@@ -47,7 +47,7 @@ public class NativeGuiController {
 	@RequestMapping(value = "/register/{forumID}", method = RequestMethod.POST)
 	public @ResponseBody
 	void register(@PathVariable String forumID, @RequestBody LoginDetailesG loginDetailes) throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException {
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		facade.register(forumID, loginDetailes.getUsername(), loginDetailes.getPassword(), loginDetailes.getEmail());
 	}
 
@@ -59,7 +59,7 @@ public class NativeGuiController {
 	@RequestMapping(value = "/addForum", method = RequestMethod.POST)
 	public @ResponseBody
 	void addForum(@RequestBody ForumG forum) throws PermissionDeniedException, ForumAlreadyExistException, ForumNotFoundException {
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		//TODO get credentials from user
 		UserG user = forum.getUser();
 		facade.addForum(user.getUsername(), user.getPassword(),
@@ -87,7 +87,7 @@ public class NativeGuiController {
 	SubForumList getForum(HttpSession session, @PathVariable String forumID, @RequestBody UserG user) throws PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, ForumNotFoundException, SessionNotFoundException {
 		logger.info("got request getForum");
 		SubForumList list = new SubForumList();
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		Integer sessionID = facade.login(forumID, user.getUsername(), user.getPassword());
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
 		Collection<SubForumI> subForumList = facade.getSubForumList(sessionID);
@@ -105,7 +105,7 @@ public class NativeGuiController {
 	ThreadList getSubforum(HttpSession session, @PathVariable String subforumID ) throws SubForumAlreadyExistException, SessionNotFoundException, SubForumNotFoundException {
 		logger.info("got request getSubforum");
 		ThreadList list = new ThreadList();
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		Integer sessionID = getSessionID(session);
 		if (sessionID == null){
 			logger.warn("Got request with sessionID=null");
@@ -114,6 +114,22 @@ public class NativeGuiController {
 		Collection<? extends ExThreadI> threadsList = exSubForumI.getThreads();
 		list.addAll(threadsList);
 		return list;
+	}
+
+	@RequestMapping(value = "logout")
+	public void logout(HttpSession session) throws SessionNotFoundException {
+		Integer sessionID = getSessionID(session);
+		removeSessionID(session);
+		FacadeI facade = getFacade();
+		facade.logout(sessionID);
+	}
+
+	private void removeSessionID(HttpSession session) {
+		session.removeAttribute(SESSION_ID_ATTR);
+	}
+
+	private FacadeI getFacade() {
+		return Facade.getFacade();
 	}
 
 	private Integer getSessionID(HttpSession session) {
