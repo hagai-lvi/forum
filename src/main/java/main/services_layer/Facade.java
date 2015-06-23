@@ -308,6 +308,7 @@ import java.util.Collection;
 		return user.isOwnerOfMessage(message);
 	}
 
+	//TODO current.getSubForum might be null, for example, before the user entered to a specific subforum
 	@Override
 	public String getCurrentUserStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
 		Session current = findSession(sessionId);
