@@ -315,6 +315,15 @@ import java.util.Collection;
 		return current.getUser().getStatus(current.getSubForum().getTitle());
 	}
 
+	@Override
+	public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException {
+		User admin = User.getUserFromDB(username, forumname);
+		if(admin == null) throw new UserNotFoundException("User not found");
+		User user = User.getUserFromDB(newAdmin, forumname);
+		if(user == null) throw new UserNotFoundException("User not found");
+		admin.setAdmin(user);
+	}
+
 
 	public static FacadeI getFacade(){
 		if (theFacade == null) {

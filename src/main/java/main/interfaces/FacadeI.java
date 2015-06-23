@@ -153,4 +153,6 @@ public interface FacadeI {
 	boolean isMessageFromCurrentUser(int sessionId, int messageId) throws SessionNotFoundException;
 
 	String getCurrentUserStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException;
+
+	void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException;
 }

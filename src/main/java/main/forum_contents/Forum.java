@@ -13,9 +13,7 @@ import main.interfaces.*;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 
 /**
@@ -52,8 +50,8 @@ public class Forum extends PersistantObject implements ForumI{
 
     private UserI guest;
 
-    @OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
-    private UserI admin;
+   // @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch= FetchType.EAGER)
+   // private Map<String, UserI> admins = new HashMap<>();
 
     @Transient
     //private static HibernatePersistancyAbstractor pers;
@@ -67,9 +65,9 @@ public class Forum extends PersistantObject implements ForumI{
         initGuest();
         initAdmin();//TODO should be initialized?
         addAllSubforumsToUser(guest, Permissions.PERMISSIONS_GUEST);
-        addAllSubforumsToUser(admin, Permissions.PERMISSIONS_ADMIN);
+        addAllSubforumsToUser(User.getUserFromDB(ADMIN_USERNAME, forum_name), Permissions.PERMISSIONS_ADMIN);
         this._users.put("Guest", this.guest);
-        this._users.put(this.admin.getUsername(), this.admin);
+       //this._users.put(this.admin.getUsername(), this.admin);
         //this.pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
         this.Save();
        // Update();
@@ -79,10 +77,12 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     private void initAdmin() {
-        ForumPermissionI adminPermission =
-                UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, this);
-        this.admin = new User(ADMIN_USERNAME, ADMIN_PASSWORD, "forumadmin@nomail.com", adminPermission);
-        this.admin.setAuthenticatedAdmin();
+        ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_SUPERADMIN, this);
+        User newUser = new User(ADMIN_USERNAME, ADMIN_PASSWORD, "admin@gmail.com", userPermissions);
+        newUser.setAuthenticatedAdmin();
+        addAllSubforumsToUser(newUser, Permissions.PERMISSIONS_SUPERADMIN);
+        _users.put(ADMIN_USERNAME, newUser);
+       // admins.put(ADMIN_USERNAME,newUser);
     }
 
     private void initGuest() {
@@ -93,8 +93,7 @@ public class Forum extends PersistantObject implements ForumI{
 
     @Override
     public void setAdmin(UserI admin){
-        this.admin = admin;
-        Update();
+        _users.replace(admin.getUsername(), admin);
     }
 
     @Override
@@ -260,6 +259,7 @@ public class Forum extends PersistantObject implements ForumI{
             forum.policy = null;
             forum.Update();
         }
+
         pers.Delete(forum);
 
     }

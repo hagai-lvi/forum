@@ -47,7 +47,7 @@ public class User extends PersistantObject implements UserI {
         signUpDate = new GregorianCalendar();
         seniorityInDays = 0;
         numOfMessages = 0;
-        this.isEmailAuthenticated = true; //TODO - don't forget to change this to false!
+        this.isEmailAuthenticated = false;
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<>();
         this.id = new UserForumID(username, forumPermissions.getForumName());
@@ -69,7 +69,7 @@ public class User extends PersistantObject implements UserI {
 
     public void setAuthenticated(){
         isEmailAuthenticated = true;
-        //Update();
+        Update();
     }
     /**
          Get the list of all of the subforums of this user

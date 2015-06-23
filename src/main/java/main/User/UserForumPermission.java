@@ -73,6 +73,10 @@ public class UserForumPermission implements ForumPermissionI {
 			logger.trace("User " + admin.getUsername() + " set as admin of forum " + forum.getName());
 			forum.setAdmin(admin);
 		}
+		else if (permissions.equals(Permissions.PERMISSIONS_ADMIN)) {
+			forum.setAdmin(admin);
+			this.permissions = Permissions.PERMISSIONS_USER;
+		}
 		else {
 			throw new PermissionDeniedException("User has no permission to set administrator");
 		}

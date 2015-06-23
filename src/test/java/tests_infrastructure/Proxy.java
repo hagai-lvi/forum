@@ -261,5 +261,10 @@ public class Proxy implements FacadeI {
         return null;
     }
 
+    @Override
+    public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException {
+
+    }
+
 
 }
