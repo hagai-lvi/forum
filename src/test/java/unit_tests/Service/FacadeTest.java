@@ -158,7 +158,7 @@ public class FacadeTest {
     @Test
     public void testRegister(){
         try {
-            theFacade.register("Temp", "Victor", "123456","aa@gmail.com");
+            theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         } catch (UserAlreadyExistsException e) {
             fail("User already exist");
         } catch (InvalidUserCredentialsException e) {
@@ -186,7 +186,7 @@ public class FacadeTest {
 
 
         try {
-            theFacade.register("Temp", "Yosi", "a123456","aa@gmail.com");
+            theFacade.register("Temp", "Yosi", "a123456", "aa@gmail.com");
         } catch (UserAlreadyExistsException e) {
             fail("User already exist");
         } catch (InvalidUserCredentialsException e) {
@@ -199,7 +199,7 @@ public class FacadeTest {
 
 
         try {
-            theFacade.register("Temp2", "Shmuel", "123456","aa@gmail.com");
+            theFacade.register("Temp2", "Shmuel", "123456", "aa@gmail.com");
         } catch (UserAlreadyExistsException e) {
             fail("User already exist");
         } catch (InvalidUserCredentialsException e) {
@@ -502,6 +502,16 @@ public class FacadeTest {
 
     @Test
     public void testDropAllData()  {
+
+    }
+
+    @Test
+    public void isMessageFromCurrentUser()  {
+
+    }
+
+    @Test
+    public void getCurrentUserStatus()  {
 
     }
 

@@ -1,6 +1,7 @@
 package main.services_layer;
 
 import data_structures.Tree;
+import main.User.Permissions;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
@@ -10,6 +11,7 @@ import main.interfaces.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -300,11 +302,17 @@ import java.util.Collection;
 	}
 
 	@Override
-	public boolean isMessageFromCurrentUser(int sessionId,  int messageId) throws SessionNotFoundException { //TODO - add test!
+	public boolean isMessageFromCurrentUser(int sessionId, int messageId) throws SessionNotFoundException {
 		Session currentSession = findSession(sessionId);
 		UserI user = currentSession.getUser();
 		MessageI message = currentSession.getThread().getMessages().find(messageId);
 		return (message.getUser().equals(user.getUsername()));
+	}
+
+	@Override
+	public String getCurrentUserStatus(int sessionId) throws SessionNotFoundException {
+		Session current = findSession(sessionId);
+		return null;
 	}
 
 
@@ -333,8 +341,5 @@ import java.util.Collection;
 		return Forum.load(forumName);
 	}
 
-
-
-	//TODO - was message posted by current user?
 	//TODO - get permission of current user.
 }

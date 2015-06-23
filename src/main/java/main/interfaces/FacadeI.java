@@ -151,4 +151,6 @@ public interface FacadeI {
 	void authenticateUser(String forum, String user1, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException;
 
 	boolean isMessageFromCurrentUser(int sessionId, int messageId) throws SessionNotFoundException;
+
+	String getCurrentUserStatus(int sessionId) throws SessionNotFoundException;
 }
