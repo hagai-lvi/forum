@@ -31,7 +31,7 @@ public class SubForum extends PersistantObject implements SubForumI {
     /**
      * a list of all of the threads in this subforum
      */
-    @OneToMany(targetEntity = ForumThread.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = ForumThread.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<ThreadI> _threads = new LinkedList<>();
 
     @Override
