@@ -92,6 +92,16 @@ public class WebController {
 		return "login_page";
 	}
 
+	@RequestMapping(value = "guest_forum_homepage", method = RequestMethod.POST)
+	public String guestLogin(ModelMap model, HttpSession session, String forumName) throws ForumNotFoundException, SessionNotFoundException {
+		logger.info("loginToForum request");
+		FacadeI facade = Facade.getFacade();
+		Integer sessionID = facade.guestEntry(forumName);
+		session.setAttribute(SESSION_ID_ATTR, sessionID);
+		preperaForumHomepageModel(model, facade, session);
+		return "forum_homepage";
+	}
+
 	/**
 	 * redirects to the current forum home page after a login
 	 */
@@ -102,7 +112,6 @@ public class WebController {
 		FacadeI facade = Facade.getFacade();
 		Integer sessionID = facade.login(forumName, username, password);
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
-		session.setAttribute(SESSION_ID_ATTR, sessionID); //TODO - why does this appear twice?
 		preperaForumHomepageModel(model, facade, session);
 		return "forum_homepage";
 	}
