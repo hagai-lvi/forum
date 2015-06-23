@@ -34,10 +34,6 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	public static ForumPermissionI createUserForumPermissions(Permissions permissions, String forumName){
-		Forum forum = Forum.load(forumName);
-		if (forum == null){
-			throw new IllegalArgumentException("forum can not be null");
-		}
 		if ((!(permissions.compareTo(Permissions.PERMISSIONS_GUEST) >=  0)
 				&& (permissions.compareTo(Permissions.PERMISSIONS_ADMIN) <= 0))){
 			throw new IllegalArgumentException("There is no such forum permissions: " + permissions);

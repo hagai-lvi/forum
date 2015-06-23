@@ -188,6 +188,11 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     @Override
+    public UserI getGuest() {
+        return guest;
+    }
+
+    @Override
     public UserI login(String username, String password) throws InvalidUserCredentialsException, NeedMoreAuthParametersException, EmailNotAuthanticatedException, PasswordNotInEffectException {
         UserI user = User.getUserFromDB(username, forum_name);
         if(user == null) throw new InvalidUserCredentialsException("User is not registered");

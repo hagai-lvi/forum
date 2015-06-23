@@ -140,10 +140,11 @@ import java.util.Collection;
 	public int guestEntry(String forumName) throws ForumNotFoundException {
 		ForumI current = findForum(forumName);
 		if(current == null) throw new ForumNotFoundException("Forum not found");
-		Session currentSession = new Session(sessionCounter, null);
+		Session currentSession = new Session(sessionCounter, current.getGuest());
 		currentSession.setForum(current);
 		openSessions.add(currentSession);
-		return GUEST_SESSION_ID;
+		sessionCounter++;
+		return sessionCounter - 1;
 	}
 
 	@Override
