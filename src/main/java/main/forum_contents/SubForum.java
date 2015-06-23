@@ -142,6 +142,14 @@ public class SubForum extends PersistantObject implements SubForumI {
         return _threads;
     }
 
+
+    public int getMessagesCount(){
+        int sum = 0;
+        for (ThreadI t: _threads){
+            sum+= t.getMessagesCount();
+        }
+        return sum;
+    }
     /**
      * Find the thread that contains the specified message
      */

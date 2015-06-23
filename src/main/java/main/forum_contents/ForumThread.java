@@ -31,6 +31,10 @@ public class ForumThread extends PersistantObject implements ThreadI{
     public ForumThread() {
     }
 
+    public int getMessagesCount(){
+        return messages.getMessagesCount();
+    }
+
     @Override
     public String getTitle() {
         return getRootMessage().getMessageTitle();

@@ -22,4 +22,6 @@ public interface ThreadI extends ExThreadI{
 	String getTitle();
 
 	void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException;
+
+	public int getMessagesCount();
 }

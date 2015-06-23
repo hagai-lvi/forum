@@ -71,4 +71,5 @@ public interface ForumI extends ExForumI{
 	boolean enterUserAuthenticationString(UserI user, String auth_string) throws InvalidUserCredentialsException;
 
 	UserI getGuest();
+
 }

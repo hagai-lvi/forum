@@ -98,7 +98,17 @@ public class Forum extends PersistantObject implements ForumI{
 
     @Override
     public String viewStatistics(){
-        return "No statistics yet";
+        return "Number of messages: " + getNumOfMessages();
+
+    }
+
+
+    private int getNumOfMessages(){
+        int sum =0;
+        for (SubForumI s : _subForums.values()){
+            sum+=s.getMessagesCount();
+        }
+        return sum;
     }
 
 

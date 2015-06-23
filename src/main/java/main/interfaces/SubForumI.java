@@ -44,4 +44,7 @@ public interface SubForumI extends ExSubForumI{
 	void removeModerator(String mod);
 
 	void editMessage(ThreadI thread, int originalMessage, String title, String text) throws MessageNotFoundException;
+
+	public int getMessagesCount();
+
 }

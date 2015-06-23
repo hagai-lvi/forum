@@ -99,4 +99,13 @@ public class Tree extends PersistantObject{
     }
 
 
+    public int getMessagesCount(){
+        try {
+            return root.getChildren().size();
+        }
+        catch(Exception e) {
+            return 0;
+        }
+    }
+
 }

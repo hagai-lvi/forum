@@ -36,7 +36,6 @@ public class ForumTest {
             }
         }
 
-
         @Test
         public void testGetForumList(){
             Forum f = new Forum("fuck", new ForumPolicy(true, 5, "fuck", 3));
@@ -113,11 +112,6 @@ public class ForumTest {
                 assertTrue(false);
             }
             assertTrue(true);  // if we got here we sent.
-        }
-
-        @Test
-        public void testViewStatistics() {
-            fail("not yet implemented");
         }
 
         @Test
