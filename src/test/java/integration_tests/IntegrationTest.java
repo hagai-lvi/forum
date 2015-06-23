@@ -186,12 +186,10 @@ public class IntegrationTest {
 			_facade.login("forum", "user", "pass");
 			_facade.removeForum("user", "pass", "forum");
 			fail("unauthorized removal of a forum");
-		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | PasswordNotInEffectException | ForumNotFoundException | InvalidUserCredentialsException | NeedMoreAuthParametersException e) {
+		} catch (UserAlreadyExistsException | EmailNotAuthanticatedException | PasswordNotInEffectException | ForumNotFoundException | InvalidUserCredentialsException | NeedMoreAuthParametersException | DoesNotComplyWithPolicyException e) {
 			e.printStackTrace();
 		} catch (PermissionDeniedException e) {
 			//pass
-		} catch (DoesNotComplyWithPolicyException e) {
-			e.printStackTrace();
 		}
 
 	}

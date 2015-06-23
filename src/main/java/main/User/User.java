@@ -47,7 +47,7 @@ public class User extends PersistantObject implements UserI {
         signUpDate = new GregorianCalendar();
         seniorityInDays = 0;
         numOfMessages = 0;
-        this.isEmailAuthenticated = true;
+        this.isEmailAuthenticated = true; //TODO - don't forget to change this to false!
         this.authString = SecureString.nextUserAuthString();
         this.subForumsPermissions = new Vector<>();
         this.id = new UserForumID(username, forumPermissions.getForumName());
@@ -110,6 +110,8 @@ public class User extends PersistantObject implements UserI {
     @Override
     public void createSubForum(String name) throws PermissionDeniedException, SubForumAlreadyExistException {
         forumPermissions.createSubForum(name);
+        UserSubforumPermission newPerms = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forumPermissions.getForum(), forumPermissions.getSubForum(name));
+        subForumsPermissions.add(newPerms);
     }
 
     @Override
@@ -257,6 +259,7 @@ public class User extends PersistantObject implements UserI {
     }
 
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
+        System.out.println("SUBFORUMPERMISSIONS: " + subForumsPermissions.size());
         for (SubForumPermissionI sfp : subForumsPermissions){
             if (sfp.getSubForum().getTitle().equals(subForum)){
                 return sfp;
@@ -270,7 +273,7 @@ public class User extends PersistantObject implements UserI {
     }
 
     public static User getUserFromDB(String username, String forumname){
-            return (User)pers.load(User.class, new UserForumID(username, forumname));
+            return pers.load(User.class, new UserForumID(username, forumname));
 
     }
 

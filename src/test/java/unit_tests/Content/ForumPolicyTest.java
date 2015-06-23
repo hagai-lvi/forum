@@ -10,6 +10,7 @@ import main.forum_contents.ForumPolicy;
 import main.interfaces.ForumI;
 import main.interfaces.MessageI;
 import org.junit.After;
+import org.junit.Before;
 
 import java.util.GregorianCalendar;
 
@@ -19,7 +20,8 @@ import java.util.GregorianCalendar;
 public class ForumPolicyTest extends TestCase {
     private ForumPolicy fp;
     private ForumI forum;
-    @Override
+
+    @Before
     public void setUp() throws Exception {
         super.setUp();
         fp = new ForumPolicy(false, 3, "[a-z]*", 365);

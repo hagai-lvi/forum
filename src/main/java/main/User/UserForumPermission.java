@@ -95,6 +95,11 @@ public class UserForumPermission implements ForumPermissionI {
 
 	@Override
 	public boolean findSubforum(String name) {
+		for (SubForumI sf : forum.getSubForums()){
+			if (sf.getTitle().equals(name)){
+				return true;
+			}
+		}
 		return false;
 	}
 
@@ -108,6 +113,21 @@ public class UserForumPermission implements ForumPermissionI {
 	@Override
 	public String getForumName() {
 		return forum.getName();
+	}
+
+	@Override
+	public ForumI getForum() {
+		return forum;
+	}
+
+	@Override
+	public SubForumI getSubForum(String name) {
+		for (SubForumI sf : forum.getSubForums()){
+			if (sf.getTitle().equals(name)){
+				return sf;
+			}
+		}
+		return null;
 	}
 
 	public void setId(Integer id) {

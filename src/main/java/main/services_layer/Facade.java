@@ -299,6 +299,14 @@ import java.util.Collection;
 		user.setAuthenticated();
 	}
 
+	@Override
+	public boolean isMessageFromCurrentUser(int sessionId,  int messageId) throws SessionNotFoundException { //TODO - add test!
+		Session currentSession = findSession(sessionId);
+		UserI user = currentSession.getUser();
+		MessageI message = currentSession.getThread().getMessages().find(messageId);
+		return (message.getUser().equals(user.getUsername()));
+	}
+
 
 	public static FacadeI getFacade(){
 		if (theFacade == null) {
@@ -324,4 +332,9 @@ import java.util.Collection;
 	private ForumI findForum(String forumName) {
 		return Forum.load(forumName);
 	}
+
+
+
+	//TODO - was message posted by current user?
+	//TODO - get permission of current user.
 }

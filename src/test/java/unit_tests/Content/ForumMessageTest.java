@@ -24,7 +24,6 @@ public class ForumMessageTest extends TestCase {
         super.setUp();
         user = new User("user", "pass", "mail@mail.mail", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, new Forum("forum", new ForumPolicy(false, 2, ".*", 365))));
         message = new ForumMessage(user, "title", "body");
-
     }
 
     public void tearDown() throws Exception {

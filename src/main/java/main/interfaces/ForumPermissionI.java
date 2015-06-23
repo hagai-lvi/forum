@@ -45,4 +45,7 @@ public interface ForumPermissionI {
 
 	String getForumName();   // returns forum name for which the permissions relate
 
+	ForumI getForum();
+
+	SubForumI getSubForum(String name);
 }

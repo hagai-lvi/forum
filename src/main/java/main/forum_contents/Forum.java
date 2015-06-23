@@ -125,7 +125,7 @@ public class Forum extends PersistantObject implements ForumI{
             } else{
                 permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, this, subForum);
             }
-            user.addSubForumPermission(permission);
+            user.getSubForumsPermissions().add(permission);
         }
         Update();
         return subForum;

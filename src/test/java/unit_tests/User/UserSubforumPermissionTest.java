@@ -17,6 +17,9 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.NoSuchElementException;
+
+import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -104,7 +107,16 @@ public class UserSubforumPermissionTest {
         } catch (MessageNotFoundException e) {
             assertTrue(true);
         }
-        // permission2.editMessage(, message.getId(), message);
+        try {
+            ThreadI thread = subforum.getThreads().iterator().next();
+            permission2.editMessage(thread, message.getId(), message.getMessageTitle(), message.getMessageText());
+        } catch (NoSuchElementException e) {
+            assertTrue(true);
+            return;
+        } catch (MessageNotFoundException e) {
+            e.printStackTrace();
+        }
+        fail("edited deleted message");
     }
 
     @Test(expected = PermissionDeniedException.class)

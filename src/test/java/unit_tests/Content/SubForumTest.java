@@ -9,6 +9,7 @@ import main.forum_contents.ForumPolicy;
 import main.forum_contents.ForumThread;
 import main.interfaces.*;
 import org.junit.After;
+import org.junit.Before;
 
 import java.util.LinkedList;
 import java.util.List;
@@ -22,6 +23,7 @@ public class SubForumTest extends TestCase {
     SubForumI subforum;
     UserI user;
 
+    @Before
     public void setUp() throws Exception {
         super.setUp();
         forum = new Forum("forum", new ForumPolicy(false, 2, "aaa", 365));
