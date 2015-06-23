@@ -46,6 +46,7 @@ public class PersistanceTest extends TestCase{
     @Test
     public void test4Forum_Load() throws SubForumAlreadyExistException {
         Forum f = Forum.load("Some forum");
+        if(f == null) fail("Forum not found");
         assertEquals(f.getName(), "Some forum");
     }
 
@@ -56,11 +57,11 @@ public class PersistanceTest extends TestCase{
     }
 
     @Test
-    public void test6DeleteForum(){
+    public void test6DeleteForum() {
         try {
             Forum.delete("Some forum");
         } catch (ForumNotFoundException e) {
-            e.printStackTrace();
+            fail("Nothing to delete");
         }
         Forum f = Forum.load("Some forum");
         assertEquals(f, null);

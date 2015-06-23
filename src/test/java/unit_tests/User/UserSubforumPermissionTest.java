@@ -12,7 +12,10 @@ import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.SubForum;
-import main.interfaces.*;
+import main.interfaces.ForumPermissionI;
+import main.interfaces.ForumPolicyI;
+import main.interfaces.MessageI;
+import main.interfaces.ThreadI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +39,7 @@ public class UserSubforumPermissionTest {
     private ForumPolicyI policy;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         int maxModerators = 1;
         String regex = "a-b";
         policy = new ForumPolicy(false, maxModerators, regex, 365);
@@ -52,24 +55,44 @@ public class UserSubforumPermissionTest {
         try {
             Forum.delete("Sport");
         } catch (ForumNotFoundException e) {
-            e.printStackTrace();
+
         }
     }
 
     @Test
-    public void testCreateThread() throws Exception {
+    public void testCreateThread()   {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow1", "Flow1");
-        permission2.createThread(message);
+        try {
+            permission2.createThread(message);
+        } catch (PermissionDeniedException e) {
+            fail("No permission to add thread");
+        } catch (DoesNotComplyWithPolicyException e) {
+            fail();
+        }
         assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
     }
 
     @Test
-    public void testReplyToMessage() throws Exception {
+    public void testReplyToMessage()   {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2", "Flow2");
-        permission2.createThread(message);
-        permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa3", "Help3"));
+        try {
+            permission2.createThread(message);
+        } catch (PermissionDeniedException e) {
+            fail("No permission to add thread");
+        } catch (DoesNotComplyWithPolicyException e) {
+            fail();
+        }
+        try {
+            permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa3", "Help3"));
+        } catch (MessageNotFoundException e) {
+            fail();
+        } catch (DoesNotComplyWithPolicyException e) {
+            fail();
+        } catch (PermissionDeniedException e) {
+            fail();
+        }
         assertEquals(message.printSubTree(), "Flow2--> Help3");
     }
 
@@ -119,26 +142,38 @@ public class UserSubforumPermissionTest {
         fail("edited deleted message");
     }
 
-    @Test(expected = PermissionDeniedException.class)
-    public void testDeleteMessageWithoutPermission() throws Exception {
+    @Test
+    public void testDeleteMessageWithoutPermission()   {
         ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum);
         MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow", "Flow");
-        permission2.createThread(message);
-        permission.deleteMessage(message, "Victor"); // PermissionDeniedException expected
+        try {
+            permission2.createThread(message);
+        } catch (PermissionDeniedException e) {
+            fail();
+        } catch (DoesNotComplyWithPolicyException e) {
+            fail();
+        }
+        try {
+            permission.deleteMessage(message, "Victor"); // PermissionDeniedException expected
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        } catch (MessageNotFoundException e) {
+            fail();
+        }
     }
 
     @Test
-    public void testReportModerator() throws Exception {
+    public void testReportModerator()   {
 
     }
 
     @Test
-    public void testGetThreads() throws Exception {
+    public void testGetThreads()   {
 
     }
 
     @Test
-    public void testSetModerator() throws Exception {
+    public void testSetModerator()   {
 
     }
 

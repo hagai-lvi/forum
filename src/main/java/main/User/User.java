@@ -306,4 +306,16 @@ public class User extends PersistantObject implements UserI {
 
     }
 
+    public static void delete(String username, String forumname) throws UserNotFoundException {
+
+        User user = getUserFromDB(username, forumname);
+        if(user == null) throw new UserNotFoundException("User not found");
+        if (user.subForumsPermissions != null) {
+            user.subForumsPermissions = null;
+            user.Update();
+        }
+        pers.Delete(user);
+
+    }
+
 }

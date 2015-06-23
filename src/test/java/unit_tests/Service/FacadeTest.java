@@ -13,8 +13,6 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Collection;
-
 import static org.junit.Assert.*;
 
 
@@ -72,7 +70,8 @@ public class FacadeTest {
 
     @Test
     public void testGetSubForumList() {
-        try {
+        fail();
+       /* try {
             theFacade.addForum("ADMIN", "ADMIN", "Sport", false, ".*", 2, 20);
         } catch (PermissionDeniedException e) {
             fail("No permission to add forum");
@@ -121,7 +120,7 @@ public class FacadeTest {
             fail("Forum not found");
         } catch (PermissionDeniedException e) {
             fail("No permission to remove forum");
-        }
+        }*/
     }
 
     @Test
@@ -140,7 +139,7 @@ public class FacadeTest {
         try {
             theFacade.removeForum("ADMIN", "ADMIN", "Sport");
         } catch (ForumNotFoundException e) {
-            fail("Forum not found when trying to remive");
+            fail("Forum not found when trying to remove");
         } catch (PermissionDeniedException e) {
             fail("No permission to remove forum");
         }

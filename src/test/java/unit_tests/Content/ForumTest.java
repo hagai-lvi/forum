@@ -32,7 +32,7 @@ public class ForumTest {
             try {
                 Forum.delete("ForumName");
             } catch (ForumNotFoundException e) {
-                e.printStackTrace();
+
             }
         }
 

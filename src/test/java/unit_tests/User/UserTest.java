@@ -49,7 +49,7 @@ public class UserTest {
         try {
             Forum.delete("Lifestyle");
         } catch (ForumNotFoundException e) {
-            e.printStackTrace();
+
         }
     }
 

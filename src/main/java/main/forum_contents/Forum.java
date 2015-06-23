@@ -72,6 +72,7 @@ public class Forum extends PersistantObject implements ForumI{
         this._users.put(this.admin.getUsername(), this.admin);
         //this.pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
         this.Save();
+       // Update();
     }
 
     public Forum() {  // needed here for hibernate
@@ -81,7 +82,6 @@ public class Forum extends PersistantObject implements ForumI{
         ForumPermissionI adminPermission =
                 UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, this);
         this.admin = new User(ADMIN_USERNAME, ADMIN_PASSWORD, "forumadmin@nomail.com", adminPermission);
-        Update();
         this.admin.setAuthenticatedAdmin();
     }
 

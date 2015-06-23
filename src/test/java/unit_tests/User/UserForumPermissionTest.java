@@ -8,14 +8,18 @@ import main.exceptions.PermissionDeniedException;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.SubForum;
-import main.interfaces.*;
+import main.interfaces.ForumI;
+import main.interfaces.ForumPermissionI;
+import main.interfaces.ForumPolicyI;
+import main.interfaces.SubForumI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by gabigiladov on 4/25/15.
@@ -45,7 +49,6 @@ public class UserForumPermissionTest {
         try {
             Forum.delete("Gardening");
         } catch (ForumNotFoundException e) {
-            e.printStackTrace();
         }
     }
 
