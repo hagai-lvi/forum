@@ -35,9 +35,8 @@ import java.util.Collection;
 	}
 
 	@Override
-	public ArrayList<ForumI> getForumList() {
-		// TODO - get forums from database
-		return null;
+	public ArrayList<String> getForumList() {
+		return Forum.getForumList();
 	}
 
 	@Override

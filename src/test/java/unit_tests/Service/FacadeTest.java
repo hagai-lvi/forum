@@ -13,6 +13,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ArrayList;
+
 import static org.junit.Assert.*;
 
 
@@ -59,8 +61,8 @@ public class FacadeTest {
 
     @Test
     public void testGetForumList() {
-        //TODO - getLIst of forums from database
-        assertTrue(false);
+        ArrayList<String> forums = theFacade.getForumList();
+        assertTrue(forums != null);
     }
 
     @Test

@@ -4,6 +4,7 @@ import data_structures.Tree;
 import main.exceptions.*;
 import main.services_layer.Session;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -18,7 +19,7 @@ public interface FacadeI {
 	/**
 	 * Get the list of forums in the system
 	 */
-	Collection<ForumI> getForumList();
+	ArrayList<String> getForumList();
 
 	/**
 	 * Get the list of subforums in the specified forum
