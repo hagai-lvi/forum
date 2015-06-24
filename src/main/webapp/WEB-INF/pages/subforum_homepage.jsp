@@ -10,8 +10,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <html>
 <head>
-
-    <title><%--TODO--%></title>
+    <title>Subforum</title>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+    <script src="http://malsup.github.com/jquery.form.js"></script>
 </head>
 <body>
 
@@ -42,6 +43,15 @@
 </form>
 
 
+<form id="addModerator" action="addModerator" method="post">
+    <h1>Add moderator to sub forum</h1>
+    <label>
+        <span>Moderator name:</span>
+        <input type="text" name="moderatorName" placeholder="Moderator Name"/>
+        <input type="submit" value="Add moderator"/>
+    </label>
+</form>
+
 <%--TODO--%>
 <table >
     <tr>
@@ -63,4 +73,25 @@
 
 
 </body>
+<script>
+//    $(document).ready(function(){
+//        $( "#addModerator" ).submit(function( event ) {
+//            event.preventDefault();
+//            alert( "Handler for .submit() called." );
+//            $.post($(this).attr('action'), $(this).serialize());
+//        });
+//    });
+    $(document).ready(function(){
+        $( "#addModerator" ).
+                ajaxForm({
+
+                    success : function (response) {
+                        alert("Moderator added successfuly");
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert("Failed to add moderator");//TODO show error message
+                    }
+                })
+    });
+</script>
 </html>

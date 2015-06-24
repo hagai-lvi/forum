@@ -17,7 +17,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 import java.util.Collection;
 
 /**
@@ -44,7 +46,7 @@ public class WebController {
 	@RequestMapping(value = "/facade",method = RequestMethod.GET)
 	public String showFacade(ModelMap model) {
 		logger.info("showFacade request");
-		FacadeI f = Facade.getFacade();
+		FacadeI f = getFacade();
 		model.addAttribute("forumList", f.getForumList());
 		return "facade";
 	}
@@ -61,7 +63,7 @@ public class WebController {
 	@RequestMapping(value = "/addForum",method = RequestMethod.POST)
 	public String addForum(ModelMap model, String forumName, int numOfModerators, String passRegex) throws PermissionDeniedException, ForumAlreadyExistException, ForumNotFoundException {
 		logger.info("addForum request");
-		FacadeI f = Facade.getFacade();
+		FacadeI f = getFacade();
 		f.addForum(ADMIN_PASS, ADMIN_USER, forumName, false, passRegex, numOfModerators, 365); //TODO get parameters from the user
 		model.addAttribute("forumName", forumName);
 		return "addForum";
@@ -74,7 +76,7 @@ public class WebController {
 	@RequestMapping(value = "/addSubforum",method = RequestMethod.POST)
 	public String addSubforum(ModelMap model, HttpSession session, String subforumName) throws SubForumAlreadyExistException, PermissionDeniedException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
 		logger.info("addSubforum request");
-		FacadeI f = Facade.getFacade();
+		FacadeI f = getFacade();
 		Integer sessionId = (Integer) session.getAttribute(SESSION_ID_ATTR);
 		f.addSubforum(sessionId, subforumName);
 		model.addAttribute("subforumName", subforumName);
@@ -95,7 +97,7 @@ public class WebController {
 	@RequestMapping(value = "guest_forum_homepage", method = RequestMethod.POST)
 	public String guestLogin(ModelMap model, HttpSession session, String forumName) throws ForumNotFoundException, SessionNotFoundException {
 		logger.info("loginToForum request");
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		Integer sessionID = facade.guestEntry(forumName);
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
 		preperaForumHomepageModel(model, facade, session, "Guest");
@@ -109,7 +111,7 @@ public class WebController {
 	public String loginToForum(ModelMap model, HttpSession session, String username, String password, String forumName)
 			throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("loginToForum request");
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		Integer sessionID = facade.login(forumName, username, password);
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
 		String status = facade.getCurrentUserForumStatus(sessionID);
@@ -123,7 +125,7 @@ public class WebController {
 	@RequestMapping(value = "forum_homepage",method = RequestMethod.GET)
 	public String showForumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("showForumHomepage request");
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
 		String status = facade.getCurrentUserForumStatus(sessionID);
 		preperaForumHomepageModel(model, facade, session, status);
@@ -137,7 +139,7 @@ public class WebController {
 	public String register(ModelMap model, String username, String password, String email, String forumName)
 			throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException {
 		logger.info("register request");
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		facade.register(forumName, username, password, email);//TODO - auto login after registration - *Victor thinks its not necessary.*
 		model.addAttribute("forumName", forumName);
 		return "login_page";
@@ -150,24 +152,24 @@ public class WebController {
 	public String resetSystem() throws PermissionDeniedException, ForumAlreadyExistException, PasswordNotInEffectException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumAlreadyExistException, ForumNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("resetSystem request");
 		Facade.dropAllData();
-		FacadeI f = Facade.getFacade();
+		FacadeI f = getFacade();
 		f.addForum("ADMIN", "ADMIN", "A", false, ".*", 5, 365);
 		int sessionID = f.login("A", "ADMIN", "ADMIN");
 		f.addSubforum(sessionID, "A sf1");
 		f.addSubforum(sessionID, "A sf2");
-		f.addSubforum(sessionID, "A sf3");
+//		f.addSubforum(sessionID, "A sf3");TODO put back
 
 		f.addForum("ADMIN", "ADMIN", "B", false, ".*", 5, 365);
 		sessionID = f.login("B", "ADMIN", "ADMIN");
 		f.addSubforum(sessionID, "B sf1");
 		f.addSubforum(sessionID, "B sf2");
-		f.addSubforum(sessionID, "B sf3");
+//		f.addSubforum(sessionID, "B sf3");TODO put back
 
 		f.addForum("ADMIN", "ADMIN", "C", false, ".*", 5, 365);
 		sessionID = f.login("C", "ADMIN", "ADMIN");
 		f.addSubforum(sessionID, "C sf1");
 		f.addSubforum(sessionID, "C sf2");
-		f.addSubforum(sessionID, "C sf3");
+//		f.addSubforum(sessionID, "C sf3");TODO put back
 		return "redirect:/facade";
 	}
 
@@ -185,6 +187,23 @@ public class WebController {
 		model.addAttribute("userStatus", userStatus);
 	}
 
+	@RequestMapping(value = "addModerator", method = RequestMethod.POST)
+	public void addModeratorToSubforum(ModelMap model, HttpSession session,
+										 String moderatorName, HttpServletResponse response) throws UserNotFoundException, PermissionDeniedException, SessionNotFoundException, SubForumNotFoundException, IOException {
+		FacadeI facade = getFacade();
+		facade.setModerator(getSessionID(session),moderatorName);
+		if (! moderatorName.equals("a")){
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST); //TODO add error message
+		}
+		else{
+			response.setStatus(HttpServletResponse.SC_OK);
+		}
+	}
+
+	private FacadeI getFacade() {
+		return Facade.getFacade();
+	}
+
 
 	/**
 	 * redirects to the current forum home page after a login
@@ -192,7 +211,7 @@ public class WebController {
 	@RequestMapping(value = "subforum_homepage",method = RequestMethod.POST)
 	public String showSubforumHomepage(ModelMap model, HttpSession session, String subforumName) throws InvalidUserCredentialsException, SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException {
 		logger.info("showSubforumHomepage request");
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		preperaSubforumHomepageModel(model, facade, session, subforumName);
 		return "subforum_homepage";
 	}
@@ -203,7 +222,7 @@ public class WebController {
 	@RequestMapping(value = "subforum_homepage",method = RequestMethod.GET)
 	public String refreshSubforumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException, SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException {
 		logger.info("refreshSubforumHomepage request");
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 
 		preperaSubforumHomepageModel(model, facade, session, null);
 //		ForumI forum = (ForumI) session.getAttribute(SESSION_FORUM_ATTR);
@@ -237,7 +256,7 @@ public class WebController {
 	@RequestMapping(value = "/addThread",method = RequestMethod.POST)
 	public void addThread(ModelMap model, HttpSession session, String srcMsgTitle, String srcMsgBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("addThread request");
-		FacadeI f = Facade.getFacade();
+		FacadeI f = getFacade();
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
 		f.addThread(sessionID, srcMsgTitle, srcMsgBody);
 		model.addAttribute("threadTitle", srcMsgTitle);
@@ -248,7 +267,7 @@ public class WebController {
 	 */
 	@RequestMapping(value = "thread_view",method = RequestMethod.GET)
 	public String showThread(ModelMap model, HttpSession session, String threadID) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException {
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
 		ExThreadI thread = facade.viewThread(sessionID, threadID);
 		model.addAttribute("thread", thread);
@@ -260,7 +279,7 @@ public class WebController {
 	public String addMessageAndShowThread(ModelMap model, HttpSession session, String newMsgTitle, String newMsgBody,
 										  int messageID) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, ThreadNotFoundException, SubForumDoesNotExistException {
 		int sessionID = getSessionID(session);
-		FacadeI facade = Facade.getFacade();
+		FacadeI facade = getFacade();
 		facade.addReply(sessionID, messageID, newMsgTitle, newMsgBody);
 		ThreadI thread = facade.getCurrentThread(sessionID);
 		model.addAttribute("thread", thread);

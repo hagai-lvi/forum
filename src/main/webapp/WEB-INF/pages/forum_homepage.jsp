@@ -20,6 +20,7 @@
 <label>${userStatus}</label>
 <a href="<c:url value="facade"/>">Click here to go back to Facade page</a>
 
+<%-- Forum admin dashboard --%>
 <c:if test="${isAdmin}">
     <form:form action="addSubforum" method="post">
         <h1>Create new Sub Forum</h1>
@@ -31,17 +32,6 @@
         <label>
             <span>&nbsp;</span>
             <input type="submit" class="button" value="Create" />
-        </label>
-    </form:form>
-    <form:form>
-        <h1>Add moderator to sub forum</h1>
-        <label>
-            <span>Sub forum name:</span>
-            <input type="text" name="subforumName" placeholder="Sub Forum Name"/>
-        </label>
-        <label>
-            <span>Moderator name:</span>
-            <input type="text" name="moderatorName" placeholder="Moderator Name"/>
         </label>
     </form:form>
 </c:if>

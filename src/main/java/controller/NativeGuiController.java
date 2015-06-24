@@ -60,7 +60,6 @@ public class NativeGuiController {
 	public @ResponseBody
 	void addForum(@RequestBody ForumG forum) throws PermissionDeniedException, ForumAlreadyExistException, ForumNotFoundException {
 		FacadeI facade = getFacade();
-		//TODO get credentials from user
 		UserG user = forum.getUser();
 		facade.addForum(user.getUsername(), user.getPassword(),
 				forum.getName(), true, //TODO what should be here?
