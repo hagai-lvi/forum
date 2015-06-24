@@ -3,7 +3,6 @@ package main.Persistancy;
 /**
  * Created by xkcd2 on 4/21/2015.
  */
-
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.AnnotationConfiguration;
 import org.hibernate.cfg.Configuration;
@@ -12,7 +11,7 @@ import org.hibernate.service.ServiceRegistryBuilder;
 
 public class HibernateSessionFactory {
 
-    private static SessionFactory sessionFactory = null;
+    private static final SessionFactory sessionFactory = buildSessionFactory();
 
     private static SessionFactory buildSessionFactory() {
         try {
@@ -30,16 +29,12 @@ public class HibernateSessionFactory {
     }
 
     public static SessionFactory getSessionFactory() {
-        if (sessionFactory == null){
-            sessionFactory = buildSessionFactory();
-        }
         return sessionFactory;
     }
 
     public static void shutdown() {
         // Close caches and connection pools
-        if (getSessionFactory() != null){
-            getSessionFactory().close();
-        }
+        getSessionFactory().close();
     }
+
 }

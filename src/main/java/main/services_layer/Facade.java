@@ -1,7 +1,6 @@
 package main.services_layer;
 
 import data_structures.Tree;
-import main.Persistancy.HibernateSessionFactory;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
@@ -31,8 +30,6 @@ import java.util.Map;
 
 	@Override
 	public void initialize() {
-		HibernateSessionFactory.shutdown();   // clear all connections, close stuff.
-		HibernateSessionFactory.getSessionFactory();  // drops all tables. create new ones by scheme.
 		openSessions = new ArrayList<>();
 		sessionCounter = 0;
 	}
