@@ -1,18 +1,11 @@
 package unit_tests.User;
 
 import main.User.Permissions;
-import main.User.User;
-import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.ForumNotFoundException;
-import main.exceptions.MessageNotFoundException;
-import main.exceptions.PermissionDeniedException;
+import main.exceptions.*;
 import main.forum_contents.Forum;
-import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.SubForum;
-import main.interfaces.ForumPermissionI;
 import main.interfaces.ForumPolicyI;
 import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
@@ -39,12 +32,12 @@ public class UserSubforumPermissionTest {
     private ForumPolicyI policy;
 
     @Before
-    public void setUp() {
+    public void setUp() throws SubForumAlreadyExistException {
         int maxModerators = 1;
         String regex = "a-b";
         policy = new ForumPolicy(false, maxModerators, regex, 365);
         forum = new Forum("Sport", policy);
-        subforum = new SubForum("Sport", policy.getSubforumPolicy());
+        forum.addSubForum("Sport");
         permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER,"Sport", "Sport");
         permission2 = new UserSubforumPermission(Permissions.PERMISSIONS_ADMIN,"Sport", "Sport");
         permission3 = new UserSubforumPermission(Permissions.PERMISSIONS_SUPERADMIN,"Sport", "Sport");
@@ -61,31 +54,28 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testCreateThread()   {
-        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum.getName());
-        MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow1", "Flow1");
         try {
-            permission2.createThread(message);
+            permission2.createThread("Gabi", "Mega Flow1", "Flow1");
         } catch (PermissionDeniedException e) {
             fail("No permission to add thread");
         } catch (DoesNotComplyWithPolicyException e) {
             fail();
         }
-        assertTrue(permission.getSubForum().getThreads().containsKey(message.getMessageTitle()));
+        assertTrue(permission.getSubForum().getThreads().containsKey("Mega Flow1"));
     }
 
     @Test
     public void testReplyToMessage()   {
-        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum.getName());
-        MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2", "Flow2");
+        MessageI message = null;
         try {
-            permission2.createThread(message);
+            message = permission2.createThread("Gabi", "Flow2", "body").getRootMessage();
         } catch (PermissionDeniedException e) {
             fail("No permission to add thread");
         } catch (DoesNotComplyWithPolicyException e) {
             fail();
         }
         try {
-            permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa3", "Help3"));
+            permission2.replyToMessage(message, "Gabi", "Help3", "text");
         } catch (MessageNotFoundException e) {
             fail();
         } catch (DoesNotComplyWithPolicyException e) {
@@ -98,15 +88,15 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testDeleteMessageS()  {
-        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum.getName());
-        MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow2222", "Flow222");
+        MessageI message = null;
+
         try {
-            permission2.createThread(message);
+            message = permission2.createThread("Gabi", "Flow222", "ddd").getRootMessage();
         } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
         try {
-            permission2.replyToMessage(message, new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "aaa", "Help"));
+            permission2.replyToMessage(message, "Gabi", "Help", "ddddd");
         } catch (MessageNotFoundException | PermissionDeniedException | DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
@@ -117,7 +107,7 @@ public class UserSubforumPermissionTest {
             e.printStackTrace();
         }
         try {
-            permission2.replyToMessage(message, message);
+            permission2.replyToMessage(message, "Gabi", "Flow222", "sadasdasd");
         } catch (DoesNotComplyWithPolicyException | PermissionDeniedException e) {
             e.printStackTrace();
         } catch (MessageNotFoundException e) {
@@ -144,10 +134,10 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testDeleteMessageWithoutPermission()   {
-        ForumPermissionI permission4 = new UserForumPermission(Permissions.PERMISSIONS_USER,forum.getName());
-        MessageI message = new ForumMessage(new User("Gabi", "123", "aa@mail.com", permission4), "Mega Flow", "Flow");
+        MessageI message = null;
+
         try {
-            permission2.createThread(message);
+            message = permission2.createThread("Gabi", "title", "sdfsadsf").getRootMessage();
         } catch (PermissionDeniedException e) {
             fail();
         } catch (DoesNotComplyWithPolicyException e) {

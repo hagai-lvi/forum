@@ -23,8 +23,8 @@ public class ForumThread extends PersistantObject implements ThreadI{
     private Tree messages;
 
 
-    public ForumThread(MessageI initialMessage){
-        messages = new Tree(initialMessage);
+    public ForumThread(String user, String title, String text){
+        messages = new Tree(new ForumMessage(user, title, text));
 //        this.Save();
     }
 
@@ -41,17 +41,17 @@ public class ForumThread extends PersistantObject implements ThreadI{
     }
 
     @Override
-    public void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException {
+    public void editMessage(MessageI originalMessage, String title, String newMessage) throws MessageNotFoundException {
         if (newMessage == null){
-            throw new MessageNotFoundException(newMessage);
+            throw new MessageNotFoundException(title);
         }
         MessageI msg = messages.findNode(originalMessage);
 
         if (msg == null){
-            throw new MessageNotFoundException(originalMessage);
+            throw new MessageNotFoundException(originalMessage.getMessageTitle());
         }
-        msg.editTitle(newMessage.getMessageTitle());
-        msg.editText(newMessage.getMessageText());
+        msg.editTitle(title);
+        msg.editText(newMessage);
     }
 
     public Tree getMessages(){
@@ -65,12 +65,14 @@ public class ForumThread extends PersistantObject implements ThreadI{
     }
 
     @Override
-    public void addReply(MessageI reply, MessageI original) throws MessageNotFoundException {
+    public MessageI addReply(MessageI original, String title, String text, String user) throws MessageNotFoundException {
         try {
-            messages.add(reply, original); //TODO - what to do with tree and array of replies?
+            ForumMessage reply = new ForumMessage(user, title, text);
+            messages.add(reply, original);
             original.addReply(reply);
+            return reply;
         } catch (NodeNotFoundException | NullPointerException e) {
-            throw new MessageNotFoundException(original);
+            throw new MessageNotFoundException(original.getMessageTitle());
         }
 //        this.Save();
     }

@@ -31,8 +31,8 @@ public class ForumThreadTest extends TestCase {
         super.setUp();
         forum = new Forum("forum", new ForumPolicy(false, 2, ".*", 365));
         user = new User("user", "pass", "aaa@aaa.aaa", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forum.getName()));
-        msg = new ForumMessage(user, "title", "body");
-        thread = new ForumThread(msg);
+        msg = new ForumMessage("user", "title", "body");
+        thread = new ForumThread("user", "title", "text");
     }
     @After
     public void tearDown() throws Exception {
@@ -54,66 +54,53 @@ public class ForumThreadTest extends TestCase {
         assertEquals(thread.getRootMessage().getMessageText(), "body");
     }
     @Test
-    public void testAddReply() {
-        MessageI reply = new ForumMessage(user, "reply-title", "reply-body");
-        try {
-            thread.addReply(reply, msg);
-        } catch (MessageNotFoundException e) {
-            fail("message not found");
-        }
+    public void testAddReply() throws MessageNotFoundException {
+        MessageI reply;
+        reply = thread.addReply(msg, "reply-title", "reply-body", "user");
         assertEquals(1, thread.getMessages().getRoot().children.size());
-        assertEquals(reply.getMessageTitle(), thread.getMessages().getRoot().children.iterator().next().getData().getMessageTitle());
-        assertEquals(reply.getMessageText(), thread.getMessages().getRoot().children.iterator().next().getData().getMessageText());
-        assertEquals(thread.getMessages().findNode(reply).getMessageTitle(), reply.getMessageTitle());
-        try {
-            thread.addReply(reply, null);
-        } catch (MessageNotFoundException e) {
-            return;
-        }
-        fail("reply to non-existant message");
+        assertEquals("reply-title", thread.getMessages().getRoot().children.iterator().next().getData().getMessageTitle());
+        assertEquals("reply-body", thread.getMessages().getRoot().children.iterator().next().getData().getMessageText());
+        assertEquals(thread.getMessages().findNode(reply).getMessageTitle(), "reply-title");
     }
+
     @Test
     public void testContains() throws Exception {
         assertTrue(thread.contains(msg));
-        MessageI newmsg = new ForumMessage(user, "aaa", "bbb");
-        assertFalse(thread.contains(newmsg));
-        thread.addReply(newmsg, msg);
+        MessageI newmsg =thread.addReply(msg, "aaa", "bbb", "user");
         assertTrue(thread.contains(newmsg));
     }
     @Test
     public void testRemove() throws Exception {
-        MessageI newmsg = new ForumMessage(user, "aaa", "bbb");
-        thread.addReply(newmsg, msg);
+        MessageI newmsg =thread.addReply(msg, "aaa", "bbb", "user");
         thread.remove(newmsg);
         assertFalse(thread.contains(newmsg));
-        thread.addReply(newmsg, msg);
+        MessageI msg =thread.addReply(newmsg, "ccc", "ddd", "user");
         thread.remove(msg);
         assertFalse(thread.contains(newmsg));
         assertFalse(thread.contains(msg));
     }
     @Test
     public void testEditMessage(){
-        MessageI msg = new ForumMessage(user, "newTitle", "newBody");
         try {
-            thread.editMessage(thread.getRootMessage(), msg);
+            thread.editMessage(thread.getRootMessage(),"newTitle", "newBody");
         } catch (MessageNotFoundException e) {
             e.printStackTrace();
         }
-        assertEquals(msg.getMessageTitle(), thread.getRootMessage().getMessageTitle());
-        assertEquals(msg.getMessageText(), thread.getRootMessage().getMessageText());
+        assertEquals("newTitle", thread.getRootMessage().getMessageTitle());
+        assertEquals("newBody", thread.getRootMessage().getMessageText());
 
         try {
-            thread.editMessage(thread.getRootMessage(), null);
+            thread.editMessage(thread.getRootMessage(), null, null);
         } catch (MessageNotFoundException e) {
             assertTrue(true);
         }
-        try {
-            thread.editMessage(null, msg);
-        } catch (MessageNotFoundException e) {
-            assertTrue(true);
-            return;
-        }
-        fail("edited message to null");
+////        try {
+////            thread.editMessage(msg, "", "");
+////        } catch (MessageNotFoundException e) {
+////            assertTrue(true);
+////            return;
+////        }
+//        fail("edited message to null");
 
     }
 }

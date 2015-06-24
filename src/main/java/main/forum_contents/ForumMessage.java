@@ -3,8 +3,6 @@ package main.forum_contents;
 import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
 import main.interfaces.MessageI;
-import main.interfaces.UserI;
-import main.User.User;
 
 import javax.persistence.*;
 import java.util.ArrayList;
@@ -19,8 +17,8 @@ import java.util.List;
 @Entity
 public class ForumMessage implements MessageI {
 
-	@OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
-	private UserI writingUser;
+	//@OneToOne(targetEntity = User.class, cascade = CascadeType.ALL)
+	private String writingUser;
 	@JsonView(NativeGuiController.class)
 	private String messageText;
 	@JsonView(NativeGuiController.class)
@@ -30,7 +28,7 @@ public class ForumMessage implements MessageI {
 	private List<MessageI> replies;
 
 
-	public ForumMessage(UserI user, String messageTitle, String messageText){
+	public ForumMessage(String user, String messageTitle, String messageText){
 		this.writingUser = user;
 		this.messageText = messageText;
 		this.messageTitle = messageTitle;
@@ -43,10 +41,6 @@ public class ForumMessage implements MessageI {
 
 	@Override
 	public void editText(/*UserI user,*/ String newText)/* throws PermissionDeniedException */{
-		/*if (user != this.writingUser){
-			throw new PermissionDeniedException("User can't edit message");
-		}*/ //Why should this be checked here?
-		//Todo resolve check permissions issue here.
 		this.messageText = newText;
 	}
 
@@ -57,7 +51,7 @@ public class ForumMessage implements MessageI {
 
 	@Override
 	public String getUser() {
-		return writingUser.getUsername();
+		return writingUser;
 	}
 	@Override
 	public Date getDate()  { return writingTime; }

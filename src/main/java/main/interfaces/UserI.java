@@ -53,11 +53,11 @@ public interface UserI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void createThread(MessageI message, String subForum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException;
+	ThreadI createThread(String title, String text, String subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException;
 
-	/**
-	 * reply to a specific message
-	 */
+		/**
+         * reply to a specific message
+         */
 	void replyToMessage(String subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException;
 
 	/**

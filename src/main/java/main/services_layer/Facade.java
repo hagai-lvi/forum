@@ -4,7 +4,6 @@ import data_structures.Tree;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
-import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.*;
 
@@ -104,7 +103,7 @@ import java.util.Map;
 	@Override
 	public void addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
-		currentSession.getUser().createThread(new ForumMessage(currentSession.getUser(), srcMessageTitle, srcMessageBody), currentSession.getSubForum().getTitle());
+		currentSession.getUser().createThread(srcMessageTitle, srcMessageBody, currentSession.getSubForum().getTitle());
 	}
 
 	@Override

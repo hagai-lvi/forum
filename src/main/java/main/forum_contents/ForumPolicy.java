@@ -129,12 +129,12 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     }
 
     @Override
-    public boolean isValidMessage(MessageI message) {
+    public boolean isValidMessage(String title, String text) {
         if (
-                message.getMessageTitle() == null ||
-                message.getMessageText() == null ||
-                message.getMessageTitle().equals("") ||
-                message.getMessageText().equals("")
+                title == null ||
+                text == null ||
+                title.equals("") ||
+                text.equals("")
                 )
         {
             return false;

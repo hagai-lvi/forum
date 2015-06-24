@@ -10,10 +10,10 @@ public interface ThreadI extends ExThreadI{
 
 	MessageI getRootMessage();
 
-	public Tree getMessages();
+	Tree getMessages();
 
 
-	void addReply(MessageI reply, MessageI original) throws MessageNotFoundException;
+	MessageI addReply(MessageI original, String title, String text, String user) throws MessageNotFoundException;
 
 	boolean contains(MessageI message);
 
@@ -21,7 +21,7 @@ public interface ThreadI extends ExThreadI{
 
 	String getTitle();
 
-	void editMessage(MessageI originalMessage, MessageI newMessage) throws MessageNotFoundException;
+	void editMessage(MessageI originalMessage, String title, String newMessage) throws MessageNotFoundException;
 
 	public int getMessagesCount();
 }

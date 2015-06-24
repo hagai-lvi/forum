@@ -44,11 +44,11 @@ import javax.persistence.Id;
 
 
     @Override
-    public void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+    public ThreadI createThread(String user, String title, String text) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
         if( ! permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to create thread");
             Forum f =  Forum.load(forum);
-            f.getSubForums().get(subforum).addThread(message);
+            return f.getSubForums().get(subforum).addThread(user, title, text);
            // f.Update();
         } else {
             logger.error(permission + " has no permission to create thread");
@@ -57,11 +57,11 @@ import javax.persistence.Id;
     }
 
    @Override
-    public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
+    public void replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
         if(!permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to reply");
             Forum f =  Forum.load(forum);
-            f.getSubForums().get(subforum).replyToMessage(original, reply);
+            f.getSubForums().get(subforum).replyToMessage(original, user, title, text);
             f.Update();
         } else {
             logger.error(permission + " has no permission to reply");

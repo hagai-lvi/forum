@@ -61,26 +61,26 @@ public class SubForum extends PersistantObject implements SubForumI {
     // ================================================ Methods   =========================================
 
     @Override
-    public ThreadI addThread(MessageI message) throws DoesNotComplyWithPolicyException {
-        if (!subforumPolicy.isValidMessage(message)) {
+    public ThreadI addThread(String user, String title, String text) throws DoesNotComplyWithPolicyException {
+        if (!subforumPolicy.isValidMessage(title, text)) {
             throw new DoesNotComplyWithPolicyException("message does not comply with forum policy.");
         }
-        ThreadI thread = new ForumThread(message);
-        _threads.put(message.getMessageTitle(), thread);
+        ThreadI thread = new ForumThread(user, title, text);
+        _threads.put(title, thread);
         return thread;
     }
 
     @Override
-    public void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException {
-        if (!subforumPolicy.isValidMessage(reply)){
+    public void replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException {
+        if (!subforumPolicy.isValidMessage(title, text)){
             throw new DoesNotComplyWithPolicyException("message does not comply with forum policy.");
         }
         ThreadI thread = _threads.get(original.getMessageTitle());
         if (thread == null){
             logger.warn("User tried to reply to already deleted thread");
-            throw new MessageNotFoundException(original);
+            throw new MessageNotFoundException(title);
         }
-        thread.addReply(reply, original);
+        thread.addReply(original, title, text, user);
 //        this.Update();
     }
 
@@ -109,7 +109,7 @@ public class SubForum extends PersistantObject implements SubForumI {
             thread.remove(message);
         }
         else {
-            throw new MessageNotFoundException(message);
+            throw new MessageNotFoundException(message.getMessageTitle());
         }
         //this.Update();
     }

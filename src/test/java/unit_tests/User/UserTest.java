@@ -6,7 +6,6 @@ import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.exceptions.*;
 import main.forum_contents.Forum;
-import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.SubForum;
 import main.interfaces.*;
@@ -146,52 +145,47 @@ public class UserTest {
     @Test
     public void testCreateThread() throws PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, ForumNotFoundException, DoesNotComplyWithPolicyException {
         user2.createSubForum("Football");
-        MessageI message = new ForumMessage(user1, "Mega Flow", "Flow");
-        user2.createThread(message, "Football");
+        user2.createThread("Mega Flow", "Flow", "Football");
     }
 
     @Test
     public void testReplyToMessage() throws SubForumAlreadyExistException, PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException, ForumNotFoundException {
         User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
-        MessageI message1 = new ForumMessage(user1, "Mega Flow", "Flow");
-        MessageI message2 = new ForumMessage(user2, "Mega Flow", "Help");
-        User.getUserFromDB("Tom", "Lifestyle").createThread(message1, "Football");
-        User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", message1, "WTF", "Help");
-        User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", message1.getReplies().iterator().next(), "WTF", "Yeah!");
-        assertEquals(message1.printSubTree(), "Flow--> Help--> Yeah!");
+        ThreadI thread = User.getUserFromDB("Tom", "Lifestyle").createThread("Mega Flow", "Flow", "Football");
+        User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", thread.getRootMessage(), "WTF", "Help");
+        User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", thread.getRootMessage().getReplies().iterator().next(), "WTF", "Yeah!");
+        assertEquals(thread.getRootMessage().printSubTree(), "Flow--> Help--> Yeah!");
     }
 
     @Test
     public void testDeleteMessageS() throws MessageNotFoundException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException {
         user2.createSubForum("Football");
-        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum.getName(), "Football");
-        MessageI message = new ForumMessage(user1, "Mega Flow", "Flow");
-        user2.createThread(message, "Football");
-        assertEquals(message.printSubTree(), "Flow");
-        user2.replyToMessage("Football", message, "WTF", "Help");
-        assertEquals(message.printSubTree(), "Flow--> Help");
-        user1.replyToMessage("Football", message, "WTF", "Yeah!");
-        assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
-        user1.deleteMessage(message, "Football");
-        user1.replyToMessage("Football", message, "aaa", "bbb");
+        ThreadI thread = user2.createThread("Football", "Mega Flow", "Flow");
+        assertEquals(thread.getRootMessage().printSubTree(), "Flow");
+        user2.replyToMessage("Football", thread.getRootMessage(), "WTF", "Help");
+        assertEquals(thread.getRootMessage().printSubTree(), "Flow--> Help");
+        user1.replyToMessage("Football", thread.getRootMessage(), "WTF", "Yeah!");
+        assertEquals(thread.getRootMessage().printSubTree(), "Flow--> Help--> Yeah!");
+        user1.deleteMessage(thread.getRootMessage(), "Football");
+        user1.replyToMessage("Football", thread.getRootMessage(), "aaa", "bbb");
     }
 
     @Test
     public void testDeleteMessageWithoutPermission() throws SubForumAlreadyExistException, ForumNotFoundException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, MessageNotFoundException {
+        ThreadI thread = null;
         try {
             user2.createSubForum("Football");
         } catch (PermissionDeniedException e) {
             fail();
         }
         SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum.getName(), "Football");
-        MessageI message = new ForumMessage(user1, "Mega Flow", "Flow");
         try {
-            user2.createThread(message, "Football");
+           thread = user2.createThread("Football", "Mega Flow", "Flow");
         } catch (PermissionDeniedException e) {
             fail();
         }
         try {
-            user2.deleteMessage(message, "Football"); // PermissionDeniedException expected
+            user2.deleteMessage(thread.getRootMessage(), "Football"); // PermissionDeniedException expected
             fail();
         } catch (PermissionDeniedException e) {
             assertTrue(true);

@@ -16,12 +16,11 @@ public interface SubForumPermissionI {
 	/**
 	 * create a thread in the subforum
 	 */
-	void createThread(MessageI message) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
-
+	ThreadI createThread(String user, String title, String text) throws PermissionDeniedException, DoesNotComplyWithPolicyException;
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(MessageI original, MessageI reply) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
+	void replyToMessage(MessageI original, String user, String title, String text) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator

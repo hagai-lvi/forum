@@ -16,12 +16,11 @@ public interface SubForumI extends ExSubForumI{
 	/**
 	 * create a thread in the sub-forum
 	 */
-	ThreadI addThread(MessageI message) throws DoesNotComplyWithPolicyException;
-
+	ThreadI addThread(String user, String title, String text) throws DoesNotComplyWithPolicyException;
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(MessageI original, MessageI reply) throws MessageNotFoundException, DoesNotComplyWithPolicyException;
+	void replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator

@@ -3,7 +3,6 @@ package main.User;
 import main.Persistancy.PersistantObject;
 import main.Utils.SecureString;
 import main.exceptions.*;
-import main.forum_contents.ForumMessage;
 import main.interfaces.*;
 import org.hibernate.annotations.ColumnTransformer;
 
@@ -121,13 +120,13 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     @Override
-    public void createThread(MessageI message, String subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
-        findPermission(subforum).createThread(message);
+    public ThreadI createThread(String title, String text, String subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
+        return findPermission(subforum).createThread(username, title, text);
     }
 
     @Override
-    public void replyToMessage(String subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
-        findPermission(subforum).replyToMessage(original, new ForumMessage(this, msgTitle, msgBody));
+    public void replyToMessage(String subforum, MessageI original, String title, String text) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
+        findPermission(subforum).replyToMessage(original, username, text, title);
     }
 
     @Override

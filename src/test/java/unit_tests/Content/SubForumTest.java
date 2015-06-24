@@ -1,11 +1,14 @@
 package unit_tests.Content;
 
 import junit.framework.TestCase;
+import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
-import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
-import main.interfaces.*;
+import main.interfaces.ForumI;
+import main.interfaces.SubForumI;
+import main.interfaces.ThreadI;
+import main.interfaces.UserI;
 import org.junit.After;
 import org.junit.Before;
 
@@ -27,7 +30,7 @@ public class SubForumTest extends TestCase {
         forum.addSubForum("subforum");
         subforum = forum.getSubForums().get("subforum");
         forum.register("user", "aaa", "aaa@aaa.aaa");
-        user = forum.getUserList().iterator().next();
+        user = User.getUserFromDB("user", "forum");
 
     }
     @After
@@ -37,21 +40,21 @@ public class SubForumTest extends TestCase {
 
     public void testGetModerators()   {
 
-        subforum.setModerator(user);
-        assertSame(user, subforum.getModerators().get(user.getUsername()));
+        Forum.load("forum").getSubForums().get("subforum").setModerator(user);
+        assertSame(user, Forum.load("forum").getSubForums().get("subforum").getModerators().get(user.getUsername()));
 
 
     }
 
     public void testCreateThread() throws DoesNotComplyWithPolicyException {
-        ThreadI thread = subforum.addThread(new ForumMessage(user, "msg", "msg"));
-        assertTrue(subforum.getThreads().containsKey("msg"));
+        ThreadI thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "msg", "msg");
+        assertTrue(Forum.load("forum").getSubForums().get("subforum").getThreads().containsKey("msg"));
         assertEquals(thread.getRootMessage().getMessageText(), "msg");
         assertEquals(thread.getRootMessage().getMessageTitle(), "msg");
-        assertEquals(subforum.getThreads().size(), 1);
+        assertEquals(Forum.load("forum").getSubForums().get("subforum").getThreads().size(), 1);
         assertEquals(thread.getMessages().getRoot().children.size(), 0);
         try{
-            subforum.addThread(new ForumMessage(user, "", ""));
+            Forum.load("forum").getSubForums().get("subforum").addThread("user", "", "");
         } catch (DoesNotComplyWithPolicyException e){
             assertTrue(true);
             return;
@@ -60,22 +63,20 @@ public class SubForumTest extends TestCase {
     }
 
     public void testReplyToMessage() throws DoesNotComplyWithPolicyException, MessageNotFoundException {
-        ThreadI thread = subforum.addThread(new ForumMessage(user, "msg", "msg"));
-        MessageI newmsg = new ForumMessage(user, "gsm", "gsm");
-        subforum.replyToMessage(thread.getRootMessage(), newmsg);
+        ThreadI thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "msg", "msg");
+        Forum.load("forum").getSubForums().get("subforum").replyToMessage(thread.getRootMessage(), "user", "gsm", "gsm");
         assertEquals(thread.getRootMessage().getMessageText(), "msg");
         assertEquals(thread.getRootMessage().getMessageTitle(), "msg");
         assertEquals(thread.getMessages().getRoot().children.size(), 1);
-        assertEquals(thread.getMessages().getRoot().children.iterator().next().data.getMessageText(), newmsg.getMessageText());
-        assertEquals(thread.getMessages().getRoot().children.iterator().next().data.getMessageTitle(),newmsg.getMessageTitle());
-        assertEquals(subforum.getThreads().size(), 1);
+        assertEquals(thread.getMessages().getRoot().children.iterator().next().data.getMessageText(), "gsm");
+        assertEquals(thread.getMessages().getRoot().children.iterator().next().data.getMessageTitle(),"gsm");
+        assertEquals(Forum.load("forum").getSubForums().get("subforum").getThreads().size(), 1);
     }
 
     public void testReplyToInvalidMessage() throws MessageNotFoundException {
         try {
-            ThreadI thread = subforum.addThread(new ForumMessage(user, "msg", "msg"));
-            MessageI newmsg = new ForumMessage(user, "", "");
-            subforum.replyToMessage(thread.getRootMessage(), newmsg);
+            ThreadI thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "msg", "msg");
+            Forum.load("forum").getSubForums().get("subforum").replyToMessage(thread.getRootMessage(), "user", "", "");
         } catch (DoesNotComplyWithPolicyException e) {
             assertTrue(true);
             return;
@@ -85,9 +86,8 @@ public class SubForumTest extends TestCase {
 
     public void testReplyToNonExistentMessage() throws DoesNotComplyWithPolicyException {
         try {
-            ThreadI thread = subforum.addThread(new ForumMessage(user, "msg", "msg"));
-            MessageI newmsg = new ForumMessage(user, "def", "abc");
-            subforum.replyToMessage(newmsg, newmsg);
+            ThreadI thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "msg", "msg");
+            Forum.load("forum").getSubForums().get("subforum").replyToMessage(thread.getRootMessage(), "user", "def", "abc");
         } catch (MessageNotFoundException e) {
             assertTrue(true);
             return;
@@ -96,9 +96,9 @@ public class SubForumTest extends TestCase {
     }
 
     public void testSetModerator()  {
-        subforum.setModerator(user);
-        assertEquals(subforum.getModerators().size(), 1);
-        assertSame(subforum.getModerators().get(user.getUsername()), user);
+        Forum.load("forum").getSubForums().get("subforum").setModerator(user);
+        assertEquals(Forum.load("forum").getSubForums().get("subforum").getModerators().size(), 1);
+        assertSame(Forum.load("forum").getSubForums().get("subforum").getModerators().get(user.getUsername()), user);
     }
 
     public void testReportModerator()  {
@@ -106,16 +106,15 @@ public class SubForumTest extends TestCase {
     }
 
     public void testDeleteMessage() throws DoesNotComplyWithPolicyException, MessageNotFoundException {
-        ThreadI thread = subforum.addThread(new ForumMessage(user, "msg", "msg"));
-        MessageI newmsg = new ForumMessage(user, "gsm", "gsm");
-        subforum.replyToMessage(thread.getRootMessage(), newmsg);
-        subforum.deleteMessage(newmsg, user.getUsername());
+        ThreadI thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "msg", "msg");
+        Forum.load("forum").getSubForums().get("subforum").replyToMessage(thread.getRootMessage(), "user", "gsm", "gsm");
+        Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage(), user.getUsername());
         assertEquals(thread.getMessages().getRoot().children.size(), 0);
-        subforum.deleteMessage(thread.getRootMessage(), "user");
-        assertEquals(subforum.getThreads().size(), 0);
+        Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage(), "user");
+        assertEquals(Forum.load("forum").getSubForums().get("subforum").getThreads().size(), 0);
 
         try{
-            subforum.deleteMessage(newmsg, user.getUsername());
+            Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage(), user.getUsername());
         } catch (MessageNotFoundException e){
             assertTrue(true);
             return;
@@ -125,48 +124,46 @@ public class SubForumTest extends TestCase {
     }
 
     public void testRemoveModerator()   {
-        subforum.setModerator(user);
-        subforum.removeModerator(user.getUsername());
-        assertEquals(subforum.getModerators().size(), 0);
+        Forum.load("forum").getSubForums().get("subforum").setModerator(user);
+        Forum.load("forum").getSubForums().get("subforum").removeModerator(user.getUsername());
+        assertEquals(Forum.load("forum").getSubForums().get("subforum").getModerators().size(), 0);
     }
 
     public void testGetTitle()  {
-        assertEquals(subforum.getTitle(), "subforum");
+        assertEquals(Forum.load("forum").getSubForums().get("subforum").getTitle(), "subforum");
     }
 
     public void testGetThreads() throws DoesNotComplyWithPolicyException {
-        ThreadI thread = subforum.addThread(new ForumMessage(user, "msg", "thread"));
-        assertEquals(subforum.getThreads().size(), 1);
-        assertTrue(subforum.getThreads().containsKey(thread.getTitle()));
+        ThreadI thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "msg", "thread");
+        assertEquals(Forum.load("forum").getSubForums().get("subforum").getThreads().size(), 1);
+        assertTrue(Forum.load("forum").getSubForums().get("subforum").getThreads().containsKey(thread.getTitle()));
     }
 
     public void testEditMessage() {
-        MessageI msg = new ForumMessage(user, "title", "body");
-        MessageI newmsg = new ForumMessage(user, "newTitle", "newBody");
         ThreadI thread = null;
         try {
-            thread = subforum.addThread(msg);
+            thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "title", "body");
         } catch (DoesNotComplyWithPolicyException e) {
             e.printStackTrace();
         }
         try {
-            subforum.editMessage(thread, thread.getRootMessage().getId(), "newTitle", "newBody");
+            Forum.load("forum").getSubForums().get("subforum").editMessage(thread, thread.getRootMessage().getId(), "newTitle", "newBody");
         } catch (MessageNotFoundException e) {
             e.printStackTrace();
         }
-        assertEquals(newmsg.getMessageTitle(), thread.getRootMessage().getMessageTitle());
-        assertEquals(newmsg.getMessageText(), thread.getRootMessage().getMessageText());
+        assertEquals("newTitle", thread.getRootMessage().getMessageTitle());
+        assertEquals("newBody", thread.getRootMessage().getMessageText());
     }
 
     public void testSeveralThreads() throws DoesNotComplyWithPolicyException {
         List<ThreadI> threads = new LinkedList<>();
         for (int i=0; i < 10; i++) {
-            ThreadI thread = subforum.addThread(new ForumMessage(user, "msg", "msg" + i));
+            ThreadI thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "msg", "msg" + i);
             threads.add(thread);
         }
         for (int i=0; i < 10; i++) {
-            assertTrue(subforum.getThreads().containsKey(threads.get(i).getTitle()));
+            assertTrue(Forum.load("forum").getSubForums().get("subforum").getThreads().containsKey(threads.get(i).getTitle()));
         }
-        assertEquals(subforum.getThreads().values().size(), 10);
+        assertEquals(Forum.load("forum").getSubForums().get("subforum").getThreads().values().size(), 10);
     }
 }

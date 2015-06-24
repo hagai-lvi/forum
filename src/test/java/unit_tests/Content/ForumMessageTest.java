@@ -26,7 +26,7 @@ public class ForumMessageTest extends TestCase {
     public void setUp() {
         ForumI forum = new Forum("forum2", new ForumPolicy(false, 2, ".*", 365));
         user = new User("user", "pass", "mail@mail.mail", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, "forum2"));
-        message = new ForumMessage(user, "title", "body");
+        message = new ForumMessage("user", "title", "body");
     }
 
     public void tearDown(){
@@ -62,7 +62,7 @@ public class ForumMessageTest extends TestCase {
     }
 
     public void testAddReply()  {
-        MessageI reply = new ForumMessage(user, "reply-title", "reply-body");
+        MessageI reply = new ForumMessage("user", "reply-title", "reply-body");
         message.addReply(reply);
         assertEquals(1, message.getReplies().size());
         assertEquals(message.getReplies().iterator().next(), reply);
