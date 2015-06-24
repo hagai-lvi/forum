@@ -20,6 +20,8 @@
   <input type="text" placeholder="Forum Name"  id="forumName" name="forumName" /><br/>
   <input type="number" placeholder="Maximal Number Of Moderators" name="numOfModerators"/><br/>
   <input type="text" placeholder="Password Regex"  name="passRegex"/><br/>
+  <input type="checkbox" name="isSecured"/> secured forum <br/>
+  <input type="number" name="passwordEffectTime" placeholder="Password Effect Time"> <br/>
   <input type="submit" value="Create forum" /><br/>
 </form:form>
 
