@@ -5,7 +5,6 @@ import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
-import main.forum_contents.ForumThread;
 import main.interfaces.*;
 import org.junit.After;
 import org.junit.Before;
@@ -166,9 +165,8 @@ public class SubForumTest extends TestCase {
             threads.add(thread);
         }
         for (int i=0; i < 10; i++) {
-            ThreadI thread = new ForumThread(new ForumMessage(user, "msg", "msg" + i));
-            assertTrue(subforum.getThreads().containsKey(threads.get(i)));
+            assertTrue(subforum.getThreads().containsKey(threads.get(i).getTitle()));
         }
-        assertEquals(subforum.getThreads().size(), 10);
+        assertEquals(subforum.getThreads().values().size(), 10);
     }
 }

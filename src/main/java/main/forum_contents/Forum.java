@@ -13,7 +13,10 @@ import main.interfaces.*;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -97,7 +100,7 @@ public class Forum extends PersistantObject implements ForumI{
 
         for (SubForumI subForum: _subForums.values()){
             UserSubforumPermission permission;
-            permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, this, subForum);
+            permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forum_name, subForum.getTitle());
             admin.addSubForumPermission(subForum.getTitle(), permission);
         }
         Update();
@@ -142,14 +145,14 @@ public class Forum extends PersistantObject implements ForumI{
             if (user != null) {
                 UserSubforumPermission permission;
                 if (!user.isAdmin()) {
-                    permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, this, subForum);
+                    permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forum_name, subForum.getTitle());
                 } else if(!user.isGuest()){
-                    permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, this, subForum);
-                } else permission = new UserSubforumPermission(Permissions.PERMISSIONS_GUEST, this, subForum);
+                    permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum_name, subForum.getTitle());
+                } else permission = new UserSubforumPermission(Permissions.PERMISSIONS_GUEST, forum_name, subForum.getTitle());
                 user.addSubForumPermission(subForumName, permission);
             }
         }
-        Update();
+        this.Update();
 //TODO - update() does not work
        return subForum;
     }
@@ -165,7 +168,7 @@ public class Forum extends PersistantObject implements ForumI{
 
     private void addAllSubforumsToUser(UserI user, Permissions perm){
         for (SubForumI sub: _subForums.values()){
-            user.addSubForumPermission(sub.getTitle(), new UserSubforumPermission(perm, this, sub));
+            user.addSubForumPermission(sub.getTitle(), new UserSubforumPermission(perm, forum_name, sub.getTitle()));
         }
     }
 
@@ -287,13 +290,6 @@ public class Forum extends PersistantObject implements ForumI{
             forum.policy = null;
             forum.Update();
         }
-        forum._subForums.clear();
-        forum.Update();
-        if (forum._subForums != null) {
-            forum._subForums = null;
-            forum.Update();
-        }
-
         pers.Delete(forum);
 
     }

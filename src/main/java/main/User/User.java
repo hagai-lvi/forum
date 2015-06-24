@@ -109,7 +109,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
     @Override
     public SubForumI createSubForum(String name) throws PermissionDeniedException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException {
         SubForumI subforum = forumPermissions.createSubForum(name);
-        UserSubforumPermission newPerms = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forumPermissions.getForum(), forumPermissions.getSubForum(name));
+        UserSubforumPermission newPerms = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forumPermissions.getForum().getName(), name);
         subForumsPermissions.put(name, newPerms);
         this.Update();
         return subforum;
@@ -123,7 +123,6 @@ public class User extends PersistantObject implements UserI, Cloneable {
     @Override
     public void createThread(MessageI message, String subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
         findPermission(subforum).createThread(message);
-       // this.Update();
     }
 
     @Override
@@ -331,6 +330,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
         User user = getUserFromDB(username, forumname);
         if(user == null) throw new UserNotFoundException("User not found");
         if (user.subForumsPermissions != null) {
+            user.subForumsPermissions.clear();
             user.subForumsPermissions = null;
             user.Update();
         }

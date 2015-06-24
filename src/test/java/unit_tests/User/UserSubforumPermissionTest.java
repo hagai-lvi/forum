@@ -45,9 +45,9 @@ public class UserSubforumPermissionTest {
         policy = new ForumPolicy(false, maxModerators, regex, 365);
         forum = new Forum("Sport", policy);
         subforum = new SubForum("Sport", policy.getSubforumPolicy());
-        permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER,forum, subforum);
-        permission2 = new UserSubforumPermission(Permissions.PERMISSIONS_ADMIN,forum, subforum);
-        permission3 = new UserSubforumPermission(Permissions.PERMISSIONS_SUPERADMIN,forum, subforum);
+        permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER,"Sport", "Sport");
+        permission2 = new UserSubforumPermission(Permissions.PERMISSIONS_ADMIN,"Sport", "Sport");
+        permission3 = new UserSubforumPermission(Permissions.PERMISSIONS_SUPERADMIN,"Sport", "Sport");
     }
 
     @After
@@ -70,7 +70,7 @@ public class UserSubforumPermissionTest {
         } catch (DoesNotComplyWithPolicyException e) {
             fail();
         }
-        assertTrue(permission.getSubForum().getThreads().containsKey(message));
+        assertTrue(permission.getSubForum().getThreads().containsKey(message.getMessageTitle()));
     }
 
     @Test

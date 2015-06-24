@@ -455,16 +455,17 @@ public class FacadeTest {
 
     @Test
     public void testCreateNewThread() throws PermissionDeniedException, ForumAlreadyExistException, PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumAlreadyExistException, SessionNotFoundException, SubForumDoesNotExistException, SubForumNotFoundException, DoesNotComplyWithPolicyException {
-        FacadeI f = Facade.getFacade();
-        f.addForum("ADMIN", "ADMIN", "A", false, ".*", 5, 365);
-        int sessionID = f.login("A", "ADMIN", "ADMIN");
-        f.addSubforum(sessionID, "A sf1");
-        f.getSubForumList(sessionID);
-        f.viewSubforum(sessionID, "A sf1");
-        f.addThread(sessionID, "TITLEEEE", "BODYYY");
-        f.viewModeratorStatistics(sessionID);
+        fail();
+    }
 
-
+    @Test
+    public void testAddSubforum() throws UserNotFoundException, PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException, EmailNotAuthanticatedException, UserAlreadyExistsException, InvalidUserCredentialsException, DoesNotComplyWithPolicyException, PasswordNotInEffectException, NeedMoreAuthParametersException, SubForumAlreadyExistException, SessionNotFoundException, SubForumDoesNotExistException {
+        theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
+        theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+        theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
+        int sessionId = theFacade.login("Temp", "Victor", "123456");
+        theFacade.addSubforum(sessionId, "sub");
+        theFacade.addSubforum(sessionId, "sub2");
     }
 
     @Test
@@ -511,121 +512,122 @@ public class FacadeTest {
 
     @Test
     public void testGuestEntry()  {
-
+        fail();
     }
 
     @Test
     public void testAddUserType() {
-
+        fail();
     }
 
     @Test
     public void testRemoveForum() {
-
+        fail();
     }
 
     @Test
     public void testSetPolicies()  {
-
+        fail();
     }
 
     @Test
     public void testEditMessage() {
+        fail();
     }
 
     @Test
     public void testRemoveModerator()  {
-
+        fail();
     }
 
     @Test
     public void testViewModeratorStatistics() {
-
+        fail();
     }
 
     @Test
     public void testViewSuperManagerStatistics()  {
-
+        fail();
     }
 
     @Test
     public void testViewSessions()  {
-
+        fail();
     }
 
     @Test
     public void testGetMessage()  {
-
+        fail();
     }
 
     @Test
     public void testGetThreadsList()  {
-
+        fail();
     }
 
     @Test
     public void testGetMessageList()  {
-
+        fail();
     }
 
     @Test
     public void testGetCurrentForumName()  {
-
+        fail();
     }
 
     @Test
     public void testGetCurrentUserName() {
-
+        fail();
     }
 
     @Test
     public void testIsAdmin() {
-
+        fail();
     }
 
     @Test
     public void testViewSubforum()  {
-
+        fail();
     }
 
     @Test
     public void testViewSubforum1()  {
-
+        fail();
     }
 
     @Test
     public void testViewThread()  {
-
+        fail();
     }
 
     @Test
     public void testGetCurrentThread()  {
-
+        fail();
     }
 
     @Test
     public void testAuthanticateUser()  {
-
+        fail();
     }
 
     @Test
     public void testGetFacade() {
-
+        fail();
     }
 
     @Test
     public void testDropAllData()  {
-
+        fail();
     }
 
     @Test
     public void isMessageFromCurrentUser()  {
-
+        fail();
     }
 
     @Test
     public void getCurrentUserStatus()  {
-
+        fail();
     }
 
     private boolean isForumExist(String forumName) {

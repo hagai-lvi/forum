@@ -155,16 +155,16 @@ public class UserTest {
         User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
         MessageI message1 = new ForumMessage(user1, "Mega Flow", "Flow");
         MessageI message2 = new ForumMessage(user2, "Mega Flow", "Help");
-        User.getUserFromDB("Gabi", "Lifestyle").createThread(message1, "Football");
+        User.getUserFromDB("Tom", "Lifestyle").createThread(message1, "Football");
         User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", message1, "WTF", "Help");
-        User.getUserFromDB("Gabi", "Lifestyle").replyToMessage("Football", message1.getReplies().iterator().next(), "WTF", "Yeah!");
+        User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", message1.getReplies().iterator().next(), "WTF", "Yeah!");
         assertEquals(message1.printSubTree(), "Flow--> Help--> Yeah!");
     }
 
     @Test
     public void testDeleteMessageS() throws MessageNotFoundException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException {
         user2.createSubForum("Football");
-        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().get("Football"));
+        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum.getName(), "Football");
         MessageI message = new ForumMessage(user1, "Mega Flow", "Flow");
         user2.createThread(message, "Football");
         assertEquals(message.printSubTree(), "Flow");
@@ -183,7 +183,7 @@ public class UserTest {
         } catch (PermissionDeniedException e) {
             fail();
         }
-        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().get("Football"));
+        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum.getName(), "Football");
         MessageI message = new ForumMessage(user1, "Mega Flow", "Flow");
         try {
             user2.createThread(message, "Football");

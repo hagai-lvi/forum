@@ -75,7 +75,7 @@ public class SubForum extends PersistantObject implements SubForumI {
         if (!subforumPolicy.isValidMessage(reply)){
             throw new DoesNotComplyWithPolicyException("message does not comply with forum policy.");
         }
-        ThreadI thread = findThread(original);
+        ThreadI thread = _threads.get(original.getMessageTitle());
         if (thread == null){
             logger.warn("User tried to reply to already deleted thread");
             throw new MessageNotFoundException(original);
@@ -100,11 +100,11 @@ public class SubForum extends PersistantObject implements SubForumI {
 
     @Override
     public void deleteMessage(MessageI message, String requestingUser) throws MessageNotFoundException {
-        ThreadI thread = findThread(message);
+        ThreadI thread = _threads.get(message.getMessageTitle());
         if (thread != null){
             if (message.equals(thread.getRootMessage())){
                 //need to remove this thread from the subforum
-                _threads.remove(thread);
+                _threads.remove(thread.getTitle());
             }
             thread.remove(message);
         }
@@ -148,17 +148,6 @@ public class SubForum extends PersistantObject implements SubForumI {
             sum+= t.getMessagesCount();
         }
         return sum;
-    }
-    /**
-     * Find the thread that contains the specified message
-     */
-    private ThreadI findThread(MessageI message){
-        for (ThreadI t: _threads.values()){
-            if (t.contains(message)){
-                return t;
-            }
-        }
-        return null;
     }
 
 
