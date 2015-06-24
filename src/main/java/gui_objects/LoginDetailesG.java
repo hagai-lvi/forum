@@ -1,9 +1,11 @@
 package gui_objects;
 
+import java.io.Serializable;
+
 /**
  * Created by hagai_lvi on 6/23/15.
  */
-public class LoginDetailesG {
+public class LoginDetailesG implements Serializable {
 	private String username;
 	private String password;
 	private String email;

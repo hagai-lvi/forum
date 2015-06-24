@@ -42,6 +42,8 @@ public class NativeGuiController {
 
 	/**
 	 * Register a user to the specified forum
+	 * Example usage:  send post request to {@code http://localhost:8080/forum-system/gui/register/A}
+	 *  with the following json{@code {"username":"a", "password":"a", "email":"a@a.a"}}
 	 */
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/register/{forumID}", method = RequestMethod.POST)
