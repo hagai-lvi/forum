@@ -66,10 +66,11 @@ public class UserForumPermissionTest {
     public void testCreateSubForumForAdmin() throws PermissionDeniedException, ForumNotFoundException, SubForumAlreadyExistException {
         Map<String, SubForumI> subForums = forum.getSubForums();
         SubForumI subforum = new SubForum("Football", policy.getSubforumPolicy());
-        assertFalse(subForums.containsKey(subforum));
+        assertFalse(subForums.containsKey(subforum.getTitle()));
         permission2.createSubForum("Football");
+        forum = Forum.load(forum.getName());
         subForums = forum.getSubForums();
-        assertTrue(subForums.containsKey(subforum));
+        assertTrue(subForums.containsKey(subforum.getTitle()));
     }
 
     private boolean contains(Collection<SubForumI> subForums, SubForumI subforum) {
@@ -94,13 +95,14 @@ public class UserForumPermissionTest {
     @Test
     public void testDeleteSubForumForAdmin() throws PermissionDeniedException, ForumNotFoundException, SubForumAlreadyExistException, SubForumDoesNotExistException {
         Map<String, SubForumI> subForums;
-        SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
-        permission2.createSubForum("Baseball");
+        SubForumI subforum = permission2.createSubForum("Baseball");
+        forum = Forum.load(forum.getName());
         subForums = forum.getSubForums();
-        assertTrue(subForums.containsKey(subforum));
+        assertTrue(subForums.containsKey(subforum.getTitle()));
         permission2.deleteSubForum(subforum);
+        forum = Forum.load(forum.getName());
         subForums = forum.getSubForums();
-        assertFalse(subForums.containsKey(subforum));
+        assertFalse(subForums.containsKey(subforum.getTitle()));
     }
 
 

@@ -134,9 +134,11 @@ public class UserTest {
         Map<String, SubForumI> subForums;
         SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
         user2.createSubForum("Baseball");
+        forum = Forum.load(forum.getName());
         subForums = forum.getSubForums();
         assertTrue(subForums.containsKey(subforum));
         user2.deleteSubForum(subforum);
+        forum = Forum.load(forum.getName());
         subForums = forum.getSubForums();
         assertFalse(subForums.containsKey(subforum));
     }
