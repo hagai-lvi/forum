@@ -6,7 +6,6 @@ import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.interfaces.FacadeI;
 import main.interfaces.ForumI;
-import main.interfaces.SubForumI;
 import main.interfaces.UserI;
 import main.services_layer.Facade;
 import org.junit.After;
@@ -636,11 +635,6 @@ public class FacadeTest {
 
     private boolean findSubforum(int id, String subforum) throws SessionNotFoundException {
         ForumI forum = Forum.load(theFacade.getCurrentForumName(id));
-        for (SubForumI f: forum.getSubForums()){
-            if (f.getTitle().equals(subforum)){
-                return true;
-            }
-        }
-        return false;
+        return forum.getSubForums().containsKey(subforum);
     }
 }

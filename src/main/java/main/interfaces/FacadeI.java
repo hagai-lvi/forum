@@ -6,6 +6,7 @@ import main.services_layer.Session;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -24,7 +25,7 @@ public interface FacadeI {
 	/**
 	 * Get the list of subforums in the specified forum
 	 */
-	Collection<SubForumI> getSubForumList(int sessionId) throws SessionNotFoundException;
+	Map<String, SubForumI> getSubForumList(int sessionId) throws SessionNotFoundException;
 
 	/**
 	 * Add a forum to the system, requires login with permissions
@@ -58,7 +59,7 @@ public interface FacadeI {
 	/**
 	 * Reply to a specific message
 	 */
-	void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException;
+	void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException;
 
 	/**
 	 * Create a new thread in the specified subforum
@@ -80,7 +81,7 @@ public interface FacadeI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException;
+	void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException;
 
 	/**
 	 * Set moderator for subforum
@@ -109,7 +110,7 @@ public interface FacadeI {
 	 * @param sessionId - Id of current session
 	 * @param messageId - Id of message
 	 */
-	void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException;
+	void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException;
 
 	void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException;
 
@@ -117,13 +118,13 @@ public interface FacadeI {
 
 	String viewSuperManagerStatistics(int sessionId) throws SessionNotFoundException;
 
-	String viewSessions(int sessionId);
+	String viewSessions(int sessionId) throws ThreadNotFoundException;
 
-	ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException;
+	ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException, ThreadNotFoundException;
 
-	Collection<ThreadI> getThreadsList(int sessionId) throws SessionNotFoundException;
+	Map<String, ThreadI> getThreadsList(int sessionId) throws SessionNotFoundException;
 
-	Tree getMessageList(int sessionId) throws SessionNotFoundException;
+	Tree getMessageList(int sessionId) throws SessionNotFoundException, ThreadNotFoundException;
 
 	/**
 	 * Return the forum name of the current forum, according to the session id
@@ -151,7 +152,7 @@ public interface FacadeI {
 
 	void authenticateUser(String forum, String user1, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException;
 
-	boolean isMessageFromCurrentUser(int sessionId, int messageId) throws SessionNotFoundException;
+	boolean isMessageFromCurrentUser(int sessionId, int messageId) throws SessionNotFoundException, ThreadNotFoundException;
 
 	String getCurrentUserForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException;
 

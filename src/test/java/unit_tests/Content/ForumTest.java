@@ -38,9 +38,9 @@ public class ForumTest {
 
         @Test
         public void testGetForumList(){
-            Forum f = new Forum("fuck", new ForumPolicy(true, 5, "fuck", 3));
             List<String> lst = Forum.getForumList();
             assertNotEquals(lst, null);
+
         }
 
         @Test

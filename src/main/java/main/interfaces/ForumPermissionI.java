@@ -51,4 +51,6 @@ public interface ForumPermissionI {
 	SubForumI getSubForum(String name) throws ForumNotFoundException, SubForumDoesNotExistException;
 
 	boolean isGuest();
+
+	void becomeAdmin();
 }

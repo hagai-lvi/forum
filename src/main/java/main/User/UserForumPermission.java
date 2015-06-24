@@ -50,7 +50,9 @@ public class UserForumPermission implements ForumPermissionI {
 		logger.trace("Created sub-forum " + name);
 		Forum forum = Forum.load(forumName);
 		if(forum == null) throw new ForumNotFoundException("Forum not found");
-		return forum.addSubForum(name);
+		SubForumI s = forum.addSubForum(name);
+		forum.Update();
+		return s;
 	}
 
 	@Override
@@ -75,14 +77,16 @@ public class UserForumPermission implements ForumPermissionI {
 		if(forum == null) throw new ForumNotFoundException("Forum not found");
 		if(permissions.equals(Permissions.PERMISSIONS_SUPERADMIN)) {
 			logger.trace("User " + admin.getUsername() + " set as admin of forum " + forumName);
+			admin.becomeAdmin();
 			forum.setAdmin(admin);
 		}
 		else if (permissions.equals(Permissions.PERMISSIONS_ADMIN)) {
+			admin.becomeAdmin();
 			forum.setAdmin(admin);
 			this.permissions = Permissions.PERMISSIONS_USER;
 		}
 		else {
-			throw new PermissionDeniedException("User has no permission to set administrator");
+			throw new PermissionDeniedException("User has no permission to set administrator + " +admin.getUsername());
 		}
 	}
 
@@ -107,12 +111,7 @@ public class UserForumPermission implements ForumPermissionI {
 	public boolean findSubforum(String name) throws ForumNotFoundException {
 		Forum forum = Forum.load(forumName);
 		if(forum == null) throw new ForumNotFoundException("Forum not found");
-		for (SubForumI sf : forum.getSubForums()){
-			if (sf.getTitle().equals(name)){
-				return true;
-			}
-		}
-		return false;
+		return forum.getSubForums().containsKey(name);
 	}
 
 	@Id @GeneratedValue(strategy=GenerationType.AUTO)
@@ -138,17 +137,20 @@ public class UserForumPermission implements ForumPermissionI {
 	public SubForumI getSubForum(String name) throws ForumNotFoundException, SubForumDoesNotExistException {
 		Forum forum = Forum.load(forumName);
 		if(forum == null) throw new ForumNotFoundException("Forum not found");
-		for (SubForumI sf : forum.getSubForums()){
-			if (sf.getTitle().equals(name)){
-				return sf;
-			}
-		}
-		throw new SubForumDoesNotExistException();
+		if(!forum.getSubForums().containsKey(name))
+			throw new SubForumDoesNotExistException();
+		return
+				forum.getSubForums().get(name);
 	}
 
 	@Override
 	public boolean isGuest() {
 		return permissions.equals(Permissions.PERMISSIONS_GUEST);
+	}
+
+	@Override
+	public void becomeAdmin() {
+		permissions = Permissions.PERMISSIONS_ADMIN;
 	}
 
 	public void setId(Integer id) {

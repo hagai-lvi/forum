@@ -1,6 +1,7 @@
 package main.interfaces;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by gabigiladov on 5/13/15.
@@ -8,5 +9,5 @@ import java.util.Collection;
 public interface ExSubForumI {
     String getTitle();
 
-    Collection<? extends ExThreadI> getThreads();
+    Map<String, ThreadI> getThreads();
 }

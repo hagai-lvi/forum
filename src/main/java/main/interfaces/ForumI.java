@@ -4,6 +4,7 @@ import main.exceptions.*;
 import main.forum_contents.UserType;
 
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -14,7 +15,7 @@ public interface ForumI extends ExForumI{
 	/**
 	 * @return the subforums in this forum
 	 */
-	Collection<SubForumI> getSubForums();
+	Map<String, SubForumI> getSubForums();
 
 	/**
 	 * Create a subforum in this forum

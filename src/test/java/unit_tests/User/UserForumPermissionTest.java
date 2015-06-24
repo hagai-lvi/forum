@@ -5,6 +5,8 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.exceptions.ForumNotFoundException;
 import main.exceptions.PermissionDeniedException;
+import main.exceptions.SubForumAlreadyExistException;
+import main.exceptions.SubForumDoesNotExistException;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.SubForum;
@@ -17,9 +19,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Collection;
+import java.util.Map;
 
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 /**
  * Created by gabigiladov on 4/25/15.
@@ -33,7 +35,7 @@ public class UserForumPermissionTest {
     private ForumPolicyI policy;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() {
         int maxModerators = 1;
         String regex = "a-b";
         policy = new ForumPolicy(false, maxModerators, regex, 365);
@@ -53,19 +55,24 @@ public class UserForumPermissionTest {
     }
 
 
-    @Test(expected=PermissionDeniedException.class)
-    public void testCreateSubForumForRegularUser() throws Exception {
-        permission.createSubForum("Football"); // PermissionDeniedException expected
+    @Test
+    public void testCreateSubForumForRegularUser() throws SubForumAlreadyExistException, ForumNotFoundException {
+        try {
+            permission.createSubForum("Football"); // PermissionDeniedException expected
+            fail();
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        }
     }
 
     @Test
-    public void testCreateSubForumForAdmin() throws Exception {
-        Collection<SubForumI> subForums = forum.getSubForums();
+    public void testCreateSubForumForAdmin() throws PermissionDeniedException, ForumNotFoundException, SubForumAlreadyExistException {
+        Map<String, SubForumI> subForums = forum.getSubForums();
         SubForumI subforum = new SubForum("Football", policy.getSubforumPolicy());
-        assertFalse(contains(subForums, subforum));
+        assertFalse(subForums.containsKey(subforum));
         permission2.createSubForum("Football");
         subForums = forum.getSubForums();
-        assertTrue(contains(subForums, subforum));
+        assertTrue(subForums.containsKey(subforum));
     }
 
     private boolean contains(Collection<SubForumI> subForums, SubForumI subforum) {
@@ -76,44 +83,53 @@ public class UserForumPermissionTest {
         return false;
     }
 
-    @Test(expected=PermissionDeniedException.class)
-    public void testDeleteSubForumForRegularUser() throws Exception {
+    @Test
+    public void testDeleteSubForumForRegularUser() throws SubForumDoesNotExistException, ForumNotFoundException {
         SubForumI subforum = new SubForum("Football", policy.getSubforumPolicy());
-        permission.deleteSubForum(subforum); // PermissionDeniedException expected
+        try {
+            permission.deleteSubForum(subforum); // PermissionDeniedException expected
+            fail();
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        }
     }
 
     @Test
-    public void testDeleteSubForumForAdmin() throws Exception {
-        Collection<SubForumI> subForums;
+    public void testDeleteSubForumForAdmin() throws PermissionDeniedException, ForumNotFoundException, SubForumAlreadyExistException, SubForumDoesNotExistException {
+        Map<String, SubForumI> subForums;
         SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
         permission2.createSubForum("Baseball");
         subForums = forum.getSubForums();
-        assertTrue(contains(subForums, subforum));
+        assertTrue(subForums.containsKey(subforum));
         permission2.deleteSubForum(subforum);
         subForums = forum.getSubForums();
-        assertFalse(contains(subForums, subforum));
+        assertFalse(subForums.containsKey(subforum));
     }
 
 
-    @Test(expected = PermissionDeniedException.class)
-    public void testSetAdminWithoutPermission() throws Exception {
-        ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
-        permission2.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
+    @Test
+    public void testSetAdminWithoutPermission() throws ForumNotFoundException {
+        try {
+            permission.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
+            fail();
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        }
     }
 
     @Test
-    public void testSetAdmin() throws Exception {
+    public void testSetAdmin() throws PermissionDeniedException, ForumNotFoundException {
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
         permission3.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
     }
 
     @Test
-    public void testSetPolicy() throws Exception {
+    public void testSetPolicy()   {
 
     }
 
     @Test
-    public void testViewStatistics() throws Exception {
+    public void testViewStatistics()   {
 
     }
 }

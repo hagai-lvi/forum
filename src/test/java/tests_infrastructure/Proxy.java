@@ -7,6 +7,7 @@ import main.services_layer.Session;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by gabigiladov on 4/25/15.
@@ -40,7 +41,7 @@ public class Proxy implements FacadeI {
 
 
     @Override
-    public Collection<SubForumI> getSubForumList(int sessionId) throws SessionNotFoundException {
+    public Map<String, SubForumI> getSubForumList(int sessionId) throws SessionNotFoundException {
         if(this.real!=null)
             return this.real.getSubForumList(sessionId);
         return null;    }
@@ -82,7 +83,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
+    public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
         if(this.real!=null)
             this.real.addReply(sessionId, srcMessageId, title, body);
     }
@@ -107,7 +108,7 @@ public class Proxy implements FacadeI {
         return null;    }
 
     @Override
-    public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
+    public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
         if(this.real!=null)
             this.real.deleteMessage(sessionId, messageId);
     }
@@ -144,7 +145,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException {
+    public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
         if(this.real!=null)
             this.real.editMessage(sessionId, messageId, title, text);
     }
@@ -170,28 +171,28 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public String viewSessions(int sessionId) {
+    public String viewSessions(int sessionId) throws ThreadNotFoundException {
         if(this.real!=null)
             return this.real.viewSessions(sessionId);
         return null;
     }
 
     @Override
-    public ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException {
+    public ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException, ThreadNotFoundException {
         if(this.real!=null)
             return this.real.getMessage(sessionId, messageId);
         return null;
     }
 
     @Override
-    public Collection<ThreadI> getThreadsList(int sessionId) throws SessionNotFoundException {
+    public Map<String, ThreadI> getThreadsList(int sessionId) throws SessionNotFoundException {
         if(this.real!=null)
             return this.real.getThreadsList(sessionId);
         return null;
     }
 
     @Override
-    public Tree getMessageList(int sessionId) throws SessionNotFoundException {
+    public Tree getMessageList(int sessionId) throws SessionNotFoundException, ThreadNotFoundException {
         if(this.real!=null)
             return this.real.getMessageList(sessionId);
         return null;

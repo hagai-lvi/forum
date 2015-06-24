@@ -5,15 +5,18 @@ import main.User.User;
 import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.exceptions.*;
-import main.forum_contents.*;
+import main.forum_contents.Forum;
+import main.forum_contents.ForumMessage;
+import main.forum_contents.ForumPolicy;
+import main.forum_contents.SubForum;
 import main.interfaces.*;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -29,7 +32,7 @@ public class UserTest {
     private ForumPolicyI policy;
 
     @Before
-    public void setUp() throws Exception {
+    public void setUp() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException, ForumNotFoundException {
         int maxModerators = 1;
         String regex = ".*";
         boolean isSecured = false;
@@ -41,7 +44,7 @@ public class UserTest {
         user2 = forum.register("Tom", "abcde", "mail2@gmail.com");
         user3 = forum.register("Victor", "78910", "mail3@gmail.com");
 
-        forum.setAdmin(user2);
+        User.getUserFromDB("ADMIN", "Lifestyle").setAdmin(user2);
     }
 
     @After
@@ -72,20 +75,20 @@ public class UserTest {
     }
 
     @Test
-    public void testSetAuthenticated() throws Exception {
+    public void testSetAuthenticated()  {
         assertFalse(user1.isEmailAuthenticated());
         user1.setAuthenticated();
         assertTrue(user1.isEmailAuthenticated());
     }
 
     @Test
-    public void testGetUsername() throws Exception {
+    public void testGetUsername()  {
         assertEquals(user1.getUsername(), "Gabi");
     }
 
 
     @Test
-    public void testGetSignUpDate() throws Exception {
+    public void testGetSignUpDate()  {
         GregorianCalendar date = user1.getSignUpDate();
         Calendar today =  GregorianCalendar.getInstance();
         assertEquals(date.get(Calendar.YEAR), today.get(Calendar.YEAR));
@@ -94,49 +97,52 @@ public class UserTest {
     }
 
 
-    @Test(expected=PermissionDeniedException.class)
-    public void testCreateSubForumForRegularUser() throws Exception {
-        user1.createSubForum("Football"); // PermissionDeniedException expected
+    @Test
+    public void testCreateSubForumForRegularUser() throws SubForumAlreadyExistException, ForumNotFoundException, SubForumDoesNotExistException {
+        try {
+            user1.createSubForum("Football"); // PermissionDeniedException expected
+            fail();
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        }
     }
 
     @Test
-    public void testCreateSubForumForAdmin() throws Exception {
-        Collection<SubForumI> subForums = forum.getSubForums();
+    public void testCreateSubForumForAdmin() throws PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, ForumNotFoundException {
+        Map<String, SubForumI> subForums = forum.getSubForums();
         SubForumI subforum = new SubForum("Football", policy.getSubforumPolicy());
-        assertFalse(contains(subForums, subforum));
+        assertFalse(subForums.containsKey(subforum));
         user2.createSubForum("Football");
         subForums = forum.getSubForums();
-        assertTrue(contains(subForums, subforum));
+        assertTrue(subForums.containsKey(subforum));
     }
 
-    private boolean contains(Collection<SubForumI> subForums, SubForumI subforum) {
-        for (SubForumI subf : subForums) {
-            if (subf.getTitle().equals(subforum.getTitle()))
-                return true;
-        }
-        return false;
-    }
 
-    @Test(expected=PermissionDeniedException.class)
-    public void testDeleteSubForumForRegularUser() throws Exception {
+    @Test
+    public void testDeleteSubForumForRegularUser() throws SubForumDoesNotExistException, ForumNotFoundException {
         SubForumI subforum = new SubForum("Football", policy.getSubforumPolicy());
-        user1.deleteSubForum(subforum); // PermissionDeniedException expected
+        try {
+            user1.deleteSubForum(subforum); // PermissionDeniedException expected
+            fail();
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        }
     }
 
     @Test
-    public void testDeleteSubForumForAdmin() throws Exception {
-        Collection<SubForumI> subForums;
+    public void testDeleteSubForumForAdmin() throws PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, ForumNotFoundException {
+        Map<String, SubForumI> subForums;
         SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
         user2.createSubForum("Baseball");
         subForums = forum.getSubForums();
-        assertTrue(contains(subForums, subforum));
+        assertTrue(subForums.containsKey(subforum));
         user2.deleteSubForum(subforum);
         subForums = forum.getSubForums();
-        assertFalse(contains(subForums, subforum));
+        assertFalse(subForums.containsKey(subforum));
     }
 
     @Test
-    public void testCreateThread() throws Exception {
+    public void testCreateThread() throws PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, ForumNotFoundException, DoesNotComplyWithPolicyException {
         user2.createSubForum("Football");
         MessageI message = new ForumMessage(user1, "Mega Flow", "Flow");
         user2.createThread(message, "Football");
@@ -144,100 +150,92 @@ public class UserTest {
 
     @Test
     public void testReplyToMessage() throws SubForumAlreadyExistException, PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException, ForumNotFoundException {
-        user2.createSubForum("Football");
+        User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
         MessageI message1 = new ForumMessage(user1, "Mega Flow", "Flow");
         MessageI message2 = new ForumMessage(user2, "Mega Flow", "Help");
-        System.out.println(user1.getSubForumsPermissions().size());
-        System.out.println(user2.getSubForumsPermissions().size());
-        System.out.println(user3.getSubForumsPermissions().size());
-        user1.createThread(message1, "Football");
-        user2.replyToMessage("Football", message1, "WTF", "Help");
-        user1.replyToMessage("Football", message1.getReplies().iterator().next(), "WTF", "Yeah!");
+        User.getUserFromDB("Gabi", "Lifestyle").createThread(message1, "Football");
+        User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", message1, "WTF", "Help");
+        User.getUserFromDB("Gabi", "Lifestyle").replyToMessage("Football", message1.getReplies().iterator().next(), "WTF", "Yeah!");
         assertEquals(message1.printSubTree(), "Flow--> Help--> Yeah!");
     }
 
     @Test
-    public void testDeleteMessageS() throws MessageNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
+    public void testDeleteMessageS() throws MessageNotFoundException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException {
+        user2.createSubForum("Football");
+        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().get("Football"));
+        MessageI message = new ForumMessage(user1, "Mega Flow", "Flow");
+        user2.createThread(message, "Football");
+        assertEquals(message.printSubTree(), "Flow");
+        user2.replyToMessage("Football", message, "WTF", "Help");
+        assertEquals(message.printSubTree(), "Flow--> Help");
+        user1.replyToMessage("Football", message, "WTF", "Yeah!");
+        assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
+        user1.deleteMessage(message, "Football");
+        user1.replyToMessage("Football", message, "aaa", "bbb");
+    }
+
+    @Test
+    public void testDeleteMessageWithoutPermission() throws SubForumAlreadyExistException, ForumNotFoundException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, MessageNotFoundException {
         try {
             user2.createSubForum("Football");
-        } catch (PermissionDeniedException | SubForumAlreadyExistException e) {
-            e.printStackTrace();
+        } catch (PermissionDeniedException e) {
+            fail();
         }
-        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
+        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().get("Football"));
         MessageI message = new ForumMessage(user1, "Mega Flow", "Flow");
         try {
             user2.createThread(message, "Football");
-        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException e) {
-            e.printStackTrace();
-        }
-        assertEquals(message.printSubTree(), "Flow");
-        try {
-            user2.replyToMessage("Football", message, "WTF", "Help");
-        } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException e) {
-            e.printStackTrace();
-        }
-        assertEquals(message.printSubTree(), "Flow--> Help");
-        try {
-            user1.replyToMessage("Football", message, "WTF", "Yeah!");
-        } catch (PermissionDeniedException | MessageNotFoundException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException e) {
-            e.printStackTrace();
-        }
-        assertEquals(message.printSubTree(), "Flow--> Help--> Yeah!");
-        try {
-            user1.deleteMessage(message, "Football");
-        } catch (PermissionDeniedException | MessageNotFoundException | SubForumDoesNotExistException e) {
-            e.printStackTrace();
+        } catch (PermissionDeniedException e) {
+            fail();
         }
         try {
-            user1.replyToMessage("Football", message, "aaa", "bbb");
-        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException | SubForumDoesNotExistException e) {
-            e.printStackTrace();
+            user2.deleteMessage(message, "Football"); // PermissionDeniedException expected
+            fail();
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
         }
     }
 
-    @Test(expected = PermissionDeniedException.class)
-    public void testDeleteMessageWithoutPermission() throws Exception {
-        user2.createSubForum("Football");
-        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum, forum.getSubForums().iterator().next());
-        MessageI message = new ForumMessage(user1, "Mega Flow", "Flow");
-        user2.createThread(message, "Football");
-        user2.deleteMessage(message, "Football"); // PermissionDeniedException expected
-    }
-
-    @Test(expected = PermissionDeniedException.class)
-    public void testSetAdminWithoutPermission() throws Exception {
+    @Test
+    public void testSetAdminWithoutPermission() throws ForumNotFoundException {
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
-        user2.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
+        try {
+            user3.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
+            fail();
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        }
     }
 
     @Test
-    public void testSetAdmin() throws Exception {
+    public void testSetAdmin() throws PermissionDeniedException, ForumNotFoundException {
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
-        user3.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
+        user2.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
     }
 
     @Test
-    public void testViewStatistics() throws Exception {
-
+    public void testViewStatistics()  {
+        fail();
     }
 
     @Test
-    public void testSetModerator() throws Exception {
-
+    public void testSetModerator() {
+        fail();
     }
 
     @Test
-    public void testBanModerator() throws Exception {
-
+    public void testBanModerator()  {
+        fail();
     }
 
     @Test
-    public void testAddSubForumPermission() throws Exception {
-
+    public void testAddSubForumPermission()  {
+        fail();
     }
 
     @Test
-    public void testReportModerator() throws Exception {
+    public void testReportModerator()  {
+        fail();
         // SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
         // user1.setModerator(subforum, user2);
         // user1.reportModerator(subforum, "Gabi", "The Worst Moderator Ever");

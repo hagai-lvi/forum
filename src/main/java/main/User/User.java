@@ -8,9 +8,7 @@ import main.interfaces.*;
 import org.hibernate.annotations.ColumnTransformer;
 
 import javax.persistence.*;
-import java.util.Collection;
-import java.util.GregorianCalendar;
-import java.util.Vector;
+import java.util.*;
 
 /**
  * Created by gabigiladov on 4/11/15.
@@ -31,8 +29,9 @@ public class User extends PersistantObject implements UserI {
     private GregorianCalendar signUpDate;
     private int seniorityInDays;
     private int numOfMessages;
+
     @OneToMany(targetEntity = UserSubforumPermission.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Collection<SubForumPermissionI> subForumsPermissions;
+    private Map<String, SubForumPermissionI> subForumsPermissions;
     @OneToOne(targetEntity = UserForumPermission.class, cascade = CascadeType.ALL)
     private ForumPermissionI forumPermissions;
     private boolean isEmailAuthenticated;
@@ -49,7 +48,7 @@ public class User extends PersistantObject implements UserI {
         numOfMessages = 0;
         this.isEmailAuthenticated = false;
         this.authString = SecureString.nextUserAuthString();
-        this.subForumsPermissions = new Vector<>();
+        this.subForumsPermissions = new HashMap<>();
         this.id = new UserForumID(username, forumPermissions.getForumName());
         this.forumPermissions = forumPermissions;
     }
@@ -75,7 +74,7 @@ public class User extends PersistantObject implements UserI {
          Get the list of all of the subforums of this user
      */
     @Override
-    public Collection<SubForumPermissionI> getSubForumsPermissions() {
+    public Map<String, SubForumPermissionI> getSubForumsPermissions() {
         return subForumsPermissions;
     }
 
@@ -111,7 +110,8 @@ public class User extends PersistantObject implements UserI {
     public SubForumI createSubForum(String name) throws PermissionDeniedException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException {
         SubForumI subforum = forumPermissions.createSubForum(name);
         UserSubforumPermission newPerms = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forumPermissions.getForum(), forumPermissions.getSubForum(name));
-        subForumsPermissions.add(newPerms);
+        subForumsPermissions.put(name, newPerms);
+        this.Update();
         return subforum;
     }
 
@@ -123,6 +123,7 @@ public class User extends PersistantObject implements UserI {
     @Override
     public void createThread(MessageI message, String subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
         findPermission(subforum).createThread(message);
+       // this.Update();
     }
 
     @Override
@@ -154,41 +155,33 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public String viewStatistics(ForumI forum) throws PermissionDeniedException {
+    public String viewStatistics(String forum) throws PermissionDeniedException {
         //TODO - not implemented
         throw new RuntimeException("Not yet implemented");
     }
 
     @Override
-    public void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException {
-
-        for(int i = 0; i < subForumsPermissions.size(); i++) {
-            boolean found = ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).subForumExists(subForum.getTitle());
+    public void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException {
+         boolean found = subForumsPermissions.containsKey(subForum);
             if(found){
-                ((Vector<SubForumPermissionI>)subForumsPermissions).elementAt(i).setModerator(moderator);
+                subForumsPermissions.get(subForum).setModerator(moderator);
                 return;
             }
-        }
         throw new SubForumNotFoundException();
     }
 
     @Override
     public void banModerator(SubForumI subForum, UserI moderatorToBan, long time) {
         throw new RuntimeException("Not yet implemented");
-//        for(int i = 0; i < subForumsPermissions.size(); i++) {
-//            if(subForumsPermissions.elementAt(i).findSubforum(subForum.getName())){
-//                subForumsPermissions.elementAt(i).banModerator(moderatorToBan, time);
-//                break;
-//            }
-//        }
+        //TODO
     }
 
     @Override
-    public void addSubForumPermission(SubForumPermissionI permission) {
-        this.subForumsPermissions.add(permission);
+    public void addSubForumPermission(String subforum, SubForumPermissionI permission) {
+        this.subForumsPermissions.put(subforum, permission);
     }
 
-    public void setSubForumsPermissions(Vector<SubForumPermissionI> subForumsPermissions) {
+    public void setSubForumsPermissions(Map<String, SubForumPermissionI> subForumsPermissions) {
         this.subForumsPermissions = subForumsPermissions;
     }
 
@@ -299,13 +292,20 @@ public class User extends PersistantObject implements UserI {
         forumPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forumPermissions.getForum().getName());
     }
 
+    @Override
+    public void becomeAdmin() {
+        forumPermissions.becomeAdmin();
+    }
+
+    @Override
+    public boolean isGuest() {
+        return forumPermissions.isGuest();
+    }
+
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
-        for (SubForumPermissionI sfp : subForumsPermissions){
-            if (sfp.getSubForum().getTitle().equals(subForum)){
-                return sfp;
-            }
-        }
-        throw new SubForumDoesNotExistException();
+        if(!subForumsPermissions.containsKey(subForum))
+            throw new SubForumDoesNotExistException();
+        return subForumsPermissions.get(subForum);
     }
 
     public void setId(UserForumID id) {
@@ -314,7 +314,6 @@ public class User extends PersistantObject implements UserI {
 
     public static User getUserFromDB(String username, String forumname){
             return pers.load(User.class, new UserForumID(username, forumname));
-
     }
 
     public static void delete(String username, String forumname) throws UserNotFoundException {

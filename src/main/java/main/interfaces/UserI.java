@@ -3,8 +3,8 @@ package main.interfaces;
 import main.User.Permissions;
 import main.exceptions.*;
 
-import java.util.Collection;
 import java.util.GregorianCalendar;
+import java.util.Map;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -20,7 +20,7 @@ public interface UserI {
 	/**
 	 * Get the list of all of the subforums of this user
 	 */
-	Collection<SubForumPermissionI> getSubForumsPermissions();
+	Map<String, SubForumPermissionI> getSubForumsPermissions();
 
 	GregorianCalendar getSignUpDate();
 	/**
@@ -83,12 +83,12 @@ public interface UserI {
 	/**
 	 * Get statistics
 	 */
-	String viewStatistics(ForumI forum) throws PermissionDeniedException;
+	String viewStatistics(String forum) throws PermissionDeniedException;
 
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(SubForumI subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException;
+	void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException;
 
 	/**
 	 * Ban moderator
@@ -98,7 +98,7 @@ public interface UserI {
 	/**
 	 * Add permissions
 	 */
-	void addSubForumPermission(SubForumPermissionI permission);
+	void addSubForumPermission(String subforum, SubForumPermissionI permission);
 
 	void updatePasswordCreationDate();
 
@@ -131,4 +131,8 @@ public interface UserI {
 	void setAuthenticatedAdmin();
 
 	void setForumPermissions(Permissions permissionsAdmin) throws ForumNotFoundException;
+
+	void becomeAdmin();
+
+	boolean isGuest();
 }

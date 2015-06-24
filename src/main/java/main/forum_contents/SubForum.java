@@ -3,11 +3,11 @@ package main.forum_contents;
 import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
 import main.Persistancy.PersistantObject;
+import main.User.User;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
 import main.interfaces.*;
-import main.User.User;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
@@ -32,7 +32,7 @@ public class SubForum extends PersistantObject implements SubForumI {
      * a list of all of the threads in this subforum
      */
     @OneToMany(targetEntity = ForumThread.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private List<ThreadI> _threads = new LinkedList<>();
+    private Map<String, ThreadI> _threads = new HashMap<>();
 
     @Override
     public Map<String, UserI> getModerators() {
@@ -66,8 +66,7 @@ public class SubForum extends PersistantObject implements SubForumI {
             throw new DoesNotComplyWithPolicyException("message does not comply with forum policy.");
         }
         ThreadI thread = new ForumThread(message);
-        _threads.add(thread);
-//        this.Update(); //TODO - need to handle those update methods.
+        _threads.put(message.getMessageTitle(), thread);
         return thread;
     }
 
@@ -138,14 +137,14 @@ public class SubForum extends PersistantObject implements SubForumI {
     }
 
     @Override
-    public Collection<ThreadI> getThreads(){
+    public Map<String, ThreadI> getThreads(){
         return _threads;
     }
 
 
     public int getMessagesCount(){
         int sum = 0;
-        for (ThreadI t: _threads){
+        for (ThreadI t: _threads.values()){
             sum+= t.getMessagesCount();
         }
         return sum;
@@ -154,7 +153,7 @@ public class SubForum extends PersistantObject implements SubForumI {
      * Find the thread that contains the specified message
      */
     private ThreadI findThread(MessageI message){
-        for (ThreadI t: _threads){
+        for (ThreadI t: _threads.values()){
             if (t.contains(message)){
                 return t;
             }

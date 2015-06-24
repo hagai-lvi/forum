@@ -4,7 +4,6 @@ import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
 
-import java.util.Collection;
 import java.util.Map;
 
 /**
@@ -39,7 +38,7 @@ public interface SubForumI extends ExSubForumI{
 	/**
 	 * Return the threads in this sub-forum
 	 */
-	Collection<ThreadI> getThreads();
+	Map<String, ThreadI> getThreads();
 
 	void removeModerator(String mod);
 

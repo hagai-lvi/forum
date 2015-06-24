@@ -70,7 +70,7 @@ public class UserSubforumPermissionTest {
         } catch (DoesNotComplyWithPolicyException e) {
             fail();
         }
-        assertTrue(permission.getSubForum().getThreads().iterator().next().getRootMessage().equals(message));
+        assertTrue(permission.getSubForum().getThreads().containsKey(message));
     }
 
     @Test
@@ -131,7 +131,7 @@ public class UserSubforumPermissionTest {
             assertTrue(true);
         }
         try {
-            ThreadI thread = subforum.getThreads().iterator().next();
+            ThreadI thread = subforum.getThreads().get(message.getMessageTitle());
             permission2.editMessage(thread, message.getId(), message.getMessageTitle(), message.getMessageText());
         } catch (NoSuchElementException e) {
             assertTrue(true);
@@ -164,17 +164,17 @@ public class UserSubforumPermissionTest {
 
     @Test
     public void testReportModerator()   {
-
+        fail();
     }
 
     @Test
     public void testGetThreads()   {
-
+        fail();
     }
 
     @Test
     public void testSetModerator()   {
-
+        fail();
     }
 
 }

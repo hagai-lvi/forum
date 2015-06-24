@@ -1,10 +1,13 @@
 package main.User;
 
-import main.exceptions.*;
+import main.exceptions.DoesNotComplyWithPolicyException;
+import main.exceptions.MessageNotFoundException;
+import main.exceptions.ModeratorDoesNotExistsException;
+import main.exceptions.PermissionDeniedException;
+import main.forum_contents.Forum;
 import main.forum_contents.SubForum;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
-import main.forum_contents.Forum;
 
 import javax.persistence.*;
 
@@ -25,7 +28,7 @@ import javax.persistence.*;
     private Permissions permission;
     @OneToOne(targetEntity = Forum.class)
     private ForumI forum;
-    @OneToOne(targetEntity = SubForum.class)
+    @OneToOne(targetEntity = SubForum.class, cascade = CascadeType.ALL)
     private SubForumI subforum;
     private static Logger logger = Logger.getLogger(UserSubforumPermission.class.getName());
 
@@ -92,14 +95,14 @@ import javax.persistence.*;
 
     @Override
     public ThreadI[] getThreads() {
-        return subforum.getThreads().toArray(new ThreadI[0]);
+        return subforum.getThreads().values().toArray(new ThreadI[0]);
     }
 
     @Override
     public void setModerator(UserI moderator) throws PermissionDeniedException {
         if( permission.equals(Permissions.PERMISSIONS_ADMIN)) {
             SubForumPermissionI p = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forum, subforum);
-            moderator.addSubForumPermission(p);
+            moderator.addSubForumPermission(subforum.getTitle(), p);
             subforum.setModerator(moderator);
         } else {
             logger.error(permission + " has no permission to set moderator");

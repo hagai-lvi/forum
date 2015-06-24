@@ -94,6 +94,13 @@ public class Forum extends PersistantObject implements ForumI{
     @Override
     public void setAdmin(UserI admin){
         _users.replace(admin.getUsername(), admin);
+
+        for (SubForumI subForum: _subForums.values()){
+            UserSubforumPermission permission;
+            permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, this, subForum);
+            admin.addSubForumPermission(subForum.getTitle(), permission);
+        }
+        Update();
     }
 
     @Override
@@ -118,7 +125,9 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     @Override
-    public Collection<SubForumI> getSubForums(){ return _subForums.values();}
+    public Map<String, SubForumI> getSubForums(){ return
+            _subForums;
+    }
 
 
     @Override
@@ -128,17 +137,21 @@ public class Forum extends PersistantObject implements ForumI{
         }
         SubForumI subForum = new SubForum(subForumName, this.policy.getSubforumPolicy());
         _subForums.put(subForumName, subForum);
-        for (UserI user: _users.values()){
-            UserSubforumPermission permission;
-            if (user.isAdmin()) {
-                permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, this, subForum);
-            } else{
-                permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, this, subForum);
+        for (String name: _users.keySet()) {
+            User user = User.getUserFromDB(name, forum_name);
+            if (user != null) {
+                UserSubforumPermission permission;
+                if (!user.isAdmin()) {
+                    permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, this, subForum);
+                } else if(!user.isGuest()){
+                    permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, this, subForum);
+                } else permission = new UserSubforumPermission(Permissions.PERMISSIONS_GUEST, this, subForum);
+                user.addSubForumPermission(subForumName, permission);
             }
-            user.getSubForumsPermissions().add(permission);
         }
         Update();
-        return subForum;
+//TODO - update() does not work
+       return subForum;
     }
 
     @Override
@@ -152,7 +165,7 @@ public class Forum extends PersistantObject implements ForumI{
 
     private void addAllSubforumsToUser(UserI user, Permissions perm){
         for (SubForumI sub: _subForums.values()){
-            user.addSubForumPermission(new UserSubforumPermission(perm, this, sub));
+            user.addSubForumPermission(sub.getTitle(), new UserSubforumPermission(perm, this, sub));
         }
     }
 
@@ -272,6 +285,12 @@ public class Forum extends PersistantObject implements ForumI{
         if(forum == null) throw new ForumNotFoundException("Forum not found");
         if (forum.policy != null) {
             forum.policy = null;
+            forum.Update();
+        }
+        forum._subForums.clear();
+        forum.Update();
+        if (forum._subForums != null) {
+            forum._subForums = null;
             forum.Update();
         }
 

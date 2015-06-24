@@ -221,7 +221,7 @@ public class WebController {
 		}else {
 			subForum = facade.viewSubforum(sessionID);
 		}
-		Collection<? extends ExThreadI> threads = subForum.getThreads();
+		Collection<? extends ExThreadI> threads = subForum.getThreads().values();
 		model.addAttribute("subforumName", subforumName);
 		model.addAttribute("user", facade.getCurrentUserName(sessionID));
 //		model.addAttribute("numberOfthreads", threads.length);//TODO

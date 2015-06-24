@@ -24,18 +24,18 @@ public class ForumMessageTest extends TestCase {
     MessageI message;
     UserI user;
     public void setUp() {
-        ForumI forum = new Forum("forum", new ForumPolicy(false, 2, ".*", 365));
-        user = new User("user", "pass", "mail@mail.mail", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, "forum"));
+        ForumI forum = new Forum("forum2", new ForumPolicy(false, 2, ".*", 365));
+        user = new User("user", "pass", "mail@mail.mail", UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, "forum2"));
         message = new ForumMessage(user, "title", "body");
     }
 
     public void tearDown(){
         try {
-            Forum.delete("forum");
+            Forum.delete("forum2");
         } catch (ForumNotFoundException e) {
         }
         try {
-            User.delete("user", "forum");
+            User.delete("user", "forum2");
         } catch (UserNotFoundException e) {
         }
 

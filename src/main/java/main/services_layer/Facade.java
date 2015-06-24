@@ -12,6 +12,7 @@ import main.interfaces.*;
 import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Map;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -42,7 +43,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public Collection<SubForumI> getSubForumList(int sessionId) throws SessionNotFoundException {
+	public Map<String, SubForumI> getSubForumList(int sessionId) throws SessionNotFoundException {
 		return findSession(sessionId).getForum().getSubForums();
 	}
 
@@ -67,7 +68,7 @@ import java.util.Collection;
 	public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
 		SubForumI subforum = currentSession.getUser().createSubForum(subforumName);
-		currentSession.setSubForum(subforum);
+		currentSession.setSubForum(subforum.getTitle());
 	}
 
 	@Override
@@ -83,8 +84,8 @@ import java.util.Collection;
 		ForumI currentForum = findForum(forumName);
 		if(currentForum == null) throw new ForumNotFoundException("Forum not found");
 		UserI currentUser = currentForum.login(userName, password);
-		Session currentSession = new Session(sessionCounter, currentUser); //create a new session
-		currentSession.setForum(currentForum);
+		Session currentSession = new Session(sessionCounter, userName); //create a new session
+		currentSession.setForum(currentForum.getName());
 		openSessions.add(currentSession);
 		sessionCounter++;
 		return sessionCounter - 1;
@@ -97,7 +98,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
+	public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
 		Session currentSession = findSession(sessionId);
 		currentSession.getUser().replyToMessage(currentSession.getSubForum().getTitle(), currentSession.getThread().getMessages().find(srcMessageId), title, body);
 
@@ -127,7 +128,7 @@ import java.util.Collection;
 
 
 	@Override
-	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
+	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
 		Session current = findSession(sessionId);
 		current.getUser().deleteMessage(current.getThread().getMessages().find(messageId), current.getSubForum().getTitle());
 	}
@@ -135,15 +136,15 @@ import java.util.Collection;
 	@Override
 	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException {
 		Session current = findSession(sessionId);
-		current.getUser().setModerator(current.getSubForum(), findUser(moderatorName, current.getForum().getName()));
+		current.getUser().setModerator(current.getSubForum().getTitle(), findUser(moderatorName, current.getForum().getName()));
 	}
 
 	@Override
 	public int guestEntry(String forumName) throws ForumNotFoundException {
 		ForumI current = findForum(forumName);
 		if(current == null) throw new ForumNotFoundException("Forum not found");
-		Session currentSession = new Session(sessionCounter, current.getGuest());
-		currentSession.setForum(current);
+		Session currentSession = new Session(sessionCounter, current.getGuest().getUsername());
+		currentSession.setForum(current.getName());
 		openSessions.add(currentSession);
 		sessionCounter++;
 		return sessionCounter - 1;
@@ -171,7 +172,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException {
+	public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
 		Session current = findSession(sessionId);
 		current.getUser().editMessage(current.getSubForum().getTitle(), current.getThread(), messageId, title, text);
 	}
@@ -195,7 +196,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public String viewSessions(int sessionId) {
+	public String viewSessions(int sessionId) throws ThreadNotFoundException {
 		StringBuilder res = new StringBuilder();
 		for (Session s : openSessions){
 			res.append("Session ");
@@ -214,7 +215,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException {
+	public ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException, ThreadNotFoundException {
 		Session current = findSession(sessionId);
 		ThreadI thread = current.getThread();
 		Tree messages = thread.getMessages();
@@ -222,14 +223,14 @@ import java.util.Collection;
 	}
 
 	@Override
-	public Collection<ThreadI> getThreadsList(int sessionId) throws SessionNotFoundException {
+	public Map<String, ThreadI> getThreadsList(int sessionId) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
 		return current.getSubForum().getThreads();
 
 	}
 
 	@Override
-	public Tree getMessageList(int sessionId) throws SessionNotFoundException {
+	public Tree getMessageList(int sessionId) throws SessionNotFoundException, ThreadNotFoundException {
 		Session current = findSession(sessionId);
 		return current.getThread().getMessages();
 	}
@@ -255,14 +256,11 @@ import java.util.Collection;
 	@Override
 	public ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionId);
-		Collection<SubForumI> subForums = current.getForum().getSubForums();
-		for (SubForumI s: subForums){
-			if (s.getTitle().equals(subforum)){
-				current.setSubForum(s);
-				return s;
-			}
-		}
-		throw new SubForumNotFoundException();
+		Map<String, SubForumI> subForums = current.getForum().getSubForums();
+		if(!subForums.containsKey(subforum))
+			throw new SubForumNotFoundException();
+		current.setSubForum(subforum);
+		return subForums.get(subforum);
 	}
 
 	@Override
@@ -274,14 +272,11 @@ import java.util.Collection;
 	@Override
 	public ExThreadI viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionId);
-		Collection<ThreadI> threads = current.getSubForum().getThreads();
-		for (ThreadI t: threads){
-			if (t.getTitle().equals(title)){
-				current.setThread(t);
-				return t;
-			}
-		}
-		throw new ThreadNotFoundException();
+		Map<String, ThreadI> threads = current.getSubForum().getThreads();
+		if(!threads.containsKey(title))
+			throw new ThreadNotFoundException();
+		current.setThread(title);
+		return threads.get(title);
 	}
 
 	@Override
@@ -305,7 +300,7 @@ import java.util.Collection;
 	}
 
 	@Override
-	public boolean isMessageFromCurrentUser(int sessionId, int messageId) throws SessionNotFoundException {
+	public boolean isMessageFromCurrentUser(int sessionId, int messageId) throws SessionNotFoundException, ThreadNotFoundException {
 		Session currentSession = findSession(sessionId);
 		UserI user = currentSession.getUser();
 		MessageI message = currentSession.getThread().getMessages().find(messageId);
@@ -326,11 +321,11 @@ import java.util.Collection;
 
 	@Override
 	public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException, ForumNotFoundException {
-		User admin = User.getUserFromDB(username, forumname);
-		if(admin == null) throw new UserNotFoundException("User not found");
+		User currentAdmin = User.getUserFromDB(username, forumname);
+		if(currentAdmin == null) throw new UserNotFoundException("User not found");
 		User user = User.getUserFromDB(newAdmin, forumname);
 		if(user == null) throw new UserNotFoundException("User not found");
-		admin.setAdmin(user);
+		currentAdmin.setAdmin(user);
 	}
 
 

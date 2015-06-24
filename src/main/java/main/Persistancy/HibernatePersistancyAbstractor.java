@@ -78,7 +78,7 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
         Session session = session_Factory.openSession();
         session.flush();
         session.beginTransaction();
-        session.saveOrUpdate(o);
+        session.update(o);
         session.getTransaction().commit();
         session.clear();
         session.close();
