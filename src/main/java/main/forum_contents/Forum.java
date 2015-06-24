@@ -153,7 +153,6 @@ public class Forum extends PersistantObject implements ForumI{
             }
         }
         this.Update();
-//TODO - update() does not work
        return subForum;
     }
 

@@ -48,7 +48,7 @@ public interface UserI {
 	/**
 	 * Delete a subForum from this forum
 	 */
-	void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException, ForumNotFoundException;
+	void deleteSubForum(String toDelete) throws PermissionDeniedException, SubForumDoesNotExistException, ForumNotFoundException;
 
 	/**
 	 * create a thread in the subforum

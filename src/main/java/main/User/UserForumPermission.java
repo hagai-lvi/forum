@@ -49,7 +49,6 @@ public class UserForumPermission implements ForumPermissionI {
 		if(forum == null) throw new ForumNotFoundException("Forum not found");
 		SubForumI s = forum.addSubForum(name);
 		forum.getSubForums().replace(name, s);
-		forum.Update();
 		return s;
 	}
 
@@ -59,14 +58,15 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException, ForumNotFoundException {
+	public void deleteSubForum(String toDelete) throws PermissionDeniedException, SubForumDoesNotExistException, ForumNotFoundException {
 		if (!isAdmin()){
 			throw new PermissionDeniedException("User has no permission to delete a subforum");
 		}
-		logger.trace("Deleted sub-forum " + toDelete.getTitle());
+		logger.trace("Deleted sub-forum " + toDelete);
 		Forum forum = Forum.load(forumName);
 		if(forum == null) throw new ForumNotFoundException("Forum not found");
-		forum.deleteSubForum(toDelete.getTitle());
+		forum.deleteSubForum(toDelete);
+
 	}
 
 	@Override

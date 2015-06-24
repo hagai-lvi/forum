@@ -115,7 +115,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     @Override
-    public void deleteSubForum(SubForumI toDelete) throws PermissionDeniedException, SubForumDoesNotExistException, ForumNotFoundException {
+    public void deleteSubForum(String toDelete) throws PermissionDeniedException, SubForumDoesNotExistException, ForumNotFoundException {
         forumPermissions.deleteSubForum(toDelete);
     }
 

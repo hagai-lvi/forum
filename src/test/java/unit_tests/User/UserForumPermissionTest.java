@@ -82,10 +82,10 @@ public class UserForumPermissionTest {
     }
 
     @Test
-    public void testDeleteSubForumForRegularUser() throws SubForumDoesNotExistException, ForumNotFoundException {
-        SubForumI subforum = new SubForum("Football", policy.getSubforumPolicy());
+    public void testDeleteSubForumForRegularUser() throws SubForumDoesNotExistException, ForumNotFoundException, SubForumAlreadyExistException {
         try {
-            permission.deleteSubForum(subforum); // PermissionDeniedException expected
+            permission.createSubForum("Zrima");
+            permission.deleteSubForum("Zrima"); // PermissionDeniedException expected
             fail();
         } catch (PermissionDeniedException e) {
             assertTrue(true);
@@ -95,14 +95,14 @@ public class UserForumPermissionTest {
     @Test
     public void testDeleteSubForumForAdmin() throws PermissionDeniedException, ForumNotFoundException, SubForumAlreadyExistException, SubForumDoesNotExistException {
         Map<String, SubForumI> subForums;
-        SubForumI subforum = permission2.createSubForum("Baseball");
+        permission2.createSubForum("Zrima");
         forum = Forum.load(forum.getName());
         subForums = forum.getSubForums();
-        assertTrue(subForums.containsKey(subforum.getTitle()));
-        permission2.deleteSubForum(subforum);
+        assertTrue(subForums.containsKey("Zrima"));
+        permission2.deleteSubForum("Zrima");
         forum = Forum.load(forum.getName());
         subForums = forum.getSubForums();
-        assertFalse(subForums.containsKey(subforum.getTitle()));
+        assertFalse(subForums.containsKey("Zrima"));
     }
 
 
@@ -124,11 +124,11 @@ public class UserForumPermissionTest {
 
     @Test
     public void testSetPolicy()   {
-
+        fail();
     }
 
     @Test
     public void testViewStatistics()   {
-
+        fail();
     }
 }
