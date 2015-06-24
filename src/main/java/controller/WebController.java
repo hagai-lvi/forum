@@ -189,14 +189,14 @@ public class WebController {
 
 	@RequestMapping(value = "addModerator", method = RequestMethod.POST)
 	public void addModeratorToSubforum(ModelMap model, HttpSession session,
-										 String moderatorName, HttpServletResponse response) throws UserNotFoundException, PermissionDeniedException, SessionNotFoundException, SubForumNotFoundException, IOException {
+										 String moderatorName, HttpServletResponse response) throws IOException {
 		FacadeI facade = getFacade();
-		facade.setModerator(getSessionID(session),moderatorName);
-		if (! moderatorName.equals("a")){
-			response.sendError(HttpServletResponse.SC_BAD_REQUEST); //TODO add error message
+		try {
+			facade.setModerator(getSessionID(session), moderatorName);
 		}
-		else{
-			response.setStatus(HttpServletResponse.SC_OK);
+		catch (Exception e) {
+			logger.warn("exception thrown in addModeratorToSubforum", e);
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 		}
 	}
 
