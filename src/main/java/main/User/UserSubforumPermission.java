@@ -48,8 +48,9 @@ import javax.persistence.Id;
         if( ! permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to create thread");
             Forum f =  Forum.load(forum);
-            return f.getSubForums().get(subforum).addThread(user, title, text);
-           // f.Update();
+            ThreadI thread =  f.getSubForums().get(subforum).addThread(user, title, text);
+            f.Update();
+            return thread;
         } else {
             logger.error(permission + " has no permission to create thread");
             throw new PermissionDeniedException("User has no permission to create thread");
@@ -113,16 +114,14 @@ import javax.persistence.Id;
 
     @Override
     public void setModerator(UserI moderator) throws PermissionDeniedException {
-        if(isAdmin()) {
-            SubForumPermissionI p = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forum, subforum);
+            permission = Permissions.PERMISSIONS_MODERATOR;
+            SubForumPermissionI p = new UserSubforumPermission(permission, forum, subforum);
             moderator.addSubForumPermission(subforum, p);
             Forum f =  Forum.load(forum);
-            f.getSubForums().get(subforum).setModerator(moderator);
-            f.Update();
-        } else {
-            logger.error(permission + " has no permission to set moderator");
-            throw new PermissionDeniedException("User can not set moderator");
-        }
+            SubForumI sf = f.getSubForums().get(subforum);
+            sf.setModerator(moderator);
+            f.getSubForums().replace(sf.getTitle(), sf);
+            //f.Update();
     }
 
     @Override
@@ -195,9 +194,5 @@ import javax.persistence.Id;
         Forum f = Forum.load(forum);
         f.getSubForums().get(subforum).removeModerator(moderatorName);
         f.Update();
-    }
-    @Override
-    public boolean isAdmin() {
-        return this.permission.compareTo(Permissions.PERMISSIONS_ADMIN) >= 0;
     }
 }

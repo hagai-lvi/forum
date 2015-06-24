@@ -66,5 +66,4 @@ public interface SubForumPermissionI {
 	boolean canDeleteMessage() throws PermissionDeniedException;
 
 	void removeModerator(String moderatorName);
-	boolean isAdmin();
 }

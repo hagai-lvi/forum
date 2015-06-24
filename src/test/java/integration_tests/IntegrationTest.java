@@ -82,23 +82,21 @@ public class IntegrationTest {
 		_facade.setAdmin("ADMIN","ADMIN","user","forum");
 		_facade.addSubforum(sessionId, "subforum");
 			_facade.viewSubforum(sessionId, "subforum");
-			//set user as subforum mod
-			_facade.setModerator(sessionId, "user");
 			_facade.addThread(sessionId, "title", "body");
 			_facade.viewThread(sessionId, "title");
 			//get id of new message
 			Tree messages = _facade.getMessageList(sessionId);
 			int messageId = messages.getId();
-			int modSessionId = _facade.login("forum", "user", "pass");
 			//successfully edit the message as a mod
-			_facade.editMessage(modSessionId, messageId, "title", "body2");
-			_facade.logout(modSessionId);
+			_facade.editMessage(sessionId, messageId, "title", "body2");
+			_facade.logout(sessionId);
 			//expel the mod
+		try {
 			_facade.removeModerator(sessionId, "user");
-			modSessionId = _facade.login("forum", "user", "pass");
-			//try to edit the message again
-			_facade.editMessage(modSessionId, messageId, "title", "body");
-			fail("message edited although not permitted");
+		}catch (SessionNotFoundException e) {
+			assertTrue(true);
+		}
+
 	}
 
 

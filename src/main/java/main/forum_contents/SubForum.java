@@ -39,7 +39,7 @@ public class SubForum extends PersistantObject implements SubForumI {
         return _moderators;
     }
 
-    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Map<String, UserI> _moderators = new HashMap<>();
     private static Logger logger = Logger.getLogger(Forum.class.getName());
     @ManyToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL)
@@ -87,7 +87,7 @@ public class SubForum extends PersistantObject implements SubForumI {
     @Override
     public void setModerator(UserI mod){
         _moderators.put(mod.getUsername(), mod);
-//        this.Update();
+
     }
 
 

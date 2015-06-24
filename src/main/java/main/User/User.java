@@ -121,7 +121,8 @@ public class User extends PersistantObject implements UserI, Cloneable {
 
     @Override
     public ThreadI createThread(String title, String text, String subforum) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
-        return findPermission(subforum).createThread(username, title, text);
+        ThreadI threadI = findPermission(subforum).createThread(username, title, text);
+        return threadI;
     }
 
     @Override
@@ -161,8 +162,10 @@ public class User extends PersistantObject implements UserI, Cloneable {
     public void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException {
          boolean found = subForumsPermissions.containsKey(subForum);
             if(found){
-                subForumsPermissions.get(subForum).setModerator(moderator);
-                return;
+                if(forumPermissions.isAdmin()) {
+                    subForumsPermissions.get(subForum).setModerator(moderator);
+                }
+                else throw new PermissionDeniedException("Can not set moderator");
             }
         throw new SubForumNotFoundException();
     }
