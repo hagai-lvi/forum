@@ -56,7 +56,7 @@ public class ForumThreadTest extends TestCase {
     @Test
     public void testAddReply() throws MessageNotFoundException {
         MessageI reply;
-        reply = thread.addReply(msg, "reply-title", "reply-body", "user");
+        reply = thread.addReply(new ForumMessage("user", "title", "text"), "reply-title", "reply-body", "user");
         assertEquals(1, thread.getMessages().getRoot().children.size());
         assertEquals("reply-title", thread.getMessages().getRoot().children.iterator().next().getData().getMessageTitle());
         assertEquals("reply-body", thread.getMessages().getRoot().children.iterator().next().getData().getMessageText());

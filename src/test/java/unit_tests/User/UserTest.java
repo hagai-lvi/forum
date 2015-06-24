@@ -3,11 +3,9 @@ package unit_tests.User;
 import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
-import main.User.UserSubforumPermission;
 import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
-import main.forum_contents.SubForum;
 import main.interfaces.*;
 import org.junit.After;
 import org.junit.Before;
@@ -109,19 +107,18 @@ public class UserTest {
     @Test
     public void testCreateSubForumForAdmin() throws PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, ForumNotFoundException {
         Map<String, SubForumI> subForums = forum.getSubForums();
-        SubForumI subforum = new SubForum("Football", policy.getSubforumPolicy());
-        assertFalse(subForums.containsKey(subforum));
-        user2.createSubForum("Football");
-        subForums = forum.getSubForums();
-        assertTrue(subForums.containsKey(subforum));
+        assertFalse(subForums.containsKey("Football"));
+        User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
+        subForums = Forum.load("Lifestyle").getSubForums();
+        assertTrue(subForums.containsKey("Football"));
     }
 
 
     @Test
     public void testDeleteSubForumForRegularUser() throws SubForumDoesNotExistException, ForumNotFoundException, SubForumAlreadyExistException, PermissionDeniedException {
-        user1.createSubForum("Zrima");
+        User.getUserFromDB("Tom", "Lifestyle").createSubForum("Zrima");
         try {
-            user1.deleteSubForum("Zrima"); // PermissionDeniedException expected
+            User.getUserFromDB("Gabi", "Lifestyle").deleteSubForum("Zrima"); // PermissionDeniedException expected
             fail();
         } catch (PermissionDeniedException e) {
             assertTrue(true);
@@ -135,7 +132,7 @@ public class UserTest {
         forum = Forum.load(forum.getName());
         subForums = forum.getSubForums();
         assertTrue(subForums.containsKey("Baseball"));
-        user2.deleteSubForum("Baseball");
+        User.getUserFromDB("Tom", "Lifestyle").deleteSubForum("Baseball");
         forum = Forum.load(forum.getName());
         subForums = forum.getSubForums();
         assertFalse(subForums.containsKey("Baseball"));
@@ -143,8 +140,8 @@ public class UserTest {
 
     @Test
     public void testCreateThread() throws PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, ForumNotFoundException, DoesNotComplyWithPolicyException {
-        user2.createSubForum("Football");
-        user2.createThread("Mega Flow", "Flow", "Football");
+        User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
+        User.getUserFromDB("Tom", "Lifestyle").createThread("Mega Flow", "Flow", "Football");
     }
 
     @Test
@@ -158,33 +155,32 @@ public class UserTest {
 
     @Test
     public void testDeleteMessageS() throws MessageNotFoundException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException {
-        user2.createSubForum("Football");
-        ThreadI thread = user2.createThread("Football", "Mega Flow", "Flow");
+        User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
+        ThreadI thread = User.getUserFromDB("Tom", "Lifestyle").createThread("Football", "Mega Flow", "Flow");
         assertEquals(thread.getRootMessage().printSubTree(), "Flow");
-        user2.replyToMessage("Football", thread.getRootMessage(), "WTF", "Help");
+        User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", thread.getRootMessage(), "WTF", "Help");
         assertEquals(thread.getRootMessage().printSubTree(), "Flow--> Help");
-        user1.replyToMessage("Football", thread.getRootMessage(), "WTF", "Yeah!");
+        User.getUserFromDB("Gabi", "Lifestyle").replyToMessage("Football", thread.getRootMessage(), "WTF", "Yeah!");
         assertEquals(thread.getRootMessage().printSubTree(), "Flow--> Help--> Yeah!");
-        user1.deleteMessage(thread.getRootMessage(), "Football");
-        user1.replyToMessage("Football", thread.getRootMessage(), "aaa", "bbb");
+        User.getUserFromDB("Gabi", "Lifestyle").deleteMessage(thread.getRootMessage(), "Football");
+        User.getUserFromDB("Gabi", "Lifestyle").replyToMessage("Football", thread.getRootMessage(), "aaa", "bbb");
     }
 
     @Test
     public void testDeleteMessageWithoutPermission() throws SubForumAlreadyExistException, ForumNotFoundException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, MessageNotFoundException {
         ThreadI thread = null;
         try {
-            user2.createSubForum("Football");
-        } catch (PermissionDeniedException e) {
-            fail();
-        }
-        SubForumPermissionI permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum.getName(), "Football");
-        try {
-           thread = user2.createThread("Football", "Mega Flow", "Flow");
+            User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
         } catch (PermissionDeniedException e) {
             fail();
         }
         try {
-            user2.deleteMessage(thread.getRootMessage(), "Football"); // PermissionDeniedException expected
+           thread = User.getUserFromDB("Tom", "Lifestyle").createThread("Football", "Mega Flow", "Flow");
+        } catch (PermissionDeniedException e) {
+            fail();
+        }
+        try {
+            User.getUserFromDB("Tom", "Lifestyle").deleteMessage(thread.getRootMessage(), "Football"); // PermissionDeniedException expected
             fail();
         } catch (PermissionDeniedException e) {
             assertTrue(true);
@@ -205,7 +201,7 @@ public class UserTest {
     @Test
     public void testSetAdmin() throws PermissionDeniedException, ForumNotFoundException, UserNotFoundException, CloneNotSupportedException {
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
-        user2.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
+        User.getUserFromDB("Tom", "Lifestyle").setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
     }
 
     @Test
@@ -249,8 +245,5 @@ public class UserTest {
     @Test
     public void testReportModerator()  {
         fail();
-        // SubForumI subforum = new SubForum("Baseball", policy.getSubforumPolicy());
-        // user1.setModerator(subforum, user2);
-        // user1.reportModerator(subforum, "Gabi", "The Worst Moderator Ever");
     }
 }

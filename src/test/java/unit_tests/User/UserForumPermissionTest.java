@@ -123,8 +123,15 @@ public class UserForumPermissionTest {
     }
 
     @Test
-    public void testSetPolicy()   {
-        fail();
+    public void testSetPolicy() throws PermissionDeniedException, ForumNotFoundException {
+        try {
+            permission.setPolicy(new ForumPolicy(true, 2, ".*", 10));
+            fail();
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+            permission2.setPolicy(new ForumPolicy(true, 2, ".*", 10));
+            permission3.setPolicy(new ForumPolicy(true, 2, ".*", 10));
+        }
     }
 
     @Test

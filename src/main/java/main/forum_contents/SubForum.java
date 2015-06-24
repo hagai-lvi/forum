@@ -67,6 +67,7 @@ public class SubForum extends PersistantObject implements SubForumI {
         }
         ThreadI thread = new ForumThread(user, title, text);
         _threads.put(title, thread);
+        Update();
         return thread;
     }
 
