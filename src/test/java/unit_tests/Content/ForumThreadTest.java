@@ -45,13 +45,13 @@ public class ForumThreadTest extends TestCase {
     @Test
     public void testGetMessages() throws Exception {
         assertEquals(thread.getMessages().getRoot().getData().getMessageTitle(), "title");
-        assertEquals(thread.getMessages().getRoot().getData().getMessageText(), "body");
+        assertEquals(thread.getMessages().getRoot().getData().getMessageText(), "text");
 
     }
     @Test
     public void testGetRootMessage() throws Exception {
         assertEquals(thread.getRootMessage().getMessageTitle(), "title");
-        assertEquals(thread.getRootMessage().getMessageText(), "body");
+        assertEquals(thread.getRootMessage().getMessageText(), "text");
     }
     @Test
     public void testAddReply() throws MessageNotFoundException {
@@ -65,7 +65,7 @@ public class ForumThreadTest extends TestCase {
 
     @Test
     public void testContains() throws Exception {
-        assertTrue(thread.contains(msg));
+        assertFalse(thread.contains(msg));
         MessageI newmsg =thread.addReply(msg, "aaa", "bbb", "user");
         assertTrue(thread.contains(newmsg));
     }
