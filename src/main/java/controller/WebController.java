@@ -184,7 +184,7 @@ public class WebController {
 		model.addAttribute("forumName", forumName);
 		model.addAttribute("user", userName);
 		model.addAttribute("isAdmin", isAdmin);
-		model.addAttribute("subforumsList", facade.getSubForumList(sessionID));
+		model.addAttribute("subforumsList", facade.getSubForumList(sessionID).values());
 		model.addAttribute("userStatus", userStatus);
 	}
 
