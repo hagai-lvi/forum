@@ -42,16 +42,16 @@
     <input type="submit" value="Back to forum homepage" >
 </form>
 
-
-<form id="addModerator" action="addModerator" method="post">
-    <h1>Add moderator to sub forum</h1>
-    <label>
-        <span>Moderator name:</span>
-        <input type="text" name="moderatorName" placeholder="Moderator Name"/>
-        <input type="submit" value="Add moderator"/>
-    </label>
-</form>
-
+<c:if test="${isAdmin}">
+    <form id="addModerator" action="addModerator" method="post">
+        <h1>Add moderator to sub forum</h1>
+        <label>
+            <span>Moderator name:</span>
+            <input type="text" name="moderatorName" placeholder="Moderator Name"/>
+            <input type="submit" value="Add moderator"/>
+        </label>
+    </form>
+</c:if>
 <%--TODO--%>
 <table >
     <tr>
