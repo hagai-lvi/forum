@@ -1,9 +1,6 @@
 package main.User;
 
-import main.exceptions.ForumNotFoundException;
-import main.exceptions.PermissionDeniedException;
-import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.SubForumDoesNotExistException;
+import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.interfaces.*;
 
@@ -72,17 +69,16 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException {
+	public void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException, UserNotFoundException {
 		Forum forum = Forum.load(forumName);
+		UserI clone = admin.cloneAs(Permissions.PERMISSIONS_ADMIN);
 		if(forum == null) throw new ForumNotFoundException("Forum not found");
 		if(permissions.equals(Permissions.PERMISSIONS_SUPERADMIN)) {
 			logger.trace("User " + admin.getUsername() + " set as admin of forum " + forumName);
-			admin.becomeAdmin();
-			forum.setAdmin(admin);
+			forum.setAdmin(clone);
 		}
 		else if (permissions.equals(Permissions.PERMISSIONS_ADMIN)) {
-			admin.becomeAdmin();
-			forum.setAdmin(admin);
+			forum.setAdmin(clone);
 			this.permissions = Permissions.PERMISSIONS_USER;
 		}
 		else {
@@ -149,9 +145,14 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public void becomeAdmin() {
-		permissions = Permissions.PERMISSIONS_ADMIN;
+	public Permissions getPermission() {
+		return permissions;
 	}
+
+//	@Override
+//	public void becomeAdmin() {
+//		permissions = Permissions.PERMISSIONS_ADMIN;
+//	}
 
 	public void setId(Integer id) {
 		this.id = id;

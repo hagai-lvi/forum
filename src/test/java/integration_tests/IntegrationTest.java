@@ -72,7 +72,7 @@ public class IntegrationTest {
 	/**
 	 * target - Check if an expelled moderator keeps his privileges.
 	 */
-	public void test_removeModThenTryToEditMessage() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, NeedMoreAuthParametersException, PasswordNotInEffectException, EmailNotAuthanticatedException, SubForumAlreadyExistException, SessionNotFoundException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException, MessageNotFoundException {
+	public void test_removeModThenTryToEditMessage() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, NeedMoreAuthParametersException, PasswordNotInEffectException, EmailNotAuthanticatedException, SubForumAlreadyExistException, SessionNotFoundException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException, MessageNotFoundException, CloneNotSupportedException {
 
 			//add new user
 			_facade.register("forum", "user", "pass", "mail@mail.com");

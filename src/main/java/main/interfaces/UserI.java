@@ -73,17 +73,14 @@ public interface UserI {
 	/**
 	 * Set new forum administrator
 	 */
-	void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException;
+	void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException, UserNotFoundException, CloneNotSupportedException;
 
 	/**
 	 * Set policy for forum
 	 */
 	void setPolicy(ForumPolicyI policy) throws PermissionDeniedException, ForumNotFoundException;
 
-	/**
-	 * Get statistics
-	 */
-	String viewStatistics(String forum) throws PermissionDeniedException;
+    String viewStatistics() throws PermissionDeniedException;
 
 	/**
 	 * Set moderator for subforum
@@ -122,7 +119,7 @@ public interface UserI {
 
 	void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException;
 
-	String getForumStatus(String subForum) throws SubForumDoesNotExistException;
+	String getForumStatus() throws SubForumDoesNotExistException;
 
 	String getSubForumStatus(String subForum) throws SubForumDoesNotExistException;
 
@@ -130,9 +127,9 @@ public interface UserI {
 
 	void setAuthenticatedAdmin();
 
-	void setForumPermissions(Permissions permissionsAdmin) throws ForumNotFoundException;
+	//void becomeAdmin();
 
-	void becomeAdmin();
+	UserI cloneAs(Permissions permission) throws ForumNotFoundException, CloneNotSupportedException;
 
 	boolean isGuest();
 }

@@ -3,10 +3,7 @@ package unit_tests.User;
 import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
-import main.exceptions.ForumNotFoundException;
-import main.exceptions.PermissionDeniedException;
-import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.SubForumDoesNotExistException;
+import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.SubForum;
@@ -108,7 +105,7 @@ public class UserForumPermissionTest {
 
 
     @Test
-    public void testSetAdminWithoutPermission() throws ForumNotFoundException {
+    public void testSetAdminWithoutPermission() throws ForumNotFoundException, UserNotFoundException, CloneNotSupportedException {
         try {
             permission.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
             fail();
@@ -118,7 +115,7 @@ public class UserForumPermissionTest {
     }
 
     @Test
-    public void testSetAdmin() throws PermissionDeniedException, ForumNotFoundException {
+    public void testSetAdmin() throws PermissionDeniedException, ForumNotFoundException, UserNotFoundException, CloneNotSupportedException {
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
         permission3.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
     }

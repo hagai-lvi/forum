@@ -32,7 +32,7 @@ public class UserTest {
     private ForumPolicyI policy;
 
     @Before
-    public void setUp() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException, ForumNotFoundException {
+    public void setUp() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, PermissionDeniedException, ForumNotFoundException, UserNotFoundException, CloneNotSupportedException {
         int maxModerators = 1;
         String regex = ".*";
         boolean isSecured = false;
@@ -197,7 +197,7 @@ public class UserTest {
     }
 
     @Test
-    public void testSetAdminWithoutPermission() throws ForumNotFoundException {
+    public void testSetAdminWithoutPermission() throws ForumNotFoundException, UserNotFoundException, CloneNotSupportedException {
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
         try {
             user3.setAdmin(new User("Shreder", "000", "XXX@gmail.com", permission));
@@ -208,7 +208,7 @@ public class UserTest {
     }
 
     @Test
-    public void testSetAdmin() throws PermissionDeniedException, ForumNotFoundException {
+    public void testSetAdmin() throws PermissionDeniedException, ForumNotFoundException, UserNotFoundException, CloneNotSupportedException {
         ForumPermissionI permission = new UserForumPermission(Permissions.PERMISSIONS_ADMIN,forum.getName());
         user2.setAdmin(new User("Shreder", "000", "XXX@gmail.com",permission));
     }
@@ -217,6 +217,24 @@ public class UserTest {
     public void testViewStatistics()  {
         fail();
     }
+
+
+    @Test
+    public void testCloneAs() throws ForumNotFoundException, CloneNotSupportedException, SubForumDoesNotExistException, PermissionDeniedException {
+        UserI clone = user1.cloneAs(Permissions.PERMISSIONS_ADMIN);
+        assertTrue(clone.isAdmin());
+        System.out.println(user1.isEmailAuthenticated()+ " - " + clone.isEmailAuthenticated());
+        assertEquals(user1.isEmailAuthenticated(), clone.isEmailAuthenticated());
+        assertEquals(user1.getUsername(), clone.getUsername());
+        assertEquals(user1.getEmail(), clone.getEmail());
+        assertEquals(user1.getForumStatus(), clone.getForumStatus());
+        assertEquals(user1.getPassword(), clone.getPassword());
+        assertEquals(user1.getUserAuthString(), clone.getUserAuthString());
+        assertEquals(user1.getSignUpDate(), clone.getSignUpDate());
+        assertEquals(user1.getPasswordCreationDate(), clone.getPasswordCreationDate());
+        assertEquals(user1.viewStatistics(), clone.viewStatistics());
+    }
+
 
     @Test
     public void testSetModerator() {

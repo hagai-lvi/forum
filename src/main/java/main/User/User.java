@@ -14,7 +14,7 @@ import java.util.*;
  * Created by gabigiladov on 4/11/15.
  */
 @Entity
-public class User extends PersistantObject implements UserI {
+public class User extends PersistantObject implements UserI, Cloneable {
     private String authString = null;
     private String username;
     //@Type(type="encryptedString")
@@ -145,7 +145,7 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException {
+    public void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException, UserNotFoundException, CloneNotSupportedException {
         forumPermissions.setAdmin(admin);
     }
 
@@ -155,9 +155,8 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public String viewStatistics(String forum) throws PermissionDeniedException {
-        //TODO - not implemented
-        throw new RuntimeException("Not yet implemented");
+    public String viewStatistics() throws PermissionDeniedException {
+        return null; //TODO - not yet implemented.
     }
 
     @Override
@@ -253,7 +252,7 @@ public class User extends PersistantObject implements UserI {
     }
 
     @Override
-    public String getForumStatus(String forum) {
+    public String getForumStatus() {
         if (forumPermissions.isAdmin()){
             return "Admin";
         }
@@ -287,14 +286,23 @@ public class User extends PersistantObject implements UserI {
         isEmailAuthenticated = true;
     }
 
-    @Override
-    public void setForumPermissions(Permissions permissionsAdmin) throws ForumNotFoundException {
+    private void setForumPermissions(Permissions permissionsAdmin) throws ForumNotFoundException {
         forumPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_ADMIN, forumPermissions.getForum().getName());
     }
 
+  //  @Override
+  //  public void becomeAdmin() {
+  //      forumPermissions.becomeAdmin();
+  //  }
+
+
     @Override
-    public void becomeAdmin() {
-        forumPermissions.becomeAdmin();
+    public UserI cloneAs(Permissions permission) throws ForumNotFoundException, CloneNotSupportedException {
+        Permissions temPerms = this.forumPermissions.getPermission();
+        this.setForumPermissions(permission);
+        UserI clone = (User)this.clone();//new User(this.username, this.password, this.email, clonePermissions);
+        this.setForumPermissions(temPerms);
+        return clone;
     }
 
     @Override
@@ -315,6 +323,8 @@ public class User extends PersistantObject implements UserI {
     public static User getUserFromDB(String username, String forumname){
             return pers.load(User.class, new UserForumID(username, forumname));
     }
+
+
 
     public static void delete(String username, String forumname) throws UserNotFoundException {
 

@@ -307,17 +307,17 @@ import java.util.Map;
 	@Override
 	public String getCurrentUserForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
 		Session current = findSession(sessionId);
-		return current.getUser().getForumStatus(current.getForum().getName());
+		return current.getUser().getForumStatus();
 	}
 
 	@Override
 	public String getCurrentUserSubForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
 		Session current = findSession(sessionId);
-		return current.getUser().getForumStatus(current.getSubForum().getTitle());
+		return current.getUser().getForumStatus();
 	}
 
 	@Override
-	public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException, ForumNotFoundException {
+	public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException {
 		User currentAdmin = User.getUserFromDB(username, forumname);
 		if(currentAdmin == null) throw new UserNotFoundException("User not found");
 		User user = User.getUserFromDB(newAdmin, forumname);

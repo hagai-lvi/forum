@@ -65,7 +65,7 @@ public class FacadeTest {
     }
 
     @Test
-    public void testSetAdmin() {
+    public void testSetAdmin() throws CloneNotSupportedException {
         try {
             theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         } catch (UserAlreadyExistsException e) {

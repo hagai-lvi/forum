@@ -1,9 +1,7 @@
 package main.interfaces;
 
-import main.exceptions.ForumNotFoundException;
-import main.exceptions.PermissionDeniedException;
-import main.exceptions.SubForumAlreadyExistException;
-import main.exceptions.SubForumDoesNotExistException;
+import main.User.Permissions;
+import main.exceptions.*;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -25,7 +23,7 @@ public interface ForumPermissionI {
 	/**
 	 * Set this user to be forum administrator
 	 */
-	void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException;
+	void setAdmin(UserI admin) throws PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException, UserNotFoundException;
 
 	/**
 	 * Set policy for forum
@@ -52,5 +50,7 @@ public interface ForumPermissionI {
 
 	boolean isGuest();
 
-	void becomeAdmin();
+	Permissions getPermission();
+
+	//void becomeAdmin();
 }
