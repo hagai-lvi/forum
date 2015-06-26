@@ -142,11 +142,10 @@ public class Forum extends PersistantObject implements ForumI{
         SubForumI subForum = new SubForum(subForumName, this.policy.getSubforumPolicy());
         _subForums.put(subForumName, subForum);
 
-        for (String name: _users.keySet()) {
-            UserI user = User.getUserFromDB(name, forum_name);
-            if (user != null) {
+        for (UserI user: _users.values()) {
+            if (user != null ) {
                 UserSubforumPermission permission;
-                if (!user.isAdmin()) {
+                if (user.isAdmin()) {
                     permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forum_name, subForum.getTitle());
                 } else if(!user.isGuest()){
                     permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum_name, subForum.getTitle());

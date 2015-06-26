@@ -5,10 +5,7 @@ import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
-import main.interfaces.ExThreadI;
-import main.interfaces.FacadeI;
-import main.interfaces.ForumI;
-import main.interfaces.SubForumI;
+import main.interfaces.*;
 import main.services_layer.Facade;
 import org.junit.After;
 import org.junit.Before;
@@ -157,15 +154,23 @@ public class IntegrationTest {
 
 	@Test
 
-	public void testAdmin() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, ThreadNotFoundException, MessageNotFoundException {
+	public void testAdmin() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, ThreadNotFoundException, MessageNotFoundException, SubForumNotFoundException {
 		int session = _facade.login("forum","ADMIN","ADMIN");
 		_facade.addSubforum(session, "sub");
 		_facade.addSubforum(session, "sub2");
 		_facade.addSubforum(session, "sub3");
 
+
 		int id = _facade.addThread(session, "title", "text");
-		ExThreadI th = _facade.viewThread(session, "title");
-		int id2 = _facade.addReply(session, id, "reply", "text");
-		_facade.addReply(session, id2, "reply2", "text");
+
+		//ExThreadI th = _facade.viewThread(session, "title");
+
+		//int id2 = _facade.addReply(session, id, "reply", "text");
+
+		//_facade.addReply(session, id2, "reply2", "text");
+
+		ExSubForumI ex = _facade.viewSubforum(session, "sub2");
+
+		_facade.addThread(session, "a", "b");
 	}
 }

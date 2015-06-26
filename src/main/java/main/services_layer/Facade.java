@@ -64,6 +64,7 @@ import java.util.Map;
 	public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
 		SubForumI subforum = currentSession.getUser().createSubForum(subforumName);
+
 		currentSession.setSubForum(subforum.getTitle());
 	}
 
@@ -103,7 +104,7 @@ import java.util.Map;
 	@Override
 	public int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
-		ThreadI th =currentSession.getUser().createThread(srcMessageTitle, srcMessageBody, currentSession.getSubForum().getTitle());
+		ThreadI th = currentSession.getUser().createThread(srcMessageTitle, srcMessageBody, currentSession.getSubForum().getTitle());
 		currentSession.setThread(srcMessageTitle);
 		return th.getRootMessage().getId();
 	}

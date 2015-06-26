@@ -107,10 +107,13 @@ public class User extends PersistantObject implements UserI, Cloneable {
 
     @Override
     public SubForumI createSubForum(String name) throws PermissionDeniedException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException {
-        SubForumI subforum = forumPermissions.createSubForum(name);
         UserSubforumPermission newPerms = new UserSubforumPermission(forumPermissions.getPermission(), forumPermissions.getForum().getName(), name);
         subForumsPermissions.put(name, newPerms);
-        this.Update();
+
+        System.out.println("************" + subForumsPermissions.keySet().size());
+
+        SubForumI subforum = forumPermissions.createSubForum(name);
+        //this.Update();
         return subforum;
     }
 
@@ -304,6 +307,10 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
+        System.out.println("************"+username);
+        System.out.println("************"+subForum);
+        System.out.println("************"+subForumsPermissions.keySet().size());
+
         if(!subForumsPermissions.containsKey(subForum))
             throw new SubForumDoesNotExistException();
         return subForumsPermissions.get(subForum);

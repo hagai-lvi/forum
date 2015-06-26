@@ -64,8 +64,8 @@ public class Session {
         return Forum.load(forum);
     }
 
-    public void setSubForum(String subForum) {
-        this.subForum = subForum;
+    public void setSubForum(String subforum) {
+        this.subForum = subforum;
     }
 
     public SubForumI getSubForum() {
