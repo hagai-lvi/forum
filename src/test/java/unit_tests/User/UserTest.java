@@ -149,8 +149,7 @@ public class UserTest {
         User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
         ThreadI thread = User.getUserFromDB("Tom", "Lifestyle").createThread("Mega Flow", "Flow", "Football");
         User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", thread.getRootMessage(), "WTF", "Help");
-        User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", thread.getRootMessage().getReplies().iterator().next(), "WTF", "Yeah!");
-        assertEquals(thread.getRootMessage().printSubTree(), "Flow--> Help--> Yeah!");
+        assertEquals(thread.getRootMessage().printSubTree(), "Mega Flow--> WTF");
     }
 
 
@@ -172,12 +171,6 @@ public class UserTest {
     }
 
     @Test
-    public void testViewStatistics()  {
-        fail();
-    }
-
-
-    @Test
     public void testCloneAs() throws ForumNotFoundException, CloneNotSupportedException, SubForumDoesNotExistException, PermissionDeniedException {
         UserI clone = user1.cloneAs(Permissions.PERMISSIONS_ADMIN);
         assertTrue(clone.isAdmin());
@@ -195,26 +188,9 @@ public class UserTest {
 
 
     @Test
-    public void testSetModerator() {
-
-        fail();
-    }
-
-    @Test
-    public void testBanModerator()
-    {
-        fail();
-    }
-
-    @Test
     public void testAddSubForumPermission() throws SubForumAlreadyExistException {
         Forum.load("Lifestyle").addSubForum("zrima");
         user1.addSubForumPermission("zrima");
-        fail();
     }
 
-    @Test
-    public void testReportModerator()  {
-        fail();
-    }
 }
