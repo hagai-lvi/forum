@@ -69,6 +69,7 @@ public class ForumThread extends PersistantObject implements ThreadI{
             ForumMessage reply = new ForumMessage(user, title, text);
             messages.add(original, reply);
             original.addReply(reply);
+           // this.Update();
             return reply;
         } catch (NodeNotFoundException | NullPointerException e) {
             throw new MessageNotFoundException(original.getMessageTitle());

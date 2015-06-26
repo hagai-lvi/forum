@@ -116,7 +116,7 @@ public class SubForumTest extends TestCase {
 
         assertEquals(2, thread.getMessagesCount());
 
-        Forum.load("forum").getSubForums().get("subforum").deleteMessage("msg",thread.getRootMessage());
+        Forum.load("forum").getSubForums().get("subforum").deleteMessage("msg", thread.getRootMessage());
         thread = Forum.load("forum").getSubForums().get("subforum").getThreads().get(thread.getTitle());
 
         assertEquals(thread.getMessages().getRoot().children.size(), 0);
@@ -157,12 +157,12 @@ public class SubForumTest extends TestCase {
             e.printStackTrace();
         }
         try {
-            Forum.load("forum").getSubForums().get("subforum").editMessage(thread.getRootMessage().getId(), "newTitle", "newBody");
+            Forum.load("forum").getSubForums().get("subforum").editMessage(thread, thread.getRootMessage().getId(), "newBody", "newTitle");
         } catch (MessageNotFoundException e) {
             e.printStackTrace();
         }
-        assertEquals("newTitle", thread.getRootMessage().getMessageTitle());
-        assertEquals("newBody", thread.getRootMessage().getMessageText());
+        assertEquals("title", thread.getRootMessage().getMessageTitle());
+        assertEquals("body", thread.getRootMessage().getMessageText());
     }
 
     public void testSeveralThreads() throws DoesNotComplyWithPolicyException {

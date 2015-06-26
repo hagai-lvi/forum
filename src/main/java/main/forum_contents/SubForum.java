@@ -134,15 +134,8 @@ public class SubForum extends PersistantObject implements SubForumI {
     }
 
     @Override
-    public void editMessage(int originalMessage, String title, String text) throws MessageNotFoundException {
-        ThreadI thread = null;
-        MessageI original = null;
-        for (ThreadI t : _threads.values()){
-            if ((original = t.getMessages().find(originalMessage)) != null){
-                thread = t;
-                break;
-            }
-        }
+    public void editMessage(ThreadI thread, int originalMessage, String text, String title) throws MessageNotFoundException {
+        MessageI original = thread.getMessages().find(originalMessage);
         if (thread == null){
             logger.warn("User tried to reply to already deleted thread");
             throw new MessageNotFoundException(title);

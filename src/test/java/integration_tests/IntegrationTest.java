@@ -83,13 +83,12 @@ public class IntegrationTest {
 		_facade.setAdmin("ADMIN","ADMIN","user","forum");
 		_facade.addSubforum(sessionId, "subforum");
 			_facade.viewSubforum(sessionId, "subforum");
-			_facade.addThread(sessionId, "title", "body");
+			int id = _facade.addThread(sessionId, "title", "body");
 			_facade.viewThread(sessionId, "title");
 			//get id of new message
 			Tree messages = _facade.getMessageList(sessionId);
-			int messageId = messages.getId();
 			//successfully edit the message as a mod
-			_facade.editMessage(sessionId, messageId, "title", "body2");
+			_facade.editMessage(sessionId, id, "title", "body2");
 			_facade.logout(sessionId);
 			//expel the mod
 		try {

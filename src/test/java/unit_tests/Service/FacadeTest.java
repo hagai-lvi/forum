@@ -4,9 +4,7 @@ package unit_tests.Service;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
-import main.interfaces.FacadeI;
-import main.interfaces.ForumI;
-import main.interfaces.UserI;
+import main.interfaces.*;
 import main.services_layer.Facade;
 import org.junit.After;
 import org.junit.Before;
@@ -449,8 +447,18 @@ public class FacadeTest {
     }
 
     @Test
-    public void testAddReply()  {
-        fail();
+    public void testAddReply() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, EmailNotAuthanticatedException, UserNotFoundException, PermissionDeniedException, CloneNotSupportedException, PasswordNotInEffectException, NeedMoreAuthParametersException, SubForumAlreadyExistException, SessionNotFoundException, SubForumDoesNotExistException, MessageNotFoundException, ThreadNotFoundException {
+        theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
+        theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+        theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
+        int sessionId = theFacade.login("Temp", "Victor", "123456");
+        theFacade.addSubforum(sessionId, "sub");
+        theFacade.addSubforum(sessionId, "sub2");
+        theFacade.addThread(sessionId, "thread", "text");
+        theFacade.addReply(sessionId, 1, "reply", "text");
+       ExThreadI t =  theFacade.viewThread(sessionId, "thread");
+       assertTrue( t.getTitle().equals("thread"));
+        assertTrue(t.getMessages().getRoot().getChildren().get(0).getData().getMessageTitle().equals("reply"));
     }
 
     @Test

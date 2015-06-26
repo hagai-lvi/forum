@@ -100,7 +100,7 @@ import javax.persistence.Id;
     @Override
     public void editMessage(ThreadI thread, int originalMessage, String title, String text) throws MessageNotFoundException {
         ForumI f =  Forum.load(forum);
-        f.getSubForums().get(subforum).editMessage(originalMessage, title, text);
+        f.getSubForums().get(subforum).editMessage(thread, originalMessage, text, title);
        // f.Update();
     }
 
