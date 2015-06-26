@@ -145,8 +145,9 @@ import javax.persistence.Id;
         this.permission = permission;
     }
 
-    @Id @GeneratedValue(strategy = GenerationType.AUTO)
+    @Id@GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
+    
 
     public int getId() {
         return id;

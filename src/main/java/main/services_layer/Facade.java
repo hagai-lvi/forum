@@ -259,12 +259,13 @@ import java.util.Map;
 	}
 
 	@Override
-	public ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException {
+	public ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionId);
 		Map<String, SubForumI> subForums = current.getForum().getSubForums();
 		if(!subForums.containsKey(subforum))
 			throw new SubForumNotFoundException();
 		current.setSubForum(subforum);
+		current.getUser().viewSubforum(subforum);
 		return subForums.get(subforum);
 	}
 

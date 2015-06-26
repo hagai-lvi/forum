@@ -49,6 +49,7 @@ public class UserForumPermission implements ForumPermissionI {
 		if(forum == null) throw new ForumNotFoundException("Forum not found");
 		SubForumI s = forum.addSubForum(name);
 		forum.getSubForums().replace(name, s);
+		forum.Update();
 		return s;
 	}
 

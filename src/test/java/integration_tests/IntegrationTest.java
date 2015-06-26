@@ -160,10 +160,7 @@ public class IntegrationTest {
 		_facade.addSubforum(session, "sub2");
 		_facade.addSubforum(session, "sub3");
 
-
-		int id = _facade.addThread(session, "title", "text");
-
-		ExSubForumI ex = _facade.viewSubforum(session, "sub2");
+		ExSubForumI ex = _facade.viewSubforum(session, "sub");
 
 		_facade.addThread(session, "a", "b");
 	}

@@ -130,4 +130,6 @@ public interface UserI {
 	UserI cloneAs(Permissions permission) throws ForumNotFoundException, CloneNotSupportedException;
 
 	boolean isGuest();
+
+	void viewSubforum(String subforum) ;
 }

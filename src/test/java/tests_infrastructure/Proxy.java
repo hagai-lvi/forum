@@ -227,7 +227,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SessionNotFoundException, SubForumNotFoundException {
+    public ExSubForumI viewSubforum(int sessionId, String subforum) throws SessionNotFoundException, SubForumNotFoundException {
         if(this.real!=null)
             return this.real.viewSubforum(sessionId, subforum);
         return null;

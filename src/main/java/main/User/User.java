@@ -31,6 +31,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
 
     @OneToMany(targetEntity = UserSubforumPermission.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private Map<String, SubForumPermissionI> subForumsPermissions;
+
     @OneToOne(targetEntity = UserForumPermission.class, cascade = CascadeType.ALL)
     private ForumPermissionI forumPermissions;
     private boolean isEmailAuthenticated;
@@ -179,7 +180,6 @@ public class User extends PersistantObject implements UserI, Cloneable {
              this.subForumsPermissions.put(subforum, new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forumPermissions.getForumName(), subforum));
     else
             this.subForumsPermissions.put(subforum, new UserSubforumPermission(forumPermissions.getPermission(), forumPermissions.getForumName(), subforum));
-
     }
 
     public void setSubForumsPermissions(Map<String, SubForumPermissionI> subForumsPermissions) {
@@ -304,6 +304,17 @@ public class User extends PersistantObject implements UserI, Cloneable {
     @Override
     public boolean isGuest() {
         return forumPermissions.isGuest();
+    }
+
+    @Override
+    public void viewSubforum(String subforum)  {
+        if(!subForumsPermissions.containsKey(subforum)) {
+            if (forumPermissions.isAdmin())
+                this.subForumsPermissions.put(subforum, new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forumPermissions.getForumName(), subforum));
+            else
+                this.subForumsPermissions.put(subforum, new UserSubforumPermission(forumPermissions.getPermission(), forumPermissions.getForumName(), subforum));
+            Update();
+        }
     }
 
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {

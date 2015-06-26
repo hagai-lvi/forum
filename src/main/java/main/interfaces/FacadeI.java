@@ -148,7 +148,7 @@ public interface FacadeI {
 	 */
 	boolean isGuest(int sessionID) throws SessionNotFoundException;
 
-	ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException;
+	ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumNotFoundException, SessionNotFoundException;
 	ExSubForumI viewSubforum(int sessionId) throws SessionNotFoundException;
 
 	ExThreadI viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException;
