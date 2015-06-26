@@ -23,7 +23,8 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <h3><c:out value="${node.data.getMessageTitle()}"/> :</h3>
-<c:out value="${node.data.getMessageText()}"/>
+<c:out value="${node.data.getMessageText()}"/><br/>
+<c:out value="user: ${node.data.getUser()}"/>
 <form action="reply_to_message" method="post">
     <input hidden name="messageID" value=${node.data.getId()}>
     <input type="submit" value="Add reply"/>

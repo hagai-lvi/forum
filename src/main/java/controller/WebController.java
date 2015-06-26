@@ -155,7 +155,7 @@ public class WebController {
 		int sessionID = f.login("A", "ADMIN", "ADMIN");
 		f.addSubforum(sessionID, "A sf1");
 		f.addSubforum(sessionID, "A sf2");
-//		f.addSubforum(sessionID, "A sf3");
+		f.addSubforum(sessionID, "A sf3");
 		f.logout(sessionID);
 
 		f.addForum("ADMIN", "ADMIN", "B", false, ".*", 5, 365);
@@ -245,7 +245,7 @@ public class WebController {
 		model.addAttribute("subforumName", subforumName);
 		model.addAttribute("user", facade.getCurrentUserName(sessionID));
 //		model.addAttribute("numberOfthreads", threads.length);//TODO
-//		model.addAttribute("isModerator", user.isAdmin()); //TODO
+		model.addAttribute("isAdmin", facade.isAdmin(sessionID)); //TODO
 		model.addAttribute("threadsList", threads);
 
 	}

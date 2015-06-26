@@ -5,10 +5,10 @@
 <c:if test="${!empty node}">
     <ul>
         <c:forEach var="node" items="${node.children}">
-            <%--<li><h3><c:out value="${node.data.getMessageTitle()}"/> :</h3>--%>
-            <%--<c:out value="${node.data.getMessageText()}"/></li>--%>
             <li>
-                <a><c:out value="${node.data.getMessageText()}"/></a>
+                <b><a><c:out value="${node.data.getMessageTitle()}"/></a></b><br/>
+                <a><c:out value="${node.data.getMessageText()}"/></a><br/>
+                <a><c:out value="user: ${node.data.getUser()}"/></a>
 
                 <form action="reply_to_message" method="post">
                     <input hidden name="messageID" value=${node.data.getId()}>
