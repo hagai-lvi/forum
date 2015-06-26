@@ -34,7 +34,6 @@ public class ForumMessage implements MessageI {
 		this.messageTitle = messageTitle;
 		writingTime = new Date();
 		replies = new ArrayList<>();
-		this.id = ForumThread.GENERATED_ID++;
 	}
 
 	public ForumMessage() {
