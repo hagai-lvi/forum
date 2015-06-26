@@ -136,11 +136,9 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     @Override
-    public void deleteMessage(MessageI message, String subforum)
+    public void deleteMessage(String subforum, String thread, MessageI mes)
             throws PermissionDeniedException, MessageNotFoundException, SubForumDoesNotExistException {
-        if(canDeleteMessage(subforum, message ))
-        findPermission(subforum).deleteMessage(message, this.username);
-        else throw new PermissionDeniedException("Can not delete message");
+        findPermission(subforum).deleteMessage(this.username,thread, mes);
     }
 
     @Override
@@ -234,12 +232,6 @@ public class User extends PersistantObject implements UserI, Cloneable {
     public boolean canAddThread(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException {
         SubForumPermissionI permission = findPermission(subForum);
         return permission.canAddThread();
-    }
-
-    @Override
-    public boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExistException, PermissionDeniedException {
-        SubForumPermissionI permission = findPermission(subForum);
-            return (msg.getUser().equals(this.username)) || (permission.canDeleteMessage());
     }
 
     @Override

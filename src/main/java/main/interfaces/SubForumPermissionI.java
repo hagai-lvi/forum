@@ -30,7 +30,7 @@ public interface SubForumPermissionI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, String deleter) throws PermissionDeniedException, MessageNotFoundException;
+	void deleteMessage(String deleter, String thread, MessageI message) throws PermissionDeniedException, MessageNotFoundException;
 
 	/**
 	 * Edit an existing message.
@@ -62,8 +62,6 @@ public interface SubForumPermissionI {
 	boolean canReply() throws PermissionDeniedException;
 
 	boolean canAddThread() throws PermissionDeniedException;
-
-	boolean canDeleteMessage() throws PermissionDeniedException;
 
 	void removeModerator(String moderatorName);
 }

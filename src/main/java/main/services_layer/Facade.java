@@ -127,7 +127,7 @@ import java.util.Map;
 	@Override
 	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
 		Session current = findSession(sessionId);
-		current.getUser().deleteMessage(current.getThread().getMessages().find(messageId), current.getSubForum().getTitle());
+		current.getUser().deleteMessage(current.getSubForum().getTitle(), current.getThread().getTitle(), current.getThread().getMessages().find(messageId));
 	}
 
 	@Override

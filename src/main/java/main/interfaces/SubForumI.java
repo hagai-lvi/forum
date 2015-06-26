@@ -29,8 +29,10 @@ public interface SubForumI extends ExSubForumI{
 
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
+	 * @param thread
+	 * @param message
 	 */
-	void deleteMessage(MessageI message, String requestingUser) throws MessageNotFoundException;
+	void deleteMessage(String thread, MessageI message) throws MessageNotFoundException;
 
 	void setModerator(UserI mod);
 

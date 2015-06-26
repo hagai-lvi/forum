@@ -68,7 +68,7 @@ public interface UserI {
 	/**
 	 * Delete a specific message if the message was create by the user that sent this request
 	 */
-	void deleteMessage(MessageI message, String subForum) throws PermissionDeniedException, MessageNotFoundException, SubForumDoesNotExistException;
+	void deleteMessage(String subForum, String thread, MessageI mes) throws PermissionDeniedException, MessageNotFoundException, SubForumDoesNotExistException;
 
 	/**
 	 * Set new forum administrator
@@ -112,8 +112,6 @@ public interface UserI {
 	boolean canReply(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException;
 
 	boolean canAddThread(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException;
-
-	boolean canDeleteMessage(String subForum, MessageI msg) throws SubForumDoesNotExistException, PermissionDeniedException;
 
 	void editMessage(String subforum,ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException;
 

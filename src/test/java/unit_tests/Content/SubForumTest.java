@@ -116,15 +116,15 @@ public class SubForumTest extends TestCase {
 
         assertEquals(2, thread.getMessagesCount());
 
-        Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage(), user.getUsername());
+        Forum.load("forum").getSubForums().get("subforum").deleteMessage("msg",thread.getRootMessage());
         thread = Forum.load("forum").getSubForums().get("subforum").getThreads().get(thread.getTitle());
 
         assertEquals(thread.getMessages().getRoot().children.size(), 0);
-        Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage(), "user");
+        Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage().getMessageTitle(), thread.getRootMessage());
         assertEquals(Forum.load("forum").getSubForums().get("subforum").getThreads().size(), 0);
 
         try{
-            Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage(), user.getUsername());
+            Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage().getMessageTitle(), thread.getRootMessage());
         } catch (MessageNotFoundException e){
             assertTrue(true);
             return;

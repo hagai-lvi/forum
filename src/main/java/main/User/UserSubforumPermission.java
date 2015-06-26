@@ -1,9 +1,6 @@
 package main.User;
 
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.MessageNotFoundException;
-import main.exceptions.ModeratorDoesNotExistsException;
-import main.exceptions.PermissionDeniedException;
+import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
@@ -87,11 +84,12 @@ import javax.persistence.Id;
      * Delete a specific message if the message was create by the user that sent this request
      */
     @Override
-    public void deleteMessage(MessageI message, String deleter) throws PermissionDeniedException, MessageNotFoundException {
-        if(canDeleteMessage(message, deleter)) {
+    public void deleteMessage(String deleter, String thread, MessageI message) throws PermissionDeniedException, MessageNotFoundException {
+        SubForumI sf =  Forum.load(forum).getSubForums().get(subforum);
+
+        if(canDeleteMessage(deleter,message)) {
             logger.info(permission + " has permission to delete message");
-            ForumI f =  Forum.load(forum);
-            f.getSubForums().get(subforum).deleteMessage(message, deleter);
+            sf.deleteMessage(thread, message);
            // f.Update();
         } else {
             logger.error(permission + " has no permission to delete message");
@@ -141,10 +139,6 @@ import javax.persistence.Id;
         this.permission = permission;
     }
 
-    private boolean canDeleteMessage(MessageI message, String deleter) {
-        return message.getUser().equals(deleter);
-    }
-
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
@@ -180,9 +174,9 @@ import javax.persistence.Id;
         }
     }
 
-    @Override
-    public boolean canDeleteMessage() throws PermissionDeniedException {
-        if (!permission.equals(Permissions.PERMISSIONS_GUEST) && !permission.equals(Permissions.PERMISSIONS_USER)){
+
+    private boolean canDeleteMessage(String user, MessageI m) throws PermissionDeniedException {
+        if (!permission.equals(Permissions.PERMISSIONS_GUEST) && m.getUser().equals(user)){
             return true;
         } else {
             throw new PermissionDeniedException("user cannot delete this message.");
@@ -195,4 +189,6 @@ import javax.persistence.Id;
         f.getSubForums().get(subforum).removeModerator(moderatorName);
         //f.Update();
     }
+
+
 }

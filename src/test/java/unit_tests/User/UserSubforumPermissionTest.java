@@ -102,7 +102,7 @@ public class UserSubforumPermissionTest {
         }
         assertEquals(message.printSubTree(), "Flow222--> Help");
         try {
-            permission.deleteMessage(message, "Gabi");
+            permission.deleteMessage("Gabi", "Flow222", message);
         } catch (PermissionDeniedException | MessageNotFoundException e) {
             e.printStackTrace();
         }
@@ -114,7 +114,7 @@ public class UserSubforumPermissionTest {
             assertTrue(true);
         }
         try {
-            permission2.deleteMessage(message, "Gabi");
+            permission2.deleteMessage("Gabi","Flow222" , message);
         } catch (PermissionDeniedException e) {
             e.printStackTrace();
         } catch (MessageNotFoundException e) {
@@ -144,7 +144,7 @@ public class UserSubforumPermissionTest {
             fail();
         }
         try {
-            permission.deleteMessage(message, "Victor"); // PermissionDeniedException expected
+            permission.deleteMessage("Victor", "title", message); // PermissionDeniedException expected
         } catch (PermissionDeniedException e) {
             assertTrue(true);
         } catch (MessageNotFoundException e) {

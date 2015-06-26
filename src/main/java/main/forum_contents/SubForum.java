@@ -112,14 +112,8 @@ public class SubForum extends PersistantObject implements SubForumI {
     }
 
     @Override
-    public void deleteMessage(MessageI message, String requestingUser) throws MessageNotFoundException {
-        ThreadI thread = null;
-        for (ThreadI t : _threads.values()){
-            if (t.contains(message)){
-                thread = t;
-                break;
-            }
-        }
+    public void deleteMessage(String th, MessageI message) throws MessageNotFoundException {
+        ThreadI thread = _threads.get(th);
         if (thread == null){
             throw new MessageNotFoundException("could not find message");
         }

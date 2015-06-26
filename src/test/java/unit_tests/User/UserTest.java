@@ -153,39 +153,6 @@ public class UserTest {
         assertEquals(thread.getRootMessage().printSubTree(), "Flow--> Help--> Yeah!");
     }
 
-    @Test
-    public void testDeleteMessageS() throws MessageNotFoundException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException, PermissionDeniedException, DoesNotComplyWithPolicyException {
-        User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
-        ThreadI thread = User.getUserFromDB("Tom", "Lifestyle").createThread("Football", "Mega Flow", "Flow");
-        assertEquals(thread.getRootMessage().printSubTree(), "Flow");
-        User.getUserFromDB("Tom", "Lifestyle").replyToMessage("Football", thread.getRootMessage(), "WTF", "Help");
-        assertEquals(thread.getRootMessage().printSubTree(), "Flow--> Help");
-        User.getUserFromDB("Gabi", "Lifestyle").replyToMessage("Football", thread.getRootMessage(), "WTF", "Yeah!");
-        assertEquals(thread.getRootMessage().printSubTree(), "Flow--> Help--> Yeah!");
-        User.getUserFromDB("Gabi", "Lifestyle").deleteMessage(thread.getRootMessage(), "Football");
-        User.getUserFromDB("Gabi", "Lifestyle").replyToMessage("Football", thread.getRootMessage(), "aaa", "bbb");
-    }
-
-    @Test
-    public void testDeleteMessageWithoutPermission() throws SubForumAlreadyExistException, ForumNotFoundException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, MessageNotFoundException {
-        ThreadI thread = null;
-        try {
-            User.getUserFromDB("Tom", "Lifestyle").createSubForum("Football");
-        } catch (PermissionDeniedException e) {
-            fail();
-        }
-        try {
-           thread = User.getUserFromDB("Tom", "Lifestyle").createThread("Football", "Mega Flow", "Flow");
-        } catch (PermissionDeniedException e) {
-            fail();
-        }
-        try {
-            User.getUserFromDB("Tom", "Lifestyle").deleteMessage(thread.getRootMessage(), "Football"); // PermissionDeniedException expected
-            fail();
-        } catch (PermissionDeniedException e) {
-            assertTrue(true);
-        }
-    }
 
     @Test
     public void testSetAdminWithoutPermission() throws ForumNotFoundException, UserNotFoundException, CloneNotSupportedException {
