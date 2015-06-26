@@ -20,7 +20,7 @@ public interface SubForumI extends ExSubForumI{
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException;
+	int replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator

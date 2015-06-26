@@ -58,7 +58,7 @@ public interface UserI {
 		/**
          * reply to a specific message
          */
-	void replyToMessage(String subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException;
+	int replyToMessage(String subforum, MessageI original, String msgTitle, String msgBody) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException;
 
 	/**
 	 * Allows a user to report a moderator

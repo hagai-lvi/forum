@@ -83,7 +83,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
+    public int addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
         if(this.real!=null)
             this.real.addReply(sessionId, srcMessageId, title, body);
     }
@@ -225,10 +225,6 @@ public class Proxy implements FacadeI {
         return false;
     }
 
-    @Override
-    public boolean isGuest(int sessionID) throws SessionNotFoundException {
-        return false;
-    }
 
     @Override
     public ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SessionNotFoundException, SubForumNotFoundException {

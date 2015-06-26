@@ -55,11 +55,11 @@ import javax.persistence.Id;
     }
 
    @Override
-    public void replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
+    public int replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
         if(!permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to reply");
             ForumI f =  Forum.load(forum);
-            f.getSubForums().get(subforum).replyToMessage(original, user, title, text);
+            return f.getSubForums().get(subforum).replyToMessage(original, user, title, text);
             //f.Update();
         } else {
             logger.error(permission + " has no permission to reply");

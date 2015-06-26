@@ -20,7 +20,7 @@ public interface SubForumPermissionI {
 	/**
 	 * reply to a specific message
 	 */
-	void replyToMessage(MessageI original, String user, String title, String text) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
+	int replyToMessage(MessageI original, String user, String title, String text) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
 	 * Allows a user to report a moderator

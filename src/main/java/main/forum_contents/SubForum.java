@@ -75,7 +75,7 @@ public class SubForum extends PersistantObject implements SubForumI {
     }
 
     @Override
-    public void replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException {
+    public int replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException {
         if (!subforumPolicy.isValidMessage(title, text)){
             throw new DoesNotComplyWithPolicyException("message does not comply with forum policy.");
         }
@@ -90,9 +90,10 @@ public class SubForum extends PersistantObject implements SubForumI {
             logger.warn("User tried to reply to already deleted thread");
             throw new MessageNotFoundException(title);
         }
-        thread.addReply(original, title, text, user);
+        MessageI m = thread.addReply(original, title, text, user);
         _threads.replace(thread.getTitle(), thread);
         Update();
+        return m.getId();
     }
 
     @Override

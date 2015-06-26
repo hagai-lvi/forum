@@ -126,8 +126,8 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     @Override
-    public void replyToMessage(String subforum, MessageI original, String title, String text) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
-        findPermission(subforum).replyToMessage(original, username, title, text);
+    public int replyToMessage(String subforum, MessageI original, String title, String text) throws PermissionDeniedException, MessageNotFoundException, DoesNotComplyWithPolicyException, SubForumDoesNotExistException {
+        return findPermission(subforum).replyToMessage(original, username, title, text);
     }
 
     @Override
