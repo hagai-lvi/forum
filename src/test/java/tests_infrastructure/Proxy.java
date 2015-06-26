@@ -226,6 +226,10 @@ public class Proxy implements FacadeI {
         return false;
     }
 
+    @Override
+    public boolean isGuest(int sessionID) throws SessionNotFoundException {
+        return false;
+    }
 
     @Override
     public ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SessionNotFoundException, SubForumNotFoundException {

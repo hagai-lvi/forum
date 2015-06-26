@@ -155,19 +155,22 @@ public class WebController {
 		int sessionID = f.login("A", "ADMIN", "ADMIN");
 		f.addSubforum(sessionID, "A sf1");
 		f.addSubforum(sessionID, "A sf2");
-//		f.addSubforum(sessionID, "A sf3");TODO put back
+//		f.addSubforum(sessionID, "A sf3");
+		f.logout(sessionID);
 
 		f.addForum("ADMIN", "ADMIN", "B", false, ".*", 5, 365);
 		sessionID = f.login("B", "ADMIN", "ADMIN");
 		f.addSubforum(sessionID, "B sf1");
 		f.addSubforum(sessionID, "B sf2");
-//		f.addSubforum(sessionID, "B sf3");TODO put back
+		f.addSubforum(sessionID, "B sf3");
+		f.logout(sessionID);
 
 		f.addForum("ADMIN", "ADMIN", "C", false, ".*", 5, 365);
 		sessionID = f.login("C", "ADMIN", "ADMIN");
 		f.addSubforum(sessionID, "C sf1");
 		f.addSubforum(sessionID, "C sf2");
-//		f.addSubforum(sessionID, "C sf3");TODO put back
+		f.addSubforum(sessionID, "C sf3");
+		f.logout(sessionID);
 		return "redirect:/facade";
 	}
 
