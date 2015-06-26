@@ -48,8 +48,9 @@ import javax.persistence.Id;
         if( ! permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to create thread");
             ForumI f =  Forum.load(forum);
-            ThreadI thread = f.getSubForums().get(subforum).addThread(user, title, text);
-            return thread;
+                ThreadI thread = f.getSubForums().get(subforum).addThread(user, title, text);
+                return thread;
+
         } else {
             logger.error(permission + " has no permission to create thread");
             throw new PermissionDeniedException("User has no permission to create thread");

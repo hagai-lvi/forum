@@ -104,6 +104,7 @@ import java.util.Map;
 	public void addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
 		currentSession.getUser().createThread(srcMessageTitle, srcMessageBody, currentSession.getSubForum().getTitle());
+		currentSession.setThread(srcMessageTitle);
 	}
 
 	@Override
