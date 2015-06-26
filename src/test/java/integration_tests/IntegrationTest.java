@@ -5,6 +5,7 @@ import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
+import main.interfaces.ExThreadI;
 import main.interfaces.FacadeI;
 import main.interfaces.ForumI;
 import main.interfaces.SubForumI;
@@ -152,5 +153,17 @@ public class IntegrationTest {
 		assertTrue(flag);
 	}
 
+	@Test
 
+	public void testAdmin() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, ThreadNotFoundException, MessageNotFoundException {
+		int session = _facade.login("forum","ADMIN","ADMIN");
+		_facade.addSubforum(session, "sub");
+		_facade.addSubforum(session, "sub2");
+		_facade.addSubforum(session, "sub3");
+
+		int id = _facade.addThread(session, "title", "text");
+		ExThreadI th = _facade.viewThread(session, "title");
+		_facade.addReply(session, id, "reply", "text");
+
+	}
 }

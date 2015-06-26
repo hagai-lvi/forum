@@ -108,7 +108,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
     @Override
     public SubForumI createSubForum(String name) throws PermissionDeniedException, ForumNotFoundException, SubForumDoesNotExistException, SubForumAlreadyExistException {
         SubForumI subforum = forumPermissions.createSubForum(name);
-        UserSubforumPermission newPerms = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forumPermissions.getForum().getName(), name);
+        UserSubforumPermission newPerms = new UserSubforumPermission(forumPermissions.getPermission(), forumPermissions.getForum().getName(), name);
         subForumsPermissions.put(name, newPerms);
         this.Update();
         return subforum;

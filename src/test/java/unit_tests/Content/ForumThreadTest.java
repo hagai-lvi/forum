@@ -8,7 +8,6 @@ import main.exceptions.ForumNotFoundException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ThreadFinalMessageDeletedException;
 import main.forum_contents.Forum;
-import main.forum_contents.ForumMessage;
 import main.forum_contents.ForumPolicy;
 import main.forum_contents.ForumThread;
 import main.interfaces.ForumI;
@@ -55,49 +54,8 @@ public class ForumThreadTest extends TestCase {
         assertEquals(thread.getRootMessage().getMessageTitle(), "title");
         assertEquals(thread.getRootMessage().getMessageText(), "text");
     }
-    @Test
-    public void testAddReply() throws MessageNotFoundException {
-        MessageI reply;
-        reply = thread.addReply(thread.getRootMessage(), "reply-title", "reply-body", "user");
-        assertEquals(1, thread.getMessages().getRoot().children.size());
-        assertEquals("reply-title", thread.getMessages().getRoot().children.iterator().next().getData().getMessageTitle());
-        assertEquals("reply-body", thread.getMessages().getRoot().children.iterator().next().getData().getMessageText());
-        assertEquals(thread.getMessages().findNode(reply).getMessageTitle(), "reply-title");
-    }
 
-    @Test
-    public void testContains() throws MessageNotFoundException {
-        assertTrue(thread.contains(msg));
-        MessageI newmsg =thread.addReply(msg, "aaa", "bbb", "user");
-        assertTrue(thread.contains(newmsg));
-        assertFalse(thread.contains(new ForumMessage("user", "title", "body")));
-    }
-    @Test
-    public void testRemove() throws MessageNotFoundException, ThreadFinalMessageDeletedException {
-        MessageI newmsg = thread.addReply(msg, "aaa", "bbb", "user");
-        thread.remove(newmsg);
-        assertFalse(thread.contains(newmsg));
-        assertTrue(thread.contains(msg));
-    }
 
-    @Test
-     public void testDoubleRemove() throws ThreadFinalMessageDeletedException {
-        MessageI newmsg = null;
-        try {
-            newmsg = thread.addReply(msg, "aaa", "bbb", "user");
-        } catch (MessageNotFoundException e) {
-            e.printStackTrace();
-        }
-        try {
-            thread.remove(newmsg);
-            assertFalse(thread.contains(newmsg));
-            thread.remove(newmsg);
-        } catch (MessageNotFoundException e) {
-            assertTrue(true); //pass.
-            return;
-        }
-        fail("double-deleted a message");
-    }
 
 
     @Test

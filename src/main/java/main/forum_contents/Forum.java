@@ -86,6 +86,7 @@ public class Forum extends PersistantObject implements ForumI{
         addAllSubforumsToUser(newUser, Permissions.PERMISSIONS_SUPERADMIN);
         _users.put(ADMIN_USERNAME, newUser);
        // admins.put(ADMIN_USERNAME,newUser);
+
     }
 
     private void initGuest() {
