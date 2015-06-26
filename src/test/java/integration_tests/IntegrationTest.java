@@ -163,7 +163,7 @@ public class IntegrationTest {
 
 		int id = _facade.addThread(session, "title", "text");
 		ExThreadI th = _facade.viewThread(session, "title");
-		_facade.addReply(session, id, "reply", "text");
-
+		int id2 = _facade.addReply(session, id, "reply", "text");
+		_facade.addReply(session, id2, "reply2", "text");
 	}
 }
