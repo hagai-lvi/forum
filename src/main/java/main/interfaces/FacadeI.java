@@ -143,6 +143,11 @@ public interface FacadeI {
 	 */
 	boolean isAdmin(int sessionID) throws SessionNotFoundException;
 
+	/**
+	 * Return true if the current user is an admin
+	 */
+	boolean isGuest(int sessionID) throws SessionNotFoundException;
+
 	ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException;
 	ExSubForumI viewSubforum(int sessionId) throws SessionNotFoundException;
 

@@ -252,6 +252,12 @@ import java.util.Map;
 	}
 
 	@Override
+	public boolean isGuest(int sessionID) throws SessionNotFoundException {
+		Session current = findSession(sessionID);
+		return current.getUser().isGuest();
+	}
+
+	@Override
 	public ExSubForumI viewSubforum(int sessionId, String subforum) throws SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionId);
 		Map<String, SubForumI> subForums = current.getForum().getSubForums();
