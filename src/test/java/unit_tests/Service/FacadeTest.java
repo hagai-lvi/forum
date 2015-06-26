@@ -454,8 +454,8 @@ public class FacadeTest {
         int sessionId = theFacade.login("Temp", "Victor", "123456");
         theFacade.addSubforum(sessionId, "sub");
         theFacade.addSubforum(sessionId, "sub2");
-        theFacade.addThread(sessionId, "thread", "text");
-        theFacade.addReply(sessionId, 1, "reply", "text");
+        int id = theFacade.addThread(sessionId, "thread", "text");
+        theFacade.addReply(sessionId, id, "reply", "text");
        ExThreadI t =  theFacade.viewThread(sessionId, "thread");
        assertTrue( t.getTitle().equals("thread"));
         assertTrue(t.getMessages().getRoot().getChildren().get(0).getData().getMessageTitle().equals("reply"));
@@ -604,10 +604,6 @@ public class FacadeTest {
         fail();
     }
 
-    @Test
-    public void testViewSubforum1()  {
-        fail();
-    }
 
     @Test
     public void testViewThread()  {

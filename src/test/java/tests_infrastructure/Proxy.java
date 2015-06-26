@@ -116,7 +116,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException {
+    public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException {
         if(this.real!=null)
             this.real.setModerator(sessionId, moderatorName);
     }

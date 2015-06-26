@@ -85,7 +85,7 @@ public interface UserI {
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException;
+	void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException;
 
 	/**
 	 * Ban moderator
@@ -95,7 +95,7 @@ public interface UserI {
 	/**
 	 * Add permissions
 	 */
-	void addSubForumPermission(String subforum, SubForumPermissionI permission);
+	void addSubForumPermission(String subforum);
 
 	void updatePasswordCreationDate();
 

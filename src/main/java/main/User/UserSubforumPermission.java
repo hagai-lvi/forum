@@ -111,15 +111,21 @@ import javax.persistence.Id;
     }
 
     @Override
-    public void setModerator(UserI moderator) throws PermissionDeniedException {
-            permission = Permissions.PERMISSIONS_MODERATOR;
-            SubForumPermissionI p = new UserSubforumPermission(permission, forum, subforum);
-            moderator.addSubForumPermission(subforum, p);
-            ForumI f =  Forum.load(forum);
-            SubForumI sf = f.getSubForums().get(subforum);
-            sf.setModerator(moderator);
-            f.getSubForums().replace(sf.getTitle(), sf);
-            //f.Update();
+    public void setModerator(UserI moderator) throws PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException {
+
+
+        UserI clone = moderator.cloneAs(Permissions.PERMISSIONS_MODERATOR);
+        if(permission.equals(Permissions.PERMISSIONS_SUPERADMIN) || permission.equals(Permissions.PERMISSIONS_ADMIN)) {
+            logger.trace("User " + moderator.getUsername() + " set as moderator of subforum " + subforum);
+            Forum.load(forum).getSubForums().get(subforum).setModerator(clone);
+        }
+        else if (permission.equals(Permissions.PERMISSIONS_MODERATOR)) {
+            Forum.load(forum).getSubForums().get(subforum).setModerator(clone);
+            this.permission = Permissions.PERMISSIONS_USER;
+        }
+        else {
+            throw new PermissionDeniedException("User has no permission to set administrator + " +moderator.getUsername());
+        }
     }
 
     @Override

@@ -133,7 +133,7 @@ import java.util.Map;
 	}
 
 	@Override
-	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException {
+	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException {
 		Session current = findSession(sessionId);
 		current.getUser().setModerator(current.getSubForum().getTitle(), findUser(moderatorName, current.getForum().getName()));
 	}

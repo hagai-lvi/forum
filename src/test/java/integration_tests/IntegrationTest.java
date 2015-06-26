@@ -163,12 +163,6 @@ public class IntegrationTest {
 
 		int id = _facade.addThread(session, "title", "text");
 
-		//ExThreadI th = _facade.viewThread(session, "title");
-
-		//int id2 = _facade.addReply(session, id, "reply", "text");
-
-		//_facade.addReply(session, id2, "reply2", "text");
-
 		ExSubForumI ex = _facade.viewSubforum(session, "sub2");
 
 		_facade.addThread(session, "a", "b");

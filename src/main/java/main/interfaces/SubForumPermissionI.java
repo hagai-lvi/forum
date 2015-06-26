@@ -1,10 +1,7 @@
 package main.interfaces;
 
 import main.User.Permissions;
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.MessageNotFoundException;
-import main.exceptions.ModeratorDoesNotExistsException;
-import main.exceptions.PermissionDeniedException;
+import main.exceptions.*;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -46,7 +43,7 @@ public interface SubForumPermissionI {
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(UserI moderator) throws PermissionDeniedException;
+	void setModerator(UserI moderator) throws PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException;
 
 	/**
 	 * Get related subforum

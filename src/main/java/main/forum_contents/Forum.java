@@ -6,7 +6,6 @@ import main.Persistancy.PersistantObject;
 import main.User.Permissions;
 import main.User.User;
 import main.User.UserForumPermission;
-import main.User.UserSubforumPermission;
 import main.Utils.GmailSender;
 import main.exceptions.*;
 import main.interfaces.*;
@@ -67,8 +66,8 @@ public class Forum extends PersistantObject implements ForumI{
         this.forum_name = name;
         initGuest();
         initAdmin();//TODO should be initialized?
-        addAllSubforumsToUser(guest, Permissions.PERMISSIONS_GUEST);
-        addAllSubforumsToUser(User.getUserFromDB(ADMIN_USERNAME, forum_name), Permissions.PERMISSIONS_ADMIN);
+        addAllSubforumsToUser(guest);
+        addAllSubforumsToUser(User.getUserFromDB(ADMIN_USERNAME, forum_name));
         this._users.put("Guest", this.guest);
        //this._users.put(this.admin.getUsername(), this.admin);
         //this.pers = HibernatePersistancyAbstractor.getPersistanceAbstractor();
@@ -83,7 +82,7 @@ public class Forum extends PersistantObject implements ForumI{
         ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_SUPERADMIN, forum_name);
         User newUser = new User(ADMIN_USERNAME, ADMIN_PASSWORD, "admin@gmail.com", userPermissions);
         newUser.setAuthenticatedAdmin();
-        addAllSubforumsToUser(newUser, Permissions.PERMISSIONS_SUPERADMIN);
+        addAllSubforumsToUser(newUser);
         _users.put(ADMIN_USERNAME, newUser);
        // admins.put(ADMIN_USERNAME,newUser);
 
@@ -98,11 +97,8 @@ public class Forum extends PersistantObject implements ForumI{
     @Override
     public void setAdmin(UserI admin){
         _users.replace(admin.getUsername(), admin);
-
         for (SubForumI subForum: _subForums.values()){
-            UserSubforumPermission permission;
-            permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forum_name, subForum.getTitle());
-            admin.addSubForumPermission(subForum.getTitle(), permission);
+            admin.addSubForumPermission(subForum.getTitle());
         }
         Update();
     }
@@ -144,16 +140,10 @@ public class Forum extends PersistantObject implements ForumI{
 
         for (UserI user: _users.values()) {
             if (user != null ) {
-                UserSubforumPermission permission;
-                if (user.isAdmin()) {
-                    permission = new UserSubforumPermission(Permissions.PERMISSIONS_MODERATOR, forum_name, subForum.getTitle());
-                } else if(!user.isGuest()){
-                    permission = new UserSubforumPermission(Permissions.PERMISSIONS_USER, forum_name, subForum.getTitle());
-                } else permission = new UserSubforumPermission(Permissions.PERMISSIONS_GUEST, forum_name, subForum.getTitle());
-                user.addSubForumPermission(subForumName, permission);
+                user.addSubForumPermission(subForumName);
             }
         }
-        this.Update();
+        Update();
        return subForum;
     }
 
@@ -166,9 +156,9 @@ public class Forum extends PersistantObject implements ForumI{
         Update();
     }
 
-    private void addAllSubforumsToUser(UserI user, Permissions perm){
+    private void addAllSubforumsToUser(UserI user){
         for (SubForumI sub: _subForums.values()){
-            user.addSubForumPermission(sub.getTitle(), new UserSubforumPermission(perm, forum_name, sub.getTitle()));
+            user.addSubForumPermission(sub.getTitle());
         }
     }
 
@@ -189,7 +179,7 @@ public class Forum extends PersistantObject implements ForumI{
 
         ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_USER, forum_name);
         UserI newUser = new User(userName, password, eMail, userPermissions);
-        addAllSubforumsToUser(newUser, Permissions.PERMISSIONS_USER);
+        addAllSubforumsToUser(newUser);
         //sendAuthenticationEMail(new_user);    //TODO --> uncomment to actually send authentication mails!
         _users.put(userName, newUser);
         Update();

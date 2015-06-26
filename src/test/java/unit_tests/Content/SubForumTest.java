@@ -60,10 +60,9 @@ public class SubForumTest extends TestCase {
     }
 
     public void testReplyToMessage() throws DoesNotComplyWithPolicyException, MessageNotFoundException {
-        MessageI rootMessage = forum.getSubForums().get("subforum").addThread("user", "title", "body").getRootMessage();
         ForumI forum = Forum.load("forum");
+        MessageI rootMessage = forum.getSubForums().get("subforum").addThread("user", "title", "body").getRootMessage();
         forum.getSubForums().get("subforum").replyToMessage(rootMessage, "user", "reply-title", "reply-body");
-        forum = Forum.load("forum");
         SubForumI subforum = forum.getSubForums().get("subforum");
         ThreadI thread = subforum.getThreads().get("title");
 
@@ -108,31 +107,6 @@ public class SubForumTest extends TestCase {
         fail("Not yet implemented");
     }
 
-    public void testDeleteMessage() throws DoesNotComplyWithPolicyException, MessageNotFoundException {
-        ThreadI thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "msg", "msg");
-
-        Forum.load("forum").getSubForums().get("subforum").replyToMessage(thread.getRootMessage(), "user", "gsm", "gsm");
-        thread = Forum.load("forum").getSubForums().get("subforum").getThreads().get(thread.getTitle());
-
-        assertEquals(2, thread.getMessagesCount());
-
-        Forum.load("forum").getSubForums().get("subforum").deleteMessage("msg", thread.getRootMessage());
-        thread = Forum.load("forum").getSubForums().get("subforum").getThreads().get(thread.getTitle());
-
-        assertEquals(thread.getMessages().getRoot().children.size(), 0);
-        Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage().getMessageTitle(), thread.getRootMessage());
-        assertEquals(Forum.load("forum").getSubForums().get("subforum").getThreads().size(), 0);
-
-        try{
-            Forum.load("forum").getSubForums().get("subforum").deleteMessage(thread.getRootMessage().getMessageTitle(), thread.getRootMessage());
-        } catch (MessageNotFoundException e){
-            assertTrue(true);
-            return;
-        }
-        fail("did not catch double-deletion message");
-
-    }
-
     public void testRemoveModerator()   {
         Forum.load("forum").getSubForums().get("subforum").setModerator(user);
         Forum.load("forum").getSubForums().get("subforum").removeModerator(user.getUsername());
@@ -149,20 +123,12 @@ public class SubForumTest extends TestCase {
         assertTrue(Forum.load("forum").getSubForums().get("subforum").getThreads().containsKey(thread.getTitle()));
     }
 
-    public void testEditMessage() {
+    public void testEditMessage() throws DoesNotComplyWithPolicyException, MessageNotFoundException {
         ThreadI thread = null;
-        try {
-            thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "title", "body");
-        } catch (DoesNotComplyWithPolicyException e) {
-            e.printStackTrace();
-        }
-        try {
-            Forum.load("forum").getSubForums().get("subforum").editMessage(thread, thread.getRootMessage().getId(), "newBody", "newTitle");
-        } catch (MessageNotFoundException e) {
-            e.printStackTrace();
-        }
-        assertEquals("title", thread.getRootMessage().getMessageTitle());
-        assertEquals("body", thread.getRootMessage().getMessageText());
+        thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "title", "body");
+        Forum.load("forum").getSubForums().get("subforum").editMessage(thread, thread.getRootMessage().getId(), "newBody", "newTitle");
+        assertEquals("newTitle", thread.getRootMessage().getMessageTitle());
+        assertEquals("newBody", thread.getRootMessage().getMessageText());
     }
 
     public void testSeveralThreads() throws DoesNotComplyWithPolicyException {

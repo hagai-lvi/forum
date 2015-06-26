@@ -196,16 +196,20 @@ public class UserTest {
 
     @Test
     public void testSetModerator() {
+
         fail();
     }
 
     @Test
-    public void testBanModerator()  {
+    public void testBanModerator()
+    {
         fail();
     }
 
     @Test
-    public void testAddSubForumPermission()  {
+    public void testAddSubForumPermission() throws SubForumAlreadyExistException {
+        Forum.load("Lifestyle").addSubForum("zrima");
+        user1.addSubForumPermission("zrima");
         fail();
     }
 
