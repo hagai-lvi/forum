@@ -1,6 +1,8 @@
 package unit_tests.User;
 
 import main.User.Permissions;
+import main.User.User;
+import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.exceptions.*;
 import main.forum_contents.Forum;
@@ -12,8 +14,6 @@ import main.interfaces.ThreadI;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.util.NoSuchElementException;
 
 import static junit.framework.TestCase.fail;
 import static org.junit.Assert.assertEquals;
@@ -87,49 +87,32 @@ public class UserSubforumPermissionTest {
     }
 
     @Test
-    public void testDeleteMessageS()  {
+    public void testDeleteMessageS() throws PermissionDeniedException, DoesNotComplyWithPolicyException, MessageNotFoundException {
         MessageI message = null;
 
-        try {
-            message = permission2.createThread("Gabi", "Flow222", "ddd").getRootMessage();
-        } catch (PermissionDeniedException | DoesNotComplyWithPolicyException e) {
-            e.printStackTrace();
-        }
-        try {
-            permission2.replyToMessage(message, "Gabi", "Help", "ddddd");
-        } catch (MessageNotFoundException | PermissionDeniedException | DoesNotComplyWithPolicyException e) {
-            e.printStackTrace();
-        }
+        message = permission2.createThread("Gabi", "Flow222", "ddd").getRootMessage();
+        permission2.replyToMessage(message, "Gabi", "Help", "ddddd");
         assertEquals(message.printSubTree(), "Flow222--> Help");
-        try {
-            permission.deleteMessage("Gabi", "Flow222", message);
-        } catch (PermissionDeniedException | MessageNotFoundException e) {
-            e.printStackTrace();
-        }
+        permission.deleteMessage("Gabi", "Flow222", message);
         try {
             permission2.replyToMessage(message, "Gabi", "Flow222", "sadasdasd");
-        } catch (DoesNotComplyWithPolicyException | PermissionDeniedException e) {
-            e.printStackTrace();
+            fail();
         } catch (MessageNotFoundException e) {
             assertTrue(true);
         }
         try {
             permission2.deleteMessage("Gabi","Flow222" , message);
-        } catch (PermissionDeniedException e) {
-            e.printStackTrace();
+            fail();
         } catch (MessageNotFoundException e) {
             assertTrue(true);
         }
         try {
-            ThreadI thread = subforum.getThreads().get(message.getMessageTitle());
+            ThreadI thread = Forum.load("Sport").getSubForums().get("Sport").getThreads().get(message.getMessageTitle());
             permission2.editMessage(thread, message.getId(), message.getMessageTitle(), message.getMessageText());
-        } catch (NoSuchElementException e) {
-            assertTrue(true);
-            return;
+            fail();
         } catch (MessageNotFoundException e) {
-            e.printStackTrace();
+            assertTrue(true);
         }
-        fail("edited deleted message");
     }
 
     @Test
@@ -153,18 +136,28 @@ public class UserSubforumPermissionTest {
     }
 
     @Test
-    public void testReportModerator()   {
-        fail();
+    public void testGetThreads() throws PermissionDeniedException, DoesNotComplyWithPolicyException {
+        permission.createThread("Gabi", "title2", "text");
+        permission.createThread("Gabi", "title", "text");
+        permission.createThread("Gabi", "title3", "text");
+        permission.createThread("Gabi", "title4", "text");
+        assertEquals(permission.getThreads().length, 4);
+        assertEquals(permission.getThreads()[0].getTitle(), "title2");
+        assertEquals(permission.getThreads()[1].getTitle(), "title3");
+        assertEquals(permission.getThreads()[2].getTitle(), "title");
+        assertEquals(permission.getThreads()[3].getTitle(), "title4");
+
     }
 
     @Test
-    public void testGetThreads()   {
-        fail();
-    }
-
-    @Test
-    public void testSetModerator()   {
-        fail();
+    public void testSetModerator() throws ForumNotFoundException, CloneNotSupportedException, PermissionDeniedException {
+        try {
+            permission.setModerator(new User("a","aa","a@a.com", new UserForumPermission(Permissions.PERMISSIONS_USER,"Sport")));
+            fail();
+        } catch (PermissionDeniedException e) {
+            assertTrue(true);
+        }
+        permission2.setModerator(new User("a","aa","a@a.com", new UserForumPermission(Permissions.PERMISSIONS_USER,"Sport")));
     }
 
 }

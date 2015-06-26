@@ -134,8 +134,5 @@ public class UserForumPermissionTest {
         }
     }
 
-    @Test
-    public void testViewStatistics()   {
-        fail();
-    }
+
 }

@@ -118,11 +118,12 @@ public class SubForum extends PersistantObject implements SubForumI {
         if (thread == null){
             throw new MessageNotFoundException("could not find message");
         }
+        String title = thread.getTitle();
         try {
             thread.remove(message);
-            _threads.replace(thread.getTitle(), thread);
+          //  _threads.replace(thread.getTitle(), thread);
         } catch (ThreadFinalMessageDeletedException e) {
-            _threads.remove(thread.getTitle());
+            _threads.remove(title);
         }
         Update();
     }
@@ -136,11 +137,11 @@ public class SubForum extends PersistantObject implements SubForumI {
 
     @Override
     public void editMessage(ThreadI thread, int originalMessage, String text, String title) throws MessageNotFoundException {
-        MessageI original = thread.getMessages().find(originalMessage);
         if (thread == null){
             logger.warn("User tried to reply to already deleted thread");
             throw new MessageNotFoundException(title);
         }
+        MessageI original = thread.getMessages().find(originalMessage);
         thread.editMessage(original, title, text);
         _threads.replace(thread.getTitle(), thread);
         Update();

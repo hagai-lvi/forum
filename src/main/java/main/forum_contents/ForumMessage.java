@@ -58,9 +58,9 @@ public class ForumMessage implements MessageI {
 
 	@Override
 	public String printSubTree(){
-		String ans = this.messageText;
+		String ans = this.messageTitle;
 		for (MessageI m: replies){
-			ans += "--> " + m.getMessageText();
+			ans += "--> " + m.getMessageTitle();
 		}
 		return ans;
 	}

@@ -36,10 +36,10 @@ public class SubForumTest extends TestCase {
 
     public void testGetModerators()   {
         SubForumI subforum = Forum.load("forum").getSubForums().get("subforum");
-        subforum.setModerator(user);
+        subforum.setModerator(User.getUserFromDB("user", "forum"));
         Map<String, UserI> mods = subforum.getModerators();
         assertTrue(mods.containsKey(user.getUsername()));
-        assertTrue(mods.containsKey("ADMIN"));
+        assertTrue(mods.containsKey("user"));
     }
 
     public void testCreateThread() throws DoesNotComplyWithPolicyException {
@@ -101,10 +101,6 @@ public class SubForumTest extends TestCase {
         Forum.load("forum").getSubForums().get("subforum").setModerator(user);
         assertEquals(1, Forum.load("forum").getSubForums().get("subforum").getModerators().size());
         assertTrue(Forum.load("forum").getSubForums().get("subforum").getModerators().containsKey(user.getUsername()));
-    }
-
-    public void testReportModerator()  {
-        fail("Not yet implemented");
     }
 
     public void testRemoveModerator()   {

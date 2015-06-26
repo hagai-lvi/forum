@@ -21,7 +21,6 @@ import java.util.Map;
 	private static FacadeI theFacade;
 	private Collection<Session> openSessions;
 	private int sessionCounter;
-	private static final int GUEST_SESSION_ID = -2;
 	private Facade(){
 		initialize();
 	}

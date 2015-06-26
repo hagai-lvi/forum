@@ -173,6 +173,7 @@ public class FacadeTest {
         } catch (PermissionDeniedException e) {
             fail("No permission to remove forum");
         }*/
+        fail();
     }
 
     @Test
@@ -226,7 +227,7 @@ public class FacadeTest {
 
 
         try {
-            theFacade.register("Temp", "Victor", "123456","aa@gmail.com");
+            theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
             fail();
         } catch (UserAlreadyExistsException e) {
             assertTrue(true);
@@ -457,7 +458,7 @@ public class FacadeTest {
         int id = theFacade.addThread(sessionId, "thread", "text");
         theFacade.addReply(sessionId, id, "reply", "text");
        ExThreadI t =  theFacade.viewThread(sessionId, "thread");
-       assertTrue( t.getTitle().equals("thread"));
+       assertTrue(t.getTitle().equals("thread"));
         assertTrue(t.getMessages().getRoot().getChildren().get(0).getData().getMessageTitle().equals("reply"));
     }
 
@@ -480,6 +481,7 @@ public class FacadeTest {
         int sessionId = theFacade.login("Temp", "Victor", "123456");
         theFacade.addSubforum(sessionId, "sub");
         theFacade.addSubforum(sessionId, "sub2");
+        fail();
     }
 
     @Test
@@ -631,8 +633,20 @@ public class FacadeTest {
     }
 
     @Test
-    public void isMessageFromCurrentUser()  {
-        fail();
+    public void isMessageFromCurrentUser() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, EmailNotAuthanticatedException, UserNotFoundException, PasswordNotInEffectException, NeedMoreAuthParametersException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, MessageNotFoundException, ThreadNotFoundException, SubForumNotFoundException {
+        theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
+        theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+        int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
+        theFacade.addSubforum(sessionId, "sub");
+       int id =  theFacade.addThread(sessionId, "zrima", "text");
+        theFacade.addReply(sessionId, id, "reply", "text");
+        assertTrue(theFacade.isMessageFromCurrentUser(sessionId, id));
+        int session = theFacade.login("Temp", "Victor", "123456");
+        theFacade.viewSubforum(session, "sub");
+        theFacade.viewThread(session, "zrima");
+        assertFalse(theFacade.isMessageFromCurrentUser(session, id));
+        id = theFacade.addReply(session, id, "reply2", "text");
+        assertTrue(theFacade.isMessageFromCurrentUser(session, id));
     }
 
     @Test

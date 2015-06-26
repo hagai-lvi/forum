@@ -2,6 +2,7 @@ package main.User;
 
 import main.exceptions.*;
 import main.forum_contents.Forum;
+import main.forum_contents.ForumThread;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 
@@ -101,13 +102,12 @@ import javax.persistence.Id;
     public void editMessage(ThreadI thread, int originalMessage, String title, String text) throws MessageNotFoundException {
         ForumI f =  Forum.load(forum);
         f.getSubForums().get(subforum).editMessage(thread, originalMessage, text, title);
-       // f.Update();
     }
 
     @Override
     public ThreadI[] getThreads() {
         ForumI f =  Forum.load(forum);
-        return f.getSubForums().get(subforum).getThreads().values().toArray(new ThreadI[0]);
+        return f.getSubForums().get(subforum).getThreads().values().toArray(new ForumThread[0]);
     }
 
     @Override
@@ -147,7 +147,7 @@ import javax.persistence.Id;
 
     @Id@GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
-    
+
 
     public int getId() {
         return id;
