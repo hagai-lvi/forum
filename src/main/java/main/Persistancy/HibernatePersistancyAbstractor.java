@@ -29,9 +29,16 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
         return singleton;
     }
 
+    private SessionFactory getSessionFactory(){
+        if (session_Factory == null || session_Factory.isClosed()){
+            session_Factory = HibernateSessionFactory.getSessionFactory();
+        }
+        return session_Factory;
+    }
+
     @Override
     public void save(Object o) {
-        Session session = session_Factory.openSession();
+        Session session = getSessionFactory().openSession();
         session.beginTransaction();
         session.save(o);
         session.getTransaction().commit();
@@ -40,7 +47,7 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
 
     @Override
     public void saveOrUpdate(Object o) {
-        Session session = session_Factory.openSession();
+        Session session = getSessionFactory().openSession();
         session.flush();
         session.beginTransaction();
         session.saveOrUpdate(o);
@@ -51,7 +58,7 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
 
     @Override
     public <T> T load(Class<T> c, int id) {
-        Session sess = session_Factory.openSession();
+        Session sess = getSessionFactory().openSession();
         T result = c.cast(sess.get(c, id));
         sess.close();
         return result;
@@ -59,7 +66,7 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
 
     @Override
     public <T> T load(Class<T> c, String id) {
-        Session sess = session_Factory.openSession();
+        Session sess = getSessionFactory().openSession();
         T result = c.cast(sess.get(c, id));
         sess.close();
         return result;
@@ -67,7 +74,7 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
 
     @Override
     public <T> T load(Class<T> c, UserForumID idclass) {
-        Session sess = session_Factory.openSession();
+        Session sess = getSessionFactory().openSession();
         T result = c.cast(sess.get(c, idclass));
         sess.close();
         return result;
@@ -75,7 +82,7 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
 
     @Override
     public void Update(Object o){
-        Session session = session_Factory.openSession();
+        Session session = getSessionFactory().openSession();
         session.flush();
         session.beginTransaction();
         session.update(o);
@@ -86,7 +93,7 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
 
     @Override
     public void Delete(Object o){
-        Session session = session_Factory.openSession();
+        Session session = getSessionFactory().openSession();
         session.flush();
         session.beginTransaction();
         session.delete(o);
@@ -97,7 +104,7 @@ public class HibernatePersistancyAbstractor implements PersistancyAbstractionI{
 
     @Override
     public List executeQuery(String query){
-        Session session = session_Factory.openSession();
+        Session session = getSessionFactory().openSession();
         SQLQuery sqlquery = session.createSQLQuery(query);
         sqlquery.setResultTransformer(Criteria.ROOT_ENTITY);
         return sqlquery.list();

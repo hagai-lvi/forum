@@ -11,7 +11,7 @@ import org.hibernate.service.ServiceRegistryBuilder;
 
 public class HibernateSessionFactory {
 
-    private static final SessionFactory sessionFactory = buildSessionFactory();
+    private static SessionFactory sessionFactory = buildSessionFactory();
 
     private static SessionFactory buildSessionFactory() {
         try {
@@ -29,6 +29,9 @@ public class HibernateSessionFactory {
     }
 
     public static SessionFactory getSessionFactory() {
+        if (sessionFactory == null || sessionFactory.isClosed()){
+            sessionFactory = HibernateSessionFactory.buildSessionFactory();
+        }
         return sessionFactory;
     }
 

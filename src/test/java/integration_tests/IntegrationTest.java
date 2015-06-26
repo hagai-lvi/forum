@@ -64,6 +64,8 @@ public class IntegrationTest {
 				int session1ID = _facade.login("forum", "ADMIN", "ADMIN");
 				_facade.addSubforum(session1ID, "subforum");
 				_facade.addThread(session1ID, "thread-title", "message-body");
+				_facade.addThread(session1ID, "thread-title2", "message-body2");
+
 				Map<String, SubForumI> sf = _facade.getSubForumList(session1ID);
 				assertTrue(sf.containsKey("subforum"));
 				boolean flag = sf.get("subforum").getThreads().containsKey("thread-title");
