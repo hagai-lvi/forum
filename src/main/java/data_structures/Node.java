@@ -39,7 +39,6 @@ public class Node extends PersistantObject{
         this.data = data;
         this.parent = parent;
         this.children = new ArrayList<>();
-    //    this.Save();
     }
 
     public Node() {
@@ -48,15 +47,16 @@ public class Node extends PersistantObject{
     public void addChild(MessageI child) {
         Node toAdd = new Node(child, this);
         children.add(toAdd);
-    //    this.Save();
     }
 
     /**
      * Find a node that contains the specified data. return null if non found
      */
     public Node findChild(MessageI data) {
-
-        if (this.data.equals(data)) {
+        if (data == null) {
+            return null;
+        }
+        if (this.data.getId() == data.getId()) {
             return this;
         }
 
@@ -79,7 +79,7 @@ public class Node extends PersistantObject{
     private int id;
 
     public int getId() {
-        return id;
+        return data.getId();
     }
 
     public void setId(int id) {

@@ -99,15 +99,6 @@ public class IntegrationTest {
 
 	}
 
-
-	@Test
-	/**
-	 * target: change policy that have conflict with the former policy.
-	 */
-	public void integration3(){
-		//TODO this functionality is not yet implemented
-	}
-
 	@Test
 	/**
 	 * target: Check whether a user without admin privileges can delete a sub-forum.

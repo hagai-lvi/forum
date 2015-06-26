@@ -47,9 +47,8 @@ import javax.persistence.Id;
     public ThreadI createThread(String user, String title, String text) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
         if( ! permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to create thread");
-            Forum f =  Forum.load(forum);
-            ThreadI thread =  f.getSubForums().get(subforum).addThread(user, title, text);
-            f.Update();
+            ForumI f =  Forum.load(forum);
+            ThreadI thread = f.getSubForums().get(subforum).addThread(user, title, text);
             return thread;
         } else {
             logger.error(permission + " has no permission to create thread");
@@ -61,9 +60,9 @@ import javax.persistence.Id;
     public void replyToMessage(MessageI original, String user, String title, String text) throws MessageNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException {
         if(!permission.equals(Permissions.PERMISSIONS_GUEST)) {
             logger.info(permission + " has permission to reply");
-            Forum f =  Forum.load(forum);
+            ForumI f =  Forum.load(forum);
             f.getSubForums().get(subforum).replyToMessage(original, user, title, text);
-            f.Update();
+            //f.Update();
         } else {
             logger.error(permission + " has no permission to reply");
             throw new PermissionDeniedException("User has no permission to reply");
@@ -74,9 +73,9 @@ import javax.persistence.Id;
     public void reportModerator(String moderatorUsername, String reportMessage, UserI reporter) throws PermissionDeniedException, ModeratorDoesNotExistsException {
        if(!permission.equals(Permissions.PERMISSIONS_GUEST)) {
            logger.info(permission + " has permission to report moderator");
-           Forum f =  Forum.load(forum);
+           ForumI f =  Forum.load(forum);
            f.getSubForums().get(subforum).reportModerator(moderatorUsername, reportMessage, reporter);
-           f.Update();
+          // f.Update();
        } else {
            logger.error(permission + " has no permission to reply");
            throw new PermissionDeniedException("User has no permission to reply");
@@ -90,9 +89,9 @@ import javax.persistence.Id;
     public void deleteMessage(MessageI message, String deleter) throws PermissionDeniedException, MessageNotFoundException {
         if(canDeleteMessage(message, deleter)) {
             logger.info(permission + " has permission to delete message");
-            Forum f =  Forum.load(forum);
+            ForumI f =  Forum.load(forum);
             f.getSubForums().get(subforum).deleteMessage(message, deleter);
-            f.Update();
+           // f.Update();
         } else {
             logger.error(permission + " has no permission to delete message");
             throw new PermissionDeniedException("User has no permission delete message");
@@ -101,14 +100,14 @@ import javax.persistence.Id;
 
     @Override
     public void editMessage(ThreadI thread, int originalMessage, String title, String text) throws MessageNotFoundException {
-        Forum f =  Forum.load(forum);
-        f.getSubForums().get(subforum).editMessage(thread, originalMessage, title, text);
-        f.Update();
+        ForumI f =  Forum.load(forum);
+        f.getSubForums().get(subforum).editMessage(originalMessage, title, text);
+       // f.Update();
     }
 
     @Override
     public ThreadI[] getThreads() {
-        Forum f =  Forum.load(forum);
+        ForumI f =  Forum.load(forum);
         return f.getSubForums().get(subforum).getThreads().values().toArray(new ThreadI[0]);
     }
 
@@ -117,7 +116,7 @@ import javax.persistence.Id;
             permission = Permissions.PERMISSIONS_MODERATOR;
             SubForumPermissionI p = new UserSubforumPermission(permission, forum, subforum);
             moderator.addSubForumPermission(subforum, p);
-            Forum f =  Forum.load(forum);
+            ForumI f =  Forum.load(forum);
             SubForumI sf = f.getSubForums().get(subforum);
             sf.setModerator(moderator);
             f.getSubForums().replace(sf.getTitle(), sf);
@@ -126,7 +125,7 @@ import javax.persistence.Id;
 
     @Override
     public SubForumI getSubForum() {
-        Forum f =  Forum.load(forum);
+        ForumI f =  Forum.load(forum);
         return f.getSubForums().get(subforum);
     }
 
@@ -191,8 +190,8 @@ import javax.persistence.Id;
 
     @Override
     public void removeModerator(String moderatorName) {
-        Forum f = Forum.load(forum);
+        ForumI f = Forum.load(forum);
         f.getSubForums().get(subforum).removeModerator(moderatorName);
-        f.Update();
+        //f.Update();
     }
 }

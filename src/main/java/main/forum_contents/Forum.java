@@ -140,8 +140,9 @@ public class Forum extends PersistantObject implements ForumI{
         }
         SubForumI subForum = new SubForum(subForumName, this.policy.getSubforumPolicy());
         _subForums.put(subForumName, subForum);
+
         for (String name: _users.keySet()) {
-            User user = User.getUserFromDB(name, forum_name);
+            UserI user = User.getUserFromDB(name, forum_name);
             if (user != null) {
                 UserSubforumPermission permission;
                 if (!user.isAdmin()) {
@@ -172,7 +173,7 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     @Override
-    public User register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException, DoesNotComplyWithPolicyException {
+    public UserI register(String userName, String password, String eMail) throws UserAlreadyExistsException, InvalidUserCredentialsException, DoesNotComplyWithPolicyException {
         // Protective Programing
         if (userName == null || userName.equals("") || password == null || password.equals("") || eMail == null || eMail.equals(""))
             throw new InvalidUserCredentialsException("invalid user credentials.");
@@ -187,7 +188,7 @@ public class Forum extends PersistantObject implements ForumI{
         }
 
         ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_USER, forum_name);
-        User newUser = new User(userName, password, eMail, userPermissions);
+        UserI newUser = new User(userName, password, eMail, userPermissions);
         addAllSubforumsToUser(newUser, Permissions.PERMISSIONS_USER);
         //sendAuthenticationEMail(new_user);    //TODO --> uncomment to actually send authentication mails!
         _users.put(userName, newUser);
@@ -206,6 +207,8 @@ public class Forum extends PersistantObject implements ForumI{
     public boolean enterUserAuthenticationString(UserI user, String auth_string) throws InvalidUserCredentialsException {
             if (user.getUserAuthString().equals(auth_string)){
                 user.setAuthenticated();
+                _users.replace(user.getUsername(), user);
+                Update();
                 return true;
             } else {
                 throw new InvalidUserCredentialsException("Invalid authentication string");
@@ -220,9 +223,10 @@ public class Forum extends PersistantObject implements ForumI{
     @Override
     public UserI login(String username, String password) throws InvalidUserCredentialsException, NeedMoreAuthParametersException, EmailNotAuthanticatedException, PasswordNotInEffectException {
         UserI user = User.getUserFromDB(username, forum_name);
-        if(user == null) throw new InvalidUserCredentialsException("User is not registered");
+        if (user == null){
+            throw new InvalidUserCredentialsException("User is not registered");
+        }
         if (user.getPassword().equals(password)){
-            //UserI user = _users.get(username);
             if (policy.hasMoreAuthQuestions()){
                 throw new NeedMoreAuthParametersException();
             }
@@ -269,6 +273,7 @@ public class Forum extends PersistantObject implements ForumI{
 
     @Override
     public boolean removeUserType(String type) {
+        //TODO - yet not implemented.
         return false;
     }
 

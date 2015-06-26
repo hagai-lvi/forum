@@ -6,6 +6,7 @@ import data_structures.Tree;
 import main.Persistancy.PersistantObject;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.NodeNotFoundException;
+import main.exceptions.ThreadFinalMessageDeletedException;
 import main.interfaces.MessageI;
 import main.interfaces.ThreadI;
 
@@ -22,6 +23,7 @@ public class ForumThread extends PersistantObject implements ThreadI{
     @JsonView(NativeGuiController.class)
     private Tree messages;
 
+    public static int GENERATED_ID;
 
     public ForumThread(String user, String title, String text){
         messages = new Tree(new ForumMessage(user, title, text));
@@ -41,17 +43,14 @@ public class ForumThread extends PersistantObject implements ThreadI{
     }
 
     @Override
-    public void editMessage(MessageI originalMessage, String title, String newMessage) throws MessageNotFoundException {
-        if (newMessage == null){
-            throw new MessageNotFoundException(title);
+    public void editMessage(MessageI originalMessage, String title, String text) throws MessageNotFoundException {
+        if (text == null || title == null || text == "" || title == ""){
+            throw new MessageNotFoundException("invalid message data provided");
         }
-        MessageI msg = messages.findNode(originalMessage);
-
-        if (msg == null){
-            throw new MessageNotFoundException(originalMessage.getMessageTitle());
+        MessageI ans = messages.editNodeData(originalMessage, title, text);
+        if (ans == null){
+            throw new MessageNotFoundException("invalid message data provided");
         }
-        msg.editTitle(title);
-        msg.editText(newMessage);
     }
 
     public Tree getMessages(){
@@ -68,7 +67,7 @@ public class ForumThread extends PersistantObject implements ThreadI{
     public MessageI addReply(MessageI original, String title, String text, String user) throws MessageNotFoundException {
         try {
             ForumMessage reply = new ForumMessage(user, title, text);
-            messages.add(reply, original);
+            messages.add(original, reply);
             original.addReply(reply);
             return reply;
         } catch (NodeNotFoundException | NullPointerException e) {
@@ -83,7 +82,7 @@ public class ForumThread extends PersistantObject implements ThreadI{
     }
 
     @Override
-    public void remove(MessageI message) {
+    public void remove(MessageI message) throws MessageNotFoundException, ThreadFinalMessageDeletedException {
         messages.remove(message);
     }
 

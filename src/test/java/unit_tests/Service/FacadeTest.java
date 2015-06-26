@@ -454,8 +454,14 @@ public class FacadeTest {
     }
 
     @Test
-    public void testCreateNewThread() throws PermissionDeniedException, ForumAlreadyExistException, PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumAlreadyExistException, SessionNotFoundException, SubForumDoesNotExistException, SubForumNotFoundException, DoesNotComplyWithPolicyException {
-        fail();
+    public void testCreateNewThread() throws PermissionDeniedException, ForumAlreadyExistException, PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumAlreadyExistException, SessionNotFoundException, SubForumDoesNotExistException, SubForumNotFoundException, DoesNotComplyWithPolicyException, UserAlreadyExistsException, UserNotFoundException, CloneNotSupportedException {
+        theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
+        theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+        theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
+        int sessionId = theFacade.login("Temp", "Victor", "123456");
+        theFacade.addSubforum(sessionId, "sub");
+        theFacade.addSubforum(sessionId, "sub2");
+        theFacade.addThread(sessionId, "thread", "text");
     }
 
     @Test

@@ -7,6 +7,7 @@ import main.User.User;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
+import main.exceptions.ThreadFinalMessageDeletedException;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 
@@ -32,7 +33,7 @@ public class SubForum extends PersistantObject implements SubForumI {
      * a list of all of the threads in this subforum
      */
     @OneToMany(targetEntity = ForumThread.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Map<String, ThreadI> _threads = new HashMap<>();
+    private Map<String, ThreadI> _threads;
 
     @Override
     public Map<String, UserI> getModerators() {
@@ -40,7 +41,7 @@ public class SubForum extends PersistantObject implements SubForumI {
     }
 
     @OneToMany(targetEntity = User.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    private Map<String, UserI> _moderators = new HashMap<>();
+    private Map<String, UserI> _moderators;
     private static Logger logger = Logger.getLogger(Forum.class.getName());
     @ManyToOne(targetEntity = ForumPolicy.class, cascade = CascadeType.ALL)
     private SubForumPolicyI subforumPolicy;
@@ -49,6 +50,8 @@ public class SubForum extends PersistantObject implements SubForumI {
     // ================================================ Constructors ====================================
 
     public SubForum(String name, SubForumPolicyI subforumPolicy){
+        _moderators = new HashMap<>();
+        _threads = new HashMap<>();
         _name = name;
         this.subforumPolicy = subforumPolicy;
     }
@@ -76,18 +79,26 @@ public class SubForum extends PersistantObject implements SubForumI {
         if (!subforumPolicy.isValidMessage(title, text)){
             throw new DoesNotComplyWithPolicyException("message does not comply with forum policy.");
         }
-        ThreadI thread = _threads.get(original.getMessageTitle());
+        ThreadI thread = null;
+        for (ThreadI t : _threads.values()){
+            if (t.contains(original)){
+                thread = t;
+                break;
+            }
+        }
         if (thread == null){
             logger.warn("User tried to reply to already deleted thread");
             throw new MessageNotFoundException(title);
         }
         thread.addReply(original, title, text, user);
-//        this.Update();
+        _threads.replace(thread.getTitle(), thread);
+        Update();
     }
 
     @Override
     public void setModerator(UserI mod){
         _moderators.put(mod.getUsername(), mod);
+        Update();
 
     }
 
@@ -97,36 +108,54 @@ public class SubForum extends PersistantObject implements SubForumI {
         if (!_moderators.containsKey(moderatorUsername)){
             throw new ModeratorDoesNotExistsException();
         }
+        //TODO - not yet implemented.
     }
 
     @Override
     public void deleteMessage(MessageI message, String requestingUser) throws MessageNotFoundException {
-        ThreadI thread = _threads.get(message.getMessageTitle());
-        if (thread != null){
-            if (message.equals(thread.getRootMessage())){
-                //need to remove this thread from the subforum
-                _threads.remove(thread.getTitle());
+        ThreadI thread = null;
+        for (ThreadI t : _threads.values()){
+            if (t.contains(message)){
+                thread = t;
+                break;
             }
+        }
+        if (thread == null){
+            throw new MessageNotFoundException("could not find message");
+        }
+        try {
             thread.remove(message);
+            _threads.replace(thread.getTitle(), thread);
+        } catch (ThreadFinalMessageDeletedException e) {
+            _threads.remove(thread.getTitle());
         }
-        else {
-            throw new MessageNotFoundException(message.getMessageTitle());
-        }
-        //this.Update();
+        Update();
     }
 
 
     @Override
     public void removeModerator(String mod) {
         _moderators.remove(mod);
-        //this.Update();
+        Update();
     }
 
     @Override
-    public void editMessage(ThreadI thread, int originalMessage, String title, String text) throws MessageNotFoundException {
-        MessageI ms =  thread.getMessages().find(originalMessage);
-        ms.editTitle(title);
-        ms.editText(text);
+    public void editMessage(int originalMessage, String title, String text) throws MessageNotFoundException {
+        ThreadI thread = null;
+        MessageI original = null;
+        for (ThreadI t : _threads.values()){
+            if ((original = t.getMessages().find(originalMessage)) != null){
+                thread = t;
+                break;
+            }
+        }
+        if (thread == null){
+            logger.warn("User tried to reply to already deleted thread");
+            throw new MessageNotFoundException(title);
+        }
+        thread.editMessage(original, title, text);
+        _threads.replace(thread.getTitle(), thread);
+        Update();
     }
 
 

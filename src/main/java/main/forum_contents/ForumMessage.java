@@ -24,7 +24,7 @@ public class ForumMessage implements MessageI {
 	@JsonView(NativeGuiController.class)
 	private String messageTitle;
 	private Date writingTime;
-	@OneToMany(targetEntity = ForumMessage.class, cascade = CascadeType.ALL)
+	@OneToMany(targetEntity = ForumMessage.class, cascade = CascadeType.ALL, fetch = FetchType.EAGER)
 	private List<MessageI> replies;
 
 
@@ -34,6 +34,7 @@ public class ForumMessage implements MessageI {
 		this.messageTitle = messageTitle;
 		writingTime = new Date();
 		replies = new ArrayList<>();
+		this.id = ForumThread.GENERATED_ID++;
 	}
 
 	public ForumMessage() {

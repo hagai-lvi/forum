@@ -4,11 +4,13 @@ package data_structures;
 import main.Persistancy.PersistantObject;
 import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
+import main.exceptions.MessageNotFoundException;
 import main.exceptions.NodeNotFoundException;
-import main.forum_contents.ForumMessage;
+import main.exceptions.ThreadFinalMessageDeletedException;
 import main.interfaces.MessageI;
 
 import javax.persistence.*;
+import java.util.List;
 
 /**
  * A basic tree implementation
@@ -24,21 +26,17 @@ public class Tree extends PersistantObject{
 
     public Tree(MessageI rootData) {
         root = new Node(rootData, null);
-//        this.Save();
     }
 
     public Tree() {
     }
 
-    public void add(MessageI dataToAdd, MessageI ancestor) throws NodeNotFoundException {
-
-        Node ancestorNode = root.findChild(ancestor);
-        if (ancestorNode == null || dataToAdd == null){
-            throw new NodeNotFoundException("Could not find ancestor " + ancestor.toString() + " in the tree");
+    public void add(MessageI original, MessageI newMessage) throws NodeNotFoundException {
+        Node ancestorNode = root.findChild(original);
+        if (ancestorNode == null || newMessage == null){
+            throw new NodeNotFoundException("Could not find ancestor " + original.toString() + " in the tree");
         }
-        new Node(dataToAdd, ancestorNode);
-        ancestorNode.addChild(dataToAdd);
-//        this.Save();
+        ancestorNode.addChild(newMessage);
     }
 
     public Node getRoot() {
@@ -59,10 +57,14 @@ public class Tree extends PersistantObject{
         }
     }
 
-    public void remove(MessageI data) {
+    public void remove(MessageI data) throws MessageNotFoundException, ThreadFinalMessageDeletedException {
         Node child = root.findChild(data);
-        if (child == root){
+        if (child == null){
+            throw new MessageNotFoundException("Could not find message " + data.getMessageTitle());
+        }
+        if (child.getId() == root.getId()){
             root = null;
+            throw new ThreadFinalMessageDeletedException();
         }
         else {
             child.parent.children.remove(child);
@@ -99,13 +101,51 @@ public class Tree extends PersistantObject{
     }
 
 
-    public int getMessagesCount(){
-        try {
-            return root.getChildren().size();
+    public int getMessagesCount(Node node){
+       if (node == null){
+           return 0;
+       }
+        if (node.getChildren().size() == 0){
+           return 1;
+       }
+        int c = 0;
+        for (Node n : node.getChildren()){
+            c = c + getMessagesCount(n);
         }
-        catch(Exception e) {
-            return 0;
-        }
+        return c + 1;
     }
 
+    public int getMessagesCount(){
+        if (root == null){
+            return 0;
+        }
+
+        if (root.getChildren().size() == 0){
+            return 1;
+        }
+
+        int c = 0;
+        for (Node n : root.getChildren()){
+            c = c + getMessagesCount(n);
+        }
+        return c+1;
+    }
+
+    public MessageI editNodeData(MessageI originalMessage, String title, String text) {
+        if (root == null){
+            return null;
+        }
+        if (root.getData().getId() == originalMessage.getId()){
+            root.getData().editTitle(title);
+            root.getData().editText(text);
+            return root.getData();
+        }
+        for (Node n : root.getChildren()){
+            MessageI newmsg;
+            if ((newmsg = editNodeData(n.getData(), title, text)) != null){
+                return newmsg;
+            }
+        }
+        return null;
+    }
 }

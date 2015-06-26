@@ -2,6 +2,7 @@ package main.interfaces;
 
 import data_structures.Tree;
 import main.exceptions.MessageNotFoundException;
+import main.exceptions.ThreadFinalMessageDeletedException;
 
 /**
  * Created by hagai_lvi on 4/6/15.
@@ -17,11 +18,11 @@ public interface ThreadI extends ExThreadI{
 
 	boolean contains(MessageI message);
 
-	void remove(MessageI message);
+	void remove(MessageI message) throws MessageNotFoundException, ThreadFinalMessageDeletedException;
 
 	String getTitle();
 
-	void editMessage(MessageI originalMessage, String title, String newMessage) throws MessageNotFoundException;
+	void editMessage(MessageI originalMessage, String title, String text) throws MessageNotFoundException;
 
 	public int getMessagesCount();
 }
