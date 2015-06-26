@@ -14,6 +14,9 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
+
+//TODO implement view thread
+//TODO implement add message
 /**
  * Created by hagai_lvi on 6/2/15.
  * A rest controller to work with the native GUI

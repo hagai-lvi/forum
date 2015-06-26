@@ -1,16 +1,15 @@
 package data_structures;
 
 
-import main.Persistancy.PersistantObject;
 import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
+import main.Persistancy.PersistantObject;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.NodeNotFoundException;
 import main.exceptions.ThreadFinalMessageDeletedException;
 import main.interfaces.MessageI;
 
 import javax.persistence.*;
-import java.util.List;
 
 /**
  * A basic tree implementation
@@ -79,7 +78,7 @@ public class Tree extends PersistantObject{
             return node.data;
         }
         else{
-            for (Node child : root.children){
+            for (Node child : node.children){
                 MessageI msg = find(child, id);
                 if (msg != null) {
                     return msg;
