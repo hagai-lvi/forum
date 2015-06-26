@@ -11,12 +11,9 @@ import main.services_layer.Facade;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.servlet.ModelAndView;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -35,7 +32,7 @@ public class WebController {
 	public static final String ADMIN_USER = "ADMIN";// TODO remove
 	public static final String ADMIN_PASS = "ADMIN";// TODO remove
 
-	@RequestMapping(value = "/superAdminDashboard", method = RequestMethod.POST)
+	@RequestMapping(value = "superAdminDashboard", method = RequestMethod.POST)
 	public String showSuperAdminDashboard(String username, String password){
 		return "superAdminDashboard";
 	}
@@ -43,14 +40,14 @@ public class WebController {
 	/**
 	 * Shows a facade with all the available forums in the system
 	 */
-	@RequestMapping(value = "/facade",method = RequestMethod.GET)
+	@RequestMapping(value = "facade",method = RequestMethod.GET)
 	public String showFacade(ModelMap model) {
 		logger.info("showFacade request");
 		FacadeI f = getFacade();
 		model.addAttribute("forumList", f.getForumList());
 		return "facade";
 	}
-	@RequestMapping(value = "/logout", method = RequestMethod.GET)
+	@RequestMapping(value = "logout", method = RequestMethod.GET)
 	public String logout(HttpSession session) throws SessionNotFoundException {
 		Facade.getFacade().logout(getSessionID(session));
 		session.removeAttribute(SESSION_ID_ATTR);
@@ -60,7 +57,7 @@ public class WebController {
 	/**
 	 * Send a request to create a new forum in the system
 	 */
-	@RequestMapping(value = "/addForum",method = RequestMethod.POST)
+	@RequestMapping(value = "addForum",method = RequestMethod.POST)
 	public String addForum(ModelMap model, String forumName, int numOfModerators, String passRegex,
 						   boolean isSecured, int passwordEffectTime) throws PermissionDeniedException, ForumAlreadyExistException, ForumNotFoundException {
 		logger.info("addForum request");
@@ -74,7 +71,7 @@ public class WebController {
 	/**
 	 * Send a request to create a new sub forum in the currently used forum
 	 */
-	@RequestMapping(value = "/addSubforum",method = RequestMethod.POST)
+	@RequestMapping(value = "addSubforum",method = RequestMethod.POST)
 	public String addSubforum(ModelMap model, HttpSession session, String subforumName) throws SubForumAlreadyExistException, PermissionDeniedException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
 		logger.info("addSubforum request");
 		FacadeI f = getFacade();
@@ -88,7 +85,7 @@ public class WebController {
 	/**
 	 * Shows a login/register page
 	 */
-	@RequestMapping(value = "/login_page",method = RequestMethod.POST)
+	@RequestMapping(value = "login_page",method = RequestMethod.POST)
 	public String loginForm(ModelMap model, String forum) {
 		logger.info("loginForm request");
 		model.addAttribute("forumName", forum);
@@ -254,7 +251,7 @@ public class WebController {
 	/**
 	 * Send a request to create a new sub forum in the currently used forum
 	 */
-	@RequestMapping(value = "/addThread",method = RequestMethod.POST)
+	@RequestMapping(value = "addThread",method = RequestMethod.POST)
 	public void addThread(ModelMap model, HttpSession session, String srcMsgTitle, String srcMsgBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("addThread request");
 		FacadeI f = getFacade();
@@ -292,22 +289,22 @@ public class WebController {
 		return (int) session.getAttribute(SESSION_ID_ATTR);
 	}
 
-	@RequestMapping(value = "/reply_to_message",method = RequestMethod.POST)
+	@RequestMapping(value = "reply_to_message",method = RequestMethod.POST)
 	public String addReplyMessage(ModelMap model, HttpSession session, int messageID) throws PermissionDeniedException, DoesNotComplyWithPolicyException {
 		model.addAttribute("messageID", messageID);
 		return "reply_to_message";
 	}
 
 
-	@ExceptionHandler(Exception.class)
-	public ModelAndView handleError(HttpServletRequest req, Exception exception) {
-		logger.error("Request: " + req.getRequestURL() + " raised an exception", exception);
-
-		ModelAndView mav = new ModelAndView();
-		mav.addObject("error_message", exception.getMessage());
-		mav.addObject("exception", exception);
-		mav.addObject("url", req.getRequestURL());
-		mav.setViewName("error");
-		return mav;
-	}
+//	@ExceptionHandler(Exception.class)
+//	public ModelAndView handleError(HttpServletRequest req, Exception exception) {
+//		logger.error("Request: " + req.getRequestURL() + " raised an exception", exception);
+//
+//		ModelAndView mav = new ModelAndView();
+//		mav.addObject("error_message", exception.getMessage());
+//		mav.addObject("exception", exception);
+//		mav.addObject("url", req.getRequestURL());
+//		mav.setViewName("error");
+//		return mav;
+//	}
 }
