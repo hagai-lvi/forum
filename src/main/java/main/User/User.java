@@ -241,7 +241,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     @Override
-    public void editMessage(String subforum, ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException {
+    public void editMessage(String subforum, ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException, PermissionDeniedException {
         findPermission(subforum).editMessage(thread, messageId, title, text, username);
     }
 
@@ -309,7 +309,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
         return forumPermissions.isGuest();
     }
 
-    @Override
+ /*   @Override
     public void viewSubforum(String subforum)  {
         if(!subForumsPermissions.containsKey(subforum)) {
             if (forumPermissions.isAdmin())
@@ -318,7 +318,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
                 this.subForumsPermissions.put(subforum, new UserSubforumPermission(forumPermissions.getPermission(), forumPermissions.getForumName(), subforum));
             Update();
         }
-    }
+    }*/
 
 
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {

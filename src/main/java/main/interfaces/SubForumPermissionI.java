@@ -32,7 +32,7 @@ public interface SubForumPermissionI {
 	/**
 	 * Edit an existing message.
 	 */
-	 void editMessage(ThreadI thread, int originalMessage, String title, String text, String user) throws MessageNotFoundException;
+	 void editMessage(ThreadI thread, int originalMessage, String title, String text, String user) throws MessageNotFoundException, PermissionDeniedException;
 
 	 /**
 	 * view threads

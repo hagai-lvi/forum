@@ -118,7 +118,7 @@ public class WebController {
 	}
 
 	@RequestMapping(value = "edit_message", method = RequestMethod.POST)
-	public String editMessage(HttpSession session, int messageID,String newTitle, String newBody) throws SessionNotFoundException, SubForumDoesNotExistException, MessageNotFoundException, ThreadNotFoundException {
+	public String editMessage(HttpSession session, int messageID,String newTitle, String newBody) throws SessionNotFoundException, SubForumDoesNotExistException, MessageNotFoundException, ThreadNotFoundException, PermissionDeniedException {
 		FacadeI facade = getFacade();
 		facade.editMessage(getSessionID(session), messageID, newTitle, newBody);
 		return "redirect:/thread_view";

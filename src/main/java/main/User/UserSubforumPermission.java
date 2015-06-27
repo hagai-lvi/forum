@@ -99,7 +99,7 @@ import javax.persistence.Id;
     }
 
     @Override
-    public void editMessage(ThreadI thread, int originalMessage, String title, String text, String user) throws MessageNotFoundException {
+    public void editMessage(ThreadI thread, int originalMessage, String title, String text, String user) throws MessageNotFoundException, PermissionDeniedException {
         ForumI f =  Forum.load(forum);
         f.getSubForums().get(subforum).editMessage(thread, originalMessage, text, title, user);
 

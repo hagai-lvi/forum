@@ -3,6 +3,7 @@ package main.interfaces;
 import main.exceptions.DoesNotComplyWithPolicyException;
 import main.exceptions.MessageNotFoundException;
 import main.exceptions.ModeratorDoesNotExistsException;
+import main.exceptions.PermissionDeniedException;
 
 import java.util.Map;
 
@@ -43,7 +44,7 @@ public interface SubForumI extends ExSubForumI{
 
 	void removeModerator(String mod);
 
-	void editMessage(ThreadI thread, int originalMessage, String text, String title, String user) throws MessageNotFoundException;
+	void editMessage(ThreadI thread, int originalMessage, String text, String title, String user) throws MessageNotFoundException, PermissionDeniedException;
 
 	public int getMessagesCount();
 

@@ -147,7 +147,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
+    public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException, PermissionDeniedException {
         if(this.real!=null)
             this.real.editMessage(sessionId, messageId, title, text);
     }

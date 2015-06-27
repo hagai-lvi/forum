@@ -113,7 +113,7 @@ public interface UserI {
 
 	boolean canAddThread(String subForum) throws SubForumDoesNotExistException, PermissionDeniedException;
 
-	void editMessage(String subforum,ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException;
+	void editMessage(String subforum,ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException, PermissionDeniedException;
 
 	void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException;
 
@@ -131,5 +131,5 @@ public interface UserI {
 
 	boolean isGuest();
 
-	void viewSubforum(String subforum) ;
+	/*void viewSubforum(String subforum)*/ ;
 }

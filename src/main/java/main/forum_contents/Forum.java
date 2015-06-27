@@ -179,7 +179,8 @@ public class Forum extends PersistantObject implements ForumI{
         ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_USER, forum_name);
         UserI newUser = new User(userName, password, eMail, userPermissions);
         addAllSubforumsToUser(newUser);
-        sendAuthenticationEMail(newUser);
+        //TODO - send email
+        //sendAuthenticationEMail(newUser);
         _users.put(userName, newUser);
         Update();
         return newUser;

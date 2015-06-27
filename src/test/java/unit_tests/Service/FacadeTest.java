@@ -4,16 +4,14 @@ package unit_tests.Service;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
-import main.interfaces.ExThreadI;
-import main.interfaces.FacadeI;
-import main.interfaces.ForumI;
-import main.interfaces.UserI;
+import main.interfaces.*;
 import main.services_layer.Facade;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 import static org.junit.Assert.*;
 
@@ -30,7 +28,7 @@ public class FacadeTest {
 
         try {
             theFacade.addForum("ADMIN", "ADMIN", "Temp", false, "[1-9]*", 1, 10);
-            theFacade.addForum("ADMIN", "ADMIN", "Temp2", true, "[1-9]*", 1, 10);
+           // theFacade.addForum("ADMIN", "ADMIN", "Temp2", true, "[1-9]*", 1, 10);
 
         } catch (PermissionDeniedException e) {
             fail("No permission to add forum");
@@ -44,7 +42,7 @@ public class FacadeTest {
     public void tearDown() {
         try {
             theFacade.removeForum("ADMIN", "ADMIN", "Temp");
-            theFacade.removeForum("ADMIN", "ADMIN", "Temp2");
+          //  theFacade.removeForum("ADMIN", "ADMIN", "Temp2");
 
         } catch (ForumNotFoundException e) {
             fail("Forum not found when trying to remove");
@@ -94,46 +92,22 @@ public class FacadeTest {
     }
 
     @Test
-    public void testGetSubForumList() throws InvalidUserCredentialsException, PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, EmailNotAuthanticatedException {
-    /*   try {
-            theFacade.addForum("ADMIN", "ADMIN", "Sport", false, ".*", 2, 20);
-        } catch (PermissionDeniedException e) {
-            fail("No permission to add forum");
-        } catch (ForumAlreadyExistException e) {
-           fail("Forum already exist");
-        }
+    public void testGetSubForumList() throws InvalidUserCredentialsException, PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, EmailNotAuthanticatedException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, UserAlreadyExistsException, DoesNotComplyWithPolicyException, UserNotFoundException, CloneNotSupportedException {
 
         int session = 0;
-        session = theFacade.login("Sport", "ADMIN", "ADMIN");
-
-
-        ForumI forum = theFacade.getForumList().iterator().next();
-        try {
-            forum.addSubForum("Baseball");
-            forum.addSubForum("Tennis");
-        } catch (SubForumAlreadyExistException e) {
-            fail("Sub forum already exist");
-        }
-
-        try {
-            Collection<SubForumI> list = theFacade.getSubForumList(session);
-        } catch (SessionNotFoundException e) {
-            fail("Session not found");
-        }
-        try {
-            assertTrue(findSubforum(session, "Baseball"));
-            assertTrue(findSubforum(session, "Tennis"));
-        } catch (SessionNotFoundException e) {
-            fail("Session not found");
-        }
-        try {
-            theFacade.removeForum("ADMIN", "ADMIN", "Sport");
-        } catch (ForumNotFoundException e) {
-            fail("Forum not found");
-        } catch (PermissionDeniedException e) {
-            fail("No permission to remove forum");
-        }*/
-        fail();
+        session = theFacade.login("Temp", "ADMIN", "ADMIN");
+        theFacade.addSubforum(session, "Sport");
+        theFacade.addSubforum(session, "SomeSub");
+        theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
+        theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+       session =  theFacade.login("Temp", "Victor", "123456");
+        theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
+        theFacade.addSubforum(session, "OneMore");
+        Map<String, SubForumI> list = theFacade.getSubForumList(session);
+        assertTrue(list.containsKey("Sport"));
+        assertTrue(list.containsKey("SomeSub"));
+        assertTrue(list.containsKey("OneMore"));
+        assertFalse(list.containsKey("Zrima"));
     }
 
     @Test

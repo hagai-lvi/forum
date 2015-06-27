@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import controller.NativeGuiController;
 import main.Persistancy.PersistantObject;
 import main.User.User;
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.MessageNotFoundException;
-import main.exceptions.ModeratorDoesNotExistsException;
-import main.exceptions.ThreadFinalMessageDeletedException;
+import main.exceptions.*;
 import main.interfaces.*;
 import org.apache.log4j.Logger;
 
@@ -137,7 +134,7 @@ public class SubForum extends PersistantObject implements SubForumI {
     }
 
     @Override
-    public void editMessage(ThreadI thread, int originalMessage, String text, String title, String user) throws MessageNotFoundException {
+    public void editMessage(ThreadI thread, int originalMessage, String text, String title, String user) throws MessageNotFoundException, PermissionDeniedException {
         if (thread == null){
             logger.warn("User tried to reply to already deleted thread");
             throw new MessageNotFoundException(title);
@@ -148,7 +145,7 @@ public class SubForum extends PersistantObject implements SubForumI {
             _threads.replace(thread.getTitle(), thread);
             Update();
         }
-        else throw new PersistenceException("Can not edit message");
+        else throw new PermissionDeniedException("Can not edit message");
     }
 
 

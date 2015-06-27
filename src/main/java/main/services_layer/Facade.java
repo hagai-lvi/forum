@@ -171,7 +171,7 @@ import java.util.Map;
 	}
 
 	@Override
-	public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
+	public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException, PermissionDeniedException {
 		Session current = findSession(sessionId);
 		current.getUser().editMessage(current.getSubForum().getTitle(), current.getThread(), messageId, title, text);
 	}
@@ -274,7 +274,7 @@ import java.util.Map;
 		if(!subForums.containsKey(subforum))
 			throw new SubForumNotFoundException();
 		current.setSubForum(subforum);
-		current.getUser().viewSubforum(subforum);
+		//current.getUser().viewSubforum(subforum);
 		return subForums.get(subforum);
 	}
 
