@@ -111,7 +111,7 @@ import javax.persistence.Id;
     }
 
     @Override
-    public void setModerator(UserI moderator) throws PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException {
+    public void setModerator(UserI moderator) throws PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException, TooManyModeratorsException {
             UserI clone = moderator.cloneAsMod(Permissions.PERMISSIONS_MODERATOR, subforum);
 
             logger.trace("User " + moderator.getUsername() + " set as moderator of subforum " + subforum);

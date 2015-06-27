@@ -34,7 +34,7 @@ public class SubForumTest extends TestCase {
         Forum.delete("forum");
     }
 
-    public void testGetModerators()   {
+    public void testGetModerators() throws TooManyModeratorsException {
         SubForumI subforum = Forum.load("forum").getSubForums().get("subforum");
         subforum.setModerator(User.getUserFromDB("user", "forum"));
         Map<String, UserI> mods = subforum.getModerators();
@@ -97,13 +97,13 @@ public class SubForumTest extends TestCase {
         fail("did not catch non-existent message reply");
     }
 
-    public void testSetModerator()  {
+    public void testSetModerator() throws TooManyModeratorsException {
         Forum.load("forum").getSubForums().get("subforum").setModerator(user);
         assertEquals(1, Forum.load("forum").getSubForums().get("subforum").getModerators().size());
         assertTrue(Forum.load("forum").getSubForums().get("subforum").getModerators().containsKey(user.getUsername()));
     }
 
-    public void testRemoveModerator()   {
+    public void testRemoveModerator() throws TooManyModeratorsException {
         Forum.load("forum").getSubForums().get("subforum").setModerator(user);
         Forum.load("forum").getSubForums().get("subforum").removeModerator(user.getUsername());
         assertEquals(0, Forum.load("forum").getSubForums().get("subforum").getModerators().size());

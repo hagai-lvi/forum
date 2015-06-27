@@ -104,6 +104,8 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         this.maxModerators = numOfModerators;
     }
 
+
+
     @java.lang.Override
     public boolean isValidAdmin(UserI admin){
         long currYear = GregorianCalendar.getInstance().get(Calendar.YEAR);

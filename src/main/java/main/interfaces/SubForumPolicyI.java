@@ -6,4 +6,6 @@ package main.interfaces;
 public interface SubForumPolicyI {
 
     boolean isValidMessage(String title, String text);
+
+    int getMaxModerators();
 }

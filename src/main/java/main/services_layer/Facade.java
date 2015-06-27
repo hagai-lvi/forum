@@ -143,7 +143,7 @@ import java.util.Vector;
 	}
 
 	@Override
-	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException {
+	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException, TooManyModeratorsException {
 		Session current = findSession(sessionId);
 		current.getUser().setModerator(current.getSubForum().getTitle(), findUser(moderatorName, current.getForum().getName()));
 		current.addCommand("Adding moderator " + moderatorName);

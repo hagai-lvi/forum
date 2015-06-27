@@ -85,7 +85,7 @@ public interface UserI {
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException;
+	void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException, TooManyModeratorsException;
 
 	/**
 	 * Ban moderator

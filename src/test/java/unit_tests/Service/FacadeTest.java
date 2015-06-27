@@ -60,13 +60,13 @@ public class FacadeTest {
 
     @Test
     public void testGetForumList() throws PermissionDeniedException, ForumAlreadyExistException, ForumNotFoundException {
-        theFacade.addForum("ADMIN","ADMIN","Temp2", false, ".*", 1,1);
+        theFacade.addForum("ADMIN", "ADMIN", "Temp2", false, ".*", 1, 1);
         ArrayList<String> forums = theFacade.getForumList();
         assertTrue(forums != null);
         assertTrue(forums.contains("Temp"));
         assertTrue(forums.contains("Temp2"));
         assertFalse(forums.contains("Zrima"));
-        theFacade.removeForum("ADMIN","ADMIN","Temp2");
+        theFacade.removeForum("ADMIN", "ADMIN", "Temp2");
     }
 
     @Test
@@ -517,7 +517,7 @@ public class FacadeTest {
     }
 
     @Test
-    public void testDeleteMessage() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, EmailNotAuthanticatedException, UserNotFoundException, PasswordNotInEffectException, NeedMoreAuthParametersException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, MessageNotFoundException, ThreadNotFoundException, SubForumNotFoundException, CloneNotSupportedException {
+    public void testDeleteMessage() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, EmailNotAuthanticatedException, UserNotFoundException, PasswordNotInEffectException, NeedMoreAuthParametersException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, MessageNotFoundException, ThreadNotFoundException, SubForumNotFoundException, CloneNotSupportedException, TooManyModeratorsException {
         theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
         int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
@@ -541,7 +541,7 @@ public class FacadeTest {
     }
 
     @Test
-    public void testSetModerator() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, EmailNotAuthanticatedException, UserNotFoundException, PasswordNotInEffectException, NeedMoreAuthParametersException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, CloneNotSupportedException, SubForumNotFoundException, MessageNotFoundException, ThreadNotFoundException {
+    public void testSetModerator() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, EmailNotAuthanticatedException, UserNotFoundException, PasswordNotInEffectException, NeedMoreAuthParametersException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, CloneNotSupportedException, SubForumNotFoundException, MessageNotFoundException, ThreadNotFoundException, TooManyModeratorsException {
         theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
         int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
@@ -612,7 +612,7 @@ public class FacadeTest {
     }
 
     @Test
-    public void testRemoveModerator() throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException, DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, SubForumAlreadyExistException, SubForumNotFoundException {
+    public void testRemoveModerator() throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException, DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, SubForumAlreadyExistException, SubForumNotFoundException, TooManyModeratorsException {
         theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
         int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
@@ -794,7 +794,7 @@ public class FacadeTest {
 
 
     @Test
-    public void getCurrentUserStatus() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumDoesNotExistException, SessionNotFoundException, SubForumAlreadyExistException, PermissionDeniedException, UserAlreadyExistsException, DoesNotComplyWithPolicyException, UserNotFoundException, CloneNotSupportedException, SubForumNotFoundException {
+    public void getCurrentUserStatus() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumDoesNotExistException, SessionNotFoundException, SubForumAlreadyExistException, PermissionDeniedException, UserAlreadyExistsException, DoesNotComplyWithPolicyException, UserNotFoundException, CloneNotSupportedException, SubForumNotFoundException, TooManyModeratorsException {
         int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
         theFacade.addSubforum(sessionId, "Zrima");
         assertEquals(theFacade.getCurrentUserForumStatus(sessionId), "Admin");

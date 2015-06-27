@@ -87,7 +87,7 @@ public interface FacadeI {
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException;
+	void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException, TooManyModeratorsException;
 
 	/**
 	 * guest entry usecase, return session id

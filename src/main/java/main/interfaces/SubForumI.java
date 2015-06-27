@@ -1,9 +1,6 @@
 package main.interfaces;
 
-import main.exceptions.DoesNotComplyWithPolicyException;
-import main.exceptions.MessageNotFoundException;
-import main.exceptions.ModeratorDoesNotExistsException;
-import main.exceptions.PermissionDeniedException;
+import main.exceptions.*;
 
 import java.util.Map;
 
@@ -35,7 +32,7 @@ public interface SubForumI extends ExSubForumI{
 	 */
 	void deleteMessage(String thread, MessageI message) throws MessageNotFoundException;
 
-	void setModerator(UserI mod);
+	void setModerator(UserI mod) throws TooManyModeratorsException;
 
 	/**
 	 * Return the threads in this sub-forum

@@ -157,7 +157,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     @Override
-    public void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException {
+    public void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException, TooManyModeratorsException {
         if (! forumPermissions.isAdmin()){
             throw new PermissionDeniedException("Can not set moderator");
         }

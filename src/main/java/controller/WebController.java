@@ -234,7 +234,7 @@ public class WebController {
 
 	@RequestMapping(value = "addModerator", method = RequestMethod.POST)
 	public void addModeratorToSubforum(ModelMap model, HttpSession session,
-									   String moderatorName, HttpServletResponse response) throws IOException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, ForumNotFoundException, CloneNotSupportedException, SessionNotFoundException {
+									   String moderatorName, HttpServletResponse response) throws IOException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, ForumNotFoundException, CloneNotSupportedException, SessionNotFoundException, TooManyModeratorsException {
 		FacadeI facade = getFacade();
 		try {
 			facade.setModerator(getSessionID(session), moderatorName);

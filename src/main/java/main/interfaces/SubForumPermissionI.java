@@ -43,7 +43,7 @@ public interface SubForumPermissionI {
 	/**
 	 * Set moderator for subforum
 	 */
-	void setModerator(UserI moderator) throws PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException;
+	void setModerator(UserI moderator) throws PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException, TooManyModeratorsException;
 
 	/**
 	 * Get related subforum
