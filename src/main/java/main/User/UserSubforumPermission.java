@@ -99,13 +99,14 @@ import javax.persistence.Id;
     }
 
     @Override
-    public void editMessage(ThreadI thread, int originalMessage, String title, String text) throws MessageNotFoundException {
+    public void editMessage(ThreadI thread, int originalMessage, String title, String text, String user) throws MessageNotFoundException {
         ForumI f =  Forum.load(forum);
-        f.getSubForums().get(subforum).editMessage(thread, originalMessage, text, title);
+        f.getSubForums().get(subforum).editMessage(thread, originalMessage, text, title, user);
+
     }
 
     @Override
-    public ThreadI[] getThreads() {
+    public ThreadI[] getThreads () {
         ForumI f =  Forum.load(forum);
         return f.getSubForums().get(subforum).getThreads().values().toArray(new ForumThread[0]);
     }
@@ -114,7 +115,7 @@ import javax.persistence.Id;
     public void setModerator(UserI moderator) throws PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException {
 
 
-        UserI clone = moderator.cloneAs(Permissions.PERMISSIONS_MODERATOR);
+            UserI clone = moderator.cloneAs(Permissions.PERMISSIONS_MODERATOR);
         if(permission.equals(Permissions.PERMISSIONS_SUPERADMIN) || permission.equals(Permissions.PERMISSIONS_ADMIN)) {
             logger.trace("User " + moderator.getUsername() + " set as moderator of subforum " + subforum);
             Forum.load(forum).getSubForums().get(subforum).setModerator(clone);
@@ -132,12 +133,6 @@ import javax.persistence.Id;
     public SubForumI getSubForum() {
         ForumI f =  Forum.load(forum);
         return f.getSubForums().get(subforum);
-    }
-
-    @Override
-    public boolean subForumExists(String name) {
-        //TODO what is this method for?
-        return false;
     }
 
     @Override

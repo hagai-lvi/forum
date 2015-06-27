@@ -34,7 +34,8 @@ import java.util.Map;
 
 	@Override
 	public ArrayList<String> getForumList() {
-		return Forum.getForumList();
+		return
+				Forum.getForumList();
 	}
 
 	@Override
@@ -182,15 +183,24 @@ import java.util.Map;
 	}
 
 	@Override
-	public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException {
+	public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException {
 		Session current = findSession(sessionsId);
-		return current.getForum().viewStatistics();
+		return current.getUser().viewStatistics();
 	}
 
 	@Override
-	public String viewSuperManagerStatistics(int sessionId) throws SessionNotFoundException {
-		return  null;
-		//TODO - not implemented.
+	public String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException {
+		if (username.equals(SUPER_ADMIN_USERNAME) && password.equals(SUPER_ADMIN_PASSWORD)){
+			StringBuilder result = new StringBuilder();
+			ArrayList<String> forums = getForumList();
+			for(String s:forums){
+				result.append(Forum.load(s).viewStatistics()+"\n\n");
+			}
+			return result.toString();
+		}
+		else {
+			throw new PermissionDeniedException(MessageFormat.format("user {0} is not authorized to view system statistics.", username));
+		}
 	}
 
 	@Override
@@ -365,5 +375,4 @@ import java.util.Map;
 		return Forum.load(forumName);
 	}
 
-	//TODO - get permission of current user.
 }

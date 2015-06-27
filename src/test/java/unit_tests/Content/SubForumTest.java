@@ -122,7 +122,7 @@ public class SubForumTest extends TestCase {
     public void testEditMessage() throws DoesNotComplyWithPolicyException, MessageNotFoundException {
         ThreadI thread = null;
         thread = Forum.load("forum").getSubForums().get("subforum").addThread("user", "title", "body");
-        Forum.load("forum").getSubForums().get("subforum").editMessage(thread, thread.getRootMessage().getId(), "newBody", "newTitle");
+        Forum.load("forum").getSubForums().get("subforum").editMessage(thread, thread.getRootMessage().getId(), "newBody", "newTitle", "Gabi");
         assertEquals("newTitle", thread.getRootMessage().getMessageTitle());
         assertEquals("newBody", thread.getRootMessage().getMessageText());
     }

@@ -33,7 +33,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
 
     private boolean secured;
 
-//TODO - define parameters according to  requirements.
+//TODO - define parameters according to requirements.
     public ForumPolicy(boolean isSecured, int maxModerators, String passwordRegex, int passwordEffectTime) {
         this.secured = isSecured;
         this.maxModerators = maxModerators;

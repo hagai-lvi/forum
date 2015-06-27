@@ -108,7 +108,7 @@ public class UserSubforumPermissionTest {
         }
         try {
             ThreadI thread = Forum.load("Sport").getSubForums().get("Sport").getThreads().get(message.getMessageTitle());
-            permission2.editMessage(thread, message.getId(), message.getMessageTitle(), message.getMessageText());
+            permission2.editMessage(thread, message.getId(), message.getMessageTitle(), message.getMessageText(),"Gabi" );
             fail();
         } catch (MessageNotFoundException e) {
             assertTrue(true);

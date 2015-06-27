@@ -33,7 +33,7 @@ public interface ForumPermissionI {
 	/**
 	 * Get statistics
 	 */
-	String viewStatistics();
+	String viewStatistics() throws PermissionDeniedException;
 
 	/**
 	 * Find a subforum in this forum according to it's name

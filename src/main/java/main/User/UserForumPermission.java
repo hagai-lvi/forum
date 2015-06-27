@@ -18,14 +18,12 @@ public class UserForumPermission implements ForumPermissionI {
 	@Transient
 	private static final org.apache.log4j.Logger logger = org.apache.log4j.Logger.getLogger(UserForumPermission.class.getName());
 
-	//TODO add logger
 
 	//@OneToOne(targetEntity = Forum.class)
 	private String forumName;
 	private Permissions permissions;
 
 	public UserForumPermission(Permissions permissions, String forumName){
-		//TODO use state for permissions? should the permissions be final?
 		this.forumName = forumName;
 		this.permissions = permissions;
 	}
@@ -100,9 +98,10 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public String viewStatistics() {
-		//TODO - not implemented
-		return null;
+	public String viewStatistics() throws PermissionDeniedException {
+		if(isAdmin())
+			return Forum.load(forumName).viewStatistics();
+		throw new PermissionDeniedException("Can not view statistics");
 	}
 
 	@Override

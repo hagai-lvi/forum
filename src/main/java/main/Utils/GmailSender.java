@@ -10,8 +10,8 @@ import java.util.Properties;
 
 public class GmailSender {
 
-    private static String USER_NAME = "SEWorkshopForum";  // GMail user name (just the part before "@gmail.com")
-    private static String PASSWORD = "123Bs!324Adz(01"; // GMail password
+    private static String USER_NAME = "seforumws";  // GMail user name (just the part before "@gmail.com")
+    private static String PASSWORD = "A1a2b3c4d5e"; // GMail password
 
     public static void sendFromGMail(String[] to, String subject, String body) {
         Properties props = System.getProperties();

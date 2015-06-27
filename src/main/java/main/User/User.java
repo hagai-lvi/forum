@@ -153,7 +153,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
 
     @Override
     public String viewStatistics() throws PermissionDeniedException {
-        return null; //TODO - not yet implemented.
+        return forumPermissions.viewStatistics();
     }
 
     @Override
@@ -190,7 +190,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     /**
-     * This method is for testing purposes only, TODO need to think how to remove it
+     * This method is for testing purposes only,
      */
     public void setSignUpDate(GregorianCalendar signUpDate){
         this.signUpDate = signUpDate;
@@ -242,7 +242,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
 
     @Override
     public void editMessage(String subforum, ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException {
-        findPermission(subforum).editMessage(thread, messageId, title, text);
+        findPermission(subforum).editMessage(thread, messageId, title, text, username);
     }
 
     @Override
@@ -319,6 +319,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
             Update();
         }
     }
+
 
     private SubForumPermissionI findPermission(String subForum) throws SubForumDoesNotExistException {
         if(!subForumsPermissions.containsKey(subForum))

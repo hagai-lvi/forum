@@ -159,16 +159,14 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException {
+    public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException {
         if(this.real!=null)
             return this.real.viewModeratorStatistics(sessionsId);
         return null;
     }
 
     @Override
-    public String viewSuperManagerStatistics(int sessionId) throws SessionNotFoundException {
-        if(this.real!=null)
-            return this.real.viewSuperManagerStatistics(sessionId);
+    public String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException {
         return null;
     }
 

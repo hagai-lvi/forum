@@ -114,9 +114,9 @@ public interface FacadeI {
 
 	void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException;
 
-	String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException;
+	String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException;
 
-	String viewSuperManagerStatistics(int sessionId) throws SessionNotFoundException;
+	String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException;
 
 	String viewSessions(int sessionId) throws ThreadNotFoundException;
 

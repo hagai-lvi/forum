@@ -25,7 +25,6 @@ import java.util.Map;
 @Entity
 public class Forum extends PersistantObject implements ForumI{
 
-    //TODO use enum permissions, fix all occurrences of 'Guest' or 'Admin' in the code
     public static final String GUEST_USER_NAME = "Guest user";
     public static final String ADMIN_USERNAME = "ADMIN";
     public static final String ADMIN_PASSWORD = "ADMIN";
@@ -65,7 +64,7 @@ public class Forum extends PersistantObject implements ForumI{
         this.policy = policy;
         this.forum_name = name;
         initGuest();
-        initAdmin();//TODO should be initialized?
+        initAdmin();
         addAllSubforumsToUser(guest);
         addAllSubforumsToUser(User.getUserFromDB(ADMIN_USERNAME, forum_name));
         this._users.put("Guest", this.guest);
@@ -180,7 +179,7 @@ public class Forum extends PersistantObject implements ForumI{
         ForumPermissionI userPermissions = UserForumPermission.createUserForumPermissions(Permissions.PERMISSIONS_USER, forum_name);
         UserI newUser = new User(userName, password, eMail, userPermissions);
         addAllSubforumsToUser(newUser);
-        //sendAuthenticationEMail(new_user);    //TODO --> uncomment to actually send authentication mails!
+        sendAuthenticationEMail(newUser);
         _users.put(userName, newUser);
         Update();
         return newUser;

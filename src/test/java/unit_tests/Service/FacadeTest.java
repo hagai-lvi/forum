@@ -4,7 +4,10 @@ package unit_tests.Service;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
-import main.interfaces.*;
+import main.interfaces.ExThreadI;
+import main.interfaces.FacadeI;
+import main.interfaces.ForumI;
+import main.interfaces.UserI;
 import main.services_layer.Facade;
 import org.junit.After;
 import org.junit.Before;
@@ -27,7 +30,7 @@ public class FacadeTest {
 
         try {
             theFacade.addForum("ADMIN", "ADMIN", "Temp", false, "[1-9]*", 1, 10);
-           // theFacade.addForum("ADMIN", "ADMIN", "Temp2", true, "[1-9]*", 1, 10);
+            theFacade.addForum("ADMIN", "ADMIN", "Temp2", true, "[1-9]*", 1, 10);
 
         } catch (PermissionDeniedException e) {
             fail("No permission to add forum");
@@ -41,7 +44,7 @@ public class FacadeTest {
     public void tearDown() {
         try {
             theFacade.removeForum("ADMIN", "ADMIN", "Temp");
-           // theFacade.removeForum("ADMIN", "ADMIN", "Temp2");
+            theFacade.removeForum("ADMIN", "ADMIN", "Temp2");
 
         } catch (ForumNotFoundException e) {
             fail("Forum not found when trying to remove");
@@ -60,70 +63,39 @@ public class FacadeTest {
     public void testGetForumList() {
         ArrayList<String> forums = theFacade.getForumList();
         assertTrue(forums != null);
+        assertTrue(forums.contains("Temp"));
+        assertTrue(forums.contains("Temp2"));
+        assertFalse(forums.contains("Zrima"));
     }
 
     @Test
-    public void testSetAdmin() throws CloneNotSupportedException {
-        try {
-            theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
-        } catch (UserAlreadyExistsException e) {
-            fail("User already exist");
-        } catch (InvalidUserCredentialsException e) {
-            fail("Invalid credentials");
-        } catch (ForumNotFoundException e) {
-            fail("Forum not found");
-        } catch (DoesNotComplyWithPolicyException e) {
-            fail("Password does not comply with policy");
-        }
+    public void testSetAdmin() throws CloneNotSupportedException, DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, UserNotFoundException, PermissionDeniedException, PasswordNotInEffectException, SessionNotFoundException, EmailNotAuthanticatedException, NeedMoreAuthParametersException {
 
+        theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         try {
-            theFacade.setAdmin("ADMIN","ADMIN","Victor2","Temp");
+            theFacade.setAdmin("ADMIN","ADMIN","Victor2","Temp2");
             fail();
         } catch (UserNotFoundException e) {
             assertTrue(true);
-        } catch (PermissionDeniedException e) {
-            fail();
-        } catch (ForumNotFoundException e) {
-            fail();
-        }
-
-        try {
-            theFacade.setAdmin("ADMIN","ADMIN","Victor","Temp2");
-            fail();
-        } catch (UserNotFoundException e) {
-            assertTrue(true);
-        } catch (PermissionDeniedException e) {
-            fail();
-        } catch (ForumNotFoundException e) {
-            fail();
         }
 
         try {
             theFacade.setAdmin("Victor","ADMIN","Victor","Temp");
             fail();
-        } catch (UserNotFoundException e) {
-            fail();
         } catch (PermissionDeniedException e) {
             assertTrue(true);
-        } catch (ForumNotFoundException e) {
-            fail();
         }
 
-        try {
-            theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
-            int session = theFacade.login("Temp", "Victor", "123456");
-            assertFalse(theFacade.isAdmin(session));
-            theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
-            assertTrue(theFacade.isAdmin(session));
-        } catch (UserNotFoundException | PasswordNotInEffectException | SessionNotFoundException | InvalidUserCredentialsException | ForumNotFoundException | EmailNotAuthanticatedException | NeedMoreAuthParametersException | PermissionDeniedException e) {
-            fail(e.getMessage());
-        }
+        theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+        int session = theFacade.login("Temp", "Victor", "123456");
+        assertFalse(theFacade.isAdmin(session));
+        theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
+        assertTrue(theFacade.isAdmin(session));
     }
 
     @Test
-    public void testGetSubForumList() {
-        fail();
-       /* try {
+    public void testGetSubForumList() throws InvalidUserCredentialsException, PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, EmailNotAuthanticatedException {
+    /*   try {
             theFacade.addForum("ADMIN", "ADMIN", "Sport", false, ".*", 2, 20);
         } catch (PermissionDeniedException e) {
             fail("No permission to add forum");
@@ -132,21 +104,9 @@ public class FacadeTest {
         }
 
         int session = 0;
-        try {
-            session = theFacade.login("Sport", "ADMIN", "ADMIN");
-        } catch (InvalidUserCredentialsException e) {
-            fail("Invalid credentials");
-        } catch (ForumNotFoundException e) {
-            fail("Forum not found");
-        } catch (PasswordNotInEffectException e) {
-            fail("Password Not In Effect");
-        } catch (NeedMoreAuthParametersException e) {
-            fail("Need More Authentication Parameters");
-        } catch (EmailNotAuthanticatedException e) {
-            fail("Email Not Authanticated");
-        }
+        session = theFacade.login("Sport", "ADMIN", "ADMIN");
 
-        //TODO - getLIst of forums from database
+
         ForumI forum = theFacade.getForumList().iterator().next();
         try {
             forum.addSubForum("Baseball");

@@ -9,5 +9,4 @@ public interface ExMessageI {
     int getId();
     Collection<MessageI> getReplies();
     String getMessageText();
-    //TODO - getuser
 }

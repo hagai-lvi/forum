@@ -97,7 +97,7 @@ public class ForumTest {
         public void testSendMail() throws Exception {
             UserI user = null;
             try {
-                user = forum.register("tomgond_new1", "my_pass", "someinvalidemail@fufufu.com"); // TODO: change to valid email to check if sent
+                user = forum.register("tomgond_new1", "my_pass", "someinvalidemail@fufufu.com");
             }
             catch(UserAlreadyExistsException e){
                 fail("user already exists!");  // we should raise exception caus the user exists
