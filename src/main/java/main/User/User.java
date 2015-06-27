@@ -138,7 +138,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
     @Override
     public void deleteMessage(String subforum, String thread, MessageI mes)
             throws PermissionDeniedException, MessageNotFoundException, SubForumDoesNotExistException {
-        findPermission(subforum).deleteMessage(this.username,thread, mes);
+        findPermission(subforum).deleteMessage(this.username, thread, mes);
     }
 
     @Override
@@ -158,14 +158,17 @@ public class User extends PersistantObject implements UserI, Cloneable {
 
     @Override
     public void setModerator(String subForum, UserI moderator) throws PermissionDeniedException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException {
-         boolean found = subForumsPermissions.containsKey(subForum);
-            if(found){
-                if(forumPermissions.isAdmin()) {
-                    subForumsPermissions.get(subForum).setModerator(moderator);
-                }
-                else throw new PermissionDeniedException("Can not set moderator");
-            }
-        throw new SubForumNotFoundException();
+        if (! forumPermissions.isAdmin()){
+            throw new PermissionDeniedException("Can not set moderator");
+        }
+
+        SubForumPermissionI permission = subForumsPermissions.get(subForum);
+        if (permission != null){
+            permission.setModerator(moderator);
+        }
+        else{
+            throw new SubForumNotFoundException();
+        }
     }
 
     @Override
