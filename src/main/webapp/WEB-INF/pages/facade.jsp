@@ -30,22 +30,9 @@
 <br/>
 
 <form:form action="superAdminDashboard" method="post">
-    Super admin login:
-
-    <label>
-        <span>Username :</span>
-        <input type="text" name="username" placeholder="username" />
-    </label>
-
-    <label>
-        <span>Password :</span>
-        <input type="password" name="password" placeholder="Password" />
-    </label>
-
-
     <label>
         <span>&nbsp;</span>
-        <input type="submit" class="button" value="Login" />
+        <input type="submit" class="button" value="Super Admin Dashboard" />
     </label>
 
 </form:form>

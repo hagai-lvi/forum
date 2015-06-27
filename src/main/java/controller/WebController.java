@@ -33,7 +33,7 @@ public class WebController {
 	public static final String ADMIN_PASS = "ADMIN";// TODO remove
 
 	@RequestMapping(value = "superAdminDashboard", method = RequestMethod.POST)
-	public String showSuperAdminDashboard(String username, String password){
+	public String showSuperAdminDashboard(){
 		return "superAdminDashboard";
 	}
 
