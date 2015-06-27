@@ -248,6 +248,11 @@ public class Proxy implements FacadeI {
     }
 
     @Override
+    public ExThreadI viewThread(int sessionId) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException {
+        return null;
+    }
+
+    @Override
     public ThreadI getCurrentThread(int sessionID) throws ThreadNotFoundException, SessionNotFoundException {
         if (this.real != null)
             return this.real.getCurrentThread(sessionID);

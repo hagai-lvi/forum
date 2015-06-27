@@ -285,6 +285,12 @@ import java.util.Map;
 	}
 
 	@Override
+	public ExThreadI viewThread(int sessionId) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException {
+		Session current = findSession(sessionId);
+		return current.getThread();
+	}
+
+	@Override
 	public ThreadI getCurrentThread(int sessionID) throws ThreadNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionID);
 		ThreadI thread = current.getThread();

@@ -15,6 +15,12 @@
                         <input hidden name="messageID" value=${node.data.getId()}>
                         <input type="submit" value="Add reply" />
                     </form>
+                    <form action="edit_message" method="post">
+                        <input hidden name="messageID" value=${node.data.getId()}>
+                        <input type="text" name="newTitle">
+                        <input type="text" name="newBody">
+                        <input type="submit" value="edit message" />
+                    </form>
                 </c:if>
             </li>
             <myTags:threadTree node="${node}" isGuest="${isGuest}"/>

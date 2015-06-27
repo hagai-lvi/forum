@@ -131,20 +131,25 @@ public class Tree extends PersistantObject{
     }
 
     public MessageI editNodeData(MessageI originalMessage, String title, String text) {
+        return editNodeData(root, originalMessage, title, text);
+    }
+
+    public MessageI editNodeData(Node root, MessageI original, String title, String text){
         if (root == null){
             return null;
         }
-        if (root.getData().getId() == originalMessage.getId()){
+        if (root.getData().getId() == original.getId()){
             root.getData().editTitle(title);
             root.getData().editText(text);
             return root.getData();
         }
         for (Node n : root.getChildren()){
             MessageI newmsg;
-            if ((newmsg = editNodeData(n.getData(), title, text)) != null){
+            if ((newmsg = editNodeData(n, original, title, text)) != null){
                 return newmsg;
             }
         }
         return null;
+
     }
 }

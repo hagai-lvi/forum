@@ -153,6 +153,8 @@ public interface FacadeI {
 
 	ExThreadI viewThread(int sessionId, String title) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException;
 
+	ExThreadI viewThread(int sessionId) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException;
+
 	ThreadI getCurrentThread(int sessionID) throws ThreadNotFoundException, SessionNotFoundException;
 
 	void authenticateUser(String forum, String user1, String userAuthString) throws EmailNotAuthanticatedException, UserNotFoundException;

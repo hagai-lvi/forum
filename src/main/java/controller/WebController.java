@@ -117,6 +117,13 @@ public class WebController {
 		return "forum_homepage";
 	}
 
+	@RequestMapping(value = "edit_message", method = RequestMethod.POST)
+	public String editMessage(HttpSession session, int messageID,String newTitle, String newBody) throws SessionNotFoundException, SubForumDoesNotExistException, MessageNotFoundException, ThreadNotFoundException {
+		FacadeI facade = getFacade();
+		facade.editMessage(getSessionID(session), messageID, newTitle, newBody);
+		return "redirect:/thread_view";
+	}
+
 	/**
 	 * Redirects to the forum home page, assumes that a user has already logged in
 	 */
@@ -270,7 +277,13 @@ public class WebController {
 	public String showThread(ModelMap model, HttpSession session, String threadID) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException {
 		FacadeI facade = getFacade();
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
-		ExThreadI thread = facade.viewThread(sessionID, threadID);
+		ExThreadI thread;
+		if (threadID != null){
+			thread =  facade.viewThread(sessionID, threadID);
+		}
+		else{
+			thread = facade.viewThread(sessionID);
+		}
 		model.addAttribute("thread", thread);
 		model.addAttribute("node", thread.getMessages().getRoot());
 		model.addAttribute("isGuest", facade.isGuest(sessionID));
