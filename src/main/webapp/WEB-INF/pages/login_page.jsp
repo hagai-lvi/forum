@@ -37,6 +37,7 @@
     <input type="submit" class="button" value="Login" />
   </label>
 </form>
+<hr/>
 
 
 
@@ -66,6 +67,7 @@
     <input type="submit" class="button" value="Register" on />
   </label>
 </form>
+<hr/>
 
 <form action="guest_forum_homepage" method="post">
   <label>
@@ -83,6 +85,7 @@
 <form method="get" action="facade">
   <input type="submit" value="Back to Facade" >
 </form>
+<hr/>
 
 </body>
 </html>

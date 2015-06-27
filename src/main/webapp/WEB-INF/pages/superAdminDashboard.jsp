@@ -27,6 +27,7 @@
   <input type="submit" value="Create forum" /><br/>
 
 </form:form>
+<hr/>
 <c:if test="${not empty sessions}">
   Open sessions:
   <ul>
@@ -41,7 +42,7 @@
     </c:forEach>
   </ul>
 </c:if>
-
+<hr/>
 <c:if test="${not empty messages}">
   New Messges:
   <ul>

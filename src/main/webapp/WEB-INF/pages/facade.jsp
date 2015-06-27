@@ -28,7 +28,7 @@
 </table>
 <br/>
 <br/>
-
+<hr/>
 <form:form action="superAdminDashboard" method="post">
     <label>
         <span>&nbsp;</span>
