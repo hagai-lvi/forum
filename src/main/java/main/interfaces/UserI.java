@@ -80,7 +80,7 @@ public interface UserI {
 	 */
 	void setPolicy(ForumPolicyI policy) throws PermissionDeniedException, ForumNotFoundException;
 
-    String viewStatistics() throws PermissionDeniedException;
+    String viewStatistics() throws PermissionDeniedException, SubForumDoesNotExistException;
 
 	/**
 	 * Set moderator for subforum
@@ -115,7 +115,7 @@ public interface UserI {
 
 	void editMessage(String subforum,ThreadI thread, int messageId, String title, String text) throws SubForumDoesNotExistException, MessageNotFoundException, PermissionDeniedException;
 
-	void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException;
+	void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException, PermissionDeniedException;
 
 	String getForumStatus() throws SubForumDoesNotExistException;
 
@@ -131,7 +131,7 @@ public interface UserI {
 
 	boolean isGuest();
 
-	UserI cloneAsMod(Permissions permissionsModerator, String subforum) throws ForumNotFoundException, CloneNotSupportedException;
+	public UserI cloneAsMod(Permissions permissionsModerator, String subforum) throws ForumNotFoundException, CloneNotSupportedException;
 
 	/*void viewSubforum(String subforum)*/ ;
 }

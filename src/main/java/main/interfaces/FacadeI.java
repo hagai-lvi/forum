@@ -113,13 +113,13 @@ public interface FacadeI {
 	 */
 	void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException, PermissionDeniedException;
 
-	void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException;
+	void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, PermissionDeniedException;
 
-	String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException;
+	String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException, SubForumDoesNotExistException;
 
-	String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException;
+	String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException, SubForumDoesNotExistException;
 
-	String viewSessions(int sessionId) throws ThreadNotFoundException;
+	String viewSessions(int sessionId) throws ThreadNotFoundException, SessionNotFoundException, PermissionDeniedException;
 
 	ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException, ThreadNotFoundException;
 

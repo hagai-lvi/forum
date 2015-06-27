@@ -67,7 +67,7 @@ public interface ForumI extends ExForumI{
 
 	void setAdmin(UserI admin) throws PermissionDeniedException;
 
-	String viewStatistics();
+	String viewStatistics() throws SubForumDoesNotExistException, PermissionDeniedException;
 
 	boolean enterUserAuthenticationString(UserI user, String auth_string) throws InvalidUserCredentialsException;
 

@@ -154,13 +154,13 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
+    public void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, PermissionDeniedException {
         if(this.real!=null)
             this.real.removeModerator(sessionId, moderatorName);
     }
 
     @Override
-    public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException {
+    public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException, SubForumDoesNotExistException {
         if(this.real!=null)
             return this.real.viewModeratorStatistics(sessionsId);
         return null;
@@ -172,7 +172,7 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public String viewSessions(int sessionId) throws ThreadNotFoundException {
+    public String viewSessions(int sessionId) throws ThreadNotFoundException, PermissionDeniedException, SessionNotFoundException {
         if(this.real!=null)
             return this.real.viewSessions(sessionId);
         return null;

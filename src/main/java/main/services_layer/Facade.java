@@ -191,21 +191,21 @@ import java.util.Vector;
 	}
 
 	@Override
-	public void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
+	public void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, PermissionDeniedException {
 		Session current = findSession(sessionId);
 		current.getUser().removeModerator(current.getSubForum().getTitle(), moderatorName);
 		current.addCommand("removing moderator " + moderatorName);
 	}
 
 	@Override
-	public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException {
+	public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException, SubForumDoesNotExistException {
 		Session current = findSession(sessionsId);
 		current.addCommand("viewing statistics");
 		return current.getUser().viewStatistics();
 	}
 
 	@Override
-	public String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException {
+	public String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException, SubForumDoesNotExistException {
 		if (username.equals(SUPER_ADMIN_USERNAME) && password.equals(SUPER_ADMIN_PASSWORD)){
 			StringBuilder result = new StringBuilder();
 			ArrayList<String> forums = getForumList();
@@ -220,22 +220,26 @@ import java.util.Vector;
 	}
 
 	@Override
-	public String viewSessions(int sessionId) throws ThreadNotFoundException {
-		StringBuilder res = new StringBuilder();
-		for (Session s : openSessions){
-			res.append("Session ");
-			res.append(s.getId());
-			res.append(" [USER: ");
-			res.append(s.getUser().getUsername());
-			res.append("] [FORUM: ");
-			res.append(s.getForum().getName());
-			res.append("] [SUB-FORUM: ");
-			res.append(s.getSubForum().getTitle());
-			res.append("] [THREAD: ");
-			res.append(s.getThread().getTitle());
-			res.append("]\n");
+	public String viewSessions(int sessionId) throws ThreadNotFoundException, SessionNotFoundException, PermissionDeniedException {
+		UserI current = findSession(sessionId).getUser();
+		if (current.getUsername().equals(SUPER_ADMIN_USERNAME) && current.getPassword().equals(SUPER_ADMIN_PASSWORD)) {
+			StringBuilder res = new StringBuilder();
+			for (Session s : openSessions) {
+				res.append("Session ");
+				res.append(s.getId());
+				res.append(" [USER: ");
+				res.append(s.getUser().getUsername());
+				res.append("] [FORUM: ");
+				res.append(s.getForum().getName());
+				res.append("] [SUB-FORUM: ");
+				res.append(s.getSubForum().getTitle());
+				res.append("] [THREAD: ");
+				res.append(s.getThread().getTitle());
+				res.append("]\n");
+			}
+			return res.toString();
 		}
-		return res.toString();
+		throw new PermissionDeniedException("Can not view sessions");
 	}
 
 	@Override
@@ -293,7 +297,6 @@ import java.util.Vector;
 		if(!subForums.containsKey(subforum))
 			throw new SubForumNotFoundException();
 		current.setSubForum(subforum);
-		//current.getUser().viewSubforum(subforum);
 		current.addCommand("viewing subforum " + subforum);
 		return subForums.get(subforum);
 	}

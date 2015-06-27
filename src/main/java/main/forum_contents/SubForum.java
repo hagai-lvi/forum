@@ -170,6 +170,14 @@ public class SubForum extends PersistantObject implements SubForumI {
         return sum;
     }
 
+    @Override
+    public String viewStatistics() {
+        StringBuilder result = new StringBuilder();
+        result.append("\n\t\tName: ");
+        result.append(this._name);
+        return result.toString();
+    }
+
 
     public static SubForum load(String sub_forum_name){
         return (SubForum)pers.load(SubForum.class, sub_forum_name);

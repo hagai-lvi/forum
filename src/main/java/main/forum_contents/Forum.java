@@ -103,8 +103,24 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     @Override
-    public String viewStatistics(){
-        return "Number of messages: " + getNumOfMessages();
+    public String viewStatistics() throws SubForumDoesNotExistException, PermissionDeniedException {
+        StringBuilder result = new StringBuilder();
+        result.append("\nForum Name: "); result.append(forum_name);
+        result.append("\n\n\tSub-Forums: ");
+        for(SubForumI s: _subForums.values())
+            result.append(s.viewStatistics());
+        result.append("\n\n\tUsers: ");
+        for(UserI s: _users.values()) {
+            result.append("\n\n\t\tUser Name: ");
+            result.append(s.getUsername());
+            result.append("\n\t\tEmail: ");
+            result.append(s.getEmail());
+            result.append("\n\t\tStatus: ");
+            result.append(s.getForumStatus());
+            result.append("\n\t\tSign-Up Date: ");
+            result.append(s.getSignUpDate().getTime().toString());
+        }
+        return result.toString();
 
     }
 

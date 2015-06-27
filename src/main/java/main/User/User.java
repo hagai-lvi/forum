@@ -152,7 +152,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     @Override
-    public String viewStatistics() throws PermissionDeniedException {
+    public String viewStatistics() throws PermissionDeniedException, SubForumDoesNotExistException {
         return forumPermissions.viewStatistics();
     }
 
@@ -246,8 +246,10 @@ public class User extends PersistantObject implements UserI, Cloneable {
     }
 
     @Override
-    public void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException {
-        findPermission(subforum).removeModerator(moderatorName);
+    public void removeModerator(String subforum, String moderatorName) throws SubForumDoesNotExistException, PermissionDeniedException {
+        if(forumPermissions.isAdmin())
+            findPermission(subforum).removeModerator(moderatorName);
+        else throw new PermissionDeniedException("Can not remove moderator");
     }
 
     @Override

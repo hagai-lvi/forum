@@ -48,4 +48,5 @@ public interface SubForumI extends ExSubForumI{
 
 	public int getMessagesCount();
 
+	String viewStatistics();
 }

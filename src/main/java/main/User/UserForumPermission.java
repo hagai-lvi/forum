@@ -53,7 +53,7 @@ public class UserForumPermission implements ForumPermissionI {
 
 	@Override
 	public boolean isAdmin() {
-		return permissions.compareTo(Permissions.PERMISSIONS_ADMIN) >= 0;
+		return permissions.equals(Permissions.PERMISSIONS_ADMIN) || permissions.equals(Permissions.PERMISSIONS_SUPERADMIN);
 	}
 
 	@Override
@@ -98,7 +98,7 @@ public class UserForumPermission implements ForumPermissionI {
 	}
 
 	@Override
-	public String viewStatistics() throws PermissionDeniedException {
+	public String viewStatistics() throws PermissionDeniedException, SubForumDoesNotExistException {
 		if(isAdmin())
 			return Forum.load(forumName).viewStatistics();
 		throw new PermissionDeniedException("Can not view statistics");
