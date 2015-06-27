@@ -15,7 +15,7 @@
 <body class="basic-grey">
 <h1>Thread ${node.getData().getMessageText()}</h1>
 
-<myTags:logout></myTags:logout>
+<myTags:logout/>
 
 <form method="get" action="subforum_homepage">
     <input type="submit" class="button" value="Back to subforum homepage" >

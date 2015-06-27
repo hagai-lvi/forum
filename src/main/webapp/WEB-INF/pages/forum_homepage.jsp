@@ -20,7 +20,7 @@
 <table>
     <tr>
         <td>
-            <myTags:logout></myTags:logout>
+            <myTags:logout/>
         </td>
         <td>
             <label>User role:${userStatus}</label>

@@ -19,7 +19,9 @@
 <form action="forum_homepage" method="post">
   <h1>Sign In</h1>
 
-  <input hidden type="text" name="forumName" value="${forumName}">
+  <label>
+    <input hidden type="text" name="forumName" value="${forumName}">
+  </label>
 
   <label>
     <span>Username :</span>
@@ -45,7 +47,9 @@
 <form action="register" method="post">
   <h1>Sign UP</h1>
 
-  <input hidden type="text" name="forumName" value="${forumName}">
+  <label>
+    <input hidden type="text" name="forumName" value="${forumName}">
+  </label>
 
   <label>
     <span>Username :</span>
@@ -74,7 +78,9 @@
     <span>Enter as guest</span>
   </label>
 
-  <input hidden type="text" name="forumName" value="${forumName}">
+  <label>
+    <input hidden type="text" name="forumName" value="${forumName}">
+  </label>
 
   <label>
     <span>&nbsp;</span>

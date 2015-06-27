@@ -32,7 +32,9 @@
     <input type="submit" class="button" value="Reply" />
   </label>
 
-  <input hidden value="${messageID}" name="messageID"/>
+  <label>
+    <input hidden value="${messageID}" name="messageID"/>
+  </label>
 </form:form>
 
 </body>
