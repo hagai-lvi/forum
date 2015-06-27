@@ -25,11 +25,13 @@
 <h3><c:out value="${node.data.getMessageTitle()}"/> :</h3>
 <c:out value="${node.data.getMessageText()}"/><br/>
 <c:out value="user: ${node.data.getUser()}"/>
-<form action="reply_to_message" method="post">
-    <input hidden name="messageID" value=${node.data.getId()}>
-    <input type="submit" value="Add reply"/>
-</form>
-<myTags:threadTree node="${node}"/>
+<c:if test="${not isGuest}">
+    <form action="reply_to_message" method="post">
+        <input hidden name="messageID" value=${node.data.getId()}>
+        <input type="submit" value="Add reply"/>
+    </form>
+</c:if>
+<myTags:threadTree node="${node}" isGuest="${isGuest}"/>
 
 
 </body>

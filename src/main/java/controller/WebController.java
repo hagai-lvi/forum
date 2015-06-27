@@ -273,6 +273,7 @@ public class WebController {
 		ExThreadI thread = facade.viewThread(sessionID, threadID);
 		model.addAttribute("thread", thread);
 		model.addAttribute("node", thread.getMessages().getRoot());
+		model.addAttribute("isGuest", facade.isGuest(sessionID));
 		return "thread_view";
 	}
 
@@ -285,6 +286,7 @@ public class WebController {
 		ThreadI thread = facade.getCurrentThread(sessionID);
 		model.addAttribute("thread", thread);
 		model.addAttribute("node", thread.getMessages().getRoot());
+		model.addAttribute("isGuest", facade.isGuest(sessionID));
 		return "thread_view";
 	}
 

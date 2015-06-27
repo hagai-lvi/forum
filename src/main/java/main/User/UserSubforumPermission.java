@@ -64,7 +64,7 @@ import javax.persistence.Id;
             //f.Update();
         } else {
             logger.error(permission + " has no permission to reply");
-            throw new PermissionDeniedException("User has no permission to reply");
+            throw new PermissionDeniedException("User" + user + "has no permission to reply");
         }
     }
 
