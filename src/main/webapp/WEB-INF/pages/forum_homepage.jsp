@@ -23,8 +23,12 @@
             <myTags:logout/>
         </td>
         <td>
+            <form action="<c:url value="facade"/>">
+                <input type="submit" class="button" value="Back to Facade page"/>
+            </form>
+        </td>
+        <td>
             <label>User role:${userStatus}</label>
-            <a href="<c:url value="facade"/>">Click here to go back to Facade page</a>
         </td>
     </tr>
 </table>

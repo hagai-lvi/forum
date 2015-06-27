@@ -14,7 +14,10 @@
 </head>
 <body class="basic-grey">
 <h1>Sub forum ${subforumName} added</h1>
-<a href="<c:url value="forum_homepage"/>">Click here to go back to the forum homepage</a>
+
+<form action="<c:url value="forum_homepage"/>">
+  <input type="submit" class="button" value="Back to forum homepage"/>
+</form>
 
 </body>
 </html>

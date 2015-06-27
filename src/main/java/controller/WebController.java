@@ -34,10 +34,11 @@ public class WebController {
 	public static final String ADMIN_PASS = "ADMIN";// TODO remove
 
 	@RequestMapping(value = "report_moderator", method = RequestMethod.POST)
-	public void reportModerator(HttpSession session, HttpServletResponse response, String moderatorUserName, String reportMessage) throws IOException, ModeratorDoesNotExistsException, PermissionDeniedException, SessionNotFoundException {
+	public void reportModerator(HttpSession session, HttpServletResponse response, String moderatorUserName, String reportMessage) throws Exception{
 		FacadeI facade = getFacade();
 		try {
 			facade.reportModerator(getSessionID(session), moderatorUserName, reportMessage);
+			response.setStatus(HttpServletResponse.SC_OK);
 		} catch (Exception e) {
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			logger.warn(e);
@@ -233,13 +234,28 @@ public class WebController {
 
 	@RequestMapping(value = "addModerator", method = RequestMethod.POST)
 	public void addModeratorToSubforum(ModelMap model, HttpSession session,
-										 String moderatorName, HttpServletResponse response) throws IOException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, ForumNotFoundException, CloneNotSupportedException, SessionNotFoundException {
+									   String moderatorName, HttpServletResponse response) throws IOException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, ForumNotFoundException, CloneNotSupportedException, SessionNotFoundException {
 		FacadeI facade = getFacade();
 		try {
 			facade.setModerator(getSessionID(session), moderatorName);
+			response.setStatus(HttpServletResponse.SC_OK);
 		}
 		catch (Exception e) {
 			logger.warn("exception thrown in addModeratorToSubforum", e);
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			throw e;
+		}
+	}
+	@RequestMapping(value = "removeModerator", method = RequestMethod.POST)
+	public void removeModerator(ModelMap model, HttpSession session,
+									   String moderatorName, HttpServletResponse response) throws Exception{
+		FacadeI facade = getFacade();
+		try {
+			facade.removeModerator(getSessionID(session), moderatorName);
+			response.setStatus(HttpServletResponse.SC_OK);
+		}
+		catch (Exception e) {
+			logger.warn("exception thrown in removeModerator", e);
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
 			throw e;
 		}
@@ -254,7 +270,7 @@ public class WebController {
 	 * redirects to the current forum home page after a login
 	 */
 	@RequestMapping(value = "subforum_homepage",method = RequestMethod.POST)
-	public String showSubforumHomepage(ModelMap model, HttpSession session, String subforumName) throws InvalidUserCredentialsException, SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException {
+	public String showSubforumHomepage(ModelMap model, HttpSession session, String subforumName) throws InvalidUserCredentialsException, SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("showSubforumHomepage request");
 		FacadeI facade = getFacade();
 		preperaSubforumHomepageModel(model, facade, session, subforumName);
@@ -265,7 +281,7 @@ public class WebController {
 	 * Called when the user is already logged in and the subforum is listed in the httpsession
 	 */
 	@RequestMapping(value = "subforum_homepage",method = RequestMethod.GET)
-	public String refreshSubforumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException, SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException {
+	public String refreshSubforumHomepage(ModelMap model, HttpSession session) throws InvalidUserCredentialsException, SubForumAlreadyExistException, SubForumNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
 		logger.info("refreshSubforumHomepage request");
 		FacadeI facade = getFacade();
 
@@ -276,7 +292,7 @@ public class WebController {
 //		preperaSubforumHomepageModel(model, facade, subforum, user);
 		return "subforum_homepage";
 	}
-	private void preperaSubforumHomepageModel(ModelMap model, FacadeI facade, HttpSession session, String subforumName) throws SubForumAlreadyExistException, SessionNotFoundException, SubForumNotFoundException {
+	private void preperaSubforumHomepageModel(ModelMap model, FacadeI facade, HttpSession session, String subforumName) throws SubForumAlreadyExistException, SessionNotFoundException, SubForumNotFoundException, SubForumDoesNotExistException {
 		logger.info("preperaSubforumHomepageModel request");
 		int sessionID = (int) session.getAttribute(SESSION_ID_ATTR);
 		ExSubForumI subForum;
@@ -288,7 +304,7 @@ public class WebController {
 		Collection<? extends ExThreadI> threads = subForum.getThreads().values();
 		model.addAttribute("subforumName", subforumName);
 		model.addAttribute("user", facade.getCurrentUserName(sessionID));
-//		model.addAttribute("numberOfthreads", threads.length);//TODO
+		model.addAttribute("userStatus", facade.getCurrentUserSubForumStatus(sessionID));
 		model.addAttribute("isAdmin", facade.isAdmin(sessionID)); //TODO
 		model.addAttribute("threadsList", threads);
 

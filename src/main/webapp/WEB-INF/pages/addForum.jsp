@@ -14,7 +14,9 @@
 </head>
 <body class="basic-grey">
 <h1>Forum ${forumName} added</h1>
-<a href="<c:url value="facade"/>">Click here to go back to facade page</a>
+<form action="<c:url value="facade"/>">
+  <input type="submit" class="button" value="Back to facade"/>
+</form>
 
 </body>
 </html>

@@ -74,9 +74,6 @@
 <hr/>
 
 <form action="guest_forum_homepage" method="post">
-  <label>
-    <span>Enter as guest</span>
-  </label>
 
   <label>
     <input hidden type="text" name="forumName" value="${forumName}">
@@ -84,7 +81,7 @@
 
   <label>
     <span>&nbsp;</span>
-    <input type="submit" class="button" value="Enter" on />
+    <input type="submit" class="button" value="Enter as guest" on />
   </label>
 </form>
 <hr/>

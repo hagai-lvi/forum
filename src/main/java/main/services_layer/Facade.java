@@ -363,7 +363,7 @@ import java.util.Vector;
 	@Override
 	public String getCurrentUserSubForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
 		Session current = findSession(sessionId);
-		return current.getUser().getForumStatus();
+		return current.getUser().getSubForumStatus(current.getSubForum().getTitle());
 	}
 
 	@Override

@@ -28,6 +28,9 @@
                 <input type="submit" class="button" value="Back to forum homepage" >
             </form>
         </td>
+        <td>
+            <label>User role:${userStatus}</label>
+        </td>
     </tr>
 </table>
 <h1>Welcome to subforum ${subforumName}</h1>
@@ -58,6 +61,14 @@
             <span>Moderator name:</span>
             <input type="text" name="moderatorName" placeholder="Moderator Name"/>
             <input type="submit" class="button" value="Add moderator"/>
+        </label>
+    </form>
+    <form id="removeModerator" action="removeModerator" method="post">
+        <h1>Add moderator to sub forum</h1>
+        <label>
+            <span>Moderator name:</span>
+            <input type="text" name="moderatorName" placeholder="Moderator Name"/>
+            <input type="submit" class="button" value="Remove moderator"/>
         </label>
     </form>
 </c:if>
@@ -123,6 +134,17 @@
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert("Failed to add complaint");//TODO show error message
+                    }
+                })
+
+        $( "#removeModerator" ).
+                ajaxForm({
+
+                    success : function (response) {
+                        alert("Successfully removed moderator");
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert("Failed to remove moderator");//TODO show error message
                     }
                 })
     });
