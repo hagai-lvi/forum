@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -59,13 +60,21 @@ public class WebController {
 		return "view_session_detailes";
 	}
 
-	@RequestMapping(value = "superAdminDashboard", method = RequestMethod.POST)
+	@RequestMapping(value = "superAdminDashboard")
 	public String showSuperAdminDashboard(ModelMap model) throws PermissionDeniedException, SubForumDoesNotExistException {
 		Collection<Session> sessions = getFacade().getSessions();
 		model.addAttribute("sessions", sessions);
 		model.addAttribute("messages", getFacade().getMessagesToSuperAdmin());
 		model.addAttribute("statistics",getFacade().viewSuperManagerStatistics("ADMIN", "ADMIN"));
+		ArrayList<String> forumList = getFacade().getForumList();
+		model.addAttribute("forumList", forumList);
 		return "superAdminDashboard";
+	}
+
+	@RequestMapping(value = "deleteForum")
+	public String removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException {
+		getFacade().removeForum(username,password, forumName);
+		return "redirect:/superAdminDashboard";
 	}
 
 	/**

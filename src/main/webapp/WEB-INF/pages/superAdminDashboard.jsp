@@ -53,6 +53,24 @@
     </c:forEach>
   </ul>
 </c:if>
+
+<c:if test="${not empty forumList}">
+  Forums:
+  <ul>
+    <c:forEach var="forum" items="${forumList}">
+      <li>
+        <form action="deleteForum">
+          <label>${forum}</label>
+          <input type="text" name="username" placeholder="username">
+          <input type="password" name="password" placeholder="password">
+          <input type="hidden" name="forumName" value="${forum}">
+          <input type="submit" value="Delete forum">
+        </form>
+      </li>
+    </c:forEach>
+  </ul>
+</c:if>
+
 <hr/>
 <h1>Statistics:</h1>
 <p style="white-space: pre-line">${statistics}</p>
