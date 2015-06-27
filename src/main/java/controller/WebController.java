@@ -124,6 +124,13 @@ public class WebController {
 		return "redirect:/thread_view";
 	}
 
+	@RequestMapping(value = "delete_message", method = RequestMethod.POST)
+	public String deleteMessage(HttpSession session, int messageID) throws PermissionDeniedException, SessionNotFoundException, SubForumDoesNotExistException, MessageNotFoundException, ThreadNotFoundException {
+		FacadeI facade = getFacade();
+		facade.deleteMessage(getSessionID(session), messageID);
+		return "redirect:/thread_view";
+	}
+
 	/**
 	 * Redirects to the forum home page, assumes that a user has already logged in
 	 */

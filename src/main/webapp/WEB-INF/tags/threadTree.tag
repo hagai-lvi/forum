@@ -21,6 +21,10 @@
                         <input type="text" name="newBody">
                         <input type="submit" value="edit message" />
                     </form>
+                    <form action="delete_message" method="post">
+                        <input hidden name="messageID" value=${node.data.getId()}>
+                        <input type="submit" value="delete message" />
+                    </form>
                 </c:if>
             </li>
             <myTags:threadTree node="${node}" isGuest="${isGuest}"/>
