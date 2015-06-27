@@ -81,9 +81,10 @@
     <input type="submit" class="button" value="Enter" on />
   </label>
 </form>
+<hr/>
 
 <form method="get" action="facade">
-  <input type="submit" value="Back to Facade" >
+  <input type="submit" class="button" value="Back to Facade" >
 </form>
 <hr/>
 

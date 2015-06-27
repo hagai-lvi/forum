@@ -24,7 +24,7 @@
   <input type="text" placeholder="Password Regex"  name="passRegex"/><br/>
   <input type="checkbox" name="isSecured"/> secured forum <br/>
   <input type="number" name="passwordEffectTime" placeholder="Password Effect Time"> <br/>
-  <input type="submit" value="Create forum" /><br/>
+  <input type="submit" class="button" value="Create forum" /><br/>
 
 </form:form>
 <hr/>
@@ -36,7 +36,7 @@
         <form action="view_session_detailes" method="get">
           "${session.getUser().getUsername()}"
           <input type="hidden" name="sessionID" value="${session.getId()}"/>
-          <input type="submit" value="view session"/>
+          <input type="submit" class="button" value="view session"/>
         </form>
       </li>
     </c:forEach>

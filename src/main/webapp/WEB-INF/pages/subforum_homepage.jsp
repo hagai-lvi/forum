@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
 <%--
   Created by IntelliJ IDEA.
   User: hagai_lvi
@@ -13,12 +14,23 @@
     <title>Subforum</title>
     <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
     <script src="http://malsup.github.com/jquery.form.js"></script>
+    <link href="<c:url value="/resources/css/align-text.css" />" rel="stylesheet">
 </head>
-<body>
+<body class="basic-grey">
+<table>
+    <tr>
+        <td>
+            <myTags:logout></myTags:logout>
+        </td>
+        <td>
 
+            <form method="get" action="forum_homepage">
+                <input type="submit" class="button" value="Back to forum homepage" >
+            </form>
+        </td>
+    </tr>
+</table>
 <h1>Welcome to subforum ${subforumName}</h1>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
-<myTags:logout></myTags:logout>
 <%--TODO--%>
 <form:form action="addThread" method="post">
     <h1>Create New Thread</h1>
@@ -38,9 +50,6 @@
     </label>
 </form:form>
 
-<form method="get" action="forum_homepage">
-    <input type="submit" value="Back to forum homepage" >
-</form>
 
 <c:if test="${isAdmin}">
     <form id="addModerator" action="addModerator" method="post">
@@ -48,19 +57,21 @@
         <label>
             <span>Moderator name:</span>
             <input type="text" name="moderatorName" placeholder="Moderator Name"/>
-            <input type="submit" value="Add moderator"/>
+            <input type="submit" class="button" value="Add moderator"/>
         </label>
     </form>
 </c:if>
 <%--TODO--%>
+<hr/>
 <table >
+    <h1>Threads in this subforum</h1>
     <tr>
 
         <c:forEach var="thread" items="${threadsList}">
             ${thread.getRootMessage().getMessageTitle()}
 
             <form action="thread_view" method="GET">
-                <input type="submit" value="${thread.getTitle()}" name="threadID" />
+                <input type="submit" class="button" value="${thread.getTitle()}" name="threadID" />
             </form>
             <br/>
         </c:forEach>
@@ -68,6 +79,7 @@
     </tr>
 </table>
 <br/>
+<hr/>
 <br/>
 
 
@@ -76,21 +88,21 @@
     <label>
         <span>Moderator name:</span>
         <input type="text" name="moderatorUserName" placeholder="Moderator Name"/>
-        <input type="text" name="reportMessage" placeholder="Moderator Name"/>
-        <input type="submit" value="Report moderator"/>
+        <input type="text" name="reportMessage" placeholder="Complaint..."/>
+        <input type="submit" class="button" value="Report moderator"/>
     </label>
 </form>
 
 
 </body>
 <script>
-//    $(document).ready(function(){
-//        $( "#addModerator" ).submit(function( event ) {
-//            event.preventDefault();
-//            alert( "Handler for .submit() called." );
-//            $.post($(this).attr('action'), $(this).serialize());
-//        });
-//    });
+    //    $(document).ready(function(){
+    //        $( "#addModerator" ).submit(function( event ) {
+    //            event.preventDefault();
+    //            alert( "Handler for .submit() called." );
+    //            $.post($(this).attr('action'), $(this).serialize());
+    //        });
+    //    });
     $(document).ready(function(){
         $( "#addModerator" ).
                 ajaxForm({

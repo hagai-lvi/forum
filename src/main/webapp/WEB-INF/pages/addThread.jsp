@@ -10,8 +10,9 @@
 <html>
 <head>
     <title></title>
+  <link href="<c:url value="/resources/css/align-text.css" />" rel="stylesheet">
 </head>
-<body>
+<body class="basic-grey">
 <h1>Thread ${threadTitle} added</h1>
 <a href="<c:url value="subforum_homepage"/>">Click here to go back to the subforum homepage</a>
 

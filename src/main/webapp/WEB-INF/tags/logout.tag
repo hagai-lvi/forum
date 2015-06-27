@@ -2,5 +2,5 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <form:form action="/forum-system/logout" method="get">
-  <input type="submit" value="Logout"/>
+  <input type="submit" class="button" value="Logout"/>
 </form:form>

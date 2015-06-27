@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
+<%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
 <%--
   Created by IntelliJ IDEA.
   User: hagai_lvi
@@ -10,22 +11,34 @@
 <html>
 <head>
     <title>${forumName}</title>
+    <link href="<c:url value="/resources/css/align-text.css" />" rel="stylesheet">
 </head>
-<body>
+<body class="basic-grey">
 
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 <h1>Hello ${user}, welcome to ${forumName}</h1>
-<%@ taglib tagdir="/WEB-INF/tags" prefix="myTags" %>
-<myTags:logout></myTags:logout>
-<label>${userStatus}</label>
-<a href="<c:url value="facade"/>">Click here to go back to Facade page</a>
-
+<table>
+    <tr>
+        <td>
+            <myTags:logout></myTags:logout>
+        </td>
+        <td>
+            <label>User role:${userStatus}</label>
+            <a href="<c:url value="facade"/>">Click here to go back to Facade page</a>
+        </td>
+    </tr>
+</table>
 <%-- Forum admin dashboard --%>
+<br/>
+<br/>
+<hr/>
+<br/>
+<br/>
 <c:if test="${isAdmin}">
     <form:form action="addSubforum" method="post">
         <h1>Create new Sub Forum</h1>
         <label>
-            <span>Sub Forum Name :</span>
+            <span>Sub Forum Name:</span>
             <input type="text" name="subforumName" placeholder="Sub Forum Name" />
         </label>
 
@@ -36,7 +49,11 @@
     </form:form>
 </c:if>
 
-
+<br/>
+<br/>
+<hr/>
+<br/>
+<br/>
 
 <table >
     <tr>
@@ -45,7 +62,7 @@
             ${subforum.getTitle()}
 
             <form action="subforum_homepage" method="POST">
-                <input type="submit" value="${subforum.getTitle()}" name="subforumName" />
+                <input type="submit" class="button" value="${subforum.getTitle()}" name="subforumName" />
             </form>
             <br/>
         </c:forEach>
@@ -54,9 +71,6 @@
 </table>
 <br/>
 <br/>
-
-
-
 
 
 </body>
