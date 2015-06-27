@@ -15,7 +15,6 @@ import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
@@ -235,7 +234,7 @@ public class WebController {
 
 	@RequestMapping(value = "addModerator", method = RequestMethod.POST)
 	public void addModeratorToSubforum(HttpSession session,
-									   String moderatorName, HttpServletResponse response) throws IOException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, ForumNotFoundException, CloneNotSupportedException, SessionNotFoundException {
+									   String moderatorName, HttpServletResponse response) throws IOException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, ForumNotFoundException, CloneNotSupportedException, SessionNotFoundException, TooManyModeratorsException {
 		FacadeI facade = getFacade();
 		try {
 			facade.setModerator(getSessionID(session), moderatorName);
@@ -248,7 +247,7 @@ public class WebController {
 		}
 	}
 	@RequestMapping(value = "removeModerator", method = RequestMethod.POST)
-	public void removeModerator(ModelMap model, HttpSession session,
+	public void removeModerator(HttpSession session,
 									   String moderatorName, HttpServletResponse response) throws Exception{
 		FacadeI facade = getFacade();
 		try {
@@ -369,9 +368,17 @@ public class WebController {
 
 
 	@RequestMapping(value = "auth", method = RequestMethod.POST)
-	public String authUser(HttpServletRequest request,  ModelMap model, HttpSession session, String forumName, String username, String auth_string) throws PermissionDeniedException, DoesNotComplyWithPolicyException, EmailNotAuthanticatedException, UserNotFoundException {
+	public String authUser(HttpServletResponse response, String forumName, String username, String auth_string) throws EmailNotAuthanticatedException, UserNotFoundException, IOException {
 		FacadeI facade = getFacade();
-		facade.authenticateUser(forumName, username, auth_string);
+		try {
+			facade.authenticateUser(forumName, username, auth_string);
+			response.setStatus(HttpServletResponse.SC_OK);
+		} catch (Exception e) {
+			logger.warn(e);
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			throw e;
+
+		}
 		return "facade";
 	}
 

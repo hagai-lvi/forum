@@ -11,6 +11,8 @@
 <html>
 <head>
     <title>${forumName} Login</title>
+  <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.js"></script>
+  <script src="http://malsup.github.com/jquery.form.js"></script>
   <link href="<c:url value="/resources/css/align-text.css" />" rel="stylesheet">
 </head>
 <body class="basic-grey">
@@ -73,7 +75,7 @@
 </form>
 <hr/>
 
-<form action="auth" method="post">
+<form id="auth" action="auth" method="post">
   <h1>Enter Auth String</h1>
 
   <input hidden type="text" name="forumName" value="${forumName}">
@@ -117,4 +119,18 @@
 <hr/>
 
 </body>
+<script>
+  $(document).ready(function() {
+    $("#auth").
+            ajaxForm({
+
+              success: function (response) {
+                alert("auth successful");
+              },
+              error: function (xhr, ajaxOptions, thrownError) {
+                alert("auth failed");//TODO show error message
+              }
+            })
+  });
+</script>
 </html>
