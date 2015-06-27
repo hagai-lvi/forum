@@ -1,6 +1,7 @@
 package unit_tests.Service;
 
 
+import data_structures.Tree;
 import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
@@ -58,12 +59,14 @@ public class FacadeTest {
     }
 
     @Test
-    public void testGetForumList() {
+    public void testGetForumList() throws PermissionDeniedException, ForumAlreadyExistException, ForumNotFoundException {
+        theFacade.addForum("ADMIN","ADMIN","Temp2", false, ".*", 1,1);
         ArrayList<String> forums = theFacade.getForumList();
         assertTrue(forums != null);
         assertTrue(forums.contains("Temp"));
         assertTrue(forums.contains("Temp2"));
         assertFalse(forums.contains("Zrima"));
+        theFacade.removeForum("ADMIN","ADMIN","Temp2");
     }
 
     @Test
@@ -89,6 +92,8 @@ public class FacadeTest {
         assertFalse(theFacade.isAdmin(session));
         theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
         assertTrue(theFacade.isAdmin(session));
+        theFacade.logout(session);
+
     }
 
     @Test
@@ -100,14 +105,17 @@ public class FacadeTest {
         theFacade.addSubforum(session, "SomeSub");
         theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
-       session =  theFacade.login("Temp", "Victor", "123456");
+       int session2 =  theFacade.login("Temp", "Victor", "123456");
         theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
-        theFacade.addSubforum(session, "OneMore");
-        Map<String, SubForumI> list = theFacade.getSubForumList(session);
+        theFacade.addSubforum(session2, "OneMore");
+        Map<String, SubForumI> list = theFacade.getSubForumList(session2);
         assertTrue(list.containsKey("Sport"));
         assertTrue(list.containsKey("SomeSub"));
         assertTrue(list.containsKey("OneMore"));
         assertFalse(list.containsKey("Zrima"));
+        theFacade.logout(session);
+        theFacade.logout(session2);
+
     }
 
     @Test
@@ -203,7 +211,7 @@ public class FacadeTest {
     }
 
     @Test
-    public void testLogin() {
+    public void testLogin() throws SessionNotFoundException {
 
         try {
             theFacade.login("Temp", "Victor", "123456");
@@ -320,7 +328,8 @@ public class FacadeTest {
         }
 
         try {
-            theFacade.login("Temp", "Victor", "123456");
+            int session = theFacade.login("Temp", "Victor", "123456");
+            theFacade.logout(session);
         } catch (InvalidUserCredentialsException e) {
             fail("Invalid credentials");
         } catch (ForumNotFoundException e) {
@@ -416,6 +425,8 @@ public class FacadeTest {
         assertEquals(t.getMessages().find(idt).getMessageText(), "asss");
         assertEquals(t.getMessages().find(ids).getMessageTitle(), "more");
         assertEquals(t.getMessages().find(ids).getMessageText(), "body");
+        theFacade.logout(sessionId);
+
     }
 
     @Test
@@ -431,6 +442,8 @@ public class FacadeTest {
         ExThreadI ex = theFacade.viewThread(sessionId, "thread");
         assertEquals(ex.getTitle(), "thread");
         assertEquals(ex.getMessages().getRoot().getData().getMessageText(), "text2");
+        theFacade.logout(sessionId);
+
     }
 
     @Test
@@ -444,15 +457,17 @@ public class FacadeTest {
         } catch (PermissionDeniedException e) {
             assertTrue(true);
         }
-        theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
-        theFacade.addSubforum(sessionId, "sub2");
-        fail();
+
         try {
             theFacade.addSubforum(sessionId, "sub2");
-        } catch (SubForumAlreadyExistException e) {
+            fail();
+        } catch (PermissionDeniedException e) {
             assertTrue(true);
         }
+        theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
         theFacade.addSubforum(sessionId, "sub3");
+        theFacade.logout(sessionId);
+
     }
 
     @Test
@@ -496,6 +511,9 @@ public class FacadeTest {
         assertFalse(theFacade.isMessageFromCurrentUser(session, id));
         id = theFacade.addReply(session, id, "reply2", "text");
         assertTrue(theFacade.isMessageFromCurrentUser(session, id));
+        theFacade.logout(sessionId);
+        theFacade.logout(session);
+
     }
 
     @Test
@@ -517,6 +535,9 @@ public class FacadeTest {
         }
         theFacade.setModerator(sessionId, "Victor");
         theFacade.deleteMessage(sessionId2, id);
+        theFacade.logout(sessionId);
+        theFacade.logout(sessionId2);
+
     }
 
     @Test
@@ -538,25 +559,31 @@ public class FacadeTest {
         }
         theFacade.setModerator(sessionId, "Victor");
         theFacade.deleteMessage(sessionId2, id);
+        theFacade.logout(sessionId);
+        theFacade.logout(sessionId2);
+
     }
 
     @Test
-    public void testGuestEntry() throws ForumNotFoundException {
-        theFacade.guestEntry("Temp");
+    public void testGuestEntry() throws ForumNotFoundException, SessionNotFoundException {
+        int s = theFacade.guestEntry("Temp");
+        theFacade.logout(s);
     }
 
     @Test
-    public void testRemoveForum() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, EmailNotAuthanticatedException, UserNotFoundException, PasswordNotInEffectException, NeedMoreAuthParametersException, PermissionDeniedException {
+    public void testRemoveForum() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, EmailNotAuthanticatedException, UserNotFoundException, PasswordNotInEffectException, NeedMoreAuthParametersException, PermissionDeniedException, ForumAlreadyExistException, SessionNotFoundException {
         theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
         int sessionId = theFacade.login("Temp", "Victor", "123456");
         try {
-            theFacade.removeForum("Victor", "123456", "Temp");
+            theFacade.addForum("ADMIN","ADMIN","Temp2",false,".*",1,1);
+            theFacade.removeForum("Victor", "123456", "Temp2");
             fail();
         } catch (PermissionDeniedException e) {
             assertTrue(true);
         }
-        theFacade.removeForum("ADMIN", "ADMIN", "Temp");
+        theFacade.removeForum("ADMIN", "ADMIN", "Temp2");
+        theFacade.logout(sessionId);
 
     }
 
@@ -579,6 +606,9 @@ public class FacadeTest {
             assertTrue(true);
         }
         theFacade.editMessage(sessionId, id, "edit", "edittext");
+        theFacade.logout(sessionId);
+        theFacade.logout(sessionId2);
+
     }
 
     @Test
@@ -598,6 +628,9 @@ public class FacadeTest {
         }
         theFacade.setModerator(sessionId, "Victor");
         theFacade.removeModerator(sessionId, "Victor");
+        theFacade.logout(sessionId);
+        theFacade.logout(sessionId2);
+
     }
 
     @Test
@@ -608,15 +641,15 @@ public class FacadeTest {
         int s = theFacade.login("Temp", "ADMIN", "ADMIN");
         theFacade.addSubforum(s, "Sub-1");
         theFacade.addSubforum(s, "Sub-2");
-        s = theFacade.login("Forum-1", "ADMIN", "ADMIN");
-        theFacade.addSubforum(s, "Sub-3");
-        theFacade.addSubforum(s, "Sub-4");
-        s = theFacade.login("Forum-2", "ADMIN", "ADMIN");
-        theFacade.addSubforum(s, "Sub-5");
-        theFacade.addSubforum(s, "Sub-6");
-        s = theFacade.login("Forum-3", "ADMIN", "ADMIN");
-        theFacade.addSubforum(s, "Sub-7");
-        theFacade.addSubforum(s, "Sub-8");
+        int s2 = theFacade.login("Forum-1", "ADMIN", "ADMIN");
+        theFacade.addSubforum(s2, "Sub-3");
+        theFacade.addSubforum(s2, "Sub-4");
+        int s3 = theFacade.login("Forum-2", "ADMIN", "ADMIN");
+        theFacade.addSubforum(s3, "Sub-5");
+        theFacade.addSubforum(s3, "Sub-6");
+        int s4 = theFacade.login("Forum-3", "ADMIN", "ADMIN");
+        theFacade.addSubforum(s4, "Sub-7");
+        theFacade.addSubforum(s4, "Sub-8");
 
         theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
         theFacade.register("Temp", "Gabi", "123456", "aa@gmail.com");
@@ -632,18 +665,23 @@ public class FacadeTest {
             assertTrue(true);
         }
         System.out.println("\n\n\n\n" + theFacade.viewSuperManagerStatistics("ADMIN", "ADMIN") + "\n\n\n\n");
+        theFacade.removeForum("ADMIN", "ADMIN", "Forum-1");
+        theFacade.removeForum("ADMIN", "ADMIN", "Forum-2");
+        theFacade.removeForum("ADMIN", "ADMIN", "Forum-3");
+        theFacade.logout(s);
+        theFacade.logout(s2);
+        theFacade.logout(s3);
+        theFacade.logout(s4);
+
     }
 
     @Test
     public void testViewSessions() throws ThreadNotFoundException, PermissionDeniedException, SessionNotFoundException, DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, SubForumAlreadyExistException, SubForumDoesNotExistException, NeedMoreAuthParametersException, PasswordNotInEffectException, EmailNotAuthanticatedException, ForumAlreadyExistException {
-        theFacade.addForum("ADMIN", "ADMIN", "Forum-1", false, ".*", 1, 2);
-        theFacade.addForum("ADMIN", "ADMIN", "Forum-2", false, ".*", 1, 2);
-        theFacade.addForum("ADMIN", "ADMIN", "Forum-3", false, ".*", 2, 2);
         int s = theFacade.login("Temp", "ADMIN", "ADMIN");
         theFacade.addSubforum(s, "Sub-1");
         theFacade.addThread(s, "thread", "text");
         System.out.println(theFacade.viewSessions(s));
-
+        theFacade.logout(s);
     }
 
     @Test
@@ -657,78 +695,124 @@ public class FacadeTest {
         int sessionId2 = theFacade.login("Temp", "Victor", "123456");
         ExMessageI m = theFacade.getMessage(sessionId, id);
         assertTrue(m.getMessageText().equals("text"));
-    }
-
-    @Test
-    public void testGetThreadsList()  {
+        theFacade.logout(sessionId);
+        theFacade.logout(sessionId2);
 
     }
 
     @Test
-    public void testGetMessageList()  {
-        fail();
+    public void testGetThreadsList() throws DoesNotComplyWithPolicyException, UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, EmailNotAuthanticatedException, UserNotFoundException, PasswordNotInEffectException, NeedMoreAuthParametersException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, ThreadNotFoundException, SubForumNotFoundException {
+        theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
+        theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+        int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
+        theFacade.addSubforum(sessionId, "sub");
+        theFacade.addSubforum(sessionId, "sub2");
+        theFacade.addThread(sessionId, "thread", "text");
+        theFacade.addThread(sessionId, "thread2", "text2");
+        theFacade.addThread(sessionId, "thread3", "text3");
+        theFacade.viewSubforum(sessionId, "sub");
+        theFacade.addThread(sessionId, "threaddd", "text");
+        theFacade.addThread(sessionId, "thread2dd", "text2");
+        theFacade.addThread(sessionId, "thread3dd", "text3");
+        Map<String, ThreadI> t = theFacade.getThreadsList(sessionId);
+        assertFalse(t.containsKey("thread"));
+        assertFalse(t.containsKey("thread2"));
+        assertFalse(t.containsKey("thread3"));
+        assertTrue(t.containsKey("threaddd"));
+        assertTrue(t.containsKey("thread3dd"));
+        assertTrue(t.containsKey("thread2dd"));
+        theFacade.logout(sessionId);
+
     }
 
     @Test
-    public void testGetCurrentForumName()  {
-        fail();
+    public void testGetMessageList() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, ThreadNotFoundException, MessageNotFoundException {
+        int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
+        theFacade.addSubforum(sessionId, "sub2");
+        int id =theFacade.addThread(sessionId, "thread", "text");
+        theFacade.addReply(sessionId, id, "title", "text");
+       id= theFacade.addReply(sessionId, id, "title2", "text");
+        theFacade.addReply(sessionId, id, "title3", "text");
+        theFacade.addReply(sessionId, id, "title4", "text");
+        Tree t = theFacade.getMessageList(sessionId);
+        assertEquals(t.getRoot().getData().getMessageTitle(), "thread");
+        theFacade.logout(sessionId);
+
     }
 
     @Test
-    public void testGetCurrentUserName() {
-        fail();
+    public void testGetCurrentForumName() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SessionNotFoundException {
+        int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
+        assertEquals(theFacade.getCurrentForumName(sessionId), "Temp");
+        theFacade.logout(sessionId);
+
     }
 
     @Test
-    public void testIsAdmin() {
-        fail();
-    }
+    public void testGetCurrentUserName() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException {
+        int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
+        theFacade.addSubforum(sessionId, "Zrima");
+        assertEquals(theFacade.getCurrentUserName(sessionId), "ADMIN");
+        theFacade.logout(sessionId);
 
-    @Test
-    public void testViewSubforum()  {
-        fail();
-    }
-
-
-    @Test
-    public void testViewThread()  {
-        fail();
-    }
-
-    @Test
-    public void testGetCurrentThread()  {
-        fail();
-    }
-
-    @Test
-    public void testAuthanticateUser()  {
-        fail();
-    }
-
-    @Test
-    public void testGetFacade() {
-        fail();
-    }
-
-    @Test
-    public void testDropAllData()  {
-        fail();
     }
 
 
-
     @Test
-    public void getCurrentUserStatus()  {
-        fail();
+    public void testViewSubforum() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, SubForumNotFoundException {
+        int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
+        theFacade.addSubforum(sessionId, "Zrima");
+        theFacade.addSubforum(sessionId, "Zrima2");
+        theFacade.viewSubforum(sessionId, "Zrima");
+        assertEquals(theFacade.getCurrentUserSubForumStatus(sessionId), "Moderator");
+        theFacade.logout(sessionId);
+
     }
 
     @Test
-    public void testReportModerator() {
-        fail();
+    public void testViewThread() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, ThreadNotFoundException {
+        int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
+        theFacade.addSubforum(sessionId, "Zrima");
+        theFacade.addThread(sessionId, "trhread", "asdasd");
+        theFacade.addThread(sessionId, "t2", "asas");
+        theFacade.viewThread(sessionId);
+        assertEquals(theFacade.getCurrentThread(sessionId).getTitle(), "t2");
+        theFacade.logout(sessionId);
+
     }
+
     @Test
-    public void testAddUserType() {
-        fail();
+    public void testGetCurrentThread() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SessionNotFoundException, PermissionDeniedException, SubForumAlreadyExistException, SubForumDoesNotExistException, DoesNotComplyWithPolicyException, ThreadNotFoundException {
+        int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
+        theFacade.addSubforum(sessionId, "Zrima");
+        theFacade.addThread(sessionId, "trhread", "asdasd");
+        assertEquals(theFacade.getCurrentThread(sessionId).getTitle(), "trhread");
+        theFacade.logout(sessionId);
+
+    }
+
+
+
+    @Test
+    public void getCurrentUserStatus() throws PasswordNotInEffectException, ForumNotFoundException, NeedMoreAuthParametersException, InvalidUserCredentialsException, EmailNotAuthanticatedException, SubForumDoesNotExistException, SessionNotFoundException, SubForumAlreadyExistException, PermissionDeniedException, UserAlreadyExistsException, DoesNotComplyWithPolicyException, UserNotFoundException, CloneNotSupportedException, SubForumNotFoundException {
+        int sessionId = theFacade.login("Temp", "ADMIN", "ADMIN");
+        theFacade.addSubforum(sessionId, "Zrima");
+        assertEquals(theFacade.getCurrentUserForumStatus(sessionId), "Admin");
+        assertEquals(theFacade.getCurrentUserSubForumStatus(sessionId), "Moderator");
+        theFacade.register("Temp", "Victor", "123456", "aa@gmail.com");
+        theFacade.authenticateUser("Temp", "Victor", User.getUserFromDB("Victor", "Temp").getUserAuthString());
+
+
+        int sessionId2 = theFacade.login("Temp", "Victor", "123456");
+        theFacade.viewSubforum(sessionId2, "Zrima");
+        assertEquals(theFacade.getCurrentUserForumStatus(sessionId2), "User");
+        assertEquals(theFacade.getCurrentUserSubForumStatus(sessionId2), "User");
+        theFacade.setAdmin("ADMIN", "ADMIN", "Victor", "Temp");
+        assertEquals(theFacade.getCurrentUserForumStatus(sessionId2), "Admin");
+        theFacade.setModerator(sessionId, "Victor");
+        assertEquals(theFacade.getCurrentUserSubForumStatus(sessionId2), "Moderator");
+        theFacade.logout(sessionId);
+
     }
 
     private boolean isForumExist(String forumName) {

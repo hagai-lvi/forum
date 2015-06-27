@@ -225,17 +225,24 @@ import java.util.Vector;
 		if (current.getUsername().equals(SUPER_ADMIN_USERNAME) && current.getPassword().equals(SUPER_ADMIN_PASSWORD)) {
 			StringBuilder res = new StringBuilder();
 			for (Session s : openSessions) {
-				res.append("Session ");
+
+				System.out.println("**********"+s.getId()+s.getUser().getUsername());
+
+				res.append("\n\nSession ");
 				res.append(s.getId());
 				res.append(" [USER: ");
-				res.append(s.getUser().getUsername());
+				if(s.getUser() != null)
+					res.append(s.getUser().getUsername());
 				res.append("] [FORUM: ");
-				res.append(s.getForum().getName());
+				if(s.getForum() != null)
+					res.append(s.getForum().getName());
 				res.append("] [SUB-FORUM: ");
-				res.append(s.getSubForum().getTitle());
+				if(s.getSubForum() != null)
+					res.append(s.getSubForum().getTitle());
 				res.append("] [THREAD: ");
-				res.append(s.getThread().getTitle());
-				res.append("]\n");
+				if(s.getThread() != null)
+					res.append(s.getThread().getTitle());
+				res.append("]\n\n");
 			}
 			return res.toString();
 		}

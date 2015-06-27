@@ -5,7 +5,10 @@ import main.User.User;
 import main.exceptions.*;
 import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
-import main.interfaces.*;
+import main.interfaces.ExSubForumI;
+import main.interfaces.FacadeI;
+import main.interfaces.ForumI;
+import main.interfaces.SubForumI;
 import main.services_layer.Facade;
 import org.junit.After;
 import org.junit.Before;
@@ -13,7 +16,6 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -128,28 +130,6 @@ public class IntegrationTest {
 			//pass
 		}
 
-	}
-
-
-	/**
-	 target: check whether a user can view a previously deleted message.
-	 */
-	@Test
-	public void test_PostAndCheckStatistics() throws SessionNotFoundException, SubForumDoesNotExistException, PasswordNotInEffectException, EmailNotAuthanticatedException, NeedMoreAuthParametersException, ForumNotFoundException, UserNotFoundException, DoesNotComplyWithPolicyException, PermissionDeniedException, SubForumAlreadyExistException, InvalidUserCredentialsException, UserAlreadyExistsException, ForumAlreadyExistException {
-		_facade.register("forum", "user2", "pass", "mail@mail.com");
-		int sess = _facade.login("forum", "ADMIN", "ADMIN");
-		assertEquals(_facade.viewModeratorStatistics(sess), "Number of messages: 0");
-		_facade.authenticateUser("forum", "user2", _facade.getUserAuthString("forum", "user2", "pass"));
-
-		// first user creates a new message.
-		int session1ID = _facade.login("forum", "ADMIN", "ADMIN");
-		_facade.addSubforum(session1ID, "subforum");
-		_facade.addThread(session1ID, "thread-title", "message-body");
-		assertEquals(_facade.viewModeratorStatistics(sess), "Number of messages: 1");
-		Map<String, SubForumI> sf = _facade.getSubForumList(session1ID);
-		assertTrue(sf.containsKey("subforum"));
-		boolean flag = sf.get("subforum").getThreads().containsKey("thread-title");
-		assertTrue(flag);
 	}
 
 	@Test
