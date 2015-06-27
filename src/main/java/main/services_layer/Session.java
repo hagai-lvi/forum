@@ -8,6 +8,8 @@ import main.interfaces.SubForumI;
 import main.interfaces.ThreadI;
 import main.interfaces.UserI;
 
+import java.util.Vector;
+
 /**
  * Created by gabigiladov on 5/31/15.
  */
@@ -17,6 +19,7 @@ public class Session {
     private String forum;
     private String subForum;
     private String thread;
+    private Vector<String> history;
 
 
     public Session(int sessionId, String user) {
@@ -25,6 +28,7 @@ public class Session {
         this.thread = null;
         this.subForum = null;
         this.forum = null;
+        history = new Vector<>();
     }
 
     public int getId(){
@@ -32,7 +36,6 @@ public class Session {
     }
 
     public void setThread(String thread) {
-
         this.thread = thread;
     }
 
@@ -77,5 +80,13 @@ public class Session {
 
     public UserI getUser() {
         return User.getUserFromDB(user, forum);
+    }
+
+    public void addCommand(String command){
+        history.add(command);
+    }
+
+    public Vector<String> getHistory(){
+        return history;
     }
 }

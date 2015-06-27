@@ -8,6 +8,7 @@ import main.interfaces.ExThreadI;
 import main.interfaces.FacadeI;
 import main.interfaces.ThreadI;
 import main.services_layer.Facade;
+import main.services_layer.Session;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
@@ -32,8 +33,22 @@ public class WebController {
 	public static final String ADMIN_USER = "ADMIN";// TODO remove
 	public static final String ADMIN_PASS = "ADMIN";// TODO remove
 
+	@RequestMapping(value = "view_session_detailes", method = RequestMethod.GET)
+	public String showSessionDetailes(ModelMap model, Integer sessionID){
+		Collection<Session> sessions = getFacade().getSessions();
+		for (Session s: sessions){
+			if (s.getId() == sessionID.intValue()) {
+				model.addAttribute("sessionEntries", s.getHistory());
+				return "view_session_detailes";
+			}
+		}
+		return "view_session_detailes";
+	}
+
 	@RequestMapping(value = "superAdminDashboard", method = RequestMethod.POST)
-	public String showSuperAdminDashboard(){
+	public String showSuperAdminDashboard(ModelMap model){
+		Collection<Session> sessions = getFacade().getSessions();
+		model.addAttribute("sessions", sessions);
 		return "superAdminDashboard";
 	}
 

@@ -64,7 +64,7 @@ import java.util.Map;
 	public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
 		SubForumI subforum = currentSession.getUser().createSubForum(subforumName);
-
+		currentSession.addCommand("created subforum " + subforumName);
 		currentSession.setSubForum(subforum.getTitle());
 	}
 
@@ -82,6 +82,7 @@ import java.util.Map;
 		if(currentForum == null) throw new ForumNotFoundException("Forum not found");
 		UserI currentUser = currentForum.login(userName, password);
 		Session currentSession = new Session(sessionCounter, userName); //create a new session
+		currentSession.addCommand(userName + " has logged in to " + forumName);
 		currentSession.setForum(currentForum.getName());
 		openSessions.add(currentSession);
 		sessionCounter++;
@@ -97,6 +98,7 @@ import java.util.Map;
 	@Override
 	public int addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
 		Session currentSession = findSession(sessionId);
+		currentSession.addCommand("Added reply " + title + ", " + body + " to message " + srcMessageId);
 		return currentSession.getUser().replyToMessage(currentSession.getSubForum().getTitle(), currentSession.getThread().getMessages().find(srcMessageId), title, body);
 
 	}
@@ -105,6 +107,7 @@ import java.util.Map;
 	public int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
 		ThreadI th = currentSession.getUser().createThread(srcMessageTitle, srcMessageBody, currentSession.getSubForum().getTitle());
+		currentSession.addCommand("Added thread " + srcMessageTitle);
 		currentSession.setThread(srcMessageTitle);
 		return th.getRootMessage().getId();
 	}
@@ -112,6 +115,7 @@ import java.util.Map;
 	@Override
 	public void reportModerator(int sessionId, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException, SessionNotFoundException {
 		Session current = findSession(sessionId);
+		current.addCommand(" reporting moderator " + moderatorUserName);
 		current.getSubForum().reportModerator(moderatorUserName, reportMessage, current.getUser());
 	}
 
@@ -129,6 +133,7 @@ import java.util.Map;
 	@Override
 	public void deleteMessage(int sessionId, int messageId) throws PermissionDeniedException, MessageNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
 		Session current = findSession(sessionId);
+		current.addCommand("Deleting message " + messageId );
 		current.getUser().deleteMessage(current.getSubForum().getTitle(), current.getThread().getTitle(), current.getThread().getMessages().find(messageId));
 	}
 
@@ -136,6 +141,7 @@ import java.util.Map;
 	public void setModerator(int sessionId, String moderatorName) throws PermissionDeniedException, UserNotFoundException, SessionNotFoundException, SubForumNotFoundException, ForumNotFoundException, CloneNotSupportedException {
 		Session current = findSession(sessionId);
 		current.getUser().setModerator(current.getSubForum().getTitle(), findUser(moderatorName, current.getForum().getName()));
+		current.addCommand("Adding moderator " + moderatorName);
 	}
 
 	@Override
@@ -153,6 +159,7 @@ import java.util.Map;
 	public void addUserType(int sessionId, String typeName, int seniority, int numOfMessages, int connectionTime) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
 		current.getForum().addUserType(typeName, seniority, numOfMessages, connectionTime);
+		current.addCommand("Adding user type " + typeName);
 	}
 
 	@Override
@@ -168,23 +175,27 @@ import java.util.Map;
 	public void setPolicies(int sessionId, boolean isSecured, String regex, int numOfModerators, int passLife) throws SessionNotFoundException, PermissionDeniedException, ForumNotFoundException {
 		Session current = findSession(sessionId);
 		current.getUser().setPolicy(new ForumPolicy(isSecured, numOfModerators, regex, passLife));
+		current.addCommand("setting policy");
 	}
 
 	@Override
 	public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException, PermissionDeniedException {
 		Session current = findSession(sessionId);
 		current.getUser().editMessage(current.getSubForum().getTitle(), current.getThread(), messageId, title, text);
+		current.addCommand("Editting message " + messageId + ".\n new message:" + title  + ", "+ text);
 	}
 
 	@Override
 	public void removeModerator(int sessionId, String moderatorName) throws UserNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
 		Session current = findSession(sessionId);
 		current.getUser().removeModerator(current.getSubForum().getTitle(), moderatorName);
+		current.addCommand("removing moderator " + moderatorName);
 	}
 
 	@Override
 	public String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException {
 		Session current = findSession(sessionsId);
+		current.addCommand("viewing statistics");
 		return current.getUser().viewStatistics();
 	}
 
@@ -227,12 +238,14 @@ import java.util.Map;
 		Session current = findSession(sessionId);
 		ThreadI thread = current.getThread();
 		Tree messages = thread.getMessages();
+		current.addCommand("viewing message " + messageId);
 		return messages.find(messageId);
 	}
 
 	@Override
 	public Map<String, ThreadI> getThreadsList(int sessionId) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
+		current.addCommand(" viewing threads list");
 		return current.getSubForum().getThreads();
 
 	}
@@ -240,6 +253,7 @@ import java.util.Map;
 	@Override
 	public Tree getMessageList(int sessionId) throws SessionNotFoundException, ThreadNotFoundException {
 		Session current = findSession(sessionId);
+		current.addCommand("viewing messages for thread " + current.getThread().getTitle());
 		return current.getThread().getMessages();
 	}
 
@@ -275,12 +289,14 @@ import java.util.Map;
 			throw new SubForumNotFoundException();
 		current.setSubForum(subforum);
 		//current.getUser().viewSubforum(subforum);
+		current.addCommand("viewing subforum " + subforum);
 		return subForums.get(subforum);
 	}
 
 	@Override
 	public ExSubForumI viewSubforum(int sessionId) throws SessionNotFoundException {
 		Session current = findSession(sessionId);
+		current.addCommand("viewing subforum " + current.getSubForum());
 		return current.getSubForum();
 	}
 
@@ -291,12 +307,14 @@ import java.util.Map;
 		if(!threads.containsKey(title))
 			throw new ThreadNotFoundException();
 		current.setThread(title);
+		current.addCommand("viewing thread " + title);
 		return threads.get(title);
 	}
 
 	@Override
 	public ExThreadI viewThread(int sessionId) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException {
 		Session current = findSession(sessionId);
+		current.addCommand("viewing subforum " + current.getThread().getTitle());
 		return current.getThread();
 	}
 
