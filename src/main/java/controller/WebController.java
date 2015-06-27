@@ -33,6 +33,19 @@ public class WebController {
 	public static final String ADMIN_USER = "ADMIN";// TODO remove
 	public static final String ADMIN_PASS = "ADMIN";// TODO remove
 
+	@RequestMapping(value = "report_moderator", method = RequestMethod.POST)
+	public void reportModerator(HttpSession session, HttpServletResponse response, String moderatorUserName, String reportMessage) throws IOException, ModeratorDoesNotExistsException, PermissionDeniedException, SessionNotFoundException {
+		FacadeI facade = getFacade();
+		try {
+			facade.reportModerator(getSessionID(session), moderatorUserName, reportMessage);
+		} catch (Exception e) {
+			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			logger.warn(e);
+			throw e;
+		}
+		response.setStatus(HttpServletResponse.SC_OK);
+	}
+
 	@RequestMapping(value = "view_session_detailes", method = RequestMethod.GET)
 	public String showSessionDetailes(ModelMap model, Integer sessionID){
 		Collection<Session> sessions = getFacade().getSessions();
@@ -49,6 +62,7 @@ public class WebController {
 	public String showSuperAdminDashboard(ModelMap model){
 		Collection<Session> sessions = getFacade().getSessions();
 		model.addAttribute("sessions", sessions);
+		model.addAttribute("messages", getFacade().getMessagesToSuperAdmin());
 		return "superAdminDashboard";
 	}
 
@@ -219,7 +233,7 @@ public class WebController {
 
 	@RequestMapping(value = "addModerator", method = RequestMethod.POST)
 	public void addModeratorToSubforum(ModelMap model, HttpSession session,
-										 String moderatorName, HttpServletResponse response) throws IOException {
+										 String moderatorName, HttpServletResponse response) throws IOException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, ForumNotFoundException, CloneNotSupportedException, SessionNotFoundException {
 		FacadeI facade = getFacade();
 		try {
 			facade.setModerator(getSessionID(session), moderatorName);
@@ -227,6 +241,7 @@ public class WebController {
 		catch (Exception e) {
 			logger.warn("exception thrown in addModeratorToSubforum", e);
 			response.sendError(HttpServletResponse.SC_BAD_REQUEST);
+			throw e;
 		}
 	}
 

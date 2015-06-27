@@ -11,6 +11,7 @@ import java.text.MessageFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -21,6 +22,8 @@ import java.util.Map;
 	private static FacadeI theFacade;
 	private Collection<Session> openSessions;
 	private int sessionCounter;
+	private Vector<String> messagesToSuperAdmin = new Vector<>();
+
 	private Facade(){
 		initialize();
 	}
@@ -116,7 +119,9 @@ import java.util.Map;
 	public void reportModerator(int sessionId, String moderatorUserName, String reportMessage) throws PermissionDeniedException, ModeratorDoesNotExistsException, SessionNotFoundException {
 		Session current = findSession(sessionId);
 		current.addCommand(" reporting moderator " + moderatorUserName);
-		current.getSubForum().reportModerator(moderatorUserName, reportMessage, current.getUser());
+		addMessageToSuperAdmin("A report for moderator " + moderatorUserName + " was recieved from " +
+				current.getUser().getUsername() + ":\n" + reportMessage);
+//		current.getSubForum().reportModerator(moderatorUserName, reportMessage, current.getUser());
 	}
 
 	@Override
@@ -393,4 +398,13 @@ import java.util.Map;
 		return Forum.load(forumName);
 	}
 
+	@Override
+	public Vector<String> getMessagesToSuperAdmin() {
+		return messagesToSuperAdmin;
+	}
+
+	@Override
+	public void addMessageToSuperAdmin(String message){
+		messagesToSuperAdmin.add(message);
+	}
 }

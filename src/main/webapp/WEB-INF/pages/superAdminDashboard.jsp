@@ -28,18 +28,29 @@
 
 </form:form>
 <c:if test="${not empty sessions}">
-Open sessions:
-<ul>
-<c:forEach var="session" items="${sessions}">
-  <li>
-    <form action="view_session_detailes" method="get">
-      "${session.getUser().getUsername()}"
-      <input type="hidden" name="sessionID" value="${session.getId()}"/>
-      <input type="submit" value="view session"/>
-    </form>
-  </li>
-</c:forEach>
-</ul>
+  Open sessions:
+  <ul>
+    <c:forEach var="session" items="${sessions}">
+      <li>
+        <form action="view_session_detailes" method="get">
+          "${session.getUser().getUsername()}"
+          <input type="hidden" name="sessionID" value="${session.getId()}"/>
+          <input type="submit" value="view session"/>
+        </form>
+      </li>
+    </c:forEach>
+  </ul>
+</c:if>
+
+<c:if test="${not empty messages}">
+  New Messges:
+  <ul>
+    <c:forEach var="message" items="${messages}">
+      <li>
+        ${message}
+      </li>
+    </c:forEach>
+  </ul>
 </c:if>
 
 </body>

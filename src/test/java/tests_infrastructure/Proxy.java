@@ -8,6 +8,7 @@ import main.services_layer.Session;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by gabigiladov on 4/25/15.
@@ -280,6 +281,16 @@ public class Proxy implements FacadeI {
 
     @Override
     public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException {
+
+    }
+
+    @Override
+    public Vector<String> getMessagesToSuperAdmin() {
+        return null;
+    }
+
+    @Override
+    public void addMessageToSuperAdmin(String message) {
 
     }
 

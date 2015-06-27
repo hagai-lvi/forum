@@ -7,6 +7,7 @@ import main.services_layer.Session;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Map;
+import java.util.Vector;
 
 /**
  * Created by hagai_lvi on 4/11/15.
@@ -166,4 +167,8 @@ public interface FacadeI {
 	String getCurrentUserSubForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException;
 
 	void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException;
+
+	Vector<String> getMessagesToSuperAdmin();
+
+	void addMessageToSuperAdmin(String message);
 }

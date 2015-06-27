@@ -71,6 +71,16 @@
 <br/>
 
 
+<form id="reportModerator" action="report_moderator" method="post">
+    <h1>Report a moderator</h1>
+    <label>
+        <span>Moderator name:</span>
+        <input type="text" name="moderatorUserName" placeholder="Moderator Name"/>
+        <input type="text" name="reportMessage" placeholder="Moderator Name"/>
+        <input type="submit" value="Report moderator"/>
+    </label>
+</form>
+
 
 </body>
 <script>
@@ -90,6 +100,17 @@
                     },
                     error: function(xhr, ajaxOptions, thrownError) {
                         alert("Failed to add moderator");//TODO show error message
+                    }
+                })
+
+        $( "#reportModerator" ).
+                ajaxForm({
+
+                    success : function (response) {
+                        alert("Your feedback is appreciated");
+                    },
+                    error: function(xhr, ajaxOptions, thrownError) {
+                        alert("Failed to add complaint");//TODO show error message
                     }
                 })
     });
