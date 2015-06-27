@@ -61,7 +61,8 @@ public class Proxy implements FacadeI {
 
     @Override
     public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException {
-
+        if(this.real!=null)
+            this.real.register(forumName, userName, password, email);
     }
 
 
@@ -74,6 +75,8 @@ public class Proxy implements FacadeI {
 
     @Override
     public Collection<Session> getSessions()  {
+        if(this.real!=null)
+            return this.real.getSessions();
         return null;
     }
 
@@ -86,14 +89,14 @@ public class Proxy implements FacadeI {
     @Override
     public int addReply(int sessionId, int srcMessageId, String title, String body) throws MessageNotFoundException, PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException {
         if(this.real!=null)
-            this.real.addReply(sessionId, srcMessageId, title, body);
+            return this.real.addReply(sessionId, srcMessageId, title, body);
         return 0;
     }
 
     @Override
     public int addThread(int sessionId, String srcMessageTitle, String srcMessageBody) throws PermissionDeniedException, DoesNotComplyWithPolicyException, SessionNotFoundException, SubForumDoesNotExistException {
         if(this.real!=null) {
-            this.real.addThread(sessionId, srcMessageTitle, srcMessageBody);
+            return this.real.addThread(sessionId, srcMessageTitle, srcMessageBody);
         }
         return 0;
     }
@@ -136,9 +139,9 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public void removeForum(String username, String password, String forumName) {
+    public void removeForum(String username, String password, String forumName) throws ForumNotFoundException, PermissionDeniedException {
         if(this.real!=null)
-            this.real.getForumList();
+            this.real.removeForum(username, password, forumName);
     }
 
     @Override
@@ -167,7 +170,9 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException {
+    public String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException, SubForumDoesNotExistException {
+        if(this.real!=null)
+            return this.real.viewSuperManagerStatistics(username, password);
         return null;
     }
 
@@ -216,6 +221,8 @@ public class Proxy implements FacadeI {
 
     @Override
     public boolean isGuest(int sessionID) throws SessionNotFoundException {
+        if(this.real!=null)
+            return this.real.isGuest(sessionID);
         return false;
     }
 
@@ -242,6 +249,8 @@ public class Proxy implements FacadeI {
 
     @Override
     public ExThreadI viewThread(int sessionId) throws DoesNotComplyWithPolicyException, ThreadNotFoundException, SessionNotFoundException {
+        if(this.real!=null)
+            return this.real.viewThread(sessionId);
         return null;
     }
 
@@ -264,18 +273,24 @@ public class Proxy implements FacadeI {
     }
 
     @Override
-    public String getCurrentUserForumStatus(int sessionId) throws SessionNotFoundException {
+    public String getCurrentUserForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
+        if (this.real != null)
+          return  this.real.getCurrentUserForumStatus(sessionId);
         return null;
     }
+
 
     @Override
     public String getCurrentUserSubForumStatus(int sessionId) throws SessionNotFoundException, SubForumDoesNotExistException {
+        if (this.real != null)
+            return this.real.getCurrentUserSubForumStatus(sessionId);
         return null;
     }
 
     @Override
-    public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException {
-
+    public void setAdmin(String username, String password, String newAdmin, String forumname) throws UserNotFoundException, PermissionDeniedException, ForumNotFoundException, CloneNotSupportedException {
+        if(this.real!=null)
+             this.real.setAdmin(username, password, newAdmin, forumname);
     }
 
     @Override

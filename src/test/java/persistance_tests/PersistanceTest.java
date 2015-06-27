@@ -2,7 +2,6 @@ package persistance_tests;
 
 import junit.framework.TestCase;
 import main.Persistancy.HibernatePersistancyAbstractor;
-import main.Persistancy.HibernateSessionFactory;
 import main.User.User;
 import main.exceptions.ForumNotFoundException;
 import main.exceptions.SubForumAlreadyExistException;
@@ -10,7 +9,6 @@ import main.forum_contents.Forum;
 import main.forum_contents.ForumPolicy;
 import main.interfaces.ForumPermissionI;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
 import org.junit.FixMethodOrder;
 import org.junit.Test;
 import org.junit.runners.MethodSorters;
@@ -69,7 +67,7 @@ public class PersistanceTest extends TestCase{
         assertEquals(f, null);
     }
 
-
+/*
     @Test
     public void testresetDB(){
         SessionFactory fact = HibernateSessionFactory.getSessionFactory();
@@ -79,7 +77,7 @@ public class PersistanceTest extends TestCase{
         fact = HibernateSessionFactory.getSessionFactory();
         new Forum("blaa", new ForumPolicy(true, 5, ".*", 3));
     }
-/*
+
     @Test
     public void test5ForumPermissions_Save(){
         session.beginTransaction();
