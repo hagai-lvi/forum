@@ -1,6 +1,7 @@
 package controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import data_structures.Tree;
 import gui_objects.*;
 import main.exceptions.*;
 import main.interfaces.ExSubForumI;
@@ -116,8 +117,18 @@ public class NativeGuiController {
 		}
 		ExSubForumI exSubForumI = facade.viewSubforum(sessionID, subforumID);
 		Collection<? extends ExThreadI> threadsList = exSubForumI.getThreads().values();
-		list.addAll(threadsList);
+		for (ExThreadI t: threadsList){
+			list.add(t.getTitle());
+		}
 		return list;
+	}
+
+	@JsonView(NativeGuiController.class)
+	public @RequestMapping(value = "/thread/{threadID}")
+	Tree getThread(HttpSession session, @PathVariable String threadID) throws DoesNotComplyWithPolicyException, SessionNotFoundException, ThreadNotFoundException {
+		FacadeI facade = getFacade();
+		ExThreadI exThreadI = facade.viewThread(getSessionID(session), threadID);
+		return exThreadI.getMessages();
 	}
 
 	@RequestMapping(value = "logout")
@@ -146,46 +157,4 @@ public class NativeGuiController {
 		}
 	}
 
-
-	@RequestMapping(value = "/postExp", method = RequestMethod.POST)
-	public @ResponseBody
-	MyPojoList postExp(@RequestBody UserG user){
-		MyPojoList l = new MyPojoList();
-		MyPojo p1 = new MyPojo();
-		p1.setName(user.getUsername());
-		p1.setId(Integer.toString(1));
-
-		MyPojo p2 = new MyPojo();
-		p2.setName(user.getPassword());
-		p2.setId(Integer.toString(1));
-		l.add(p1);
-		l.add(p2);
-		return l;
-	}
-
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
-	public @ResponseBody
-	MyPojoList getPojoList(){
-		MyPojoList l = new MyPojoList();
-		MyPojo p1 = new MyPojo();
-		p1.setName("hagai");
-		p1.setId("10");
-
-		MyPojo p2 = new MyPojo();
-		p2.setName("gil");
-		p2.setId("20");
-		l.add(p1);
-		l.add(p2);
-		return l;
-	}
-
-
-	@RequestMapping(value = "/pojo", method = RequestMethod.GET)
-	public @ResponseBody
-	MyPojo getPojo(){
-		MyPojo p = new MyPojo();
-		p.setName("hagai");
-		p.setId("10");
-		return p;
-	}
 }
