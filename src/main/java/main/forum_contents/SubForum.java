@@ -12,7 +12,8 @@ import main.interfaces.*;
 import org.apache.log4j.Logger;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by hagai on 07/04/15.
@@ -23,10 +24,10 @@ public class SubForum extends PersistantObject implements SubForumI {
 
     //  ============================================== Properties ====================================
 
-    @JsonView(NativeGuiController.class)
     @Id@GeneratedValue(strategy = GenerationType.AUTO)
     private int id;
 
+    @JsonView(NativeGuiController.class)
     private String _name;
 
     /**

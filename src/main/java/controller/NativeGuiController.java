@@ -15,8 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpSession;
 import java.util.Collection;
 
-
-//TODO implement view thread
 //TODO implement add message
 /**
  * Created by hagai_lvi on 6/2/15.
@@ -102,7 +100,7 @@ public class NativeGuiController {
 	}
 
 	/**
-	 * @return A list of json objects that represents all the forums in the system
+	 * @return A list of json objects that represent all the threads in this subforum
 	 */
 	@JsonView(NativeGuiController.class)
 	@RequestMapping(value = "/subforum/{subforumID}", method = RequestMethod.GET)
@@ -123,6 +121,10 @@ public class NativeGuiController {
 		return list;
 	}
 
+	/**
+	 * Example use:<br/>
+	 * send a get request to {@code http://localhost:8080/forum-system/gui/thread/a}
+	 */
 	@JsonView(NativeGuiController.class)
 	public @RequestMapping(value = "/thread/{threadID}")
 	Tree getThread(HttpSession session, @PathVariable String threadID) throws DoesNotComplyWithPolicyException, SessionNotFoundException, ThreadNotFoundException {
