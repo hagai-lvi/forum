@@ -51,6 +51,8 @@
             <input type="submit" class="button" value="Create" />
         </label>
     </form:form>
+
+    <p style="white-space: pre-line">${statistics}</p>
 </c:if>
 
 <br/>

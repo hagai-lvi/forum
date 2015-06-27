@@ -147,13 +147,16 @@ public class WebController {
 	 */
 	@RequestMapping(value = "forum_homepage",method = RequestMethod.POST)
 	public String loginToForum(ModelMap model, HttpSession session, String username, String password, String forumName)
-			throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException, SessionNotFoundException, SubForumDoesNotExistException {
+			throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException, SessionNotFoundException, SubForumDoesNotExistException, PermissionDeniedException {
 		logger.info("loginToForum request");
 		FacadeI facade = getFacade();
 		Integer sessionID = facade.login(forumName, username, password);
 		session.setAttribute(SESSION_ID_ATTR, sessionID);
 		String status = facade.getCurrentUserForumStatus(sessionID);
 		preperaForumHomepageModel(model, facade, session, status);
+		if (getFacade().isAdmin(getSessionID(session))){
+			model.addAttribute("statistics",getFacade().viewModeratorStatistics(getSessionID(session)));
+		}
 		return "forum_homepage";
 	}
 
@@ -390,6 +393,16 @@ public class WebController {
 		}
 		return "facade";
 	}
+
+
+
+	@RequestMapping(value = "viewForumStatistics", method = RequestMethod.POST)
+	public String viewForumStatistics(HttpServletResponse response, HttpSession session) throws EmailNotAuthanticatedException, UserNotFoundException, IOException, SessionNotFoundException, SubForumDoesNotExistException, PermissionDeniedException {
+		FacadeI facade = getFacade();
+		String res = facade.viewModeratorStatistics(getSessionID(session));
+		return "facade";
+	}
+
 
 
 
