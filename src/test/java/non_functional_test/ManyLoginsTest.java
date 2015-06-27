@@ -6,20 +6,21 @@ import org.junit.Test;
 
 /**
  * Created by hagai_lvi on 6/27/15.
- *
- * This test requires a running server
  */
-public class ManyBasicConnectionsTest {
+
+//TODO continue implementation
+public class ManyLoginsTest {
 	final static int NUM_OF_CONNECTIONS = 30;
 
 	@Test
-	public void testBasicConnection() throws Throwable {
+	public void testManyLogins() throws Throwable {
+
 		Thread[] threads = new Thread[NUM_OF_CONNECTIONS];
 		final Throwable[] exceptions = new Throwable[NUM_OF_CONNECTIONS];
 
 		for (int i = 0 ; i<threads.length ; i++){
-			FacadeConnector c = new FacadeConnector(exceptions, i);
-			threads[i] = new Thread(c);
+			LoginConnector l = new LoginConnector("A", "ADMIN", "ADMIN", i, exceptions);
+			threads[i] = new Thread(l);
 			threads[i].run();
 		}
 
@@ -32,27 +33,34 @@ public class ManyBasicConnectionsTest {
 				throw t;
 			}
 		}
+
 	}
 
-
-	private static class FacadeConnector implements Runnable{
-		private final Throwable[] exceptions;
+	private static class LoginConnector implements Runnable{
+		private final String FORUM_NAME;
+		private final String USERNAME;
+		private final String PASSWORD;
 		private final int threadNumber;
+		private final Throwable[] exceptions;
 
-		public FacadeConnector(Throwable[] exceptions, int threadNumber){
-			this.exceptions = exceptions;
+		public LoginConnector(String forumName, String username, String password, int threadNumber, Throwable[] exceptions){
+			FORUM_NAME = forumName;
+			USERNAME = username;
+			PASSWORD = password;
 			this.threadNumber = threadNumber;
+			this.exceptions = exceptions;
 		}
 
 		@Override
 		public void run() {
 			int responseCode = 0;
 			try {
-				responseCode = HttpUtils.connectToFacade();
+				responseCode = HttpUtils.login(FORUM_NAME,USERNAME, PASSWORD);
 				Assert.assertEquals("thread " + threadNumber + " got response code " + responseCode,
 						200, responseCode);
+			}
 
-			} catch (Exception e) {
+			catch (Exception e) {
 				e.printStackTrace();
 				exceptions[threadNumber] = e;
 			}
