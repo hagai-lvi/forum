@@ -73,6 +73,31 @@
 </form>
 <hr/>
 
+<form action="auth" method="post">
+  <h1>Enter Auth String</h1>
+
+  <input hidden type="text" name="forumName" value="${forumName}">
+
+
+  <label>
+    <span>User Name:</span>
+    <input type="text" name="username" placeholder="User name to auth" />
+  </label>
+
+
+  <label>
+    <span>Auth String:</span>
+    <input type="text" name="auth_string" placeholder="Auth string goes here" />
+  </label>
+
+  <label>
+    <span>&nbsp;</span>
+    <input type="submit" class="button" value="authenticate" on />
+  </label>
+</form>
+<hr/>
+
+
 <form action="guest_forum_homepage" method="post">
 
   <label>
