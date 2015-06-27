@@ -52,7 +52,7 @@ public class WebController {
 	public String showSessionDetailes(ModelMap model, Integer sessionID){
 		Collection<Session> sessions = getFacade().getSessions();
 		for (Session s: sessions){
-			if (s.getId() == sessionID.intValue()) {
+			if (s.getId() == sessionID) {
 				model.addAttribute("sessionEntries", s.getHistory());
 				return "view_session_detailes";
 			}
@@ -90,11 +90,11 @@ public class WebController {
 	 * Send a request to create a new forum in the system
 	 */
 	@RequestMapping(value = "addForum",method = RequestMethod.POST)
-	public String addForum(ModelMap model, String forumName, int numOfModerators, String passRegex,
+	public String addForum(ModelMap model, String username, String password, String forumName, int numOfModerators, String passRegex,
 						   boolean isSecured, int passwordEffectTime) throws PermissionDeniedException, ForumAlreadyExistException, ForumNotFoundException {
 		logger.info("addForum request");
 		FacadeI f = getFacade();
-		f.addForum(ADMIN_PASS, ADMIN_USER, forumName, isSecured, passRegex, numOfModerators, passwordEffectTime);
+		f.addForum(username, password, forumName, isSecured, passRegex, numOfModerators, passwordEffectTime);
 		model.addAttribute("forumName", forumName);
 		return "addForum";
 	}
@@ -184,11 +184,10 @@ public class WebController {
 			throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException {
 		logger.info("register request");
 		FacadeI facade = getFacade();
-		facade.register(forumName, username, password, email);//TODO - auto login after registration - *Victor thinks its not necessary.*
+		facade.register(forumName, username, password, email);
 		model.addAttribute("forumName", forumName);
 		return "login_page";
 	}
-//TODO - junk forum "a" created here and should be deleted.
 	/**
 	 * Allows to clear all data
 	 */
@@ -235,8 +234,8 @@ public class WebController {
 	}
 
 	@RequestMapping(value = "addModerator", method = RequestMethod.POST)
-	public void addModeratorToSubforum(ModelMap model, HttpSession session,
-									   String moderatorName, HttpServletResponse response) throws IOException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, ForumNotFoundException, CloneNotSupportedException, SessionNotFoundException, TooManyModeratorsException {
+	public void addModeratorToSubforum(HttpSession session,
+									   String moderatorName, HttpServletResponse response) throws IOException, SubForumNotFoundException, PermissionDeniedException, UserNotFoundException, ForumNotFoundException, CloneNotSupportedException, SessionNotFoundException {
 		FacadeI facade = getFacade();
 		try {
 			facade.setModerator(getSessionID(session), moderatorName);
