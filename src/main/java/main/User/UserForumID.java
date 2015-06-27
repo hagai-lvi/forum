@@ -18,5 +18,11 @@ public class UserForumID implements Serializable{
         this.username_id = uname;
         this.forumname_id = forumname;
     }
+
+    public boolean equals(Object other){
+        if (!(other instanceof UserForumID))
+            return false;
+        return (this.username_id.equals(((UserForumID)other).username_id) && this.forumname_id.equals(((UserForumID) other).forumname_id));
+    }
     // equals, hashCode
 }
