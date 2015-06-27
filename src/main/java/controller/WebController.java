@@ -61,10 +61,11 @@ public class WebController {
 	}
 
 	@RequestMapping(value = "superAdminDashboard", method = RequestMethod.POST)
-	public String showSuperAdminDashboard(ModelMap model){
+	public String showSuperAdminDashboard(ModelMap model) throws PermissionDeniedException, SubForumDoesNotExistException {
 		Collection<Session> sessions = getFacade().getSessions();
 		model.addAttribute("sessions", sessions);
 		model.addAttribute("messages", getFacade().getMessagesToSuperAdmin());
+		model.addAttribute("statistics",getFacade().viewSuperManagerStatistics("ADMIN", "ADMIN"));
 		return "superAdminDashboard";
 	}
 

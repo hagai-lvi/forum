@@ -53,6 +53,10 @@
     </c:forEach>
   </ul>
 </c:if>
+<hr/>
+<h1>Statistics:</h1>
+<p style="white-space: pre-line">${statistics}</p>
+
 
 </body>
 </html>
