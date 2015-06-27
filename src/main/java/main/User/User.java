@@ -309,6 +309,15 @@ public class User extends PersistantObject implements UserI, Cloneable {
         return forumPermissions.isGuest();
     }
 
+    @Override
+    public UserI cloneAsMod(Permissions permissionsModerator, String subforum) throws ForumNotFoundException, CloneNotSupportedException {
+        Permissions temPerms = this.subForumsPermissions.get(subforum).getPermission();
+        subForumsPermissions.put(subforum, new UserSubforumPermission(permissionsModerator, forumPermissions.getForumName(),subforum));
+        UserI clone = (User)this.clone();//new User(this.username, this.password, this.email, clonePermissions);
+       // this.setForumPermissions(temPerms);
+        return clone;
+    }
+
  /*   @Override
     public void viewSubforum(String subforum)  {
         if(!subForumsPermissions.containsKey(subforum)) {

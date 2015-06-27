@@ -217,15 +217,15 @@ public class Forum extends PersistantObject implements ForumI{
             throw new InvalidUserCredentialsException("User is not registered");
         }
         if (user.getPassword().equals(password)){
-//            if (policy.hasMoreAuthQuestions()){
-//                throw new NeedMoreAuthParametersException();
-//            }
-//            if (!user.isEmailAuthenticated()){
-//                throw new EmailNotAuthanticatedException();
-//            }
-//            if (!policy.isPasswordInEffect(user.getPasswordCreationDate())){
-//                throw new PasswordNotInEffectException();
-//            }
+            if (policy.hasMoreAuthQuestions()){
+                throw new NeedMoreAuthParametersException();
+            }
+            if (!user.isEmailAuthenticated()){
+                throw new EmailNotAuthanticatedException();
+            }
+            if (!policy.isPasswordInEffect(user.getPasswordCreationDate())){
+                throw new PasswordNotInEffectException();
+            }
             return user;
         }
         else {

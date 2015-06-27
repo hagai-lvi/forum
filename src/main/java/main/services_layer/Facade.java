@@ -64,7 +64,7 @@ import java.util.Map;
 	public void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException {
 		Session currentSession = findSession(sessionId);
 		SubForumI subforum = currentSession.getUser().createSubForum(subforumName);
-		currentSession.addCommand("created subforum " + subforumName);
+
 		currentSession.setSubForum(subforum.getTitle());
 	}
 
@@ -182,7 +182,7 @@ import java.util.Map;
 	public void editMessage(int sessionId, int messageId, String title, String text) throws SessionNotFoundException, MessageNotFoundException, SubForumDoesNotExistException, ThreadNotFoundException, PermissionDeniedException {
 		Session current = findSession(sessionId);
 		current.getUser().editMessage(current.getSubForum().getTitle(), current.getThread(), messageId, title, text);
-		current.addCommand("Editting message " + messageId + ".\n new message:" + title  + ", "+ text);
+		current.addCommand("Editting message " + messageId + ".\n new message:" + title + ", " + text);
 	}
 
 	@Override
@@ -308,7 +308,7 @@ import java.util.Map;
 			throw new ThreadNotFoundException();
 		current.setThread(title);
 		current.addCommand("viewing thread " + title);
-		return threads.get(title);
+		return current.getThread();
 	}
 
 	@Override

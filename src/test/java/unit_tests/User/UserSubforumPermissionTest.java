@@ -1,8 +1,6 @@
 package unit_tests.User;
 
 import main.User.Permissions;
-import main.User.User;
-import main.User.UserForumPermission;
 import main.User.UserSubforumPermission;
 import main.exceptions.*;
 import main.forum_contents.Forum;
@@ -147,17 +145,6 @@ public class UserSubforumPermissionTest {
         assertEquals(permission.getThreads()[2].getTitle(), "title");
         assertEquals(permission.getThreads()[3].getTitle(), "title4");
 
-    }
-
-    @Test
-    public void testSetModerator() throws ForumNotFoundException, CloneNotSupportedException, PermissionDeniedException {
-        try {
-            permission.setModerator(new User("a","aa","a@a.com", new UserForumPermission(Permissions.PERMISSIONS_USER,"Sport")));
-            fail();
-        } catch (PermissionDeniedException e) {
-            assertTrue(true);
-        }
-        permission2.setModerator(new User("a","aa","a@a.com", new UserForumPermission(Permissions.PERMISSIONS_USER,"Sport")));
     }
 
 }

@@ -131,5 +131,7 @@ public interface UserI {
 
 	boolean isGuest();
 
+	UserI cloneAsMod(Permissions permissionsModerator, String subforum) throws ForumNotFoundException, CloneNotSupportedException;
+
 	/*void viewSubforum(String subforum)*/ ;
 }
