@@ -23,7 +23,6 @@ public class Session {
 
 
     public Session(int sessionId, String user) {
-        System.out.println("*************"+sessionId+"   "+user);
         this.sessionId = sessionId;
         this.user = user;
         this.thread = null;

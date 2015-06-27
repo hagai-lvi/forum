@@ -72,5 +72,8 @@ public interface ForumI extends ExForumI{
 	boolean enterUserAuthenticationString(UserI user, String auth_string) throws InvalidUserCredentialsException;
 
 	UserI getGuest();
+	
+	boolean isSecured();
 
+	UserI securedLogin(String userName, String password, String ans) throws InvalidUserCredentialsException, NeedMoreAuthParametersException, EmailNotAuthanticatedException, PasswordNotInEffectException;
 }

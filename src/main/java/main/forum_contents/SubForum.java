@@ -96,7 +96,7 @@ public class SubForum extends PersistantObject implements SubForumI {
 
     @Override
     public void setModerator(UserI mod) throws TooManyModeratorsException {
-        if (_moderators.size() > subforumPolicy.getMaxModerators()){
+        if (!subforumPolicy.canAssignModerator(mod, this)){
             throw new TooManyModeratorsException();
         }
         _moderators.put(mod.getUsername(), mod);

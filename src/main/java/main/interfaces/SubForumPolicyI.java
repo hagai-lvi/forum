@@ -8,4 +8,6 @@ public interface SubForumPolicyI {
     boolean isValidMessage(String title, String text);
 
     int getMaxModerators();
+
+    boolean canAssignModerator(UserI user, SubForumI subforum);
 }

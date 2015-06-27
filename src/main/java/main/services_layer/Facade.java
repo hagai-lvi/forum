@@ -83,6 +83,7 @@ import java.util.Vector;
 	public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException {
 		ForumI currentForum = findForum(forumName);
 		if(currentForum == null) throw new ForumNotFoundException("Forum not found");
+		//if(currentForum.isSecured()) currentForum.securedLogin(userName, password, ans);
 		UserI currentUser = currentForum.login(userName, password);
 		Session currentSession = new Session(sessionCounter, userName); //create a new session
 		currentSession.addCommand(userName + " has logged in to " + forumName);
@@ -219,35 +220,6 @@ import java.util.Vector;
 		}
 	}
 
-	@Override
-	public String viewSessions(int sessionId) throws ThreadNotFoundException, SessionNotFoundException, PermissionDeniedException {
-		UserI current = findSession(sessionId).getUser();
-		if (current.getUsername().equals(SUPER_ADMIN_USERNAME) && current.getPassword().equals(SUPER_ADMIN_PASSWORD)) {
-			StringBuilder res = new StringBuilder();
-			for (Session s : openSessions) {
-
-				System.out.println("**********"+s.getId()+s.getUser().getUsername());
-
-				res.append("\n\nSession ");
-				res.append(s.getId());
-				res.append(" [USER: ");
-				if(s.getUser() != null)
-					res.append(s.getUser().getUsername());
-				res.append("] [FORUM: ");
-				if(s.getForum() != null)
-					res.append(s.getForum().getName());
-				res.append("] [SUB-FORUM: ");
-				if(s.getSubForum() != null)
-					res.append(s.getSubForum().getTitle());
-				res.append("] [THREAD: ");
-				if(s.getThread() != null)
-					res.append(s.getThread().getTitle());
-				res.append("]\n\n");
-			}
-			return res.toString();
-		}
-		throw new PermissionDeniedException("Can not view sessions");
-	}
 
 	@Override
 	public ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException, ThreadNotFoundException {

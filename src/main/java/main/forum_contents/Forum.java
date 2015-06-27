@@ -227,15 +227,41 @@ public class Forum extends PersistantObject implements ForumI{
     }
 
     @Override
+    public boolean isSecured() {
+        return policy.isSecured();
+    }
+
+    @Override
+    public UserI securedLogin(String userName, String password, String ans) throws InvalidUserCredentialsException, NeedMoreAuthParametersException, EmailNotAuthanticatedException, PasswordNotInEffectException {
+        UserI user = User.getUserFromDB(userName, forum_name);
+        if (user == null){
+            throw new InvalidUserCredentialsException("User is not registered");
+        }
+        if (user.getPassword().equals(password)){
+            if (policy.hasMoreAuthQuestions()){
+                if(!user.isSameSeqAns(ans));
+                    throw new NeedMoreAuthParametersException();
+            }
+            if (!user.isEmailAuthenticated()){
+                throw new EmailNotAuthanticatedException();
+            }
+            if (!policy.isPasswordInEffect(user.getPasswordCreationDate())){
+                throw new PasswordNotInEffectException();
+            }
+            return user;
+        }
+        else {
+            throw new InvalidUserCredentialsException("invalid username or password");
+        }
+    }
+
+    @Override
     public UserI login(String username, String password) throws InvalidUserCredentialsException, NeedMoreAuthParametersException, EmailNotAuthanticatedException, PasswordNotInEffectException {
         UserI user = User.getUserFromDB(username, forum_name);
         if (user == null){
             throw new InvalidUserCredentialsException("User is not registered");
         }
         if (user.getPassword().equals(password)){
-            if (policy.hasMoreAuthQuestions()){
-                throw new NeedMoreAuthParametersException();
-            }
             if (!user.isEmailAuthenticated()){
                 throw new EmailNotAuthanticatedException();
             }
@@ -303,6 +329,8 @@ public class Forum extends PersistantObject implements ForumI{
         pers.Delete(forum);
 
     }
+
+
 
     public static ArrayList<String> getForumList(){
         String sql = "SELECT forum_name from forum";

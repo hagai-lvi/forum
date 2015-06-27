@@ -61,14 +61,14 @@ public class Proxy implements FacadeI {
 
     @Override
     public void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException {
-        if(this.real!=null)
-            this.real.register(forumName, userName, password, email);
+
     }
+
 
     @Override
     public int login(String forumName, String userName, String password) throws InvalidUserCredentialsException, EmailNotAuthanticatedException, PasswordNotInEffectException, NeedMoreAuthParametersException, ForumNotFoundException {
         if(this.real!=null)
-            return this.real.login(forumName, userName, password);
+            return this.real.login(forumName, userName, password );
         return 0;
     }
 
@@ -171,12 +171,6 @@ public class Proxy implements FacadeI {
         return null;
     }
 
-    @Override
-    public String viewSessions(int sessionId) throws ThreadNotFoundException, PermissionDeniedException, SessionNotFoundException {
-        if(this.real!=null)
-            return this.real.viewSessions(sessionId);
-        return null;
-    }
 
     @Override
     public ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException, ThreadNotFoundException {

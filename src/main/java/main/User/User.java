@@ -35,7 +35,6 @@ public class User extends PersistantObject implements UserI, Cloneable {
     @OneToOne(targetEntity = UserForumPermission.class, cascade = CascadeType.ALL)
     private ForumPermissionI forumPermissions;
     private boolean isEmailAuthenticated;
-    private String secQ;
     private String secA;
 
     public User(String username, String password, String email, ForumPermissionI forumPermissions) {
@@ -163,7 +162,7 @@ public class User extends PersistantObject implements UserI, Cloneable {
         }
 
         SubForumPermissionI permission = subForumsPermissions.get(subForum);
-        if (permission != null){
+        if (permission != null ){
             permission.setModerator(moderator);
         }
         else{
@@ -211,11 +210,6 @@ public class User extends PersistantObject implements UserI, Cloneable {
     @Override
     public GregorianCalendar getPasswordCreationDate(){
         return passwordCreationDate;
-    }
-
-    @Override
-    public void setSecurityQuestion(String quest) {
-        this.secQ = quest;
     }
 
     @Override
@@ -318,6 +312,11 @@ public class User extends PersistantObject implements UserI, Cloneable {
         UserI clone = (User)this.clone();//new User(this.username, this.password, this.email, clonePermissions);
        // this.setForumPermissions(temPerms);
         return clone;
+    }
+
+    @Override
+    public boolean isSameSeqAns(String ans) {
+        return ans.equals(secA);
     }
 
  /*   @Override

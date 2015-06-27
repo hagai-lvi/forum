@@ -167,7 +167,6 @@ import javax.persistence.Id;
 
 
     private boolean canDeleteMessage(String user, MessageI m) throws PermissionDeniedException {
-        System.out.println("************"+permission+user);
         if (!permission.equals(Permissions.PERMISSIONS_GUEST) && m.getUser().equals(user) || permission.equals(Permissions.PERMISSIONS_MODERATOR)){
             return true;
         } else {

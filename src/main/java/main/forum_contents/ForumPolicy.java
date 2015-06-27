@@ -75,8 +75,8 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
     @Override
     public boolean canAssignModerator(UserI user, SubForumI subforum){
         return
-                (subforum.getModerators().size() < maxModerators)
-                && isValidModerator(user);
+                (subforum.getModerators().size()< maxModerators);
+              //  && isValidModerator(user);
     }
 
     @Override
@@ -123,6 +123,7 @@ public class ForumPolicy implements ForumPolicyI, SubForumPolicyI{
         long currMonth = GregorianCalendar.getInstance().get(Calendar.MONTH);
         long userMonth = moderator.getSignUpDate().get(Calendar.MONTH);
         long seniority = (currYear - userYear) * 12 + currMonth - userMonth;
+
         return seniority > SILVER_USER_SENIORITY;
     }
 

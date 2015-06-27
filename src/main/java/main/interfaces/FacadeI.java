@@ -39,9 +39,6 @@ public interface FacadeI {
 	 */
 	void addSubforum(int sessionId, String subforumName) throws PermissionDeniedException, SubForumAlreadyExistException, SessionNotFoundException, ForumNotFoundException, SubForumDoesNotExistException;
 
-	/**
-	 * register a user to the specified forum
-	 */
 	void register(String forumName, String userName, String password, String email) throws UserAlreadyExistsException, InvalidUserCredentialsException, ForumNotFoundException, DoesNotComplyWithPolicyException;
 
 	/**
@@ -118,8 +115,6 @@ public interface FacadeI {
 	String viewModeratorStatistics(int sessionsId) throws SessionNotFoundException, PermissionDeniedException, SubForumDoesNotExistException;
 
 	String viewSuperManagerStatistics(String username, String password) throws PermissionDeniedException, SubForumDoesNotExistException;
-
-	String viewSessions(int sessionId) throws ThreadNotFoundException, SessionNotFoundException, PermissionDeniedException;
 
 	ExMessageI getMessage(int sessionId, int messageId) throws SessionNotFoundException, ThreadNotFoundException;
 

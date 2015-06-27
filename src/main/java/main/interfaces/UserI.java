@@ -104,7 +104,6 @@ public interface UserI {
 	/**
 	 *
 	 */
-	void setSecurityQuestion(String quest);
 	void setSecurityAnswer(String ans);
 
 	boolean isAdmin();
@@ -132,6 +131,8 @@ public interface UserI {
 	boolean isGuest();
 
 	public UserI cloneAsMod(Permissions permissionsModerator, String subforum) throws ForumNotFoundException, CloneNotSupportedException;
+
+	boolean isSameSeqAns(String ans);
 
 	/*void viewSubforum(String subforum)*/ ;
 }
