@@ -55,7 +55,9 @@ public class ManyLoginsTest {
 		public void run() {
 			int responseCode = 0;
 			try {
+				long time = System.currentTimeMillis();
 				responseCode = HttpUtils.login(FORUM_NAME,USERNAME, PASSWORD);
+				Assert.assertTrue((System.currentTimeMillis()-time) < 2000);
 				Assert.assertEquals("thread " + threadNumber + " got response code " + responseCode,
 						200, responseCode);
 			}
